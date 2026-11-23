@@ -3,5 +3,8 @@ dist/
 dist-electron/
 release/
 *.log
+verifydir/
+_xmlcheck.py
+publish/
 website/downloads/*.exe
 docs/downloads/*.exe
