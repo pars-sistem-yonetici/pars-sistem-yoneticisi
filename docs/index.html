@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#171719" />
+  <meta name="description" content="Pars Sistem Yöneticisi — Windows için winget tabanlı yazılım yönetimi, sistem bakımı, güvenlik denetimi ve güvenli temizleme paneli." />
+  <title>Pars Sistem Yöneticisi — Windows Sistem Bakım Merkezi</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html" aria-label="Pars Sistem Yöneticisi ana sayfa">
+        <img src="assets/icon.png" alt="" />
+        <span><strong>Pars Sistem Yöneticisi</strong><small>Sistem Bakım Merkezi</small></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
+      <nav class="main-nav" id="mainNav" aria-label="Ana menü">
+        <a href="#ozellikler">Özellikler</a>
+        <a href="#guvenlik">Güvenlik</a>
+        <a href="#sss">SSS</a>
+        <a href="download.html">İndir</a>
+      </nav>
+      <a class="header-cta" href="download.html">İndir →</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- B:HERO -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <span class="pill"><span class="dot"></span> <span data-latest-version>v1.0.0</span> · Windows 10 / 11 · x64</span>
+          <h1>Windows bakımı ve yazılım yönetimi, <em>tek panelde.</em></h1>
+          <p class="hero-lead">winget ile güncelleme ve kaldırma, disk temizleme, kayıt defteri onarımı, güvenlik duvarı denetimi ve sürücü yönetimi. Her yıkıcı işlem onaylı, her kritik değişiklik yedekli.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="download.html#setup">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg>
+              Kurulumu indir
+            </a>
+            <a class="btn btn-lg" href="download.html#portable">Portable sürüm</a>
+          </div>
+          <p class="hero-note"><span>Yönetici olarak çalışır</span><i></i><span>Ücretsiz</span><i></i><span>İnternet bağlantısı winget işlemleri için gerekir</span></p>
+        </div>
+
+        <div class="hero-visual" aria-label="Uygulama arayüzü önizlemesi">
+          <div class="app-mock">
+            <div class="mock-bar">
+              <div class="mock-dots"><i></i><i></i><i></i></div>
+              <div class="mock-bar-title"><img src="assets/icon.png" alt="" /> Pars Sistem Yöneticisi — Anasayfa</div>
+              <div class="mock-controls">— □ ✕</div>
+            </div>
+            <div class="mock-body">
+              <aside class="mock-sidebar">
+                <div class="mock-brand"><img src="assets/icon.png" alt="" /> YAZILIM YÖNETİCİSİ</div>
+                <div class="mock-nav-group">
+                  <div class="mock-nav-title">Genel <b>›</b></div>
+                  <div class="mock-nav-item active"><span>⌂</span> Anasayfa</div>
+                  <div class="mock-nav-item"><span>⌕</span> Uygulama Ara</div>
+                </div>
+                <div class="mock-nav-group">
+                  <div class="mock-nav-title">Yazılım Yönetimi <b>›</b></div>
+                  <div class="mock-nav-item"><span>↑</span> Güncellemeler</div>
+                  <div class="mock-nav-item"><span>▦</span> Kurulu Uygulamalar</div>
+                </div>
+                <div class="mock-nav-group">
+                  <div class="mock-nav-title">Yapılandırma <b>›</b></div>
+                  <div class="mock-nav-item"><span>≡</span> Sağ tık menüsü</div>
+                  <div class="mock-nav-item"><span>⚗</span> Hata Ayıklama</div>
+                  <div class="mock-nav-item"><span>⋯</span> Ayarlar</div>
+                </div>
+              </aside>
+              <div class="mock-main">
+                <div class="mock-top">
+                  <div><h3>Anasayfa</h3><p>Sistem bakım ve yazılım yönetimi paneli</p></div>
+                  <div class="mock-stats"><i>3 güncelleme</i><i>1 eksik bileşen</i></div>
+                </div>
+                <div class="mock-cards">
+                  <div class="mock-card"><small>CPU Kullanımı</small><b>18%</b><div class="mock-track"><i style="width:18%"></i></div></div>
+                  <div class="mock-card"><small>RAM Kullanımı</small><b>42% · 9,4 GB boş</b><div class="mock-track"><i style="width:42%"></i></div></div>
+                  <div class="mock-card"><small>Boş Depolama</small><b>118 / 512 GB</b><div class="mock-track"><i style="width:23%"></i></div></div>
+                </div>
+                <div class="mock-table">
+                  <div class="mock-table-head"><span>Güncelleme bekleyen</span><span>Mevcut</span><span>Yeni</span></div>
+                  <div class="mock-row"><span>7-Zip</span><span>24.08</span><em>24.09</em></div>
+                  <div class="mock-row"><span>Firefox</span><span>130.0</span><em>131.0</em></div>
+                  <div class="mock-row"><span>Node.js</span><span>20.16</span><i>Güncel</i></div>
+                </div>
+              </div>
+            </div>
+            <div class="mock-scan"></div>
+          </div>
+          <div class="float-chip">
+            <span class="shield">✓</span>
+            <span><b>Güvenli mod:</b> yedek alınmadan silinmez</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- B:STATS -->
+    <section class="stats-band" aria-label="Özet bilgiler">
+      <div class="wrap stats-grid">
+        <div class="stat"><b>142</b><span>doğrulanmış winget uygulaması</span></div>
+        <div class="stat"><b>5</b><span>salt-okunur yerel tarama motoru</span></div>
+        <div class="stat"><b>4</b><span>hazır sistem bakım planı</span></div>
+        <div class="stat"><b>55+</b><span>arayüz dili ve iki tam çeviri</span></div>
+      </div>
+    </section>
+
+    <!-- B:FEATURES -->
+    <section class="section" id="ozellikler">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Özellikler</p>
+          <h2>Bir bakım aracından fazlası</h2>
+          <p>Günlük bakımdan kurumsal ilke kaynaklı sorunlara kadar yaygın Windows baş ağrılarını tek bir arayüzde toplar.</p>
+        </div>
+        <div class="features">
+          <article class="feature"><div class="feature-icon">↑</div><h3>Güncellemeler</h3><p>winget ile güncellemesi olan paketleri tarar, seçili veya tüm güncellemeleri tek seferde uygular.</p></article>
+          <article class="feature"><div class="feature-icon">▦</div><h3>Kaldırma ve kalıntılar</h3><p>Uygulamaları kaldırır, geride kalan dosya ve kayıt girdilerini tarar. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır.</p></article>
+          <article class="feature"><div class="feature-icon">◫</div><h3>Disk temizleme</h3><p>Geçici dosyalar, önbellekler, Windows Update indirmeleri ve DNS dahil yedi kategoride güvenli temizlik.</p></article>
+          <article class="feature"><div class="feature-icon">⚙</div><h3>Kayıt defteri</h3><p>Bozuk kaldırma girdilerini 64 ve 32-bit üzerinde tarar. Silmeden önce her girdi .reg olarak yedeklenir.</p></article>
+          <article class="feature"><div class="feature-icon">⚑</div><h3>Güvenlik duvarı</h3><p>Etkin gelen kuralları denetler; geniş kapsam, eksik program yolu ve imzasız ikilileri kritik olarak işaretler.</p></article>
+          <article class="feature"><div class="feature-icon">☣</div><h3>Kötü amaçlı yazılım</h3><p>Beş yerel, salt-okunur motor: imzalar, sezgisel analiz, betikler, sistem bütünlüğü ve kalıcılık izleri.</p></article>
+          <article class="feature"><div class="feature-icon">⚒</div><h3>Sürücüler</h3><p>Windows Update Agent ile sürücü güncellemelerini tarar; kurulum öncesi DISM ile yedek alma seçeneği sunar.</p></article>
+          <article class="feature"><div class="feature-icon">◷</div><h3>Zamanlama</h3><p>Haftalık, günlük, aylık ve özel olmak üzere dört devre dışı plan. Uygulama açıkken 60 saniyelik döngüyle çalışır.</p></article>
+          <article class="feature"><div class="feature-icon">≡</div><h3>Sağ tık menüsü</h3><p>Windows 10 klasik menüsü ile Windows 11 modern menüsü arasında geçiş yapar ve Gezgin’i otomatik yeniden başlatır.</p></article>
+          <article class="feature"><div class="feature-icon">⚗</div><h3>Hata Ayıklama</h3><p>“Kuruluşunuz tarafından yönetiliyor” uyarısını düzelten Windows ve tarayıcı .reg dosyalarını içerir; uygulama öncesi yedek alınır.</p></article>
+          <article class="feature"><div class="feature-icon">⟳</div><h3>Kendi kendini güncelleme</h3><p>Yeni sürümü kontrol eder, SHA-512 ile doğrular ve onayınızla indirip kurar. Portable sürümde dosyayı değiştirmez.</p></article>
+          <article class="feature"><div class="feature-icon">✦</div><h3>Kişiselleştirme</h3><p>Grafit/altın veya Windows 11 açık teması, Türkçe/İngilizce ve 55 dil, hariç tutma listeleri ve gruplu animasyonlu menü.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- B:SECURITY -->
+    <section class="section-tight" id="guvenlik">
+      <div class="wrap security-wrap">
+        <div class="section-head" style="margin:0">
+          <p class="eyebrow">Güvenlik yaklaşımı</p>
+          <h2>Yıkıcı işlemlerde durur, yedek alır, sorar</h2>
+          <p>Hız için güvenlikten ödün verilmez: korumalı kökler hiçbir temizleme işlemine dahil edilmez, sembolik bağlantılar atlanır.</p>
+        </div>
+        <div class="security-panel">
+          <h3>Varsayılan güvenli davranış</h3>
+          <p>Uygulama yönetici izinleriyle çalışır; ancak aşağıdaki kurallar her işlemde geçerlidir.</p>
+          <ul class="security-list">
+            <li><i>✓</i><span><b>Onay zorunlu:</b> kaldırma, kalıcı silme, kural silme ve ilke .reg uygulama işlemleri açık onay ister.</span></li>
+            <li><i>✓</i><span><b>.reg yedeği:</b> kayıt defterinden silmeden önce ilgili anahtar dışa aktarılır; yedek başarısızsa silinmez.</span></li>
+            <li><i>✓</i><span><b>JSON yedeği:</b> güvenlik duvarı kuralları silinmeden önce kural ve filtreler kaydedilir.</span></li>
+            <li><i>✓</i><span><b>Geri Dönüşüm Kutusu:</b> kalıntı silmede varsayılan davranış budur; kalıcı silme iki aşamalı onay gerektirir.</span></li>
+            <li><i>✓</i><span><b>Salt-okunur tarama:</b> kötü amaçlı yazılım motoru dosya silmez, işlem sonlandırmaz, kayıt değiştirmez.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- B:SKIP1 -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="cta-band">
+          <div>
+            <h2>Hazır mısınız?</h2>
+            <p>Kurulumu veya tek dosyalık portable sürümü indirin; birkaç saniyede kullanmaya başlayın.</p>
+          </div>
+          <a class="btn btn-primary btn-lg" href="download.html">İndirme sayfasına git →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- B:FAQ -->
+    <section class="section" id="sss">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Sık sorulan sorular</p>
+          <h2>Merak edilenler</h2>
+        </div>
+        <div class="faq">
+          <details><summary>Neden yönetici izni istiyor?</summary><p>Güvenlik duvarı kuralları, HKLM kayıt girdileri, sürücü işlemleri ve sistem çapındaki temizlik işlemleri yükseltilmiş izin gerektirir. UAC penceresi beklenen bir davranıştır.</p></details>
+          <details><summary>Portable sürüm kurulum gerektirmez mi?</summary><p>Gerektirmez. exe’yi çalıştırdığınızda geçici bir klasöre çıkarılır ve kapatınca temizlenir. Ayarlarınız ve yedekleriniz kullanıcı klasörünüzde saklandığı için kalıcıdır.</p></details>
+          <details><summary>Verilerim nereye kaydediliyor?</summary><p>Ayarlar ve ek çeviriler %APPDATA%\pars-sistem-yoneticisi-ts altında; kayıt, güvenlik duvarı ve sürücü yedekleri %LOCALAPPDATA%\ParsSistemYoneticisi altında tutulur. Hiçbir veri uzak sunucuya gönderilmez.</p></details>
+          <details><summary>İnternet olmadan çalışır mı?</summary><p>Arayüz ve yerel bakım araçları çevrimdışı çalışır. winget kataloğu, sürücü taraması ve uygulama güncelleyici internet bağlantısı gerektirir.</p></details>
+          <details><summary>Kötü amaçlı yazılım sekmesi antivirüs yerine geçer mi?</summary><p>Hayır. Beş motor yalnızca yerel ve salt-okunur denetim yapar; gerçek zamanlı koruma, karantina veya dosya silme işlemi yoktur. Mevcut güvenlik yazılımınızı kullanmaya devam edin.</p></details>
+          <details><summary>Başlangıçta tepsiye küçültmeyi nasıl kapatırım?</summary><p>Ayarlar → Kapatma davranışı alanından “Uygulamayı kapat”ı seçin; “Windows ile başlat” anahtarını kapatarak otomatik açılışı tamamen devre dışı bırakabilirsiniz.</p></details>
+        </div>
+      </div>
+    </section>
+    <!-- B:END -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span><strong>Pars Sistem Yöneticisi</strong> · Sistem Bakım Merkezi · v1.0.0</span>
+      <span>Windows 10 / 11 x64 · <a href="download.html">İndir</a></span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "notes": "İlk dağıtım sürümü — winget tabanlı yazılım yönetimi, sistem bakımı, güvenlik denetimi ve uygulama güncelleyici.",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.0.exe",
+  "sha512": "d6d67d6b64520f4416d5d334d726ce21f8429d4f3a713db58e0df6c55cf7a18a652f641b67ed24cb5d7e6ee4c792a36030660d950e0fe2faca4251ad7406c77d",
+  "sha256": "53adb0eeb3b174f2c822634552873b20b3d044783d1e356932ce4b75f7cedc76",
+  "size": 83540497,
+  "url": "https://github.com/<KULLANICI>/<REPO>/releases/download/v1.0.0/Pars%20Sistem%20Yoneticisi%20Setup%201.0.0.exe",
+  "portableFileName": "ParsSistemYoneticisi-Portable.exe",
+  "portableSha256": "d757f66615d975b6955cdaee5399ee5b049beb04bd2c8cca35ff5e7f8cfd7e7a",
+  "portableSize": 83327694,
+  "portableUrl": "https://github.com/<KULLANICI>/<REPO>/releases/download/v1.0.0/ParsSistemYoneticisi-Portable.exe"
+}

@@ -1,0 +1,92 @@
+{
+  "name": "pars-sistem-yoneticisi-ts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Windows sistem bakım ve winget tabanlı yazılım yöneticisi (TypeScript / Electron)",
+  "main": "dist-electron/main/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.node.json && vite build",
+    "dist": "npm run build && electron-builder",
+    "dist:portable": "npm run build && electron-builder --dir",
+    "publish": "node scripts/publish-update.js",
+    "build:blogger": "node scripts/build-blogger.js"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^34.0.0",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  },
+  "build": {
+    "appId": "com.local.parssistemyoneticisi",
+    "productName": "Pars Sistem Yoneticisi",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist-electron/**/*",
+      "dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "build/prereqs",
+        "to": "prereqs",
+        "filter": "**/*"
+      },
+      {
+        "from": "build/updates",
+        "to": "updates",
+        "filter": "**/*"
+      },
+      {
+        "from": "build/regfix",
+        "to": "regfix",
+        "filter": "**/*"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Pars Sistem Yoneticisi"
+    },
+    "portable": {
+      "artifactName": "ParsSistemYoneticisi-Portable.exe",
+      "requestExecutionLevel": "admin"
+    }
+  },
+  "allowScripts": {
+    "electron@34.5.8": true,
+    "esbuild@0.25.12": true
+  }
+}
