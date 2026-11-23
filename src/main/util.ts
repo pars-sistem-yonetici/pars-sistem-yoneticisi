@@ -72,6 +72,15 @@ export function runCommand(
   });
 }
 
+/**
+ * PowerShell tek tırnaklı literal üretir. Tek tırnak `''` olarak kaçışlanır;
+ * `$`, backtick ve backslash olduğu gibi kalır. JSON.stringify PowerShell'de
+ * güvenli değildir: `\"` dizeyi sonlandırır, `\\` ise çift backslash bırakır.
+ */
+export function psLiteral(value: string): string {
+  return `'${value.replace(/'/g, "''")}'`;
+}
+
 /** PowerShell'i gizli, encoded komut olarak çalıştırır. */
 export function runPowerShell(script: string, onLine?: LogFn, timeout?: number): Promise<CommandResult> {
   // Progress akışı CLIXML üretir ve stderr'e yazar; JSON çıktısını bozmasın.
