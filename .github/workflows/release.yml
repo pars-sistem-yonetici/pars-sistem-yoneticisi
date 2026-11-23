@@ -55,7 +55,7 @@ jobs:
         run: npm run build
 
       - name: Kurulum ve portable exe üret
-        run: npx electron-builder
+        run: npx electron-builder --publish never
 
       - name: Blogger çıktısını yenile
         run: npm run build:blogger
