@@ -17,18 +17,24 @@ durum ikonları bulunur.
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — açılmış uygulama klasörü
 
+GitHub Releases’taki kurulum dosyasının adı noktalıdır:
+`Pars.Sistem.Yoneticisi.Setup.1.0.2.exe`. Yerel kopyalar
+`YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`
+klasörlerinde tutulur; depoya eklenmez.
+
 ## Tanıtım ve indirme sitesi
 
 `website/` klasöründe uygulamanın grafit/altın paletini kullanan bağımsız bir statik site vardır:
 
 - `index.html` — tanıtım, özellikler, güvenlik yaklaşımı ve sık sorulan sorular
 - `download.html` — kurulum/portable indirme kartları, SHA-256 doğrulama ve kurulum adımları
-- `downloads/` — `release/` içindeki iki exe’nin kopyası; site tek başına yayınlanabilir
+- `downloads/latest.json` — son sürüm bildirimi
 - `blogger.html` — Blogger için CSS/JS/ikon gömülü tek dosyalık sürüm (`npm run build:blogger`)
 
-Yerel görüntülemek için `website/index.html` dosyasını tarayıcıda açın. Yeni sürüm çıktığında exe’leri
-`release/` içinden `website/downloads/` klasörüne kopyalayıp `download.html` dosyasındaki sürüm, boyut
-ve SHA-256 değerlerini güncelleyin. Ayrıntılar `website/README.md` dosyasındadır.
+Yerel görüntülemek için `website/index.html` dosyasını tarayıcıda açın. Yayınlanan site `docs/`
+klasöründen GitHub Pages üzerinde durur. Sürüm, URL, SHA özetleri ve Blogger teması
+`.github/workflows/release.yml` tarafından otomatik üretilir; elle kopyalama gerekmez.
+Ayrıntılar `GitHubYukleme\05_ACTIONS_REHBER.md` dosyasındadır.
 
 ## Özellikler
 
@@ -36,7 +42,7 @@ ve SHA-256 değerlerini güncelleyin. Ayrıntılar `website/README.md` dosyasın
 | --- | --- |
 | **Anasayfa** | CPU, RAM ve seçili sürücüde boş alan kartları (15 sn’de bir yenilenir) ve sistem özeti. |
 | **Güncellemeler** | winget ile güncellemesi olan paketleri listeler; seçilenleri veya tümünü günceller. |
-| **Kurulu Uygulamalar** | Kayıt defterinden gerçek ikonlarla uygulamaları listeler; arama, seçim, winget ile kaldırma ve kaldırma sonrası kalıntı taraması. Kaldırma bitince liste birkaç kez yenilenip kaldırılan uygulama kaybolana kadar bekler; güncelleme listesi de otomatik tazelenir. Toplu kaldırmada tarama yalnızca tüm kaldırma işlemleri bittikten sonra başlar; başarısız kaldırmalar taranmaz. Kalıntılar Geri Dönüşüm Kutusu’na taşınabilir veya iki aşamalı onayla kalıcı silinebilir. |
+| **Kurulu Uygulamalar** | Kayıt defterinden gerçek ikonlarla uygulamaları listeler; arama, seçim, winget ile kaldırma ve kaldırma sonrası kalıntı taraması. Kaldırma bitince liste birkaç kez yenilenip kaldırılan uygulama kaybolana kadar bekler; güncelleme listesi de otomatik tazelenir. Toplu kaldırmada tarama yalnızca tüm kaldırma işlemleri bittikten sonra başlar; başarısız kaldırmalar taranmaz. Kalıntılar Geri Dönüşüm Kutusu’na taşınabilir veya açık onayla kalıcı silinebilir. |
 | **Başlangıç** | Windows ile açılan uygulamaları (HKCU/HKLM `Run`, `RunOnce` ve Başlangıç klasörleri) listeler; tek tıkla kapatıp açar. Devre dışı bırakılan kayıt girdileri yedeklenir, kısayollar `.disabled` olarak yeniden adlandırılır; geri açma anında geçerlidir. |
 | **Güvenlik Duvarı** | Etkin gelen kuralları denetler; kapsamı geniş (`Any`/`0.0.0.0/0`), programı belirtilmemiş, dosya yolu eksik veya imzasız/bozuk imzalı ikilileri **KRİTİK**, tek başına sorunlu olanları **ORTA** olarak işaretler. Seçilen kural tek tıkla devre dışı bırakılabilir veya silinebilir; silmeden önce kural + filtreler JSON olarak yedeklenir (yedek alınamazsa silinmez). |
 | **Kötü Amaçlı Yazılım** | Beş yerel, salt-okunur motor: imzalar (Run/task/process kalıpları), sezgisel analiz (user-writable imzasız ikililer, çift uzantı), betik analizi (PowerShell profilleri, WMI abonelikleri, başlangıç betikleri), sistem bütünlüğü (kritik sistem ikililerinin imzası, Winlogon ayarları) ve kalıcılık (WMI, zamanlı görevler, servisler, AppInit/IFEO). Motorlar ayrı ayrı açılıp kapatılabilir; dosya silmez, işlem sonlandırmaz, antivirüs yerine geçmez. |
@@ -122,9 +128,21 @@ yükleyeceğiniz klasörü doğrudan hedefleyebilirsiniz. `--embed`
 yalnızca bir sonraki paketlemede gömülü manifest’i günceller; mevcut kurulu sürümlere ulaşmak için
 güncelleme kaynağının sabit bir URL veya klasör olarak ayarlanması gerekir.
 
-Yeni sürüm yayınlarken `package.json` içindeki `version`, `App.tsx` içindeki sidebar sürüm metni,
-`i18n.ts` içindeki sürüm çevirisi ve `latest.json` birlikte güncellenmelidir. İndirilen kurulum
-dosyaları `%APPDATA%\pars-sistem-yoneticisi-ts\updates` altında tutulur.
+Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin:
+
+```powershell
+npm run bump -- 1.0.3
+```
+
+Bu komut `package.json`, `package-lock.json` (ilk iki alan), `i18n.ts` başlığı, `README.md`,
+`RELEASE_NOTES.md` ve `build/updates/latest.json` dosyalarındaki sürümü yazar. `website/` ve `docs/`
+dosyalarına dokunmaz; onları workflow üretir. `RELEASE_NOTES.md` içeriğini gözden geçirdikten sonra
+GitHub → Actions → **Sürüm yayınla** → **Run workflow** ile sürümü yazın. İndirilen kurulum dosyaları
+`%APPDATA%\pars-sistem-yoneticisi-ts\updates` altında tutulur.
+
+> `npm run publish` yalnızca el ile yayın yapıldığında gerekir; GitHub Actions akışı manifest’i
+> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.0.3 --check` değişiklikleri
+> yazmadan görebilirsiniz.
 
 ## Güvenlik
 
@@ -149,6 +167,12 @@ dosyaları `%APPDATA%\pars-sistem-yoneticisi-ts\updates` altında tutulur.
   boyut uyuşmazsa indirme iptal edilir ve dosya silinir. Kurulum yalnızca kullanıcı onayından sonra başlar.
 - Sürücü kurulumu yönetici izni gerektirir; yedekler `%LOCALAPPDATA%\ParsSistemYoneticisi\driver_backups` altına yazılır.
   Kurulumdan önce yedek alma varsayılan olarak açıktır.
+- Renderer’dan gelen IPC argümanları `src/main/ipc-guard.ts` içindeki şemalarla doğrulanır; eksik, yanlış
+  tipli veya sınır dışı argüman servislere ulaşmadan reddedilir ve güvenlik kaydına yazılır.
+- `shell:open-path` yalnızca uygulamanın kendi klasörleri, indirmeler, geçici klasör ve kullanıcının
+  dialog ile seçtiği klasörler için çalışır; Windows/Program Files kökleri her zaman reddedilir.
+- winget kimliği ve arama sorguları seçenek/enjeksiyon karakterlerine karşı doğrulanır. PowerShell
+  betiklerine gömülen tüm değişkenler tek tırnaklı literal olarak kaçışlanır (`psLiteral`).
 
 ## Dosya yapısı
 
@@ -158,5 +182,12 @@ src/renderer/    React arayüzü
 src/shared/      Tipler, i18n ve doğrulanmış yazılım kataloğu
 build/icon.ico   Uygulama ikonu
 build/prereqs/   Pakete gömülen küçük winget onarım betiği
-release/         Üretilen .exe dosyaları
+scripts/         Yayın, site ve sürüm yardımcı betikleri
+release/         Üretilen .exe dosyaları (depoya eklenmez)
 ```
+
+## GitHub yayını
+
+Site `docs/` altında bulunur ve GitHub Pages üzerinden yayınlanır. Kurulum dosyaları depoya
+eklenmez; **Releases** bölümünde tutulur. Sürüm akışı `GitHubYukleme\05_ACTIONS_REHBER.md`,
+Blogger teması `GitHubYukleme\08_BLOGGER_TEMA\OKUNMAMI_REHBER.md` dosyalarında anlatılır.
