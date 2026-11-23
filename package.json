@@ -10,7 +10,8 @@
     "dist": "npm run build && electron-builder",
     "dist:portable": "npm run build && electron-builder --dir",
     "publish": "node scripts/publish-update.js",
-    "build:blogger": "node scripts/build-blogger.js"
+    "build:blogger": "node scripts/build-blogger.js",
+    "bump": "node scripts/bump-version.js"
   },
   "dependencies": {
     "react": "^19.0.0",
