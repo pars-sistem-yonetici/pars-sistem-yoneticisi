@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import { CATALOG, CATEGORIES, favicon, type RecommendedSoftware } from '../shared/catalog';
+import { DEFAULT_UPDATE_SOURCE } from '../shared/constants';
 import { translate, translateFormat } from '../shared/i18n';
 import type {
   AppApi,
@@ -917,7 +918,7 @@ export default function App() {
         </nav>
         <div className="sidebar-foot">
           <span className="dot" style={{ background: '#c99a2e' }} />
-          {t('Sistem Bakım Merkezi · v1.0.0')}
+          {t('Sistem Bakım Merkezi · v1.0.2')}
         </div>
       </aside>
 
@@ -1906,7 +1907,7 @@ export default function App() {
                 <div className="setting-row">
                   <div>
                     <strong>{t('Güncelleme kaynağı')}</strong>
-                    <small>{t('Boş bırakılırsa exe yanındaki updates\\latest.json kullanılır. http(s) adresi veya yerel klasör olabilir.')}</small>
+                    <small>{t('Boş bırakılırsa varsayılan güncelleme kaynağı (GitHub Pages) kullanılır. http(s) adresi veya yerel klasör de yazabilirsiniz.')}</small>
                   </div>
                   <input
                     className="search"
@@ -1918,6 +1919,12 @@ export default function App() {
                 </div>
                 <div className="inline-form">
                   <button className="btn" onClick={() => patchSettings({ updateSource: updateSourceInput.trim() })}>{t('Kaynağı kaydet')}</button>
+                  <button
+                    className="btn"
+                    onClick={() => { setUpdateSourceInput(DEFAULT_UPDATE_SOURCE); patchSettings({ updateSource: DEFAULT_UPDATE_SOURCE }); }}
+                  >
+                    {t('Varsayılan kaynağa dön')}
+                  </button>
                   <button
                     className="btn"
                     onClick={() => void api.pickFolders().then((items) => { if (items[0]) { setUpdateSourceInput(items[0]); patchSettings({ updateSource: items[0] }); } }).catch((error: Error) => notify('error', error.message))}

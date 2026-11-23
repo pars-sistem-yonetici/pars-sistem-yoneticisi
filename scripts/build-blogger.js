@@ -126,7 +126,7 @@ ${faq}
 
   <footer class="site-footer">
     <div class="wrap">
-      <span><strong>Pars Sistem Yöneticisi</strong> · Sistem Bakım Merkezi · <span data-latest-version>v1.0.0</span></span>
+      <span><strong>Pars Sistem Yöneticisi</strong> · Sistem Bakım Merkezi · <span data-latest-version>v1.0.2</span></span>
       <span>Windows 10 / 11 x64 · <a href="#indir">İndir</a></span>
     </div>
   </footer>

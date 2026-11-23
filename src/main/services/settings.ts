@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { app } from 'electron';
+import { DEFAULT_UPDATE_SOURCE } from '../../shared/constants';
 import type { Settings } from '../../shared/types';
 
 const DEFAULTS: Settings = {
@@ -15,7 +16,7 @@ const DEFAULTS: Settings = {
   startWithWindows: true,
   startMinimizedToTray: true,
   closeBehavior: 'ask',
-  updateSource: '',
+  updateSource: DEFAULT_UPDATE_SOURCE,
   updateCheckOnStartup: true,
   excludedFolders: [],
   excludedExtensions: [],
@@ -32,7 +33,9 @@ export function getSettings(): Settings {
   try {
     const parsed = JSON.parse(fs.readFileSync(file(), 'utf8')) as Partial<Settings>;
     cache = { ...DEFAULTS, ...parsed };
-    cache.updateSource = typeof parsed.updateSource === 'string' ? parsed.updateSource : '';
+    cache.updateSource = typeof parsed.updateSource === 'string' && parsed.updateSource.trim()
+      ? parsed.updateSource.trim()
+      : DEFAULT_UPDATE_SOURCE;
     cache.closeBehavior = ['ask', 'tray', 'quit'].includes(String(parsed.closeBehavior))
       ? parsed.closeBehavior as Settings['closeBehavior']
       : 'ask';
@@ -47,7 +50,11 @@ export function getSettings(): Settings {
 
 export function setSettings(patch: Partial<Settings>): Settings {
   cache = { ...getSettings(), ...patch };
-  if (patch.updateSource !== undefined) cache.updateSource = typeof patch.updateSource === 'string' ? patch.updateSource : '';
+  if (patch.updateSource !== undefined) {
+    cache.updateSource = typeof patch.updateSource === 'string' && patch.updateSource.trim()
+      ? patch.updateSource.trim()
+      : DEFAULT_UPDATE_SOURCE;
+  }
   if (patch.closeBehavior !== undefined) {
     cache.closeBehavior = ['ask', 'tray', 'quit'].includes(String(patch.closeBehavior))
       ? patch.closeBehavior as Settings['closeBehavior']

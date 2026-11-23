@@ -1,13 +1,13 @@
 {
-  "version": "1.0.1",
-  "notes": "Güncelleme kaynağı (GitHub Pages) uygulamaya varsayılan olarak tanımlandı. Ayarlar → Güncelleme kaynağı artık hazır gelir; “Varsayılan kaynağa dön” düğmesi eklendi. Diğer işlevler 1.0.0 ile aynıdır.",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.1.exe",
+  "version": "1.0.2",
+  "notes": "Güncelleme kaynağı (GitHub Pages) uygulamaya varsayılan olarak tanımlandı. Ayarlar → Güncelleme kaynağı artık hazır gelir; “Varsayılan kaynağa dön” düğmesi eklendi. Diğer işlevler 1.0.2 ile aynıdır.",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.2.exe",
   "sha512": "ee7ecd001c09818c8905039f232beffa338902dde90ffba5948bc40c10d9a2cb473f67cc626cb6fb1d483d303f55a8dda1a4a4fac2366553b944d62a6a316da0",
   "sha256": "d2d363d1ba2d2b0745b078b5569b0ff1f18352970a9c6e8da48cb3abb0ef5aad",
   "size": 83540952,
-  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.1/Pars.Sistem.Yoneticisi.Setup.1.0.1.exe",
+  "url": "Pars Sistem Yoneticisi Setup 1.0.2.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
   "portableSha256": "f7b23cc081edfc9b90ea5c5fa8f188b1935a726bca113da3da863c5aa096bf8d",
   "portableSize": 83328054,
-  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.1/ParsSistemYoneticisi-Portable.exe"
+  "portableUrl": "ParsSistemYoneticisi-Portable.exe"
 }

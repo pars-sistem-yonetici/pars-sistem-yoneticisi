@@ -1,6 +1,6 @@
-# Pars Sistem Yöneticisi 1.0.1
+# Pars Sistem Yöneticisi 1.0.2
 
-Güncelleme kaynağı (GitHub Pages) uygulamaya varsayılan olarak tanımlandı — yeni kurulumlarda Ayarlar → Güncelleme kaynağı hazır gelir. Diğer işlevler 1.0.0 ile aynıdır.
+GitHub Actions otomasyonu eklendi: sürüm artık Windows runner üzerinde otomatik derleniyor, iki exe Release’a yükleniyor ve site manifesti ile SHA-256 özetleri otomatik güncelleniyor. Güncelleme kaynağı yeni kurulumlarda varsayılan olarak tanımlıdır.
 
 ## Bu sürümde
 
@@ -11,10 +11,11 @@ Güncelleme kaynağı (GitHub Pages) uygulamaya varsayılan olarak tanımlandı 
 - Güncelleme kaynağından SHA-512 doğrulamalı kendi kendini güncelleme (varsayılan adres gömülü)
 - Grafit/altın tema, Windows 11 açık teması, Türkçe/İngilizce arayüz
 - Ayarlar’da **Varsayılan kaynağa dön** düğmesi
+- Otomatik sürüm yayınlama (GitHub Actions)
 
 ## İndirme
 
-- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.0.1.exe` (NSIS, başlat menüsü + masaüstü kısayolu)
+- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.0.2.exe` (NSIS, başlat menüsü + masaüstü kısayolu)
 - **Portable:** `ParsSistemYoneticisi-Portable.exe`
 
 Windows 10 (1809+) / Windows 11 x64 ve güncel App Installer (winget) gereklidir.
