@@ -1,6 +1,6 @@
 # Pars Sistem Yöneticisi 1.0.2
 
-GitHub Actions otomasyonu eklendi: sürüm artık Windows runner üzerinde otomatik derleniyor, iki exe Release’a yükleniyor ve site manifesti ile SHA-256 özetleri otomatik güncelleniyor. Güncelleme kaynağı yeni kurulumlarda varsayılan olarak tanımlıdır.
+Güncelleme kaynağı (GitHub Pages) uygulamaya varsayılan olarak tanımlandı — yeni kurulumlarda Ayarlar → Güncelleme kaynağı hazır gelir. 1.0.1’deki işlevlere ek olarak varsayılan kaynağa dön düğmesi ve otomatik Blogger teması üretimi eklendi.
 
 ## Bu sürümde
 
@@ -11,7 +11,6 @@ GitHub Actions otomasyonu eklendi: sürüm artık Windows runner üzerinde otoma
 - Güncelleme kaynağından SHA-512 doğrulamalı kendi kendini güncelleme (varsayılan adres gömülü)
 - Grafit/altın tema, Windows 11 açık teması, Türkçe/İngilizce arayüz
 - Ayarlar’da **Varsayılan kaynağa dön** düğmesi
-- Otomatik sürüm yayınlama (GitHub Actions)
 
 ## İndirme
 
