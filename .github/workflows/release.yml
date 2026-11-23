@@ -1,0 +1,104 @@
+name: Sürüm yayınla (exe + site)
+
+# İki tetikleyici:
+#  1) Manuel: Actions > "Sürüm yayınla" > Run workflow > sürümü yazın (önerilen)
+#  2) Otomatik: 1.0.2 gibi bir etiket push edildiğinde
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Yayınlanacak sürüm (örn. 1.0.2)'
+        required: true
+        type: string
+  push:
+    tags:
+      - '*.*.*'
+
+permissions:
+  contents: write
+
+env:
+  CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Depoyu çek
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Node kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Sürümü belirle ve doğrula
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $v = '${{ github.event.inputs.version }}'
+          if (-not $v) { $v = '${{ github.ref_name }}' }
+          if ($v -notmatch '^\d+\.\d+\.\d+$') { throw "Geçersiz sürüm: $v" }
+          $pkg = Get-Content package.json -Raw | ConvertFrom-Json
+          if ($pkg.version -ne $v) {
+            throw "package.json sürümü ($($pkg.version)) ile yayın sürümü ($v) uyuşmuyor."
+          }
+          "RELEASE_VERSION=$v" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Bağımlılıkları kur
+        run: npm ci
+
+      - name: Derle
+        run: npm run build
+
+      - name: Kurulum ve portable exe üret
+        run: npx electron-builder
+
+      - name: Blogger çıktısını yenile
+        run: npm run build:blogger
+
+      - name: Manifest ve site dosyalarını hazırla
+        shell: pwsh
+        run: node scripts/ci-release.js --version ${{ env.RELEASE_VERSION }}
+
+      - name: GitHub Release oluştur
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          name: Pars Sistem Yöneticisi ${{ env.RELEASE_VERSION }}
+          body_path: RELEASE_NOTES.md
+          prerelease: false
+          make_latest: true
+          fail_on_unmatched_files: true
+          files: |
+            release/Pars.Sistem.Yoneticisi.Setup.${{ env.RELEASE_VERSION }}.exe
+            release/ParsSistemYoneticisi-Portable.exe
+
+      - name: Site güncellemelerini main'e gönder
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tmp = Join-Path $env:RUNNER_TEMP 'site-update'
+          if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
+          New-Item -ItemType Directory -Path $tmp -Force | Out-Null
+          Copy-Item -Path docs,website -Destination $tmp -Recurse -Force
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git checkout -f -B main origin/main
+          Copy-Item -Path (Join-Path $tmp 'docs\*') -Destination docs -Recurse -Force
+          Copy-Item -Path (Join-Path $tmp 'website\*') -Destination website -Recurse -Force
+
+          git add docs website
+          $changed = git diff --cached --name-only
+          if ($changed) {
+            git commit -m "site: ${{ env.RELEASE_VERSION }} manifest ve özetler"
+            git push origin main
+            Write-Host 'Site dosyaları main''e gönderildi.'
+          } else {
+            Write-Host 'Site dosyalarında değişiklik yok.'
+          }
