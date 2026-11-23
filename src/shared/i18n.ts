@@ -130,7 +130,7 @@ export const EN: Record<string, string> = {
   'Evet, kalıcı olarak sil': 'Yes, delete permanently',
   'Kalıntılar': 'Leftovers',
   '{name} — kalıntılar': '{name} — leftovers',
-  'Bulunan {count} öğe. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır; kalıcı silme iki aşamalı onay ister.': '{count} items found. The Recycle Bin is used by default; permanent deletion requires two-step confirmation.',
+  'Bulunan {count} öğe. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır; kalıcı silme açık onay gerektirir.': '{count} items found. The Recycle Bin is used by default; permanent deletion requires explicit confirmation.',
   'Kalıntı bulunamadı.': 'No leftovers found.',
   'Kalıcı olarak sil': 'Delete permanently',
   'Geri Dönüşüm Kutusu\'na taşı': 'Move to Recycle Bin',
