@@ -1,0 +1,398 @@
+#!/usr/bin/env node
+'use strict';
+
+/**
+ * docs/downloads/latest.json icindeki bilgilerle Blogger temasini uretir.
+ *
+ * Cikti:
+ *   docs/blogger-theme.xml
+ *   website/blogger-theme.xml
+ *
+ * Kullanim:
+ *   node scripts/build-blogger-theme.js --version 1.0.2
+ *
+ * --version verilirse manifest ile karsilastirir; uyusmazsa hata verir.
+ * --root, yerel denemeler icin depo kokunu degistirir (normalde gerekmez).
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+const args = process.argv.slice(2);
+function arg(name) {
+  const index = args.indexOf(name);
+  return index >= 0 ? args[index + 1] || '' : '';
+}
+
+const root = arg('--root') ? path.resolve(arg('--root')) : path.resolve(__dirname, '..');
+const manifestPath = path.join(root, 'docs', 'downloads', 'latest.json');
+if (!fs.existsSync(manifestPath)) {
+  throw new Error(`Manifest bulunamadi: ${manifestPath}`);
+}
+
+const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const expectedVersion = arg('--version');
+if (expectedVersion && manifest.version !== expectedVersion) {
+  throw new Error(`Manifest surumu (${manifest.version}) ile istenen surum (${expectedVersion}) uyuşmuyor.`);
+}
+
+function xml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+function megabytes(bytes) {
+  const value = Number(bytes);
+  if (!Number.isFinite(value) || value <= 0) return '? MB';
+  return `${(value / 1000000).toFixed(1).replace('.', ',')} MB`;
+}
+
+function assetName(url, fallback) {
+  try {
+    const name = decodeURIComponent(new URL(url).pathname.split('/').pop() || '');
+    return name || fallback;
+  } catch (error) {
+    return fallback;
+  }
+}
+
+const values = {
+  VERSION: xml(manifest.version),
+  SETUP_URL: xml(manifest.url),
+  PORTABLE_URL: xml(manifest.portableUrl),
+  SETUP_FILE_NAME: xml(assetName(manifest.url, manifest.fileName)),
+  PORTABLE_FILE_NAME: xml(assetName(manifest.portableUrl, manifest.portableFileName)),
+  SETUP_SHA256: xml(manifest.sha256),
+  PORTABLE_SHA256: xml(manifest.portableSha256),
+  SETUP_SIZE_MB: xml(megabytes(manifest.size)),
+  PORTABLE_SIZE_MB: xml(megabytes(manifest.portableSize)),
+};
+
+const TEMPLATE = `<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:version="2" class="v2" expr:dir="data:blog.languageDirection" xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://www.google.com/2005/gml/b" xmlns:data="http://www.google.com/2005/gml/data" xmlns:expr="http://www.google.com/2005/gml/expr">
+<head>
+  <b:include data="blog" name="all-head-content"/>
+  <title><data:blog.pageTitle/></title>
+  <b:skin><![CDATA[
+/* =========================================================
+   Pars Sistem Yoneticisi -tam- Blogger temasi {{VERSION}}
+   Grafit / altin. Tum icerik temanin icindedir.
+   ========================================================= */
+:root {
+  color-scheme: dark;
+  --bg: #171719;
+  --panel: #212125;
+  --panel-2: #29292e;
+  --line: #44444d;
+  --text: #f4f4f5;
+  --muted: #b3b3bc;
+  --accent: #d2a23f;
+  --accent-2: #a87b22;
+  --highlight: #f4d98a;
+  --green: #92d6aa;
+  --danger: #e58b8b;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; scroll-behavior: smooth; }
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  background:
+    radial-gradient(1000px 520px at 78% -8%, rgba(210,162,63,.13), transparent 62%),
+    radial-gradient(760px 420px at 4% 22%, rgba(210,162,63,.06), transparent 60%),
+    linear-gradient(180deg, #19191b 0%, var(--bg) 100%);
+  background-attachment: fixed;
+}
+a { color: var(--highlight); text-decoration: none; }
+a:hover { color: #fff; }
+img { max-width: 100%; height: auto; }
+code, .mono { font-family: Consolas, "Courier New", monospace; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(23,23,25,.94);
+  border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+.nav {
+  max-width: 1120px; margin: 0 auto; padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+}
+.brand { color: #fff; font-weight: 800; font-size: 17px; letter-spacing: .02em; }
+.brand span { color: var(--accent); }
+.links { display: flex; gap: 18px; flex-wrap: wrap; }
+.links a { color: var(--muted); font-size: 14px; }
+.links a:hover { color: var(--accent); }
+
+.hero { border-bottom: 1px solid var(--line); }
+.hero-inner { max-width: 1120px; margin: 0 auto; padding: 70px 20px 60px; }
+.eyebrow {
+  display: inline-block; color: var(--accent); font-size: 12px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; margin-bottom: 14px;
+}
+.hero h1 {
+  margin: 0 0 16px; font-size: clamp(30px, 5vw, 54px); line-height: 1.12;
+  letter-spacing: -.02em; color: #fff;
+}
+.hero h1 a { color: #fff; }
+.hero p { margin: 0 0 26px; max-width: 650px; color: var(--muted); font-size: 17px; }
+.pillrow { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+.pill {
+  display: inline-block; padding: 5px 12px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 13px;
+}
+.pill b { color: var(--highlight); }
+.btnrow { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  display: inline-block; padding: 13px 22px; border-radius: 10px; font-weight: 700;
+  color: #1b1508; background: linear-gradient(135deg, #dba946, #a87820);
+  border: 1px solid rgba(255,255,255,.12);
+}
+.btn:hover { color: #120e05; background: linear-gradient(135deg, #efbd59, #bb8827); }
+.btn-2 {
+  display: inline-block; padding: 13px 22px; border-radius: 10px; font-weight: 700;
+  color: var(--text); background: var(--panel-2); border: 1px solid var(--line);
+}
+.btn-2:hover { color: #fff; border-color: var(--accent); }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 56px 20px; }
+.block { margin-bottom: 64px; }
+.section-title { margin: 0 0 8px; font-size: 28px; color: #fff; line-height: 1.25; }
+.section-sub { margin: 0 0 30px; color: var(--muted); max-width: 700px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.card {
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--line); border-radius: 16px; padding: 24px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.2);
+}
+.card h3 { margin: 0 0 8px; color: #fff; font-size: 18px; }
+.card p { margin: 0; color: var(--muted); font-size: 14px; }
+.card .num {
+  display: inline-flex; width: 32px; height: 32px; align-items: center; justify-content: center;
+  border-radius: 9px; background: rgba(210,162,63,.14); color: var(--accent);
+  font-weight: 800; margin-bottom: 12px;
+}
+.card.accent { border-color: rgba(210,162,63,.45); }
+
+.steps { counter-reset: s; display: grid; gap: 14px; }
+.step {
+  position: relative; padding: 18px 20px 18px 62px; border: 1px solid var(--line);
+  border-radius: 14px; background: var(--panel);
+}
+.step:before {
+  counter-increment: s; content: counter(s); position: absolute; left: 18px; top: 18px;
+  width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent); color: #1b1508; font-weight: 800; font-size: 14px;
+}
+.step b { color: #fff; }
+.step span { color: var(--muted); font-size: 14px; display: block; }
+
+.dlgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
+.dlcard { border: 1px solid var(--line); border-radius: 18px; padding: 26px; background: linear-gradient(180deg, var(--panel), var(--panel-2)); }
+.dlcard.main { border-color: rgba(210,162,63,.5); }
+.dlcard h3 { margin: 0 0 4px; color: #fff; font-size: 21px; }
+.dlcard .meta { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+.hash {
+  display: block; margin-top: 14px; padding: 10px 12px; border-radius: 9px;
+  background: #101012; border: 1px solid var(--line); color: var(--highlight);
+  font-size: 11px; word-break: break-all; line-height: 1.5;
+}
+.hash-label { display: block; color: var(--muted); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; margin-top: 16px; }
+.note {
+  margin-top: 22px; padding: 16px 18px; border-left: 3px solid var(--accent);
+  background: rgba(210,162,63,.07); border-radius: 0 10px 10px 0; color: var(--muted); font-size: 14px;
+}
+.note b { color: var(--highlight); }
+
+details.faq { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); margin-bottom: 10px; padding: 0 18px; }
+details.faq summary { cursor: pointer; padding: 16px 0; color: #fff; font-weight: 600; }
+details.faq p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
+
+.footer { border-top: 1px solid var(--line); background: rgba(23,23,25,.8); }
+.footer-inner {
+  max-width: 1120px; margin: 0 auto; padding: 28px 20px; color: var(--muted); font-size: 13px;
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.footer-inner a { color: var(--accent); }
+
+.posts { display: grid; gap: 24px; }
+.post { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+.post-title { margin: 0 0 6px; font-size: 22px; }
+.post-title a { color: #fff; }
+.post-meta { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+.post-body { overflow-wrap: anywhere; }
+
+@media (max-width: 720px) {
+  .hero-inner { padding: 48px 18px 42px; }
+  .wrap { padding: 40px 16px; }
+  .section-title { font-size: 24px; }
+}
+  ]]></b:skin>
+</head>
+<body>
+  <b:section class="topbar" id="navbar" maxwidgets="1" showaddelement="no">
+    <b:widget id="PageList1" locked="false" title="Sayfalar" type="PageList" version="2">
+      <b:includable id="main">
+        <nav class="nav">
+          <a class="brand" expr:href="data:blog.homepageUrl">Pars <span>Sistem Yöneticisi</span></a>
+          <div class="links">
+            <a href="#ozellikler">Özellikler</a>
+            <a href="#kurulum">Kurulum</a>
+            <a href="#indir">İndir</a>
+            <a href="#sss">SSS</a>
+          </div>
+        </nav>
+      </b:includable>
+    </b:widget>
+  </b:section>
+
+  <b:section class="hero" id="header" maxwidgets="1" showaddelement="no">
+    <b:widget id="Header1" locked="false" title="Başlık" type="Header" version="2">
+      <b:includable id="main">
+        <div class="hero-inner">
+          <span class="eyebrow">Sistem bakım merkezi</span>
+          <h1><a expr:href="data:blog.homepageUrl"><data:blog.title/></a></h1>
+          <p>Windows bakımı ve yazılım yönetimi, tek panelde. Güncel sürüm:<b> {{VERSION}}</b></p>
+          <div class="pillrow">
+            <span class="pill">Sürüm <b>v{{VERSION}}</b></span>
+            <span class="pill">Windows 10 / 11</span>
+            <span class="pill">x64</span>
+            <span class="pill"> İmzasız · SHA doğrulamalı</span>
+          </div>
+          <div class="btnrow">
+            <a class="btn" href="{{SETUP_URL}}">Kurulumu indir</a>
+            <a class="btn-2" href="#indir">Portable ve SHA özetleri</a>
+          </div>
+        </div>
+      </b:includable>
+    </b:widget>
+  </b:section>
+
+  <b:section class="content" id="main" showaddelement="yes">
+    <b:widget id="HTML2" locked="false" title="İçerik" type="HTML" version="2">
+      <b:includable id="main">
+        <div class="wrap">
+          <div class="block" id="ozellikler">
+            <h2 class="section-title">Neler yapar?</h2>
+            <p class="section-sub">Günlük bakımı ve yazılım yönetimini tek bir panelde toplayan Windows aracı.</p>
+            <div class="grid">
+              <div class="card"><div class="num">1</div><h3>Yazılım envanteri</h3><p>Kurulu uygulamaları listeler, sürüm ve boyut bilgilerini gösterir.</p></div>
+              <div class="card"><div class="num">2</div><h3>Güvenli kaldırma</h3><p>Yıkıcı işlemlerde onay ister; zorunlu yedek alınmadan silme yapmaz.</p></div>
+              <div class="card"><div class="num">3</div><h3>Zorunlu yedek</h3><p>Yedek başarısızsa işlem iptal edilir. Veri kaybı riski alınmaz.</p></div>
+              <div class="card"><div class="num">4</div><h3>Sistem bakımı</h3><p>Geçici dosyaları ve gereksiz veriyi görünür hâle getirir, temizlik yapar.</p></div>
+              <div class="card"><div class="num">5</div><h3>Güncelleme kontrolü</h3><p>Yeni sürümü otomatik kontrol eder, indirme sayfasına yönlendirir.</p></div>
+              <div class="card"><div class="num">6</div><h3>Yönetici modu</h3><p>Sistem değişiklikleri için yükseltilmiş yetkiyle çalışır.</p></div>
+            </div>
+          </div>
+
+          <div class="block" id="kurulum">
+            <h2 class="section-title">Kurulum</h2>
+            <p class="section-sub">Yaklaşık 1 dakika sürer. Windows 10/11 x64 gereklidir.</p>
+            <div class="steps">
+              <div class="step"><b>Kurulum dosyasını indirin</b><span>Aşağıdaki “Kurulumu indir” düğmesini kullanın.</span></div>
+              <div class="step"><b>SHA-256 özetini doğrulayın</b><span>PowerShell: <code class="mono">Get-FileHash .\\{{SETUP_FILE_NAME}} -Algorithm SHA256</code></span></div>
+              <div class="step"><b>Kurulumu başlatın</b><span>“Windows korudu” uyarısında <b>Daha fazla bilgi → Yine de çalıştır</b> seçin (dosya imzalanmadığı için görünür).</span></div>
+              <div class="step"><b>Yönetici olarak açın</b><span>Uygulama sistem değişiklikleri için yönetici izni isteyecektir.</span></div>
+            </div>
+          </div>
+
+          <div class="block" id="indir">
+            <h2 class="section-title">İndir</h2>
+            <p class="section-sub">Dosyalar GitHub Releases üzerinden sunulur. Bağlantılar doğrudan exe’yi indirir.</p>
+            <div class="dlgrid">
+              <div class="dlcard main">
+                <h3>Kurulum sürümü · Önerilen</h3>
+                <div class="meta">{{SETUP_FILE_NAME}} · {{SETUP_SIZE_MB}} · NSIS</div>
+                <a class="btn" href="{{SETUP_URL}}">Kurulumu indir</a>
+                <span class="hash-label">SHA-256</span>
+                <code class="hash">{{SETUP_SHA256}}</code>
+              </div>
+              <div class="dlcard">
+                <h3>Portable sürüm</h3>
+                <div class="meta">{{PORTABLE_FILE_NAME}} · {{PORTABLE_SIZE_MB}} · Kurulum gerektirmez</div>
+                <a class="btn-2" href="{{PORTABLE_URL}}">Portable indir</a>
+                <span class="hash-label">SHA-256</span>
+                <code class="hash">{{PORTABLE_SHA256}}</code>
+              </div>
+            </div>
+            <div class="note"><b>Dijital imza henüz yok.</b> Windows “bilinmeyen yayımcı” uyarısı gösterebilir. Dosyanın değişmediğini yukarıdaki SHA-256 özetiyle doğrulayabilirsiniz.</div>
+          </div>
+
+          <div class="block" id="sss">
+            <h2 class="section-title">Sık sorulan sorular</h2>
+            <details class="faq"><summary>Ücretsiz mi?</summary><p>Evet, kişisel kullanım için ücretsizdir.</p></details>
+            <details class="faq"><summary>Kurulum gerektirmez mi?</summary><p>Portable sürümü doğrudan çalıştırabilirsiniz; kurulum sürümü ise Başlat menüsüne kısayol ekler.</p></details>
+            <details class="faq"><summary>Neden “Windows korudu” diyor?</summary><p>Çünkü exe henüz dijital olarak imzalanmadı. SHA-256 özetini kontrol edip “Yine de çalıştır” diyebilirsiniz.</p></details>
+            <details class="faq"><summary>Yedek almak zorunlu mu?</summary><p>Evet. Yıkıcı işlemlerde yedek alınamazsa uygulama silme işlemini yapmaz.</p></details>
+          </div>
+        </div>
+      </b:includable>
+    </b:widget>
+
+    <b:widget id="Blog1" locked="false" title="Yazılar" type="Blog" version="2">
+      <b:includable id="main">
+        <div class="wrap"><div class="posts">
+          <b:loop values="data:posts" var="post">
+            <article class="post">
+              <h2 class="post-title"><a expr:href="data:post.url"><data:post.title/></a></h2>
+              <div class="post-meta"><data:post.timestamp/></div>
+              <div class="post-body"><data:post.body/></div>
+            </article>
+          </b:loop>
+        </div></div>
+      </b:includable>
+    </b:widget>
+  </b:section>
+
+  <b:section class="sidebar" id="sidebar-right" showaddelement="yes"/>
+
+  <b:section class="footer" id="footer" maxwidgets="1" showaddelement="no">
+    <b:widget id="HTML1" locked="false" title="Alt bilgi" type="HTML" version="2">
+      <b:includable id="main">
+        <div class="footer-inner">
+          <span>Pars Sistem Yöneticisi · Sürüm {{VERSION}} · Windows 10/11 x64</span>
+          <span><a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi">Kaynak kod</a> · <a href="https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/">Web sitesi</a> · <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases">Tüm sürümler</a></span>
+        </div>
+      </b:includable>
+    </b:widget>
+  </b:section>
+</body>
+</html>
+`;
+
+let output = TEMPLATE.replace(/\{\{([A-Z0-9_]+)\}\}/g, (whole, key) => {
+  if (!Object.prototype.hasOwnProperty.call(values, key)) {
+    throw new Error(`Bilinmeyen yer tutucu: ${whole}`);
+  }
+  return values[key];
+});
+
+if (/\{\{[A-Z0-9_]+\}\}/.test(output)) {
+  throw new Error('Yer tutucu kalmadi ama hala {{...}} var.');
+}
+if ((output.match(/<b:skin>/g) || []).length !== 1) {
+  throw new Error('Blogger temasinda tam bir b:skin blogu bulunmali.');
+}
+for (const key of ['url', 'portableUrl', 'sha256', 'portableSha256']) {
+  if (!manifest[key]) throw new Error(`Manifest alanı eksik: ${key}`);
+}
+
+for (const dir of ['docs', 'website']) {
+  const targetDir = path.join(root, dir);
+  if (!fs.existsSync(targetDir)) continue;
+  fs.writeFileSync(path.join(targetDir, 'blogger-theme.xml'), output, 'utf8');
+}
+
+console.log(`Blogger temasi ${manifest.version} icin hazirlandi.`);
+console.log(`  Kurulum : ${manifest.fileName} · ${megabytes(manifest.size)}`);
+console.log(`  Portable: ${manifest.portableFileName} · ${megabytes(manifest.portableSize)}`);
+console.log('  Cikti   : docs/blogger-theme.xml');
