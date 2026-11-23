@@ -2103,7 +2103,7 @@ export default function App() {
         <div className="modal-backdrop" role="presentation">
           <div className="modal wide" role="dialog" aria-modal="true" aria-label={t('Kalıntılar')}>
             <h2>{tf('{name} — kalıntılar', { name: leftoverTarget.label })}</h2>
-            <p className="muted">{tf('Bulunan {count} öğe. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır; kalıcı silme iki aşamalı onay ister.', { count: leftovers.length })}</p>
+            <p className="muted">{tf('Bulunan {count} öğe. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır; kalıcı silme açık onay gerektirir.', { count: leftovers.length })}</p>
             <div className="leftover-list">
               {leftovers.map((item) => (
                 <label key={item.path} className="leftover-row">
