@@ -64,6 +64,10 @@ jobs:
         shell: pwsh
         run: node scripts/ci-release.js --version ${{ env.RELEASE_VERSION }}
 
+      - name: Blogger temasını üret
+        shell: pwsh
+        run: node scripts/build-blogger-theme.js --version ${{ env.RELEASE_VERSION }}
+
       - name: GitHub Release oluştur
         uses: softprops/action-gh-release@v2
         with:
