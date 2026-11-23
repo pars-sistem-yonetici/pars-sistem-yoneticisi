@@ -2,9 +2,9 @@
  * {{...}} yer tutucu değerlerini yayınlamadan önce düzenleyin.
  */
 var CONFIG = {
-  setupUrl: 'https://github.com/<KULLANICI>/<REPO>/releases/download/v1.0.0/Pars%20Sistem%20Yoneticisi%20Setup%201.0.0.exe',
-  portableUrl: 'https://github.com/<KULLANICI>/<REPO>/releases/download/v1.0.0/ParsSistemYoneticisi-Portable.exe',
-  latestJsonUrl: 'https://<KULLANICI>.github.io/<REPO>/downloads/latest.json'
+  setupUrl: 'https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.2/Pars.Sistem.Yoneticisi.Setup.1.0.2.exe',
+  portableUrl: 'https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.2/ParsSistemYoneticisi-Portable.exe',
+  latestJsonUrl: 'https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/downloads/latest.json'
 };
 
 (function () {
