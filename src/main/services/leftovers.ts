@@ -2,7 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import type { DeleteResult, Leftover } from '../../shared/types';
-import { directorySize, isProtectedPath, isRuntimePath, normalizeName, powershellJson, removeTree, runPowerShell } from '../util';
+import { directorySize, isProtectedPath, isRuntimePath, normalizeName, powershellJson, psLiteral, removeTree, runPowerShell } from '../util';
 import { exclusionReason, hasExcludedDescendant, isExcludedPath } from './exclusions';
 
 const GENERIC = new Set([
@@ -129,7 +129,7 @@ export async function deleteLeftovers(items: Leftover[], mode: 'recycle' | 'perm
         const type = item.kind === 'folder' ? 'Directory' : 'File';
         const script = `
 Add-Type -AssemblyName Microsoft.VisualBasic
-$target = ${JSON.stringify(item.path)}
+$target = ${psLiteral(item.path)}
 if (Test-Path -LiteralPath $target) {
   [Microsoft.VisualBasic.FileIO.FileSystem]::Delete${type}($target, 'OnlyErrorDialogs', 'SendToRecycleBin')
   'OK'
@@ -151,7 +151,7 @@ if (Test-Path -LiteralPath $target) {
 
 export async function registryLeftovers(name: string): Promise<Leftover[]> {
   const script = String.raw`
-$name = ${JSON.stringify(name)}
+$name = ${psLiteral(name)}
 $path = 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
 $found = @()
 foreach ($hive in @([Microsoft.Win32.RegistryHive]::LocalMachine, [Microsoft.Win32.RegistryHive]::CurrentUser)) {

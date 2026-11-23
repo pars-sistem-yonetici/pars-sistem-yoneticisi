@@ -2,7 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import type { RegIssue, RegResult, RegScanResult, RegStats } from '../../shared/types';
-import { powershellJson } from '../util';
+import { powershellJson, psLiteral } from '../util';
 
 const SCAN_SCRIPT = String.raw`
 $ErrorActionPreference = 'SilentlyContinue'
@@ -137,7 +137,7 @@ export async function deleteRegistryIssues(issues: RegIssue[]): Promise<RegResul
 
   const script = String.raw`
 $ErrorActionPreference = 'SilentlyContinue'
-$issues = Get-Content -Raw -LiteralPath ${JSON.stringify(tempFile)} | ConvertFrom-Json
+$issues = Get-Content -Raw -LiteralPath ${psLiteral(tempFile)} | ConvertFrom-Json
 $results = New-Object System.Collections.Generic.List[object]
 foreach ($issue in $issues) {
   $view = if ([int]$issue.view -eq 32) { [Microsoft.Win32.RegistryView]::Registry32 } else { [Microsoft.Win32.RegistryView]::Registry64 }

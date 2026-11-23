@@ -9,7 +9,7 @@ import {
   type ManagedPolicyFixId,
 } from '../../shared/managedPolicy';
 import type { ManagedPolicyApplyResult, ManagedPolicyFile, ManagedPolicySaveResult } from '../../shared/types';
-import { powershellJson, runCommand } from '../util';
+import { powershellJson, psLiteral, runCommand } from '../util';
 
 const CHECK_SCRIPT = String.raw`
 $ErrorActionPreference = 'SilentlyContinue'
@@ -67,7 +67,7 @@ function fullKey(key: string): string {
 }
 
 async function existingKeys(keys: string[]): Promise<Array<{ key: string; view: string }>> {
-  const script = CHECK_SCRIPT.replace('__KEYS__', JSON.stringify(keys));
+  const script = CHECK_SCRIPT.replace('__KEYS__', `@(${keys.map(psLiteral).join(', ')})`);
   const result = await powershellJson<{ keys?: Array<{ key: string; view: string }> }>(script, undefined, 60_000);
   return Array.isArray(result.keys) ? result.keys : [];
 }

@@ -1,13 +1,8 @@
 import type { StartupItem } from '../../shared/types';
-import { powershellJson } from '../util';
+import { powershellJson, psLiteral as ps } from '../util';
 import { isExcludedPath } from './exclusions';
 
 const BACKUP_KEY = 'HKCU:\\Software\\ParsSistemYoneticisi\\StartupDisabled';
-
-/** PowerShell tek tırnaklı dize içine güvenli ekleme. */
-function ps(value: string): string {
-  return `'${value.replace(/'/g, "''")}'`;
-}
 
 const SCAN_SCRIPT = String.raw`
 $ErrorActionPreference = 'SilentlyContinue'

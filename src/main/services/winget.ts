@@ -6,6 +6,25 @@ const QUIET = ['--disable-interactivity', '--nowarn'];
 
 export class WingetError extends Error {}
 
+/** winget kimliği: en az bir nokta içerir, seçenek/kaçış karakteri taşımaz. */
+const IDENT_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._+-]*\.[A-Za-z0-9][A-Za-z0-9._+-]*$/;
+
+function requireIdent(ident: string, action: string): string {
+  const value = ident.trim();
+  if (value.length < 3 || value.length > 128 || !IDENT_PATTERN.test(value)) {
+    throw new WingetError(`${action}: geçersiz paket kimliği.`);
+  }
+  return value;
+}
+
+function requireQuery(query: string): string {
+  const value = query.trim();
+  if (!value || value.length > 120 || /^[-/]/.test(value) || /[\r\n]/.test(value)) {
+    throw new WingetError('Arama sorgusu geçersiz.');
+  }
+  return value;
+}
+
 function byName(ident: string): boolean {
   const value = ident.trim();
   return !value || value.includes('\\') || !/^[A-Za-z0-9][A-Za-z0-9._+-]*$/.test(value);
@@ -116,7 +135,7 @@ export function listUpdates(onLine?: LogFn): Promise<Package[]> {
 }
 
 export async function search(query: string, onLine?: LogFn): Promise<Package[]> {
-  const result = await run(['search', query, ...QUIET, '--accept-source-agreements'], onLine, 3 * 60 * 1000);
+  const result = await run(['search', requireQuery(query), ...QUIET, '--accept-source-agreements'], onLine, 3 * 60 * 1000);
   const parsed = parseTable(result.text);
   if (parsed.length) return parsed;
   try {
@@ -127,7 +146,14 @@ export async function search(query: string, onLine?: LogFn): Promise<Package[]> 
 }
 
 function targetArgs(pkg: Package): string[] {
-  return byName(pkg.ident) ? ['--name', pkg.name, '--exact'] : ['--id', pkg.ident, '--exact'];
+  if (byName(pkg.ident)) {
+    const name = pkg.name.trim();
+    if (!name || name.length > 512 || /^[-/]/.test(name) || /[\r\n]/.test(name)) {
+      throw new WingetError('İşlem: geçersiz paket adı.');
+    }
+    return ['--name', name, '--exact'];
+  }
+  return ['--id', requireIdent(pkg.ident, 'İşlem'), '--exact'];
 }
 
 function silentFlag(silent: boolean): string[] {
@@ -135,7 +161,7 @@ function silentFlag(silent: boolean): string[] {
 }
 
 export async function install(ident: string, silent: boolean, onLine?: LogFn): Promise<number> {
-  const result = await run(['install', '--id', ident, '--exact', ...AGREEMENTS, ...QUIET, ...silentFlag(silent)], onLine);
+  const result = await run(['install', '--id', requireIdent(ident, 'Kurulum'), '--exact', ...AGREEMENTS, ...QUIET, ...silentFlag(silent)], onLine);
   return result.code;
 }
 
@@ -164,7 +190,7 @@ export async function download(ident: string, onLine?: LogFn) {
     ? `${process.env.USERPROFILE}\\Downloads`
     : process.cwd());
   const result = await run(
-    ['download', '--id', ident, '--exact', ...AGREEMENTS, ...QUIET, '--download-directory', downloads],
+    ['download', '--id', requireIdent(ident, 'İndirme'), '--exact', ...AGREEMENTS, ...QUIET, '--download-directory', downloads],
     onLine,
     10 * 60 * 1000,
   );

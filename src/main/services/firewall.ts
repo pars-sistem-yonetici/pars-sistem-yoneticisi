@@ -1,6 +1,6 @@
 import path from 'path';
 import os from 'os';
-import { powershellJson } from '../util';
+import { powershellJson, psLiteral } from '../util';
 import { isExcludedPath } from './exclusions';
 
 export interface FirewallRule {
@@ -39,11 +39,6 @@ interface FirewallScanRow {
 interface FirewallCommandResult {
   ok?: boolean;
   message?: string;
-}
-
-/** PowerShell tek tırnaklı dize içine güvenli ekleme. */
-function psLiteral(value: string): string {
-  return `'${value.replace(/'/g, "''")}'`;
 }
 
 function asText(value: unknown): string {

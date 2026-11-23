@@ -2,7 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import type { DriverActionResult, DriverBackupResult, DriverScanResult } from '../../shared/types';
-import { LogFn, powershellJson } from '../util';
+import { LogFn, powershellJson, psLiteral } from '../util';
 
 const ADMIN_CHECK = `$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)`;
 
@@ -106,7 +106,7 @@ function actionScript(mode: 'download' | 'install', idFile: string, doBackup: bo
   return String.raw`
 $ErrorActionPreference = 'SilentlyContinue'
 ${ADMIN_CHECK}
-$ids = @(Get-Content -Raw -LiteralPath ${JSON.stringify(idFile)} | ConvertFrom-Json)
+$ids = @(Get-Content -Raw -LiteralPath ${psLiteral(idFile)} | ConvertFrom-Json)
 $results = @()
 if ($ids.Count -eq 0) {
   [pscustomobject]@{ results = @() } | ConvertTo-Json -Depth 4 -Compress
@@ -120,7 +120,7 @@ if ('${mode}' -eq 'install' -and -not $isAdmin) {
   exit
 }
 if ('${mode}' -eq 'install' -and ${doBackup ? '$true' : '$false'}) {
-  $destination = ${JSON.stringify(destination)}
+  $destination = ${psLiteral(destination)}
   try {
     New-Item -ItemType Directory -Force -Path $destination | Out-Null
     & dism /online /export-driver /destination:$destination | Out-Null
@@ -223,7 +223,7 @@ export async function backupDrivers(onLine?: LogFn): Promise<DriverBackupResult>
   onLine?.(`Sürücüler yedekleniyor: ${destination}`);
   const result = await powershellJson<{ ok: boolean; path?: string; message: string }>(String.raw`
 $ErrorActionPreference = 'SilentlyContinue'
-$destination = ${JSON.stringify(destination)}
+$destination = ${psLiteral(destination)}
 try {
   New-Item -ItemType Directory -Force -Path $destination | Out-Null
   & dism /online /export-driver /destination:$destination | Out-Null

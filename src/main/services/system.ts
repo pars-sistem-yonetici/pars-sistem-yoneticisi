@@ -1,5 +1,5 @@
 import type { SystemSnapshot } from '../../shared/types';
-import { powershellJson } from '../util';
+import { powershellJson, psLiteral } from '../util';
 
 export async function snapshot(requestedDrive?: string): Promise<SystemSnapshot> {
   const safeDrive = requestedDrive && /^[A-Za-z]:\\?$/.test(requestedDrive.trim())
@@ -14,7 +14,7 @@ try {
   try { $cpu = [double]((Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average) } catch { $cpu = 0.0 }
 }
 $os = Get-CimInstance Win32_OperatingSystem
-$selectedDrive = ${JSON.stringify(safeDrive)}
+$selectedDrive = ${psLiteral(safeDrive)}
 $driveName = $(if ($selectedDrive) { $selectedDrive.TrimEnd(':') } else { $env:SystemDrive.TrimEnd(':') })
 $drive = Get-PSDrive -Name $driveName -PSProvider FileSystem -ErrorAction Stop
 $totalMem = [double]$os.TotalVisibleMemorySize * 1024
