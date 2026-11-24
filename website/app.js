@@ -64,6 +64,25 @@
     });
   });
 
+  const revealItems = document.querySelectorAll('.reveal');
+  if (revealItems.length) {
+    const showAll = () => revealItems.forEach((el) => el.classList.add('is-visible'));
+    if (!('IntersectionObserver' in window)) {
+      showAll();
+    } else {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+      revealItems.forEach((el) => observer.observe(el));
+      window.setTimeout(showAll, 6000);
+    }
+  }
+
   async function loadLatestRelease() {
     try {
       const response = await fetch('downloads/latest.json', { cache: 'no-store' });
