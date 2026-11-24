@@ -9,7 +9,7 @@
  *   website/blogger-theme.xml
  *
  * Kullanim:
- *   node scripts/build-blogger-theme.js --version 1.0.2
+ *   node scripts/build-blogger-theme.js --version 1.0.3
  *
  * --version verilirse manifest ile karsilastirir; uyusmazsa hata verir.
  * --root, yerel denemeler icin depo kokunu degistirir (normalde gerekmez).
@@ -25,6 +25,7 @@ function arg(name) {
 }
 
 const root = arg('--root') ? path.resolve(arg('--root')) : path.resolve(__dirname, '..');
+const assetBase = (arg('--asset-base') || 'https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/assets/').replace(/\/?$/, '/');
 const manifestPath = path.join(root, 'docs', 'downloads', 'latest.json');
 if (!fs.existsSync(manifestPath)) {
   throw new Error(`Manifest bulunamadi: ${manifestPath}`);
@@ -70,6 +71,11 @@ const values = {
   PORTABLE_SHA256: xml(manifest.portableSha256),
   SETUP_SIZE_MB: xml(megabytes(manifest.size)),
   PORTABLE_SIZE_MB: xml(megabytes(manifest.portableSize)),
+  ICON_URL: xml(assetBase + 'icon.png'),
+  SHOT_HOME: xml(assetBase + 'screen-home.png'),
+  SHOT_APPS: xml(assetBase + 'screen-apps.png'),
+  SHOT_UPDATES: xml(assetBase + 'screen-updates.png'),
+  SHOT_CONTEXT: xml(assetBase + 'screen-context.png'),
 };
 
 const TEMPLATE = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -81,160 +87,324 @@ const TEMPLATE = `<?xml version="1.0" encoding="UTF-8" ?>
   <b:skin><![CDATA[
 /* =========================================================
    Pars Sistem Yoneticisi -tam- Blogger temasi {{VERSION}}
-   Grafit / altin. Tum icerik temanin icindedir.
+   Grafit / amber. Tum icerik temanin icindedir.
    ========================================================= */
 :root {
   color-scheme: dark;
-  --bg: #171719;
-  --panel: #212125;
-  --panel-2: #29292e;
-  --line: #44444d;
-  --text: #f4f4f5;
-  --muted: #b3b3bc;
-  --accent: #d2a23f;
-  --accent-2: #a87b22;
-  --highlight: #f4d98a;
-  --green: #92d6aa;
-  --danger: #e58b8b;
+  --bg: #0e1013;
+  --surface: #15181d;
+  --surface-2: #1b1f26;
+  --surface-3: #222731;
+  --line: #2b303a;
+  --line-soft: #222630;
+  --text: #f3f5f8;
+  --muted: #a2aab8;
+  --accent: #e6b450;
+  --accent-strong: #f7d183;
+  --accent-ink: #241a08;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
 body {
-  min-width: 320px;
-  min-height: 100vh;
+  margin: 0; min-width: 320px; min-height: 100vh;
   color: var(--text);
-  font-family: "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, sans-serif;
-  font-size: 15px;
-  line-height: 1.65;
-  background:
-    radial-gradient(1000px 520px at 78% -8%, rgba(210,162,63,.13), transparent 62%),
-    radial-gradient(760px 420px at 4% 22%, rgba(210,162,63,.06), transparent 60%),
-    linear-gradient(180deg, #19191b 0%, var(--bg) 100%);
+  font-family: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 15px; line-height: 1.65;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(900px 480px at 82% -6%, rgba(230,180,80,.12), transparent 60%),
+    radial-gradient(700px 420px at 0% 18%, rgba(230,180,80,.05), transparent 60%),
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size: auto, auto, 36px 36px, 36px 36px;
   background-attachment: fixed;
 }
-a { color: var(--highlight); text-decoration: none; }
+a { color: var(--accent-strong); text-decoration: none; }
 a:hover { color: #fff; }
 img { max-width: 100%; height: auto; }
-code, .mono { font-family: Consolas, "Courier New", monospace; }
+code, .mono { font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: .92em; }
 
 .topbar {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(23,23,25,.94);
-  border-bottom: 1px solid var(--line);
-  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  background: rgba(14,16,19,.82);
+  border-bottom: 1px solid var(--line-soft);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
 }
 .nav {
-  max-width: 1120px; margin: 0 auto; padding: 14px 20px;
-  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  max-width: 1140px; margin: 0 auto; padding: 12px 22px;
+  display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
 }
-.brand { color: #fff; font-weight: 800; font-size: 17px; letter-spacing: .02em; }
+.brand { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 750; font-size: 16px; letter-spacing: .01em; }
+.brand-mark {
+  display: block; width: 34px; height: 34px; border-radius: 9px;
+  object-fit: contain; flex: 0 0 auto;
+  filter: drop-shadow(0 6px 14px rgba(230,180,80,.22));
+}
 .brand span { color: var(--accent); }
-.links { display: flex; gap: 18px; flex-wrap: wrap; }
-.links a { color: var(--muted); font-size: 14px; }
-.links a:hover { color: var(--accent); }
+.links { display: flex; gap: 20px; flex-wrap: wrap; }
+.links a { color: var(--muted); font-size: 13px; font-weight: 600; }
+.links a:hover { color: var(--accent-strong); }
 
-.hero { border-bottom: 1px solid var(--line); }
-.hero-inner { max-width: 1120px; margin: 0 auto; padding: 70px 20px 60px; }
-.eyebrow {
-  display: inline-block; color: var(--accent); font-size: 12px; font-weight: 700;
-  letter-spacing: .18em; text-transform: uppercase; margin-bottom: 14px;
+/* Kaydirma ile asagidan yukariya acilan bolumler */
+.reveal {
+  opacity: 0; transform: translateY(38px);
+  transition: opacity .75s cubic-bezier(.2,.75,.2,1), transform .75s cubic-bezier(.2,.75,.2,1);
+  transition-delay: var(--d, 0s); will-change: opacity, transform;
 }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line-soft); }
+.hero:before {
+  content: ""; position: absolute; width: 420px; height: 420px;
+  right: -120px; top: -160px; border-radius: 50%;
+  border: 1px solid rgba(230,180,80,.14);
+  box-shadow: 0 0 0 60px rgba(230,180,80,.025), 0 0 0 120px rgba(230,180,80,.015);
+}
+.hero-inner {
+  position: relative; max-width: 1140px; margin: 0 auto; padding: 76px 22px 68px;
+  display: grid; grid-template-columns: minmax(0,1.15fr) minmax(280px,.85fr);
+  gap: 54px; align-items: center;
+}
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 9px;
+  color: var(--accent); font-size: 11px; font-weight: 800;
+  letter-spacing: .2em; text-transform: uppercase; margin-bottom: 18px;
+}
+.eyebrow:before { content: ""; width: 22px; height: 1px; background: var(--accent); }
 .hero h1 {
-  margin: 0 0 16px; font-size: clamp(30px, 5vw, 54px); line-height: 1.12;
-  letter-spacing: -.02em; color: #fff;
+  margin: 0 0 18px; font-size: clamp(34px, 5vw, 56px); line-height: 1.08;
+  letter-spacing: -.035em; font-weight: 800; color: #fff;
 }
 .hero h1 a { color: #fff; }
-.hero p { margin: 0 0 26px; max-width: 650px; color: var(--muted); font-size: 17px; }
-.pillrow { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+.hero p { margin: 0 0 26px; max-width: 620px; color: var(--muted); font-size: 17px; }
+.pillrow { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 30px; }
 .pill {
-  display: inline-block; padding: 5px 12px; border-radius: 999px;
-  border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 13px;
+  padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line);
+  background: rgba(255,255,255,.025); color: var(--muted); font-size: 12px; font-weight: 600;
 }
-.pill b { color: var(--highlight); }
+.pill b { color: var(--accent-strong); }
 .btnrow { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn, .btn-2 {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 22px; border-radius: 11px; font-weight: 750; font-size: 14px;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
 .btn {
-  display: inline-block; padding: 13px 22px; border-radius: 10px; font-weight: 700;
-  color: #1b1508; background: linear-gradient(135deg, #dba946, #a87820);
-  border: 1px solid rgba(255,255,255,.12);
+  color: var(--accent-ink); background: linear-gradient(135deg, #f3cd7e, #d7a23f);
+  border: 1px solid rgba(255,255,255,.16); box-shadow: 0 10px 26px rgba(215,162,63,.18);
 }
-.btn:hover { color: #120e05; background: linear-gradient(135deg, #efbd59, #bb8827); }
-.btn-2 {
-  display: inline-block; padding: 13px 22px; border-radius: 10px; font-weight: 700;
-  color: var(--text); background: var(--panel-2); border: 1px solid var(--line);
-}
-.btn-2:hover { color: #fff; border-color: var(--accent); }
+.btn:hover { color: var(--accent-ink); background: linear-gradient(135deg, #ffdb94, #e2ad49); transform: translateY(-1px); }
+.btn-2 { color: var(--text); background: rgba(255,255,255,.03); border: 1px solid var(--line); }
+.btn-2:hover { color: #fff; border-color: var(--accent); transform: translateY(-1px); }
 
-.wrap { max-width: 1120px; margin: 0 auto; padding: 56px 20px; }
-.block { margin-bottom: 64px; }
-.section-title { margin: 0 0 8px; font-size: 28px; color: #fff; line-height: 1.25; }
-.section-sub { margin: 0 0 30px; color: var(--muted); max-width: 700px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-.card {
-  background: linear-gradient(180deg, var(--panel), var(--panel-2));
-  border: 1px solid var(--line); border-radius: 16px; padding: 24px;
-  box-shadow: 0 18px 40px rgba(0,0,0,.2);
+.release-card {
+  border: 1px solid var(--line); border-radius: 20px; padding: 26px;
+  background: linear-gradient(160deg, rgba(230,180,80,.09), rgba(21,24,29,.96) 42%);
+  box-shadow: 0 24px 60px rgba(0,0,0,.34);
 }
-.card h3 { margin: 0 0 8px; color: #fff; font-size: 18px; }
+.release-card .tag { display: inline-block; color: var(--accent-strong); font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 10px; }
+.release-card .ver { font-size: 40px; line-height: 1; font-weight: 800; letter-spacing: -.03em; color: #fff; margin-bottom: 8px; }
+.release-card .desc { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+.release-card .rows { display: grid; gap: 10px; margin-bottom: 20px; }
+.release-row {
+  display: flex; justify-content: space-between; gap: 14px; padding: 10px 12px;
+  border-radius: 10px; background: rgba(255,255,255,.025);
+  border: 1px solid var(--line-soft); font-size: 13px;
+}
+.release-row span { color: var(--muted); }
+.release-row b { color: var(--text); }
+.release-card .micro { color: var(--muted); font-size: 11px; line-height: 1.5; }
+
+.wrap { max-width: 1140px; margin: 0 auto; padding: 58px 22px; }
+.block { margin-bottom: 66px; }
+.kicker { color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; margin: 0 0 10px; }
+.section-title { margin: 0 0 10px; font-size: clamp(25px, 3.2vw, 32px); line-height: 1.2; letter-spacing: -.02em; color: #fff; }
+.section-sub { margin: 0 0 30px; color: var(--muted); max-width: 720px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.card {
+  position: relative; background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--line); border-radius: 16px; padding: 24px;
+  transition: border-color .18s ease, transform .18s ease;
+}
+.card:hover { border-color: rgba(230,180,80,.42); transform: translateY(-2px); }
+.card h3 { margin: 0 0 8px; color: #fff; font-size: 17px; }
 .card p { margin: 0; color: var(--muted); font-size: 14px; }
 .card .num {
-  display: inline-flex; width: 32px; height: 32px; align-items: center; justify-content: center;
-  border-radius: 9px; background: rgba(210,162,63,.14); color: var(--accent);
-  font-weight: 800; margin-bottom: 12px;
+  display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center;
+  border-radius: 10px; background: rgba(230,180,80,.12); color: var(--accent-strong);
+  font-weight: 800; font-size: 13px; margin-bottom: 14px; border: 1px solid rgba(230,180,80,.2);
 }
-.card.accent { border-color: rgba(210,162,63,.45); }
 
-.steps { counter-reset: s; display: grid; gap: 14px; }
+.steps { display: grid; gap: 12px; counter-reset: s; position: relative; }
+.steps:before { content: ""; position: absolute; left: 19px; top: 30px; bottom: 30px; width: 1px; background: var(--line); }
 .step {
-  position: relative; padding: 18px 20px 18px 62px; border: 1px solid var(--line);
-  border-radius: 14px; background: var(--panel);
+  position: relative; padding: 16px 20px 16px 62px;
+  border: 1px solid var(--line); border-radius: 14px; background: var(--surface);
 }
 .step:before {
-  counter-increment: s; content: counter(s); position: absolute; left: 18px; top: 18px;
-  width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
-  background: var(--accent); color: #1b1508; font-weight: 800; font-size: 14px;
+  counter-increment: s; content: counter(s); position: absolute; left: 0; top: 14px;
+  width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
+  background: var(--surface-3); border: 1px solid var(--line);
+  color: var(--accent-strong); font-weight: 800; font-size: 14px; z-index: 1;
 }
-.step b { color: #fff; }
+.step b { color: #fff; display: block; margin-bottom: 2px; }
 .step span { color: var(--muted); font-size: 14px; display: block; }
 
-.dlgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
-.dlcard { border: 1px solid var(--line); border-radius: 18px; padding: 26px; background: linear-gradient(180deg, var(--panel), var(--panel-2)); }
-.dlcard.main { border-color: rgba(210,162,63,.5); }
-.dlcard h3 { margin: 0 0 4px; color: #fff; font-size: 21px; }
-.dlcard .meta { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
-.hash {
-  display: block; margin-top: 14px; padding: 10px 12px; border-radius: 9px;
-  background: #101012; border: 1px solid var(--line); color: var(--highlight);
-  font-size: 11px; word-break: break-all; line-height: 1.5;
+.dlgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+.dlcard {
+  position: relative; border: 1px solid var(--line); border-radius: 18px; padding: 26px;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2)); overflow: hidden;
 }
-.hash-label { display: block; color: var(--muted); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; margin-top: 16px; }
+.dlcard:before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--line); }
+.dlcard.main:before { background: linear-gradient(90deg, var(--accent), var(--accent-strong)); }
+.dlcard.main { border-color: rgba(230,180,80,.38); }
+.dlcard h3 { margin: 6px 0 4px; color: #fff; font-size: 20px; }
+.dlcard .meta { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+.hash-label { display: block; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; margin: 16px 0 6px; }
+.hash {
+  display: block; padding: 11px 13px; border-radius: 10px; background: #0b0d10;
+  border: 1px solid var(--line); color: var(--accent-strong); font-size: 11px;
+  word-break: break-all; line-height: 1.5;
+}
 .note {
   margin-top: 22px; padding: 16px 18px; border-left: 3px solid var(--accent);
-  background: rgba(210,162,63,.07); border-radius: 0 10px 10px 0; color: var(--muted); font-size: 14px;
+  background: rgba(230,180,80,.06); border-radius: 0 12px 12px 0; color: var(--muted); font-size: 14px;
 }
-.note b { color: var(--highlight); }
+.note b { color: var(--accent-strong); }
 
-details.faq { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); margin-bottom: 10px; padding: 0 18px; }
-details.faq summary { cursor: pointer; padding: 16px 0; color: #fff; font-weight: 600; }
-details.faq p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
+/* Uygulama icinden alinmis ekran goruntuleri ile animasyonlu vitrin */
+.showcase-frame {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden;
+  border: 1px solid var(--line); border-radius: 18px; background: #0b0d10;
+  box-shadow: 0 26px 64px rgba(0,0,0,.4);
+}
+.showcase-frame:before {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  border-radius: 18px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.shot {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: left top;
+  opacity: 0; transform: scale(1.06); animation: shot-cycle 24s linear infinite;
+}
+.shot:nth-of-type(1) { animation-delay: 0s; }
+.shot:nth-of-type(2) { animation-delay: 6s; }
+.shot:nth-of-type(3) { animation-delay: 12s; }
+.shot:nth-of-type(4) { animation-delay: 18s; }
+@keyframes shot-cycle {
+  0%   { opacity: 0; transform: scale(1.06); }
+  2%   { opacity: 1; transform: scale(1.02); }
+  23%  { opacity: 1; transform: scale(1); }
+  25%  { opacity: 0; transform: scale(1.01); }
+  100% { opacity: 0; transform: scale(1.06); }
+}
+.showcase-bar {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-top: 14px; padding: 12px 16px; border-radius: 12px;
+  background: var(--surface); border: 1px solid var(--line);
+}
+.shot-caption {
+  position: relative; flex: 1 1 220px; min-height: 20px; overflow: hidden;
+}
+.shot-caption span {
+  position: absolute; left: 0; top: 0; white-space: nowrap;
+  color: var(--text); font-size: 13px; font-weight: 650;
+  opacity: 0; animation: label-cycle 24s linear infinite;
+}
+.shot-caption span:nth-of-type(1) { animation-delay: 0s; }
+.shot-caption span:nth-of-type(2) { animation-delay: 6s; }
+.shot-caption span:nth-of-type(3) { animation-delay: 12s; }
+.shot-caption span:nth-of-type(4) { animation-delay: 18s; }
+@keyframes label-cycle {
+  0%   { opacity: 0; transform: translateY(8px); }
+  2%   { opacity: 1; transform: none; }
+  23%  { opacity: 1; transform: none; }
+  25%  { opacity: 0; transform: translateY(-8px); }
+  100% { opacity: 0; transform: translateY(8px); }
+}
+.showcase-dots { display: flex; gap: 7px; flex: 0 0 auto; }
+.showcase-dots i {
+  display: block; width: 22px; height: 4px; border-radius: 999px;
+  background: var(--line); overflow: hidden; position: relative;
+}
+.showcase-dots i:after {
+  content: ""; position: absolute; inset: 0; width: 0;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  animation: dot-cycle 24s linear infinite;
+}
+.showcase-dots i:nth-of-type(1):after { animation-delay: 0s; }
+.showcase-dots i:nth-of-type(2):after { animation-delay: 6s; }
+.showcase-dots i:nth-of-type(3):after { animation-delay: 12s; }
+.showcase-dots i:nth-of-type(4):after { animation-delay: 18s; }
+@keyframes dot-cycle {
+  0%   { width: 0; }
+  2%   { width: 100%; }
+  25%  { width: 100%; }
+  26%  { width: 0; }
+  100% { width: 0; }
+}
+.showcase:hover .shot,
+.showcase:hover .shot-caption span,
+.showcase:hover .showcase-dots i:after { animation-play-state: paused; }
 
-.footer { border-top: 1px solid var(--line); background: rgba(23,23,25,.8); }
+details.faq { border: 1px solid var(--line); border-radius: 13px; background: var(--surface); margin-bottom: 10px; overflow: hidden; }
+details.faq summary {
+  cursor: pointer; list-style: none; padding: 16px 44px 16px 18px;
+  color: #fff; font-weight: 650; position: relative;
+}
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq summary:after {
+  content: "+"; position: absolute; right: 18px; top: 14px; width: 24px; height: 24px;
+  border-radius: 8px; display: grid; place-items: center;
+  background: rgba(230,180,80,.1); color: var(--accent-strong); font-weight: 800;
+}
+details.faq[open] summary:after { content: "−"; }
+details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size: 14px; }
+
+.posts { display: grid; gap: 22px; }
+.post { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 26px 26px 26px 30px; }
+.post:before { content: ""; position: absolute; left: 0; top: 22px; bottom: 22px; width: 3px; border-radius: 3px; background: linear-gradient(180deg, var(--accent), transparent); }
+.post-title { margin: 0 0 6px; font-size: 23px; line-height: 1.25; letter-spacing: -.01em; }
+.post-title a { color: #fff; }
+.post-title a:hover { color: var(--accent-strong); }
+.post-meta { color: var(--muted); font-size: 12px; margin-bottom: 16px; }
+.post-body { overflow-wrap: anywhere; color: var(--text); }
+.post-body img { border-radius: 12px; }
+.post-body pre { background: #0b0d10; border: 1px solid var(--line); border-radius: 12px; padding: 14px; overflow: auto; }
+
+.footer { border-top: 1px solid var(--line-soft); background: rgba(14,16,19,.7); }
 .footer-inner {
-  max-width: 1120px; margin: 0 auto; padding: 28px 20px; color: var(--muted); font-size: 13px;
-  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  max-width: 1140px; margin: 0 auto; padding: 28px 22px; color: var(--muted);
+  font-size: 12px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
 }
 .footer-inner a { color: var(--accent); }
 
-.posts { display: grid; gap: 24px; }
-.post { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
-.post-title { margin: 0 0 6px; font-size: 22px; }
-.post-title a { color: #fff; }
-.post-meta { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
-.post-body { overflow-wrap: anywhere; }
-
-@media (max-width: 720px) {
-  .hero-inner { padding: 48px 18px 42px; }
-  .wrap { padding: 40px 16px; }
-  .section-title { font-size: 24px; }
+@media (max-width: 860px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 34px; padding: 56px 20px 48px; }
+  .release-card { max-width: 520px; }
+}
+@media (max-width: 640px) {
+  .nav { padding: 10px 16px; }
+  .links { gap: 12px; }
+  .links a { font-size: 12px; }
+  .hero-inner { padding: 44px 16px 38px; }
+  .hero h1 { font-size: 34px; }
+  .wrap { padding: 42px 16px; }
+  .block { margin-bottom: 50px; }
+  .dlcard, .post { padding: 20px; }
+  .step { padding-left: 56px; }
+  .showcase-frame { border-radius: 14px; }
+  .showcase-bar { padding: 10px 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .shot { animation: none; opacity: 0; }
+  .shot:nth-of-type(1) { opacity: 1; transform: none; }
+  .shot-caption span { animation: none; opacity: 0; }
+  .shot-caption span:nth-of-type(1) { opacity: 1; }
+  .showcase-dots i:after { animation: none; width: 0; }
+  .showcase-dots i:nth-of-type(1):after { width: 100%; }
 }
   ]]></b:skin>
 </head>
@@ -243,9 +413,10 @@ details.faq p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
     <b:widget id="PageList1" locked="false" title="Sayfalar" type="PageList" version="2">
       <b:includable id="main">
         <nav class="nav">
-          <a class="brand" expr:href="data:blog.homepageUrl">Pars <span>Sistem Yöneticisi</span></a>
+          <a class="brand" expr:href="data:blog.homepageUrl"><img class="brand-mark" src="{{ICON_URL}}" alt="Pars Sistem Yöneticisi" />Pars <span>Sistem Yöneticisi</span></a>
           <div class="links">
             <a href="#ozellikler">Özellikler</a>
+            <a href="#vitrin">Ekranlar</a>
             <a href="#kurulum">Kurulum</a>
             <a href="#indir">İndir</a>
             <a href="#sss">SSS</a>
@@ -259,18 +430,31 @@ details.faq p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
     <b:widget id="Header1" locked="false" title="Başlık" type="Header" version="2">
       <b:includable id="main">
         <div class="hero-inner">
-          <span class="eyebrow">Sistem bakım merkezi</span>
-          <h1><a expr:href="data:blog.homepageUrl"><data:blog.title/></a></h1>
-          <p>Windows bakımı ve yazılım yönetimi, tek panelde. Güncel sürüm:<b> {{VERSION}}</b></p>
-          <div class="pillrow">
-            <span class="pill">Sürüm <b>v{{VERSION}}</b></span>
-            <span class="pill">Windows 10 / 11</span>
-            <span class="pill">x64</span>
-            <span class="pill"> İmzasız · SHA doğrulamalı</span>
+          <div>
+            <span class="eyebrow">Sistem bakım merkezi</span>
+            <h1><a expr:href="data:blog.homepageUrl"><data:blog.title/></a></h1>
+            <p>Windows bakımı, yazılım yönetimi ve güvenli temizlik tek panelde. Güncel sürüm:<b> {{VERSION}}</b></p>
+            <div class="pillrow">
+              <span class="pill">Sürüm <b>v{{VERSION}}</b></span>
+              <span class="pill">Windows 10 / 11</span>
+              <span class="pill">x64</span>
+              <span class="pill">İmzasız · SHA doğrulamalı</span>
+            </div>
+            <div class="btnrow">
+              <a class="btn" href="{{SETUP_URL}}">Kurulumu indir</a>
+              <a class="btn-2" href="#indir">Portable ve SHA özetleri</a>
+            </div>
           </div>
-          <div class="btnrow">
-            <a class="btn" href="{{SETUP_URL}}">Kurulumu indir</a>
-            <a class="btn-2" href="#indir">Portable ve SHA özetleri</a>
+          <div class="release-card">
+            <span class="tag">Güncel sürüm</span>
+            <div class="ver">{{VERSION}}</div>
+            <div class="desc">Doğrudan GitHub Releases üzerinden indirilir.</div>
+            <div class="rows">
+              <div class="release-row"><span>Kurulum</span><b>{{SETUP_SIZE_MB}}</b></div>
+              <div class="release-row"><span>Portable</span><b>{{PORTABLE_SIZE_MB}}</b></div>
+              <div class="release-row"><span>Doğrulama</span><b>SHA-256</b></div>
+            </div>
+            <div class="micro">Dosya bütünlüğünü indirmeden sonra özetlerle kontrol edebilirsiniz.</div>
           </div>
         </div>
       </b:includable>
@@ -281,42 +465,68 @@ details.faq p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
     <b:widget id="HTML2" locked="false" title="İçerik" type="HTML" version="2">
       <b:includable id="main">
         <div class="wrap">
-          <div class="block" id="ozellikler">
-            <h2 class="section-title">Neler yapar?</h2>
-            <p class="section-sub">Günlük bakımı ve yazılım yönetimini tek bir panelde toplayan Windows aracı.</p>
+          <div class="block reveal" id="ozellikler">
+            <p class="kicker">Neler yapar?</p>
+            <h2 class="section-title">Bakımı ve indirmeleri tek panelde yönetin</h2>
+            <p class="section-sub">Günlük temizlikten sağ tık eklentilerine kadar tüm işlemler yedek ve onay güvencesiyle çalışır.</p>
             <div class="grid">
-              <div class="card"><div class="num">1</div><h3>Yazılım envanteri</h3><p>Kurulu uygulamaları listeler, sürüm ve boyut bilgilerini gösterir.</p></div>
-              <div class="card"><div class="num">2</div><h3>Güvenli kaldırma</h3><p>Yıkıcı işlemlerde onay ister; zorunlu yedek alınmadan silme yapmaz.</p></div>
-              <div class="card"><div class="num">3</div><h3>Zorunlu yedek</h3><p>Yedek başarısızsa işlem iptal edilir. Veri kaybı riski alınmaz.</p></div>
-              <div class="card"><div class="num">4</div><h3>Sistem bakımı</h3><p>Geçici dosyaları ve gereksiz veriyi görünür hâle getirir, temizlik yapar.</p></div>
-              <div class="card"><div class="num">5</div><h3>Güncelleme kontrolü</h3><p>Yeni sürümü otomatik kontrol eder, indirme sayfasına yönlendirir.</p></div>
-              <div class="card"><div class="num">6</div><h3>Yönetici modu</h3><p>Sistem değişiklikleri için yükseltilmiş yetkiyle çalışır.</p></div>
+              <div class="card reveal" style="--d:.05s"><div class="num">1</div><h3>Yazılım envanteri</h3><p>Kurulu uygulamaları listeler; sürüm ve boyut bilgilerini gösterir.</p></div>
+              <div class="card reveal" style="--d:.1s"><div class="num">2</div><h3>Sağ tık eklentileri</h3><p>WinRAR ve 7-Zip gibi eklentileri tek tıkla kapatıp açar; kendi menüsünü eklemez.</p></div>
+              <div class="card reveal" style="--d:.15s"><div class="num">3</div><h3>Güvenli temizlik</h3><p>Yıkıcı işlemlerde onay ister; yedek alınamazsa değişiklik yapmaz.</p></div>
+              <div class="card reveal" style="--d:.2s"><div class="num">4</div><h3>İndirme kuyruğu</h3><p>Kurulum ve güncellemeleri sıraya alır; iptal, yüzde ve hız gösterir.</p></div>
+              <div class="card reveal" style="--d:.25s"><div class="num">5</div><h3>Sistem görünümü</h3><p>Diskler, başlangıç süreleri ve ağ hızı tek ekranda görünür.</p></div>
+              <div class="card reveal" style="--d:.3s"><div class="num">6</div><h3>Güncelleme kontrolü</h3><p>Yeni sürümü kontrol eder ve SHA doğrulamalı güncelleme sunar.</p></div>
             </div>
           </div>
 
-          <div class="block" id="kurulum">
+          <div class="block reveal" id="vitrin">
+            <p class="kicker">Uygulamadan</p>
+            <h2 class="section-title">Paneli çalışırken görün</h2>
+            <p class="section-sub">Gerçek arayüzden alınmış ekran görüntüleri otomatik olarak sırayla gösterilir. Üzerine gelerek durdurabilirsiniz.</p>
+            <div class="showcase">
+              <div class="showcase-frame">
+                <img class="shot" src="{{SHOT_HOME}}" alt="Pars Sistem Yöneticisi anasayfa ekranı" />
+                <img class="shot" src="{{SHOT_APPS}}" alt="Kurulu uygulamalar listesi" />
+                <img class="shot" src="{{SHOT_UPDATES}}" alt="Güncellemeler ekranı" />
+                <img class="shot" src="{{SHOT_CONTEXT}}" alt="Sağ tık menüsü eklentileri ekranı" />
+              </div>
+              <div class="showcase-bar">
+                <div class="shot-caption">
+                  <span>Anasayfa · sistem özeti ve disk durumu</span>
+                  <span>Kurulu uygulamalar · sürüm ve boyut envanteri</span>
+                  <span>Güncellemeler · winget tarama sonuçları</span>
+                  <span>Sağ tık menüsü · üçüncü taraf eklentileri</span>
+                </div>
+                <div class="showcase-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="block reveal" id="kurulum">
+            <p class="kicker">Başlarken</p>
             <h2 class="section-title">Kurulum</h2>
             <p class="section-sub">Yaklaşık 1 dakika sürer. Windows 10/11 x64 gereklidir.</p>
             <div class="steps">
-              <div class="step"><b>Kurulum dosyasını indirin</b><span>Aşağıdaki “Kurulumu indir” düğmesini kullanın.</span></div>
-              <div class="step"><b>SHA-256 özetini doğrulayın</b><span>PowerShell: <code class="mono">Get-FileHash .\\{{SETUP_FILE_NAME}} -Algorithm SHA256</code></span></div>
-              <div class="step"><b>Kurulumu başlatın</b><span>“Windows korudu” uyarısında <b>Daha fazla bilgi → Yine de çalıştır</b> seçin (dosya imzalanmadığı için görünür).</span></div>
-              <div class="step"><b>Yönetici olarak açın</b><span>Uygulama sistem değişiklikleri için yönetici izni isteyecektir.</span></div>
+              <div class="step reveal" style="--d:.05s"><b>Kurulum dosyasını indirin</b><span>Aşağıdaki “Kurulumu indir” düğmesini kullanın.</span></div>
+              <div class="step reveal" style="--d:.12s"><b>SHA-256 özetini doğrulayın</b><span>PowerShell: <code class="mono">Get-FileHash .\\{{SETUP_FILE_NAME}} -Algorithm SHA256</code></span></div>
+              <div class="step reveal" style="--d:.19s"><b>Kurulumu başlatın</b><span>“Windows korudu” uyarısında <b>Daha fazla bilgi → Yine de çalıştır</b> seçin.</span></div>
+              <div class="step reveal" style="--d:.26s"><b>Yönetici olarak açın</b><span>Sistem değişiklikleri için uygulama yönetici izni isteyecektir.</span></div>
             </div>
           </div>
 
-          <div class="block" id="indir">
-            <h2 class="section-title">İndir</h2>
-            <p class="section-sub">Dosyalar GitHub Releases üzerinden sunulur. Bağlantılar doğrudan exe’yi indirir.</p>
+          <div class="block reveal" id="indir">
+            <p class="kicker">İndir</p>
+            <h2 class="section-title">İki sürüm, aynı kod tabanı</h2>
+            <p class="section-sub">Dosyalar GitHub Releases üzerinden sunulur; bağlantılar doğrudan exe’yi indirir.</p>
             <div class="dlgrid">
-              <div class="dlcard main">
+              <div class="dlcard main reveal" style="--d:.06s">
                 <h3>Kurulum sürümü · Önerilen</h3>
                 <div class="meta">{{SETUP_FILE_NAME}} · {{SETUP_SIZE_MB}} · NSIS</div>
                 <a class="btn" href="{{SETUP_URL}}">Kurulumu indir</a>
                 <span class="hash-label">SHA-256</span>
                 <code class="hash">{{SETUP_SHA256}}</code>
               </div>
-              <div class="dlcard">
+              <div class="dlcard reveal" style="--d:.14s">
                 <h3>Portable sürüm</h3>
                 <div class="meta">{{PORTABLE_FILE_NAME}} · {{PORTABLE_SIZE_MB}} · Kurulum gerektirmez</div>
                 <a class="btn-2" href="{{PORTABLE_URL}}">Portable indir</a>
@@ -327,12 +537,14 @@ details.faq p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
             <div class="note"><b>Dijital imza henüz yok.</b> Windows “bilinmeyen yayımcı” uyarısı gösterebilir. Dosyanın değişmediğini yukarıdaki SHA-256 özetiyle doğrulayabilirsiniz.</div>
           </div>
 
-          <div class="block" id="sss">
+          <div class="block reveal" id="sss">
+            <p class="kicker">SSS</p>
             <h2 class="section-title">Sık sorulan sorular</h2>
-            <details class="faq"><summary>Ücretsiz mi?</summary><p>Evet, kişisel kullanım için ücretsizdir.</p></details>
-            <details class="faq"><summary>Kurulum gerektirmez mi?</summary><p>Portable sürümü doğrudan çalıştırabilirsiniz; kurulum sürümü ise Başlat menüsüne kısayol ekler.</p></details>
-            <details class="faq"><summary>Neden “Windows korudu” diyor?</summary><p>Çünkü exe henüz dijital olarak imzalanmadı. SHA-256 özetini kontrol edip “Yine de çalıştır” diyebilirsiniz.</p></details>
-            <details class="faq"><summary>Yedek almak zorunlu mu?</summary><p>Evet. Yıkıcı işlemlerde yedek alınamazsa uygulama silme işlemini yapmaz.</p></details>
+            <details class="faq reveal"><summary>Ücretsiz mi?</summary><p>Evet, kişisel kullanım için ücretsizdir.</p></details>
+            <details class="faq reveal"><summary>Portable sürüm kurulum gerektirmez mi?</summary><p>Portable sürümü doğrudan çalıştırabilirsiniz; kurulum sürümü Başlat menüsüne kısayol ekler.</p></details>
+            <details class="faq reveal"><summary>Neden “Windows korudu” diyor?</summary><p>Çünkü exe henüz dijital olarak imzalanmadı. SHA-256 özetini kontrol edip “Yine de çalıştır” diyebilirsiniz.</p></details>
+            <details class="faq reveal"><summary>Yedek almak zorunlu mu?</summary><p>Evet. Yıkıcı işlemlerde yedek alınamazsa uygulama değişiklik yapmaz.</p></details>
+            <details class="faq reveal"><summary>Kendi sağ tık menüsünü ekliyor mu?</summary><p>Hayır. Uygulama kendi Gezgin girdisini eklemez; yalnızca mevcut üçüncü taraf eklentileri açıp kapatır.</p></details>
           </div>
         </div>
       </b:includable>
@@ -342,7 +554,7 @@ details.faq p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
       <b:includable id="main">
         <div class="wrap"><div class="posts">
           <b:loop values="data:posts" var="post">
-            <article class="post">
+            <article class="post reveal">
               <h2 class="post-title"><a expr:href="data:post.url"><data:post.title/></a></h2>
               <div class="post-meta"><data:post.timestamp/></div>
               <div class="post-body"><data:post.body/></div>
@@ -365,6 +577,26 @@ details.faq p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
       </b:includable>
     </b:widget>
   </b:section>
+
+  <script type="text/javascript">//<![CDATA[
+  (function () {
+    var items = document.querySelectorAll('.reveal');
+    function showAll() {
+      for (var i = 0; i < items.length; i++) items[i].classList.add('is-visible');
+    }
+    if (!('IntersectionObserver' in window)) { showAll(); return; }
+    var observer = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) {
+          entries[i].target.classList.add('is-visible');
+          observer.unobserve(entries[i].target);
+        }
+      }
+    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+    for (var i = 0; i < items.length; i++) observer.observe(items[i]);
+    window.setTimeout(showAll, 6000);
+  })();
+  //]]></script>
 </body>
 </html>
 `;
