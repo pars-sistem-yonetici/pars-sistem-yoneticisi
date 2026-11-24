@@ -1,8 +1,8 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "notes": "Template manifest. When publishing a new release, update version, fileName, sha512 and size.",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.2.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.3.exe",
   "sha512": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
   "size": 1,
-  "url": "Pars Sistem Yoneticisi Setup 1.0.2.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.0.3.exe"
 }
