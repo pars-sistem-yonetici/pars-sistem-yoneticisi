@@ -1,13 +1,13 @@
 {
-  "version": "1.0.2",
-  "notes": "GitHub Actions otomasyonu eklendi: sürüm artık Windows runner üzerinde otomatik derleniyor, iki exe Release’a yükleniyor ve site manifesti ile SHA-256 özetleri otomatik güncelleniyor. Güncelleme kaynağı yeni kurulumlarda varsayılan olarak t",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.2.exe",
-  "sha512": "5cff53230095b4f5cb7ff7370d66a915da345473b2e72cbd6a3475d9204fa6e900fcb84aac220362bc494e78458f90dd790e633f294c8eac01f9c53e10b3d393",
-  "sha256": "89f1df7e88b863f050429dc35a7cd912cf5048cee4d2e74d23d21c683032b7f7",
-  "size": 83540956,
-  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.2/Pars.Sistem.Yoneticisi.Setup.1.0.2.exe",
+  "version": "1.0.3",
+  "notes": "1.0.2’e ek olarak tarama performansı, yükleme/güncelleme kuyruğu, ana sayfa iyileştirmeleri ve üçüncü taraf sağ tık menüsü eklentilerinin yönetimi eklendi.",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.3.exe",
+  "sha512": "327535d86fe270e30e4f27de9119e0ac131cc459f5eb4723ebdd32894a8442466e6a7a3ad62297c90c804b6151b42b830a7feda315fb1c511d8f05f14295da84",
+  "sha256": "cae77c3013c437209b0ab77019d8ed8ff7e73da4420864b932fd8f76eab5fdc2",
+  "size": 83560302,
+  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.3/Pars.Sistem.Yoneticisi.Setup.1.0.3.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
-  "portableSha256": "44e063177007815c607ed5974cc808904e85da010299312e65f271fc560d7ba1",
-  "portableSize": 83328049,
-  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.2/ParsSistemYoneticisi-Portable.exe"
+  "portableSha256": "57088cea660618f2f25073311665cb1ebf08f0abacec7a58ac7a5fa89eb1c9a1",
+  "portableSize": 83347495,
+  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.3/ParsSistemYoneticisi-Portable.exe"
 }
