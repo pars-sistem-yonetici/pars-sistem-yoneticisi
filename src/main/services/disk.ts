@@ -1,11 +1,35 @@
 import fs from 'fs';
 import path from 'path';
 import type { CleanResult, CleanTarget } from '../../shared/types';
-import { LogFn, directorySize, humanSize, isProtectedPath, isRuntimePath, isSafeEntry, removeTree, runCommand, runPowerShell } from '../util';
+import { LogFn, directorySize, humanSize, isProtectedPath, isRuntimePath, isSafeEntry, psLiteral, removeTree, runCommand, runPowerShell } from '../util';
 import { exclusionReason, isExcludedPath } from './exclusions';
 
 function env(name: string, fallback: string): string {
   return process.env[name] || fallback;
+}
+
+/**
+ * Sistem sürücüsündeki hedeflere ek olarak, verilen diğer sabit sürücülerdeki
+ * kök Temp klasörlerini de taramaya ekler. Kullanıcı yalnızca temp verisini
+ * temizleyebilir; sürücü köklerinin kendisi hiçbir zaman silinmez.
+ */
+export function targetsWithDrives(drives: string[] = []): CleanTarget[] {
+  const items = targets();
+  const systemDrive = (env('SystemDrive', 'C:') || 'C:').replace(/[:\\/]/g, '').toUpperCase();
+  for (const drive of drives) {
+    const letter = drive.replace(/[:\\/]/g, '').toUpperCase();
+    if (!/^[A-Z]$/.test(letter) || letter === systemDrive) continue;
+    const tempRoot = `${letter}:\\Temp`;
+    if (!fs.existsSync(tempRoot)) continue;
+    items.push({
+      key: `drive_temp_${letter}`,
+      name: `${letter}: Temp`,
+      description: `${drive} sürücüsündeki kök Temp klasörü.`,
+      dirs: [tempRoot], files: [], action: '', needsAdmin: true,
+      size: 0, count: 0, available: true,
+    });
+  }
+  return items;
 }
 
 export function targets(): CleanTarget[] {
@@ -101,7 +125,7 @@ function safeFileSize(filePath: string): number {
   try { return fs.statSync(filePath).size; } catch { return 0; }
 }
 
-export async function clean(items: CleanTarget[], onLine?: LogFn): Promise<CleanResult[]> {
+export async function clean(items: CleanTarget[], onLine?: LogFn, recycleDrives: string[] = []): Promise<CleanResult[]> {
   const results: CleanResult[] = [];
   for (const target of items) {
     let freed = 0;
@@ -114,9 +138,14 @@ export async function clean(items: CleanTarget[], onLine?: LogFn): Promise<Clean
       ok = result.code === 0;
       message = ok ? 'DNS önbelleği temizlendi' : (result.text.trim().slice(0, 200) || 'ipconfig hatası');
     } else if (target.action === 'recycle') {
-      const result = await runPowerShell('Clear-RecycleBin -Force -ErrorAction SilentlyContinue; if ($?) { "OK" } else { "HATA" }', onLine, 60_000);
+      const letters = [...new Set(recycleDrives.map((drive) => drive.replace(/[:\\/]/g, '').toUpperCase()).filter((letter) => /^[A-Z]$/.test(letter)))];
+      const list = letters.length ? letters : [(env('SystemDrive', 'C:').replace(/[:\\/]/g, '') || 'C').toUpperCase()];
+      const script = list.map((letter) => `
+Clear-RecycleBin -DriveLetter ${psLiteral(letter)} -Force -ErrorAction SilentlyContinue
+`).join('') + '\nif ($?) { "OK" } else { "HATA" }';
+      const result = await runPowerShell(script, onLine, 120_000);
       ok = /OK/.test(result.text);
-      message = ok ? 'Geri Dönüşüm Kutusu boşaltıldı' : 'Geri Dönüşüm Kutusu boşaltılamadı';
+      message = ok ? `${list.join(', ')}: Geri Dönüşüm Kutusu boşaltıldı` : 'Geri Dönüşüm Kutusu boşaltılamadı';
     } else {
       for (const entry of entries(target)) {
         try {

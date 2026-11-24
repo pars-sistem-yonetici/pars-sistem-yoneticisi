@@ -1,9 +1,7 @@
 import type { InstalledApp, Package } from '../../shared/types';
 import { normalizeName, powershellJson } from '../util';
 
-interface RawApp extends InstalledApp {
-  size?: number;
-}
+type RawApp = InstalledApp;
 
 const SCRIPT = `
 $ErrorActionPreference = 'SilentlyContinue'
@@ -59,7 +57,7 @@ function Add-Apps($hive, $viewName) {
         displayIcon = (Clean ([string]$sub.GetValue('DisplayIcon')))
         uninstallString = (Clean ([string]$sub.GetValue('UninstallString')))
         icon = $iconB64
-        size = 0
+        size = ([int64]$sub.GetValue('EstimatedSize')) * 1024
       })
     }
     $key.Close(); $base.Close()
@@ -82,9 +80,9 @@ export async function installedApps(wingetPackages: Package[] = []): Promise<Ins
   return raw.map((app) => {
     const key = normalizeName(app.name);
     const match = byName.get(key);
-    const { size: _size, ...clean } = app;
     return {
-      ...clean,
+      ...app,
+      size: Number.isFinite(app.size) && app.size > 0 ? app.size : 0,
       ident: match?.ident || '',
       version: app.version || match?.version || '',
       icon: app.icon || undefined,

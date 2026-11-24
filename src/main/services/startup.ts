@@ -1,4 +1,4 @@
-import type { StartupItem } from '../../shared/types';
+import type { StartupItem, StartupTiming } from '../../shared/types';
 import { powershellJson, psLiteral as ps } from '../util';
 import { isExcludedPath } from './exclusions';
 
@@ -111,6 +111,77 @@ export async function scanStartup(): Promise<StartupItem[]> {
   const result = await powershellJson<StartupItem[] | StartupItem>(SCAN_SCRIPT, undefined, 60_000);
   const items = Array.isArray(result) ? result : result ? [result] : [];
   return items.filter((item) => !isExcludedPath(item.sourcePath));
+}
+
+const TIMINGS_SCRIPT = String.raw`
+$ErrorActionPreference = 'SilentlyContinue'
+$boot = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime
+$rows = New-Object System.Collections.ArrayList
+foreach ($p in (Get-CimInstance Win32_Process)) {
+  try {
+    if ([datetime]$p.CreationDate -lt [datetime]$boot) { continue }
+    $sec = [math]::Round((([datetime]$p.CreationDate) - ([datetime]$boot)).TotalSeconds, 1)
+    if ($sec -lt 0 -or $sec -gt 7200) { continue }
+    [void]$rows.Add([pscustomobject]@{
+      name = [string]$p.Name
+      seconds = $sec
+      command = [string]$p.CommandLine
+    })
+  } catch { }
+}
+@{ rows = @($rows) } | ConvertTo-Json -Depth 4 -Compress
+`;
+
+function processKey(name: string): string {
+  let value = String(name || '').trim();
+  if (!value) return '';
+  // Komut satırındaki argümanları at; tırnak içindeki yolu olduğu gibi al.
+  if (value.startsWith('"')) {
+    const end = value.indexOf('"', 1);
+    value = end > 1 ? value.slice(1, end) : value.slice(1);
+  } else {
+    value = value.split(/\s+/)[0];
+  }
+  return value
+    .replace(/^.*[\\/]/, '')
+    .replace(/^["']|["']$/g, '')
+    .replace(/\.exe$/i, '')
+    .toLocaleLowerCase('tr-TR')
+    .trim();
+}
+
+/**
+ * Önyükleme anından itibaren ilk 10 işlemin başlangıç zamanını döner.
+ * Win32_Process.CreationDate yaklaşık bir ölçümdür; gerçek "başlangıç süresi"
+ * (yükleme + hazır olma) Windows tarafından doğrudan raporlanmaz.
+ */
+export async function startupTimings(): Promise<StartupTiming[]> {
+  const [raw, items] = await Promise.all([
+    powershellJson<{ rows?: Array<{ name: string; seconds: number; command: string }> | { name: string; seconds: number; command: string } }>(TIMINGS_SCRIPT, undefined, 90_000),
+    scanStartup(),
+  ]);
+  const list = !raw?.rows ? [] : Array.isArray(raw.rows) ? raw.rows : [raw.rows];
+  const processes = list
+    .filter((row) => row.name && Number.isFinite(Number(row.seconds)) && Number(row.seconds) >= 0)
+    .map((row) => ({
+      name: String(row.name),
+      processName: processKey(String(row.name)),
+      seconds: Number(row.seconds),
+      command: String(row.command || ''),
+    }));
+
+  const matched: StartupTiming[] = [];
+  for (const item of items.filter((entry) => entry.enabled)) {
+    const key = processKey(item.command) || processKey(item.name);
+    if (!key) continue;
+    const found = processes.filter((row) => row.processName === key).sort((a, b) => a.seconds - b.seconds)[0];
+    if (found) matched.push({ name: item.name, processName: found.name, seconds: found.seconds, command: item.command });
+  }
+
+  const result = matched.length
+    ? matched
+    : processes.slice(0, 10).map((row) => ({ name: row.name, processName: row.name, seconds: row.seconds, command: row.command }));
+  return result.sort((a, b) => a.seconds - b.seconds).slice(0, 10);
 }
 
 export async function setStartupEnabled(item: StartupItem, enabled: boolean): Promise<string> {
