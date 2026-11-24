@@ -100,37 +100,65 @@
       </div>
     </section>
 
+    <!-- B:SHOWCASE -->
+    <section class="section-tight" id="ekranlar">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow">Uygulamadan</p>
+          <h2>Paneli çalışırken görün</h2>
+          <p>Gerçek arayüzden alınmış ekran görüntüleri otomatik olarak sırayla gösterilir. Üzerine gelerek durdurabilirsiniz.</p>
+        </div>
+        <div class="showcase reveal">
+          <div class="showcase-frame">
+            <img class="shot" src="assets/screen-home.png" alt="Pars Sistem Yöneticisi anasayfa ekranı" />
+            <img class="shot" src="assets/screen-apps.png" alt="Kurulu uygulamalar listesi" />
+            <img class="shot" src="assets/screen-updates.png" alt="Güncellemeler ekranı" />
+            <img class="shot" src="assets/screen-context.png" alt="Sağ tık menüsü eklentileri ekranı" />
+          </div>
+          <div class="showcase-bar">
+            <div class="shot-caption">
+              <span>Anasayfa · sistem özeti ve disk durumu</span>
+              <span>Kurulu uygulamalar · sürüm ve boyut envanteri</span>
+              <span>Güncellemeler · winget tarama sonuçları</span>
+              <span>Sağ tık menüsü · üçüncü taraf eklentileri</span>
+            </div>
+            <div class="showcase-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- B:STATS -->
     <section class="stats-band" aria-label="Özet bilgiler">
       <div class="wrap stats-grid">
-        <div class="stat"><b>142</b><span>doğrulanmış winget uygulaması</span></div>
-        <div class="stat"><b>5</b><span>salt-okunur yerel tarama motoru</span></div>
-        <div class="stat"><b>4</b><span>hazır sistem bakım planı</span></div>
-        <div class="stat"><b>55+</b><span>arayüz dili ve iki tam çeviri</span></div>
+        <div class="stat reveal"><b>142</b><span>doğrulanmış winget uygulaması</span></div>
+        <div class="stat reveal"><b>5</b><span>salt-okunur yerel tarama motoru</span></div>
+        <div class="stat reveal"><b>4</b><span>hazır sistem bakım planı</span></div>
+        <div class="stat reveal"><b>55+</b><span>arayüz dili ve iki tam çeviri</span></div>
       </div>
     </section>
 
     <!-- B:FEATURES -->
     <section class="section" id="ozellikler">
       <div class="wrap">
-        <div class="section-head">
+        <div class="section-head reveal">
           <p class="eyebrow">Özellikler</p>
           <h2>Bir bakım aracından fazlası</h2>
           <p>Günlük bakımdan kurumsal ilke kaynaklı sorunlara kadar yaygın Windows baş ağrılarını tek bir arayüzde toplar.</p>
         </div>
         <div class="features">
-          <article class="feature"><div class="feature-icon">↑</div><h3>Güncellemeler</h3><p>winget ile güncellemesi olan paketleri tarar, seçili veya tüm güncellemeleri tek seferde uygular.</p></article>
-          <article class="feature"><div class="feature-icon">▦</div><h3>Kaldırma ve kalıntılar</h3><p>Uygulamaları kaldırır, geride kalan dosya ve kayıt girdilerini tarar. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır.</p></article>
-          <article class="feature"><div class="feature-icon">◫</div><h3>Disk temizleme</h3><p>Geçici dosyalar, önbellekler, Windows Update indirmeleri ve DNS dahil yedi kategoride güvenli temizlik.</p></article>
-          <article class="feature"><div class="feature-icon">⚙</div><h3>Kayıt defteri</h3><p>Bozuk kaldırma girdilerini 64 ve 32-bit üzerinde tarar. Silmeden önce her girdi .reg olarak yedeklenir.</p></article>
-          <article class="feature"><div class="feature-icon">⚑</div><h3>Güvenlik duvarı</h3><p>Etkin gelen kuralları denetler; geniş kapsam, eksik program yolu ve imzasız ikilileri kritik olarak işaretler.</p></article>
-          <article class="feature"><div class="feature-icon">☣</div><h3>Kötü amaçlı yazılım</h3><p>Beş yerel, salt-okunur motor: imzalar, sezgisel analiz, betikler, sistem bütünlüğü ve kalıcılık izleri.</p></article>
-          <article class="feature"><div class="feature-icon">⚒</div><h3>Sürücüler</h3><p>Windows Update Agent ile sürücü güncellemelerini tarar; kurulum öncesi DISM ile yedek alma seçeneği sunar.</p></article>
-          <article class="feature"><div class="feature-icon">◷</div><h3>Zamanlama</h3><p>Haftalık, günlük, aylık ve özel olmak üzere dört devre dışı plan. Uygulama açıkken 60 saniyelik döngüyle çalışır.</p></article>
-          <article class="feature"><div class="feature-icon">≡</div><h3>Sağ tık menüsü</h3><p>Windows 10 klasik menüsü ile Windows 11 modern menüsü arasında geçiş yapar ve Gezgin’i otomatik yeniden başlatır.</p></article>
-          <article class="feature"><div class="feature-icon">⚗</div><h3>Hata Ayıklama</h3><p>“Kuruluşunuz tarafından yönetiliyor” uyarısını düzelten Windows ve tarayıcı .reg dosyalarını içerir; uygulama öncesi yedek alınır.</p></article>
-          <article class="feature"><div class="feature-icon">⟳</div><h3>Kendi kendini güncelleme</h3><p>Yeni sürümü kontrol eder, SHA-512 ile doğrular ve onayınızla indirip kurar. Portable sürümde dosyayı değiştirmez.</p></article>
-          <article class="feature"><div class="feature-icon">✦</div><h3>Kişiselleştirme</h3><p>Grafit/altın veya Windows 11 açık teması, Türkçe/İngilizce ve 55 dil, hariç tutma listeleri ve gruplu animasyonlu menü.</p></article>
+          <article class="feature reveal"><div class="feature-icon">↑</div><h3>Güncellemeler</h3><p>winget ile güncellemesi olan paketleri tarar, seçili veya tüm güncellemeleri tek seferde uygular.</p></article>
+          <article class="feature reveal"><div class="feature-icon">▦</div><h3>Kaldırma ve kalıntılar</h3><p>Uygulamaları kaldırır, geride kalan dosya ve kayıt girdilerini tarar. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır.</p></article>
+          <article class="feature reveal"><div class="feature-icon">◫</div><h3>Disk temizleme</h3><p>Geçici dosyalar, önbellekler, Windows Update indirmeleri ve DNS dahil yedi kategoride güvenli temizlik.</p></article>
+          <article class="feature reveal"><div class="feature-icon">⚙</div><h3>Kayıt defteri</h3><p>Bozuk kaldırma girdilerini 64 ve 32-bit üzerinde tarar. Silmeden önce her girdi .reg olarak yedeklenir.</p></article>
+          <article class="feature reveal"><div class="feature-icon">⚑</div><h3>Güvenlik duvarı</h3><p>Etkin gelen kuralları denetler; geniş kapsam, eksik program yolu ve imzasız ikilileri kritik olarak işaretler.</p></article>
+          <article class="feature reveal"><div class="feature-icon">☣</div><h3>Kötü amaçlı yazılım</h3><p>Beş yerel, salt-okunur motor: imzalar, sezgisel analiz, betikler, sistem bütünlüğü ve kalıcılık izleri.</p></article>
+          <article class="feature reveal"><div class="feature-icon">⚒</div><h3>Sürücüler</h3><p>Windows Update Agent ile sürücü güncellemelerini tarar; kurulum öncesi DISM ile yedek alma seçeneği sunar.</p></article>
+          <article class="feature reveal"><div class="feature-icon">◷</div><h3>Zamanlama</h3><p>Haftalık, günlük, aylık ve özel olmak üzere dört devre dışı plan. Uygulama açıkken 60 saniyelik döngüyle çalışır.</p></article>
+          <article class="feature reveal"><div class="feature-icon">≡</div><h3>Sağ tık menüsü</h3><p>Windows 10 klasik menüsü ile Windows 11 modern menüsü arasında geçiş yapar ve Gezgin’i otomatik yeniden başlatır.</p></article>
+          <article class="feature reveal"><div class="feature-icon">⚗</div><h3>Hata Ayıklama</h3><p>“Kuruluşunuz tarafından yönetiliyor” uyarısını düzelten Windows ve tarayıcı .reg dosyalarını içerir; uygulama öncesi yedek alınır.</p></article>
+          <article class="feature reveal"><div class="feature-icon">⟳</div><h3>Kendi kendini güncelleme</h3><p>Yeni sürümü kontrol eder, SHA-512 ile doğrular ve onayınızla indirip kurar. Portable sürümde dosyayı değiştirmez.</p></article>
+          <article class="feature reveal"><div class="feature-icon">✦</div><h3>Kişiselleştirme</h3><p>Grafit/altın veya Windows 11 açık teması, Türkçe/İngilizce ve 55 dil, hariç tutma listeleri ve gruplu animasyonlu menü.</p></article>
         </div>
       </div>
     </section>
@@ -138,12 +166,12 @@
     <!-- B:SECURITY -->
     <section class="section-tight" id="guvenlik">
       <div class="wrap security-wrap">
-        <div class="section-head" style="margin:0">
+        <div class="section-head reveal" style="margin:0">
           <p class="eyebrow">Güvenlik yaklaşımı</p>
           <h2>Yıkıcı işlemlerde durur, yedek alır, sorar</h2>
           <p>Hız için güvenlikten ödün verilmez: korumalı kökler hiçbir temizleme işlemine dahil edilmez, sembolik bağlantılar atlanır.</p>
         </div>
-        <div class="security-panel">
+        <div class="security-panel reveal">
           <h3>Varsayılan güvenli davranış</h3>
           <p>Uygulama yönetici izinleriyle çalışır; ancak aşağıdaki kurallar her işlemde geçerlidir.</p>
           <ul class="security-list">
@@ -160,7 +188,7 @@
     <!-- B:SKIP1 -->
     <section class="section-tight">
       <div class="wrap">
-        <div class="cta-band">
+        <div class="cta-band reveal">
           <div>
             <h2>Hazır mısınız?</h2>
             <p>Kurulumu veya tek dosyalık portable sürümü indirin; birkaç saniyede kullanmaya başlayın.</p>
@@ -173,7 +201,7 @@
     <!-- B:FAQ -->
     <section class="section" id="sss">
       <div class="wrap">
-        <div class="section-head">
+        <div class="section-head reveal">
           <p class="eyebrow">Sık sorulan sorular</p>
           <h2>Merak edilenler</h2>
         </div>
