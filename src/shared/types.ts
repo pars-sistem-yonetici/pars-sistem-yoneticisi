@@ -6,10 +6,49 @@ export interface Package {
   source: string;
 }
 
+export type PackageSource = 'winget' | 'choco' | 'npm' | 'scoop';
+
+export interface InstallItem {
+  name: string;
+  ident: string;
+  source: PackageSource;
+}
+
+export interface InstallProgress {
+  requestId: string;
+  index: number;
+  total: number;
+  name: string;
+  source: PackageSource;
+  percent: number;
+  speed: string;
+  line: string;
+  phase: 'start' | 'progress' | 'done';
+  ok?: boolean;
+}
+
+export interface InstallResult {
+  name: string;
+  ident: string;
+  source: PackageSource;
+  ok: boolean;
+  code: number;
+  message: string;
+}
+
+export interface PackageManagerStatus {
+  source: PackageSource;
+  label: string;
+  available: boolean;
+  version: string;
+}
+
 export interface InstalledApp {
   name: string;
   ident: string;
   version: string;
+  /** Kayıt defterindeki EstimatedSize (KB) değerinden hesaplanan bayt cinsinden boyut. */
+  size: number;
   publisher: string;
   installLocation: string;
   displayIcon: string;
@@ -87,8 +126,46 @@ export interface Leftover {
   reason: string;
 }
 
+export interface LeftoverScanTarget {
+  name: string;
+  ident: string;
+}
+
+export interface AppLeftovers extends LeftoverScanTarget {
+  items: Leftover[];
+}
+
+export interface LeftoverProgress {
+  requestId: string;
+  rootIndex: number;
+  rootsTotal: number;
+  scanned: number;
+  matches: number;
+  percent: number;
+}
+
 export interface DeleteResult {
   path: string;
+  ok: boolean;
+  message: string;
+}
+
+export interface BloatwareItem {
+  id: string;
+  name: string;
+  publisher: string;
+  version: string;
+  kind: 'windows-app' | 'oem-app';
+  ident: string;
+  packageName: string;
+  packageFullName: string;
+  provisioned: boolean;
+  detail: string;
+  reason: string;
+}
+
+export interface BloatwareRemoveResult {
+  id: string;
   ok: boolean;
   message: string;
 }
@@ -121,6 +198,14 @@ export interface StartupItem {
   sourcePath: string;
   valueName: string;
   valueType: string;
+}
+
+/** Önyüklemeden sonra ilk 10 işlemin başlama zamanı (yaklaşık, saniye). */
+export interface StartupTiming {
+  name: string;
+  processName: string;
+  seconds: number;
+  command: string;
 }
 
 export interface Settings {
@@ -280,6 +365,37 @@ export interface ContextMenuActionResult {
   explorerRestarted: boolean;
 }
 
+/** Gezgin sağ tık menüsüne üçüncü taraf yazılımların eklediği kabuk eklentisi. */
+export interface ShellExtensionItem {
+  /** root|kind|name biçiminde, tarama sonucundan üretilen kararlı kimlik. */
+  id: string;
+  label: string;
+  name: string;
+  /** *, Directory, Directory\Background, Folder veya Drive */
+  root: string;
+  /** shellex: COM menü eklentisi, verb: klasik shell komutu */
+  kind: 'shellex' | 'verb';
+  /** HKCU (kullanıcı) veya HKLM (tüm kullanıcılar) */
+  location: 'HKCU' | 'HKLM';
+  /** CLSID veya komut değeri. */
+  value: string;
+  /** Blocked anahtarıyla kapatılabilen COM CLSID'si; klasik komutlarda boş. */
+  clsid: string;
+  /** blocked: CLSID'yi Blocked anahtarına ekler; access-only: ProgrammaticAccessOnly kullanır. */
+  strategy: 'blocked' | 'access-only' | 'unsupported';
+  enabled: boolean;
+  /** Windows veya imzalı sistem bileşeni olabilecek girdiler. */
+  isSystem: boolean;
+}
+
+export interface ShellExtensionActionResult {
+  ok: boolean;
+  enabled: boolean;
+  message: string;
+  backupPath: string;
+  explorerRestarted: boolean;
+}
+
 /** Uygulamanın kendi güncelleyicisi; winget üzerinden diğer yazılımları güncellemekten ayrıdır. */
 export interface AppUpdateInfo {
   available: boolean;
@@ -350,20 +466,34 @@ export interface AppApi {
   wingetUpdates: () => Promise<Package[]>;
   wingetSearch: (query: string) => Promise<Package[]>;
   wingetInstall: (ident: string, silent: boolean) => Promise<number>;
+  packageManagerStatus: () => Promise<PackageManagerStatus[]>;
+  networkSpeed: () => Promise<number>;
+  installQueue: (items: InstallItem[], silent: boolean, requestId?: string) => Promise<InstallResult[]>;
+  onInstallProgress: (callback: (progress: InstallProgress) => void) => () => void;
+  installCancel: (requestId: string) => void;
   wingetUpgrade: (pkg: Package, silent: boolean) => Promise<number>;
+  updateQueue: (items: Package[], silent: boolean, requestId?: string) => Promise<InstallResult[]>;
+  onUpdateQueueProgress: (callback: (progress: InstallProgress) => void) => () => void;
+  updateQueueCancel: (requestId: string) => void;
   wingetUpgradeAll: (silent: boolean) => Promise<number>;
   wingetUninstall: (pkg: Package, silent: boolean) => Promise<number>;
   wingetDownload: (ident: string) => Promise<DownloadResult>;
   installedApps: () => Promise<InstalledApp[]>;
   scanLeftovers: (name: string, ident: string) => Promise<Leftover[]>;
+  scanLeftoversBatch: (targets: LeftoverScanTarget[], requestId?: string) => Promise<AppLeftovers[]>;
+  onLeftoverProgress: (callback: (progress: LeftoverProgress) => void) => () => void;
+  cancelLeftovers: (requestId: string) => void;
   deleteLeftovers: (items: Leftover[], mode: 'recycle' | 'permanent') => Promise<DeleteResult[]>;
+  bloatwareScan: () => Promise<BloatwareItem[]>;
+  bloatwareRemove: (items: BloatwareItem[]) => Promise<BloatwareRemoveResult[]>;
   diskTargets: () => Promise<CleanTarget[]>;
   diskScan: () => Promise<CleanTarget[]>;
-  diskClean: (keys: string[]) => Promise<CleanResult[]>;
+  diskClean: (keys: string[], recycleDrives?: string[]) => Promise<CleanResult[]>;
   registryScan: () => Promise<RegScanResult>;
   registryDelete: (issues: RegIssue[]) => Promise<RegResult[]>;
   registryBackupPath: () => Promise<string>;
   startupList: () => Promise<StartupItem[]>;
+  startupTimings: () => Promise<StartupTiming[]>;
   startupSet: (item: StartupItem, enabled: boolean) => Promise<string>;
   firewallScan: () => Promise<FirewallRule[]>;
   firewallSet: (id: string, enabled: boolean) => Promise<string>;
@@ -384,6 +514,8 @@ export interface AppApi {
   prereqInstall: (id: PrerequisiteId) => Promise<PrereqActionResult>;
   contextMenuStatus: () => Promise<ContextMenuStatus>;
   contextMenuSet: (style: ContextMenuStyle) => Promise<ContextMenuActionResult>;
+  shellExtensions: () => Promise<ShellExtensionItem[]>;
+  shellExtensionSet: (id: string, enabled: boolean) => Promise<ShellExtensionActionResult>;
   managedPolicyFiles: () => Promise<ManagedPolicyFile[]>;
   managedPolicySave: (id: ManagedPolicyFixId) => Promise<ManagedPolicySaveResult>;
   managedPolicyApply: (id: ManagedPolicyFixId) => Promise<ManagedPolicyApplyResult>;

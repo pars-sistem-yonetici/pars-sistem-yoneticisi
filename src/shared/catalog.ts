@@ -1,3 +1,5 @@
+import type { PackageSource } from './types';
+
 export interface RecommendedSoftware {
   name: string;
   ident: string;
@@ -5,6 +7,8 @@ export interface RecommendedSoftware {
   description: string;
   essential?: boolean;
   homepage?: string;
+  /** Boşsa winget kullanılır. */
+  source?: PackageSource;
 }
 
 // Tüm kimlikler winget 1.29 ile `winget show --id ... --exact` kullanılarak doğrulanmıştır.
@@ -164,9 +168,72 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'Battle.net', ident: 'Blizzard.BattleNet', category: 'Oyun', description: 'Blizzard oyun platformu', homepage: 'https://www.blizzard.com' },
   { name: 'EA Desktop', ident: 'ElectronicArts.EADesktop', category: 'Oyun', description: 'EA oyun platformu', homepage: 'https://www.ea.com' },
   { name: 'Logitech G HUB', ident: 'Logitech.GHUB', category: 'Oyun', description: 'Oyun çevre birimi yazılımı', homepage: 'https://www.logitechg.com' },
+
+  // Chocolatey paketleri (kimlikler choco community repository biçimindedir).
+  { name: 'Chocolatey', ident: 'chocolatey', category: 'Paket Yöneticileri', description: 'Windows paket yöneticisinin kendisi', source: 'choco', homepage: 'https://chocolatey.org' },
+  { name: 'Git (Chocolatey)', ident: 'git', category: 'Paket Yöneticileri', description: 'Sürüm kontrol sistemi', source: 'choco', homepage: 'https://git-scm.com' },
+  { name: '7-Zip (Chocolatey)', ident: '7zip', category: 'Paket Yöneticileri', description: 'Dosya sıkıştırma/arşivleme', source: 'choco', homepage: 'https://www.7-zip.org' },
+  { name: 'Visual Studio Code (Chocolatey)', ident: 'vscode', category: 'Paket Yöneticileri', description: 'Kod editörü', source: 'choco', homepage: 'https://code.visualstudio.com' },
+  { name: 'Google Chrome (Chocolatey)', ident: 'googlechrome', category: 'Paket Yöneticileri', description: 'Web tarayıcısı', source: 'choco', homepage: 'https://www.google.com/chrome' },
+  { name: 'Mozilla Firefox (Chocolatey)', ident: 'firefox', category: 'Paket Yöneticileri', description: 'Web tarayıcısı', source: 'choco', homepage: 'https://www.mozilla.org' },
+  { name: 'Node.js (Chocolatey)', ident: 'nodejs', category: 'Paket Yöneticileri', description: 'JavaScript çalışma zamanı', source: 'choco', homepage: 'https://nodejs.org' },
+  { name: 'Python 3 (Chocolatey)', ident: 'python3', category: 'Paket Yöneticileri', description: 'Python çalışma zamanı', source: 'choco', homepage: 'https://www.python.org' },
+  { name: 'Notepad++ (Chocolatey)', ident: 'notepadplusplus', category: 'Paket Yöneticileri', description: 'Metin düzenleyici', source: 'choco', homepage: 'https://notepad-plus-plus.org' },
+  { name: 'PuTTY (Chocolatey)', ident: 'putty', category: 'Paket Yöneticileri', description: 'SSH / terminal istemcisi', source: 'choco', homepage: 'https://www.putty.org' },
+  { name: 'VLC (Chocolatey)', ident: 'vlc', category: 'Paket Yöneticileri', description: 'Medya oynatıcı', source: 'choco', homepage: 'https://www.videolan.org' },
+  { name: 'Audacity (Chocolatey)', ident: 'audacity', category: 'Paket Yöneticileri', description: 'Ses düzenleyici', source: 'choco', homepage: 'https://www.audacityteam.org' },
+  { name: 'GIMP (Chocolatey)', ident: 'gimp', category: 'Paket Yöneticileri', description: 'Görsel düzenleyici', source: 'choco', homepage: 'https://www.gimp.org' },
+  { name: 'OBS Studio (Chocolatey)', ident: 'obs-studio', category: 'Paket Yöneticileri', description: 'Ekran kayıt ve yayın', source: 'choco', homepage: 'https://obsproject.com' },
+  { name: 'LibreOffice (Chocolatey)', ident: 'libreoffice', category: 'Paket Yöneticileri', description: 'Ofis paketi', source: 'choco', homepage: 'https://www.libreoffice.org' },
+  { name: 'Docker Desktop (Chocolatey)', ident: 'docker-desktop', category: 'Paket Yöneticileri', description: 'Konteyner geliştirme ortamı', source: 'choco', homepage: 'https://www.docker.com' },
+  { name: 'curl (Chocolatey)', ident: 'curl', category: 'Paket Yöneticileri', description: 'HTTP istemcisi', source: 'choco', homepage: 'https://curl.se' },
+  { name: 'jq (Chocolatey)', ident: 'jq', category: 'Paket Yöneticileri', description: 'JSON işleme aracı', source: 'choco', homepage: 'https://jqlang.github.io/jq' },
+
+  // npm global paketleri.
+  { name: 'npm (güncelle)', ident: 'npm', category: 'Paket Yöneticileri', description: 'Node paket yöneticisi', source: 'npm', homepage: 'https://www.npmjs.com/package/npm' },
+  { name: 'Yarn', ident: 'yarn', category: 'Paket Yöneticileri', description: 'Alternatif Node paket yöneticisi', source: 'npm', homepage: 'https://yarnpkg.com' },
+  { name: 'pnpm', ident: 'pnpm', category: 'Paket Yöneticileri', description: 'Hızlı Node paket yöneticisi', source: 'npm', homepage: 'https://pnpm.io' },
+  { name: 'TypeScript', ident: 'typescript', category: 'Paket Yöneticileri', description: 'TS derleyicisi', source: 'npm', homepage: 'https://www.typescriptlang.org' },
+  { name: 'ts-node', ident: 'ts-node', category: 'Paket Yöneticileri', description: 'TypeScript çalıştırıcı', source: 'npm', homepage: 'https://typestrong.org/ts-node' },
+  { name: 'nodemon', ident: 'nodemon', category: 'Paket Yöneticileri', description: 'Geliştirme sunucusu yeniden başlatıcı', source: 'npm', homepage: 'https://nodemon.io' },
+  { name: 'PM2', ident: 'pm2', category: 'Paket Yöneticileri', description: 'Node süreç yöneticisi', source: 'npm', homepage: 'https://pm2.keymetrics.io' },
+  { name: 'ESLint', ident: 'eslint', category: 'Paket Yöneticileri', description: 'Kod kalite denetimi', source: 'npm', homepage: 'https://eslint.org' },
+  { name: 'Prettier', ident: 'prettier', category: 'Paket Yöneticileri', description: 'Kod biçimlendirici', source: 'npm', homepage: 'https://prettier.io' },
+  { name: 'Vite', ident: 'vite', category: 'Paket Yöneticileri', description: 'Ön yüz derleme aracı', source: 'npm', homepage: 'https://vite.dev' },
+  { name: 'Vue CLI', ident: '@vue/cli', category: 'Paket Yöneticileri', description: 'Vue proje oluşturucu', source: 'npm', homepage: 'https://cli.vuejs.org' },
+  { name: 'Angular CLI', ident: '@angular/cli', category: 'Paket Yöneticileri', description: 'Angular proje oluşturucu', source: 'npm', homepage: 'https://angular.dev/tools/cli' },
+  { name: 'serve', ident: 'serve', category: 'Paket Yöneticileri', description: 'Yerel statik sunucu', source: 'npm', homepage: 'https://www.npmjs.com/package/serve' },
+  { name: 'webpack CLI', ident: 'webpack-cli', category: 'Paket Yöneticileri', description: 'webpack komut satırı', source: 'npm', homepage: 'https://webpack.js.org' },
+
+  // Scoop paketleri.
+  { name: 'Scoop', ident: 'scoop', category: 'Paket Yöneticileri', description: 'Kullanıcı bazlı Windows paket yöneticisi', source: 'scoop', homepage: 'https://scoop.sh' },
+  { name: 'Git (Scoop)', ident: 'git', category: 'Paket Yöneticileri', description: 'Sürüm kontrol sistemi', source: 'scoop', homepage: 'https://git-scm.com' },
+  { name: '7-Zip (Scoop)', ident: '7zip', category: 'Paket Yöneticileri', description: 'Dosya sıkıştırma/arşivleme', source: 'scoop', homepage: 'https://www.7-zip.org' },
+  { name: 'curl (Scoop)', ident: 'curl', category: 'Paket Yöneticileri', description: 'HTTP istemcisi', source: 'scoop', homepage: 'https://curl.se' },
+  { name: 'wget (Scoop)', ident: 'wget', category: 'Paket Yöneticileri', description: 'Dosya indirici', source: 'scoop', homepage: 'https://www.gnu.org/software/wget' },
+  { name: 'jq (Scoop)', ident: 'jq', category: 'Paket Yöneticileri', description: 'JSON işleme aracı', source: 'scoop', homepage: 'https://jqlang.github.io/jq' },
+  { name: 'fzf', ident: 'fzf', category: 'Paket Yöneticileri', description: 'Bulansal arama aracı', source: 'scoop', homepage: 'https://github.com/junegunn/fzf' },
+  { name: 'ripgrep', ident: 'ripgrep', category: 'Paket Yöneticileri', description: 'Hızlı metin arama', source: 'scoop', homepage: 'https://github.com/BurntSushi/ripgrep' },
+  { name: 'fd', ident: 'fd', category: 'Paket Yöneticileri', description: 'Hızlı dosya bulma', source: 'scoop', homepage: 'https://github.com/sharkdp/fd' },
+  { name: 'bat', ident: 'bat', category: 'Paket Yöneticileri', description: 'cat yerine gelişmiş görüntüleyici', source: 'scoop', homepage: 'https://github.com/sharkdp/bat' },
+  { name: 'eza', ident: 'eza', category: 'Paket Yöneticileri', description: 'Modern dizin listeleme', source: 'scoop', homepage: 'https://github.com/eza-community/eza' },
+  { name: 'Neovim', ident: 'neovim', category: 'Paket Yöneticileri', description: 'Modern vim editörü', source: 'scoop', homepage: 'https://neovim.io' },
+  { name: 'Visual Studio Code (Scoop)', ident: 'vscode', category: 'Paket Yöneticileri', description: 'Kod editörü', source: 'scoop', homepage: 'https://code.visualstudio.com' },
+  { name: 'Python (Scoop)', ident: 'python', category: 'Paket Yöneticileri', description: 'Python çalışma zamanı', source: 'scoop', homepage: 'https://www.python.org' },
+  { name: 'Node.js (Scoop)', ident: 'nodejs', category: 'Paket Yöneticileri', description: 'JavaScript çalışma zamanı', source: 'scoop', homepage: 'https://nodejs.org' },
+  { name: 'sudo (Scoop)', ident: 'sudo', category: 'Paket Yöneticileri', description: 'Yönetici olarak komut çalıştırma', source: 'scoop', homepage: 'https://github.com/gerardog/gsudo' },
+  { name: 'yq', ident: 'yq', category: 'Paket Yöneticileri', description: 'YAML işleme aracı', source: 'scoop', homepage: 'https://github.com/mikefarah/yq' },
+  { name: 'make', ident: 'make', category: 'Paket Yöneticileri', description: 'GNU Make', source: 'scoop', homepage: 'https://www.gnu.org/software/make' },
+  { name: 'CMake', ident: 'cmake', category: 'Paket Yöneticileri', description: 'Çapraz platform derleme sistemi', source: 'scoop', homepage: 'https://cmake.org' },
+  { name: 'GCC (MinGW)', ident: 'gcc', category: 'Paket Yöneticileri', description: 'C/C++ derleyici', source: 'scoop', homepage: 'https://gcc.gnu.org' },
 ];
 
 export const CATEGORIES = Array.from(new Set(CATALOG.map((item) => item.category)));
+
+/** Aynı kimlik farklı kaynaklarda bulunabileceği için seçim anahtarı kaynağı da içerir. */
+export function recKey(item: RecommendedSoftware): string {
+  return `${item.source || 'winget'}:${item.ident}`;
+}
 
 export function favicon(item: RecommendedSoftware): string | undefined {
   if (!item.homepage) return undefined;
