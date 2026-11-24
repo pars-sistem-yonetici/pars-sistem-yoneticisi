@@ -1,24 +1,30 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
-import { CATALOG, CATEGORIES, favicon, type RecommendedSoftware } from '../shared/catalog';
+import { CATALOG, CATEGORIES, favicon, recKey, type RecommendedSoftware } from '../shared/catalog';
 import { DEFAULT_UPDATE_SOURCE } from '../shared/constants';
 import { translate, translateFormat } from '../shared/i18n';
 import type {
   AppApi,
   AppUpdateInfo,
+  BloatwareItem,
   CleanTarget,
   ContextMenuStatus,
   ContextMenuStyle,
   DriverScanResult,
   FirewallRule,
+  ShellExtensionActionResult,
+  ShellExtensionItem,
   InstalledApp,
+  InstallProgress,
   Language,
   Leftover,
+  LeftoverProgress,
   LogEntry,
   MalwareEngine,
   MalwareScanResult,
   ManagedPolicyFile,
   ManagedPolicyFixId,
   Package,
+  PackageManagerStatus,
   Prerequisite,
   RegIssue,
   RegStats,
@@ -26,6 +32,7 @@ import type {
   ScheduleTask,
   Settings,
   StartupItem,
+  StartupTiming,
   SystemSnapshot,
   Theme,
   UpdateDownloadResult,
@@ -34,7 +41,7 @@ import type {
 
 const api: AppApi = window.api;
 
-type Tab = 'home' | 'updates' | 'apps' | 'startup' | 'firewall' | 'malware' | 'disk' | 'drivers' | 'recommended' | 'registry' | 'schedule' | 'search' | 'contextmenu' | 'debugging' | 'settings';
+type Tab = 'home' | 'updates' | 'apps' | 'bloatware' | 'startup' | 'firewall' | 'malware' | 'disk' | 'drivers' | 'recommended' | 'registry' | 'schedule' | 'search' | 'contextmenu' | 'debugging' | 'settings';
 
 const SCHEDULE_INFO: Record<ScheduleKind, { description: string; icon: string }> = {
   'weekly-full': { description: 'Her hafta belirlenen günde kapsamlı temizlik (Windows Update indirmeleri hariç).', icon: '◷' },
@@ -67,6 +74,7 @@ type MeterIconKind = 'cpu' | 'ram' | 'disk';
 interface ConfirmState {
   title: string;
   message: string;
+  warning?: string;
   options: ConfirmOption[];
   onChoose: (value: string) => void | Promise<void>;
 }
@@ -80,6 +88,7 @@ const TABS: Array<{ id: Tab; label: string; icon: string }> = [
   { id: 'home', label: 'Anasayfa', icon: '⌂' },
   { id: 'updates', label: 'Güncellemeler', icon: '↑' },
   { id: 'apps', label: 'Kurulu Uygulamalar', icon: '▦' },
+  { id: 'bloatware', label: 'Gereksiz Yazılım Temizleyici', icon: '⌫' },
   { id: 'startup', label: 'Başlangıç', icon: '⏻' },
   { id: 'firewall', label: 'Güvenlik Duvarı', icon: '⚑' },
   { id: 'malware', label: 'Kötü Amaçlı Yazılım', icon: '☣' },
@@ -95,15 +104,19 @@ const TABS: Array<{ id: Tab; label: string; icon: string }> = [
 ];
 
 const TAB_GROUPS: Array<{ id: string; label: string; tabs: Tab[] }> = [
-  { id: 'general', label: 'Genel', tabs: ['home', 'search', 'recommended'] },
+  { id: 'general', label: 'Genel', tabs: ['search', 'recommended'] },
   { id: 'software', label: 'Yazılım Yönetimi', tabs: ['updates', 'apps', 'drivers'] },
-  { id: 'maintenance', label: 'Sistem Bakımı', tabs: ['disk', 'registry', 'startup', 'schedule'] },
+  { id: 'maintenance', label: 'Sistem Bakımı', tabs: ['disk', 'registry', 'bloatware', 'startup', 'schedule'] },
   { id: 'security', label: 'Güvenlik', tabs: ['firewall', 'malware'] },
-  { id: 'config', label: 'Yapılandırma', tabs: ['contextmenu', 'debugging', 'settings'] },
+  // Sağ tık menüsü Windows kabuğunu kişiselleştirir; hata ayıklama/ayarlardan ayrıldı.
+  { id: 'personalization', label: 'Kişiselleştirme', tabs: ['contextmenu'] },
+  { id: 'config', label: 'Yapılandırma', tabs: ['debugging', 'settings'] },
 ];
 
+/** Anasayfa bağımsız sekmedir; hiçbir gruba ait değildir. */
 function groupForTab(id: Tab): string {
-  return TAB_GROUPS.find((group) => group.tabs.includes(id))?.id ?? TAB_GROUPS[0].id;
+  if (id === 'home') return '';
+  return TAB_GROUPS.find((group) => group.tabs.includes(id))?.id ?? '';
 }
 
 function sizeText(size: number): string {
@@ -119,6 +132,11 @@ function sizeText(size: number): string {
 
 function appKey(app: InstalledApp): string {
   return app.ident || `${app.name}|${app.publisher}`;
+}
+
+/** Kurulu kimlikleri hem düz hem kaynaklı biçimde tutar; katalog recKey() ile eşleşir. */
+function installedIdSet(list: InstalledApp[]): Set<string> {
+  return new Set(list.flatMap((app) => (app.ident ? [app.ident, `winget:${app.ident}`] : [])));
 }
 
 function pkgKey(pkg: Package): string {
@@ -223,6 +241,7 @@ function ConfirmDialog({ state, onClose }: { state: ConfirmState; onClose: () =>
         <div className="modal-icon">!</div>
         <h2>{state.title}</h2>
         <p>{state.message}</p>
+        {state.warning && <div className="danger-zone"><b>DİKKAT</b><p>{state.warning}</p></div>}
         <div className="modal-actions">
           {state.options.map((option) => (
             <button
@@ -244,8 +263,10 @@ function ConfirmDialog({ state, onClose }: { state: ConfirmState; onClose: () =>
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('home');
-  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => new Set([groupForTab('home')]));
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => new Set());
   const [contextMenu, setContextMenu] = useState<ContextMenuStatus | null>(null);
+  const [shellExtensions, setShellExtensions] = useState<ShellExtensionItem[]>([]);
+  const [shellExtensionBusy, setShellExtensionBusy] = useState<string | null>(null);
   const [managedFixes, setManagedFixes] = useState<ManagedPolicyFile[]>([]);
   const [closePrompt, setClosePrompt] = useState(false);
   const [rememberClose, setRememberClose] = useState(false);
@@ -275,7 +296,9 @@ export default function App() {
   const updatePrompted = useRef(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [drives, setDrives] = useState<string[]>(['C:\\']);
+  const [recycleDrives, setRecycleDrives] = useState<Set<string>>(new Set(['C:\\']));
   const [snapshot, setSnapshot] = useState<SystemSnapshot | null>(null);
+  const [driveSnapshots, setDriveSnapshots] = useState<SystemSnapshot[]>([]);
 
   const [updates, setUpdates] = useState<Package[]>([]);
   const [selectedUpdates, setSelectedUpdates] = useState<Set<string>>(new Set());
@@ -283,7 +306,12 @@ export default function App() {
   const [appQuery, setAppQuery] = useState('');
   const [selectedApps, setSelectedApps] = useState<Set<string>>(new Set());
   const [leftoverTarget, setLeftoverTarget] = useState<LeftoverTarget | null>(null);
+  const [leftoverProgress, setLeftoverProgress] = useState<LeftoverProgress | null>(null);
+  const [leftoverScanning, setLeftoverScanning] = useState(false);
+  const leftoverRequestId = useRef('');
+  const leftoverCancelled = useRef(false);
   const [startupItems, setStartupItems] = useState<StartupItem[]>([]);
+  const [startupTimings, setStartupTimings] = useState<StartupTiming[]>([]);
   const [firewallRules, setFirewallRules] = useState<FirewallRule[]>([]);
   const [firewallFilter, setFirewallFilter] = useState<'all' | 'critical' | 'medium'>('all');
   const [firewallBackupPath, setFirewallBackupPath] = useState('');
@@ -292,6 +320,8 @@ export default function App() {
   const [schedules, setSchedules] = useState<ScheduleTask[]>([]);
   const [leftovers, setLeftovers] = useState<Leftover[]>([]);
   const [selectedLeftovers, setSelectedLeftovers] = useState<Set<string>>(new Set());
+  const [bloatware, setBloatware] = useState<BloatwareItem[]>([]);
+  const [selectedBloatware, setSelectedBloatware] = useState<Set<string>>(new Set());
 
   const [diskTargets, setDiskTargets] = useState<CleanTarget[]>([]);
   const [selectedDisk, setSelectedDisk] = useState<Set<string>>(new Set());
@@ -309,6 +339,15 @@ export default function App() {
   const [recCategory, setRecCategory] = useState('Tümü');
   const [recQuery, setRecQuery] = useState('');
   const [selectedRec, setSelectedRec] = useState<Set<string>>(new Set());
+  const [recSource, setRecSource] = useState<'all' | 'winget' | 'choco' | 'npm' | 'scoop'>('all');
+  const [managerStatus, setManagerStatus] = useState<PackageManagerStatus[]>([]);
+  const [installQueue, setInstallQueue] = useState<InstallProgress | null>(null);
+  const [installing, setInstalling] = useState(false);
+  const installRequestId = useRef('');
+  const [updateQueueProgress, setUpdateQueueProgress] = useState<InstallProgress | null>(null);
+  const [updatingQueue, setUpdatingQueue] = useState(false);
+  const updateQueueRequestId = useRef('');
+  const [networkBytesPerSecond, setNetworkBytesPerSecond] = useState(0);
 
   const firewallCritical = firewallRules.filter((rule) => rule.severity === 'critical').length;
   const firewallMedium = firewallRules.filter((rule) => rule.severity === 'medium').length;
@@ -324,7 +363,36 @@ export default function App() {
 
   useEffect(() => api.onLog((entry) => setLogs((prev) => [...prev.slice(-500), entry])), []);
 
-  useEffect(() => api.onUpdateProgress(setUpdateProgress), []);
+  useEffect(() => api.onLeftoverProgress((progress) => {
+    if (progress.requestId === leftoverRequestId.current) setLeftoverProgress(progress);
+  }), []);
+
+  useEffect(() => api.onInstallProgress((progress) => {
+    if (progress.requestId !== installRequestId.current) return;
+    setInstallQueue(progress);
+  }), []);
+
+  useEffect(() => api.onUpdateQueueProgress((progress) => {
+    if (progress.requestId !== updateQueueRequestId.current) return;
+    setUpdateQueueProgress(progress);
+  }), []);
+
+  useEffect(() => {
+    if (!updatingQueue && !installing) return;
+    let alive = true;
+    const sample = () => {
+      void api.networkSpeed().then((value) => {
+        if (alive) setNetworkBytesPerSecond(value);
+      }).catch(() => undefined);
+    };
+    sample();
+    const timer = window.setInterval(sample, 4000);
+    return () => { alive = false; window.clearInterval(timer); };
+  }, [updatingQueue, installing]);
+
+  useEffect(() => {
+    void api.packageManagerStatus().then(setManagerStatus).catch(() => undefined);
+  }, []);
 
   useEffect(() => {
     void api.isMaximized().then(setMaximized).catch(() => undefined);
@@ -362,7 +430,11 @@ export default function App() {
   }, [lang]);
 
   useEffect(() => {
-    void api.systemDrives().then((list) => { if (list.length) setDrives(list); }).catch(() => undefined);
+    void api.systemDrives().then((list) => {
+      if (!list.length) return;
+      setDrives(list);
+      setRecycleDrives(new Set(list));
+    }).catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -469,6 +541,16 @@ export default function App() {
   }, [tab, startupItems.length, run, t]);
 
   useEffect(() => {
+    if (tab !== 'startup' || startupTimings.length) return;
+    void api.startupTimings().then(setStartupTimings).catch(() => undefined);
+  }, [tab, startupTimings.length]);
+
+  useEffect(() => {
+    if (tab !== 'bloatware' || bloatware.length) return;
+    void run(t('Ön yüklü yazılımlar taranıyor'), async () => setBloatware(await api.bloatwareScan())).catch(() => undefined);
+  }, [tab, bloatware.length, run, t]);
+
+  useEffect(() => {
     if (tab !== 'firewall' || firewallRules.length) return;
     void run(t('Güvenlik duvarı kuralları denetleniyor'), async () => setFirewallRules(await api.firewallScan())).catch(() => undefined);
   }, [tab, firewallRules.length, run, t]);
@@ -480,16 +562,26 @@ export default function App() {
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 });
-    setExpandedGroups(new Set([groupForTab(tab)]));
+    const group = groupForTab(tab);
+    setExpandedGroups(group ? new Set([group]) : new Set());
   }, [tab]);
 
   useEffect(() => {
     if (tab !== 'contextmenu') return;
     void api.contextMenuStatus().then(setContextMenu).catch(() => notify('error', t('Sağ tık menüsü durumu alınamadı.')));
+    void api.shellExtensions().then(setShellExtensions).catch(() => notify('error', t('Sağ tık eklentileri okunamadı.')));
   }, [tab, notify, t]);
 
   const refreshSnapshot = useCallback(async () => {
     try { setSnapshot(await api.systemSnapshot(settings?.drive)); } catch { /* sessiz */ }
+    try {
+      const list = await api.systemDrives();
+      if (list.length) setDrives(list);
+      const results = await Promise.all(list.slice(0, 12).map(async (drive) => {
+        try { return await api.systemSnapshot(drive); } catch { return null; }
+      }));
+      setDriveSnapshots(results.filter((item): item is SystemSnapshot => !!item));
+    } catch { /* sessiz */ }
   }, [settings?.drive]);
 
   const refreshUpdates = useCallback(async () => {
@@ -501,8 +593,23 @@ export default function App() {
   const refreshApps = useCallback(async () => {
     const list = await api.installedApps();
     setApps(list);
-    setInstalledIds(new Set(list.map((app) => app.ident).filter(Boolean)));
+    setInstalledIds(installedIdSet(list));
     setSelectedApps(new Set());
+  }, []);
+
+  /** Kurulum sonrası kartlar anında "kurulu" olur; gecikmeli tarama winget verisiyle doğrular. */
+  const refreshAfterInstall = useCallback(async (installed: Array<{ ident: string; source: string }>) => {
+    const optimistic = installed.flatMap((item) => [item.ident, `${item.source}:${item.ident}`]).filter(Boolean);
+    setInstalledIds((prev) => new Set([...prev, ...optimistic]));
+    try {
+      await new Promise((resolve) => window.setTimeout(resolve, 1500));
+      const list = await api.installedApps();
+      setApps(list);
+      setInstalledIds((prev) => new Set([...prev, ...installedIdSet(list), ...optimistic]));
+      setSelectedApps(new Set());
+    } catch {
+      // Doğrulama taraması başarısız olsa bile iyimser "kurulu" durumu korunur.
+    }
   }, []);
 
   /** winget kaldırma işlemi bazen gecikmeli yansır; liste kaybolana kadar birkaç kez yenilenir. */
@@ -511,7 +618,7 @@ export default function App() {
     for (let attempt = 0; attempt < 4; attempt += 1) {
       const list = await api.installedApps();
       setApps(list);
-      setInstalledIds(new Set(list.map((app) => app.ident).filter(Boolean)));
+      setInstalledIds(installedIdSet(list));
       setSelectedApps(new Set());
       if (!list.some((app) => keys.has(appKey(app)))) break;
       if (attempt < 3) await new Promise((resolve) => window.setTimeout(resolve, 1200));
@@ -626,8 +733,9 @@ export default function App() {
     const query = recQuery.toLocaleLowerCase('tr-TR').trim();
     return CATALOG.filter((item) =>
       (recCategory === 'Tümü' || item.category === recCategory) &&
+      (recSource === 'all' || (item.source ?? 'winget') === recSource) &&
       (!query || `${item.name} ${item.ident} ${item.description}`.toLocaleLowerCase('tr-TR').includes(query)));
-  }, [recCategory, recQuery]);
+  }, [recCategory, recQuery, recSource]);
 
   function toggle(setter: Dispatch<SetStateAction<Set<string>>>, key: string) {
     setter((prev) => {
@@ -679,6 +787,40 @@ export default function App() {
           );
           setContextMenu(await api.contextMenuStatus());
         });
+      },
+    });
+  }
+
+  function toggleShellExtension(item: ShellExtensionItem) {
+    const enabled = !item.enabled;
+    const label = enabled
+      ? tf('{name} eklentisini aç', { name: item.label })
+      : tf('{name} eklentisini kapat', { name: item.label });
+    setConfirm({
+      title: label,
+      message: enabled
+        ? t('Seçili sağ tık eklentisi yeniden etkinleştirilecek. Değişiklikten önce .reg yedeği alınır ve Windows Gezgini yeniden başlatılır.')
+        : t('Seçili sağ tık eklentisi Gezgin menüsünde gizlenecek. Değişiklikten önce .reg yedeği alınır ve Windows Gezgini yeniden başlatılır.'),
+      warning: item.isSystem
+        ? t('Bu girdi Windows veya imzalı bir sistem bileşenine ait olabilir. Kapatılması sistem araçlarını gizleyebilir; yedek dosyasıyla geri alınabilir.')
+        : undefined,
+      options: [
+        { label: t('Vazgeç'), value: 'cancel' },
+        { label: enabled ? t('Aç') : t('Kapat'), value: 'apply', kind: enabled ? 'primary' : 'danger' },
+      ],
+      onChoose: (value) => {
+        if (value !== 'apply') return;
+        setShellExtensionBusy(item.id);
+        void run(label, async () => {
+          const result: ShellExtensionActionResult = await api.shellExtensionSet(item.id, enabled);
+          notify(
+            result.ok ? 'ok' : 'error',
+            result.ok ? result.message : tf('Sağ tık eklentisi değiştirilemedi: {message}', { message: result.message }),
+          );
+          if (result.backupPath) notify('info', tf('Yedek: {path}', { path: result.backupPath }));
+          if (result.explorerRestarted) notify('info', t('Gezgin yeniden başlatıldı.'));
+          setShellExtensions(await api.shellExtensions());
+        }).finally(() => setShellExtensionBusy(null));
       },
     });
   }
@@ -746,19 +888,41 @@ export default function App() {
   }
 
   async function openLeftovers(apps: InstalledApp[]) {
+    const label = apps.length === 1 ? apps[0].name : tf('{count} uygulama', { count: apps.length });
+    const requestId = `scan-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    leftoverRequestId.current = requestId;
+    leftoverCancelled.current = false;
+    setLeftoverTarget({ label, apps });
+    setLeftovers([]);
+    setSelectedLeftovers(new Set());
+    setLeftoverProgress(null);
+    setLeftoverScanning(true);
     await run(t('Kalıntılar taranıyor'), async () => {
-      const lists = await Promise.all(apps.map((app) => api.scanLeftovers(app.name, app.ident)));
-      const merged = new Map<string, Leftover>();
-      for (const list of lists) {
-        for (const item of list) if (!merged.has(item.path)) merged.set(item.path, item);
+      try {
+        // Tek tarama: kök dizinler bir kez gezilir, tüm uygulamalar aynı anda eşleştirilir.
+        const scanned = await api.scanLeftoversBatch(
+          apps.map((app) => ({ name: app.name, ident: app.ident })),
+          requestId,
+        );
+        const merged = new Map<string, Leftover>();
+        for (const group of scanned) {
+          for (const item of group.items) if (!merged.has(item.path)) merged.set(item.path, item);
+        }
+        const result = [...merged.values()];
+        setLeftovers(result);
+        setSelectedLeftovers(new Set(result.map((item) => item.path)));
+        if (leftoverCancelled.current) notify('info', t('Tarama iptal edildi; bulunan öğeler listelendi.'));
+        else if (!result.length) notify('info', tf('{name} için kalıntı bulunamadı.', { name: label }));
+      } finally {
+        setLeftoverScanning(false);
+        setLeftoverProgress(null);
       }
-      const result = [...merged.values()];
-      const label = apps.length === 1 ? apps[0].name : tf('{count} uygulama', { count: apps.length });
-      setLeftoverTarget({ label, apps });
-      setLeftovers(result);
-      setSelectedLeftovers(new Set(result.map((item) => item.path)));
-      if (!result.length) notify('info', tf('{name} için kalıntı bulunamadı.', { name: label }));
     });
+  }
+
+  function cancelLeftoverScan() {
+    leftoverCancelled.current = true;
+    api.cancelLeftovers(leftoverRequestId.current);
   }
 
   function askLeftoverDelete(mode: 'recycle' | 'permanent') {
@@ -790,17 +954,74 @@ export default function App() {
     }
   }
 
-  async function installSoftware(items: RecommendedSoftware[]) {
-    const silent = settings?.silentInstall ?? true;
-    await run(tf('{count} uygulama kuruluyor', { count: items.length }), async () => {
-      for (const item of items) {
-        notify('info', tf('Kuruluyor: {name}', { name: item.name }));
-        const code = await api.wingetInstall(item.ident, silent);
-        if (code !== 0) notify('error', tf('{name} kurulumu kod {code} ile sonuçlandı.', { name: item.name, code }));
-      }
-      await refreshApps();
-      notify('ok', tf('{count} kurulum işlemi tamamlandı.', { count: items.length }));
+  const refreshBloatware = useCallback(async () => {
+    const list = await api.bloatwareScan();
+    setBloatware(list);
+    setSelectedBloatware(new Set());
+  }, []);
+
+  function removeSelectedBloatware() {
+    const chosen = bloatware.filter((item) => selectedBloatware.has(item.id));
+    if (!chosen.length) {
+      notify('info', t('Kaldırmak için en az bir yazılım seçin.'));
+      return;
+    }
+    const windows = chosen.filter((item) => item.kind === 'windows-app').length;
+    setConfirm({
+      title: t('Ön yüklü yazılımları kaldır'),
+      message: tf('{count} yazılım kaldırılacak: {win} Windows uygulaması, {oem} OEM yazılımı.', {
+        count: chosen.length,
+        win: windows,
+        oem: chosen.length - windows,
+      }),
+      warning: t('Bu işlem geri alınamaz. Kaldırılan uygulamalar Microsoft Store veya üretici web sitesi üzerinden yeniden yüklenebilir.'),
+      options: [
+        { label: t('Vazgeç'), value: 'cancel' },
+        { label: t('Evet, kalıcı olarak kaldır'), value: 'remove', kind: 'danger' },
+      ],
+      onChoose: (value) => {
+        if (value !== 'remove') return;
+        void run(tf('{count} yazılım kaldırılıyor', { count: chosen.length }), async () => {
+          const results = await api.bloatwareRemove(chosen);
+          const ok = results.filter((result) => result.ok).length;
+          await refreshBloatware();
+          notify(ok ? 'ok' : 'error', tf('{ok}/{total} yazılım kaldırıldı.', { ok, total: results.length }));
+        });
+      },
     });
+  }
+
+  async function installSoftware(items: RecommendedSoftware[]) {
+    if (!items.length) return;
+    const silent = settings?.silentInstall ?? true;
+    const requestId = `install-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    installRequestId.current = requestId;
+    setInstallQueue(null);
+    setInstalling(true);
+    try {
+      const results = await api.installQueue(items.map((item) => ({
+        name: item.name,
+        ident: item.ident,
+        source: item.source ?? 'winget',
+      })), silent, requestId);
+      const ok = results.filter((result) => result.ok).length;
+      notify(ok === results.length ? 'ok' : 'error', tf('{ok}/{total} kurulum tamamlandı.', { ok, total: results.length }));
+      await refreshAfterInstall(results.filter((result) => result.ok).map((result) => ({
+        ident: result.ident,
+        source: result.source,
+      })));
+      setSelectedRec(new Set());
+    } catch (error) {
+      notify('error', tf('Kurulum kuyruğu başlatılamadı: {message}', { message: (error as Error).message }));
+    } finally {
+      setInstalling(false);
+      setInstallQueue(null);
+    }
+  }
+
+  function cancelInstallQueue() {
+    api.installCancel(installRequestId.current);
+    notify('info', t('Kurulum kuyruğu iptal ediliyor…'));
   }
 
   async function uninstallOne(app: InstalledApp): Promise<number> {
@@ -821,17 +1042,36 @@ export default function App() {
   }
 
   async function upgradePackages(items: Package[]) {
+    if (!items.length) return;
     const silent = settings?.silentInstall ?? true;
-    await run(tf('{count} güncelleme uygulanıyor', { count: items.length }), async () => {
-      for (const pkg of items) {
-        const code = await api.wingetUpgrade(pkg, silent);
-        if (code !== 0) notify('error', tf('{name} güncellenemedi (kod {code}).', { name: pkg.name, code }));
+    const requestId = `update-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    updateQueueRequestId.current = requestId;
+    setUpdateQueueProgress(null);
+    setUpdatingQueue(true);
+    try {
+      const results = await api.updateQueue(items, silent, requestId);
+      const ok = results.filter((result) => result.ok).length;
+      notify(ok === results.length ? 'ok' : 'error', tf('{ok}/{total} güncelleme tamamlandı.', { ok, total: results.length }));
+      for (const result of results.filter((entry) => !entry.ok)) {
+        notify('error', tf('{name} güncellenemedi: {message}', { name: result.name, message: result.message }));
       }
       await refreshUpdates();
       await refreshApps();
-      notify('ok', t('Güncelleme işlemleri tamamlandı.'));
-    });
+    } catch (error) {
+      notify('error', tf('Güncelleme kuyruğu başlatılamadı: {message}', { message: (error as Error).message }));
+    } finally {
+      setUpdatingQueue(false);
+      setUpdateQueueProgress(null);
+    }
   }
+
+  function cancelUpdateQueue() {
+    api.updateQueueCancel(updateQueueRequestId.current);
+    notify('info', t('Güncelleme kuyruğu iptal ediliyor…'));
+  }
+
+  const activeProgress = updatingQueue ? updateQueueProgress : installQueue;
+  const activeTitle = updatingQueue ? t('Güncelleme kuyruğu') : t('Kurulum kuyruğu');
 
   return (
     <div className="app-root">
@@ -863,6 +1103,45 @@ export default function App() {
           <button className="window-btn window-close" title={t('Kapat')} aria-label={t('Kapat')} onClick={requestClose}>✕</button>
         </div>
       </header>
+
+      {(updatingQueue || installing) && (
+        <div className="global-progress" role="status" aria-live="polite">
+          <div className="global-progress-info">
+            <b>{activeTitle}</b>
+            <span className="global-progress-name">
+              {activeProgress
+                ? activeProgress.phase === 'done'
+                  ? t('Tamamlandı')
+                  : updatingQueue
+                    ? t('Güncelleniyor')
+                    : t('Kuruluyor')
+                  : t('Başlatılıyor…')}
+              {activeProgress ? `: ${activeProgress.name}` : ''}
+            </span>
+            <span className="muted small global-progress-count">
+              {activeProgress ? tf('{current}/{total}', { current: activeProgress.index + 1, total: activeProgress.total }) : ''}
+            </span>
+            <span className="muted small global-progress-network">
+              {t('Ağ')}: {networkBytesPerSecond ? `${sizeText(networkBytesPerSecond)}/s` : '—'}
+            </span>
+            <span className="global-progress-metrics mono">
+              {activeProgress ? `${activeProgress.percent}%` : '0%'}
+              {activeProgress?.speed ? ` · ${activeProgress.speed}` : ''}
+            </span>
+            <button
+              className="btn btn-small btn-danger-ghost"
+              onClick={updatingQueue ? cancelUpdateQueue : cancelInstallQueue}
+            >
+              {t('İptal et')}
+            </button>
+          </div>
+          <div className="global-progress-track">
+            <div className="global-progress-fill" style={{ width: `${activeProgress?.percent ?? 0}%` }} />
+          </div>
+          {activeProgress?.line && <div className="global-progress-line mono">{activeProgress.line}</div>}
+        </div>
+      )}
+
       <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
@@ -873,6 +1152,14 @@ export default function App() {
           </div>
         </div>
         <nav>
+          <button
+            className={`nav-item nav-item-home ${tab === 'home' ? 'active' : ''}`}
+            aria-current={tab === 'home' ? 'page' : undefined}
+            onClick={() => setTab('home')}
+          >
+            <span className="nav-icon">⌂</span>
+            <span>{t('Anasayfa')}</span>
+          </button>
           {TAB_GROUPS.map((group) => {
             const open = expandedGroups.has(group.id);
             const active = group.tabs.includes(tab);
@@ -918,7 +1205,7 @@ export default function App() {
         </nav>
         <div className="sidebar-foot">
           <span className="dot" style={{ background: '#c99a2e' }} />
-          {t('Sistem Bakım Merkezi · v1.0.2')}
+          {t('Sistem Bakım Merkezi · v1.0.3')}
         </div>
       </aside>
 
@@ -955,6 +1242,25 @@ export default function App() {
                 <Meter icon="cpu" label={t('CPU Kullanımı')} value={snapshot?.cpuPercent ?? 0} text={`${snapshot?.cpuPercent.toFixed(0) ?? '—'}%`} tone="var(--meter-cpu)" />
                 <Meter icon="ram" label={t('RAM Kullanımı')} value={snapshot?.memoryPercent ?? 0} text={`${snapshot?.memoryPercent.toFixed(0) ?? '—'}% · ${sizeText(snapshot?.memoryAvailable ?? 0)} ${t('Boş')}`} tone="var(--meter-ram)" />
                 <Meter icon="disk" label={`${t('Boş Depolama')} (${snapshot?.diskPath || 'C:\\'})`} value={snapshot?.diskPercent ?? 0} text={`${sizeText(snapshot?.diskFree ?? 0)} / ${sizeText(snapshot?.diskTotal ?? 0)}`} tone="var(--meter-disk)" />
+              </div>
+              <div className="card">
+                <div className="card-head">
+                  <h3>{t('Tüm diskler')}</h3>
+                  <button className="btn btn-small" onClick={() => void run(t('Disk bilgileri yenileniyor'), refreshSnapshot)}>{t('Yenile')}</button>
+                </div>
+                <div className="drive-grid">
+                  {driveSnapshots.map((drive) => (
+                    <div className="drive-card" key={drive.diskPath}>
+                      <div className="drive-card-head">
+                        <b>{drive.diskPath}</b>
+                        <span className="muted small">{drive.diskPercent.toFixed(0)}%</span>
+                      </div>
+                      <div className="meter-track"><div className="meter-fill" style={{ width: `${drive.diskPercent}%`, background: 'var(--meter-disk)' }} /></div>
+                      <div className="muted small mono">{sizeText(drive.diskFree)} / {sizeText(drive.diskTotal)}</div>
+                    </div>
+                  ))}
+                  {!driveSnapshots.length && <p className="empty">{t('Disk bilgisi alınamadı.')}</p>}
+                </div>
               </div>
               <div className="card welcome">
                 <h2>{t('Hoş geldiniz')}</h2>
@@ -1068,7 +1374,7 @@ export default function App() {
                   <thead>
                     <tr>
                       <th className="col-check"><input type="checkbox" checked={filteredApps.length > 0 && selectedApps.size >= filteredApps.length} onChange={() => toggleAll(filteredApps, appKey, selectedApps, setSelectedApps)} /></th>
-                      <th>{t('Uygulama')}</th><th>{t('Yayıncı')}</th><th>{t('Sürüm')}</th><th> {t('Kimlik')}</th><th className="col-actions">{t('İşlem')}</th>
+                      <th>{t('Uygulama')}</th><th>{t('Yayıncı')}</th><th>{t('Sürüm')}</th><th>{t('Boyut')}</th><th className="col-actions">{t('İşlem')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1078,7 +1384,7 @@ export default function App() {
                         <td><div className="cell-app"><Avatar name={app.name} src={app.icon} /><b>{app.name}</b></div></td>
                         <td>{app.publisher || '—'}</td>
                         <td>{app.version || '—'}</td>
-                        <td className="mono">{app.ident || t('kayıt girdisi')}</td>
+                        <td className="mono">{app.size ? sizeText(app.size) : '—'}</td>
                         <td className="col-actions">
                           <div className="row-actions">
                             <button className="link-btn" onClick={() => void openLeftovers([app])}>{t('Kalıntıları tara')}</button>
@@ -1091,7 +1397,73 @@ export default function App() {
                   </tbody>
                 </table>
               </div>
-              <p className="muted small">{tf('Toplam {count} uygulama listeleniyor. İkonlar kayıt defterinden okunur.', { count: apps.length })}</p>
+              <p className="muted small">{tf('Toplam {count} uygulama listeleniyor. Boyutlar kayıt defterindeki EstimatedSize değerinden alınır.', { count: apps.length })}</p>
+            </section>
+          )}
+
+          {tab === 'bloatware' && (
+            <section className="page">
+              <div className="toolbar">
+                <div>
+                  <h2>{t('Gereksiz Yazılım Temizleyici')}</h2>
+                  <p className="muted">{t('Windows ile birlikte gelen uygulamalar ve üretici (OEM) yazılımları listelenir.')}</p>
+                </div>
+                <div className="toolbar-actions">
+                  <button className="btn" onClick={() => void run(t('Liste yenileniyor'), refreshBloatware)}>{t('Yenile')}</button>
+                  <button className="btn btn-danger-ghost" disabled={!selectedBloatware.size} onClick={removeSelectedBloatware}>
+                    {t('Seçilenleri kaldır')}
+                  </button>
+                </div>
+              </div>
+
+              <div className="danger-zone danger-zone-page">
+                <b>{t('DİKKAT — BU İŞLEM GERİ ALINAMAZ')}</b>
+                <p>{t('Kaldırılan uygulamalar için yedek veya geri yükleme noktası oluşturulmaz.')}</p>
+                <p>{t('Kaldırılan Windows uygulamaları ve OEM yazılımları Microsoft Store veya üretici web sitesi üzerinden yeniden yüklenebilir.')}</p>
+              </div>
+
+              <div className="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th className="col-check">
+                        <input
+                          type="checkbox"
+                          checked={bloatware.length > 0 && selectedBloatware.size >= bloatware.length}
+                          onChange={() => toggleAll(bloatware, (item) => item.id, selectedBloatware, setSelectedBloatware)}
+                        />
+                      </th>
+                      <th>{t('Uygulama')}</th>
+                      <th>{t('Tür')}</th>
+                      <th>{t('Yayıncı')}</th>
+                      <th>{t('Açıklama')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bloatware.map((item) => (
+                      <tr key={item.id}>
+                        <td><input type="checkbox" checked={selectedBloatware.has(item.id)} onChange={() => toggle(setSelectedBloatware, item.id)} /></td>
+                        <td>
+                          <b>{item.name}</b>
+                          {item.version && <div className="muted small">{item.version}</div>}
+                        </td>
+                        <td>
+                          <span className={`badge ${item.kind === 'oem-app' ? 'badge-warn' : ''}`}>
+                            {item.kind === 'windows-app' ? t('Windows uygulaması') : t('OEM yazılımı')}
+                          </span>
+                        </td>
+                        <td>{item.publisher || '—'}</td>
+                        <td className="small">
+                          {item.reason}
+                          {item.provisioned && <div className="muted">{t('Yeni kullanıcılar için de kaldırılır.')}</div>}
+                        </td>
+                      </tr>
+                    ))}
+                    {!bloatware.length && <tr><td colSpan={5} className="empty">{t('Ön yüklü yazılım bulunamadı.')}</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+              <p className="muted small">{tf('{count} yazılım listeleniyor. Kaldırma PowerShell ve winget ile yapılır.', { count: bloatware.length })}</p>
             </section>
           )}
 
@@ -1110,6 +1482,28 @@ export default function App() {
                 <span>{t('Toplam')}: <b>{startupItems.length}</b></span>
                 <span>{t('Etkin')}: <b>{startupItems.filter((item) => item.enabled).length}</b></span>
                 <span>{t('Devre dışı')}: <b>{startupItems.filter((item) => !item.enabled).length}</b></span>
+              </div>
+              <div className="card">
+                <div className="card-head">
+                  <div>
+                    <h3>{t('İlk 10 başlangıç uygulaması')}</h3>
+                    <p className="muted small">{t('Önyükleme sonrası işlem başlangıç zamanı (yaklaşık).')}</p>
+                  </div>
+                  <button className="btn btn-small" onClick={() => void run(t('Başlangıç zamanları yenileniyor'), async () => setStartupTimings(await api.startupTimings()))}>{t('Yenile')}</button>
+                </div>
+                <div className="timing-chart">
+                  {startupTimings.map((timing) => {
+                    const max = Math.max(1, startupTimings[startupTimings.length - 1]?.seconds ?? 1);
+                    return (
+                      <div className="timing-row" key={`${timing.processName}-${timing.seconds}`}>
+                        <span className="timing-label" title={timing.command}>{timing.name}</span>
+                        <div className="timing-track"><div className="timing-fill" style={{ width: `${Math.max(2, (timing.seconds / max) * 100)}%` }} /></div>
+                        <span className="mono small">{timing.seconds.toFixed(1)} sn</span>
+                      </div>
+                    );
+                  })}
+                  {!startupTimings.length && <p className="empty">{t('Başlangıç zamanı ölçülemedi.')}</p>}
+                </div>
               </div>
               <div className="table-wrap">
                 <table>
@@ -1292,11 +1686,14 @@ export default function App() {
                       const names = diskTargets.filter((item) => selectedDisk.has(item.key)).map((item) => item.name);
                       setConfirm({
                         title: t('Disk temizleme onayı'),
-                        message: tf('{names} kategorisi temizlenecek.\n\nBu işlem kalıcıdır. Geri Dönüşüm Kutusu seçiliyse kutu boşaltılacaktır.', { names: names.join(', ') }),
+                        message: tf('{names} kategorisi temizlenecek.\n\nBu işlem kalıcıdır. Geri Dönüşüm Kutusu seçiliyse şu sürücülerin kutusu boşaltılacaktır: {drives}', {
+                          names: names.join(', '),
+                          drives: [...recycleDrives].join(', ') || t('sistem sürücüsü'),
+                        }),
                         options: [{ label: t('Vazgeç'), value: 'cancel' }, { label: t('Temizle'), value: 'clean', kind: 'danger' }],
                         onChoose: (value) => {
                           if (value === 'clean') void run(t('Disk temizleniyor'), async () => {
-                            const results = await api.diskClean([...selectedDisk]);
+                            const results = await api.diskClean([...selectedDisk], [...recycleDrives]);
                             const ok = results.filter((result) => result.ok).length;
                             notify(ok ? 'ok' : 'error', tf('{ok}/{total} kategori temizlendi.', { ok, total: results.length }));
                             setDiskTargets(await api.diskScan());
@@ -1308,6 +1705,23 @@ export default function App() {
                   >
                     {t('Seçilenleri temizle')}
                   </button>
+                </div>
+              </div>
+              <div className="notice recycle-drives">
+                <div>
+                  <b>{t('Geri Dönüşüm Kutusu sürücüleri')}</b>
+                  <p className="muted">{t('Kutu boşaltma işlemi yalnızca işaretli sürücülerde uygulanır.')}</p>
+                </div>
+                <div className="chips">
+                  {drives.map((drive) => (
+                    <button
+                      key={drive}
+                      className={`chip ${recycleDrives.has(drive) ? 'active' : ''}`}
+                      onClick={() => toggle(setRecycleDrives, drive)}
+                    >
+                      {drive}
+                    </button>
+                  ))}
                 </div>
               </div>
               <div className="table-wrap">
@@ -1458,25 +1872,32 @@ export default function App() {
 
           {tab === 'recommended' && (
             <section className="page">
-              {missingEssentials.length > 0 && (
-                <div className="notice">
-                  <div>
-                    <b>{tf('{count} önerilen sistem bileşeni eksik', { count: missingEssentials.length })}</b>
-                    <p className="muted">{t('Çalışma zamanları ve temel araçlar; oyunların ve uygulamaların sorunsuz çalışması için önerilir.')}</p>
-                  </div>
-                  <button className="btn btn-primary" onClick={() => void installSoftware(missingEssentials)}>{t('Eksik bileşenleri kur')}</button>
-                </div>
-              )}
               <div className="toolbar">
                 <div>
                   <h2>{t('Önerilen yazılımlar')}</h2>
-                  <p className="muted">{t('winget’te doğrulanmış paketler. Çoklu seçim yapabilir veya satıra çift tıklayarak kurabilirsiniz.')}</p>
+                  <p className="muted">{t('winget, Chocolatey, npm ve Scoop paketleri. Çoklu seçim yapabilir veya satıra çift tıklayarak kurabilirsiniz.')}</p>
                 </div>
                 <div className="toolbar-actions">
                   <input className="search" placeholder={t('Yazılım ara…')} value={recQuery} onChange={(event) => setRecQuery(event.target.value)} />
-                  <button className="btn btn-primary" disabled={!selectedRec.size} onClick={() => void installSoftware(CATALOG.filter((item) => selectedRec.has(item.ident)))}>{t('Seçilenleri kur')}</button>
+                  <button className="btn btn-primary" disabled={installing || !selectedRec.size} onClick={() => void installSoftware(CATALOG.filter((item) => selectedRec.has(recKey(item))))}>{t('Seçilenleri kur')}</button>
                 </div>
               </div>
+              <div className="chips">
+                {(['all', 'winget', 'choco', 'npm', 'scoop'] as const).map((source) => (
+                  <button key={source} className={`chip ${recSource === source ? 'active' : ''}`} onClick={() => setRecSource(source)}>
+                    {source === 'all' ? t('Tümü') : source === 'winget' ? 'winget' : source === 'choco' ? 'Chocolatey' : source === 'npm' ? 'npm' : 'Scoop'}
+                  </button>
+                ))}
+              </div>
+              {!!managerStatus.length && (
+                <div className="chips manager-status">
+                  {managerStatus.map((manager) => (
+                    <span key={manager.source} className={`badge ${manager.available ? 'badge-green' : 'badge-warn'}`} title={manager.version}>
+                      {manager.label}: {manager.available ? t('kullanılabilir') : t('kurulu değil')}
+                    </span>
+                  ))}
+                </div>
+              )}
               <div className="chips">
                 {['Tümü', ...CATEGORIES].map((category) => (
                   <button key={category} className={`chip ${recCategory === category ? 'active' : ''}`} onClick={() => setRecCategory(category)}>{t(category)}</button>
@@ -1484,10 +1905,11 @@ export default function App() {
               </div>
               <div className="software-grid">
                 {filteredRecommended.map((item) => {
-                  const installed = installedIds.has(item.ident);
+                  const installed = installedIds.has(recKey(item));
+                  const key = recKey(item);
                   return (
                     <div
-                      key={item.ident}
+                      key={key}
                       className={`software-card ${installed ? 'installed' : ''}`}
                       onDoubleClick={() => { if (!installed) void installSoftware([item]); }}
                     >
@@ -1495,16 +1917,16 @@ export default function App() {
                         <Avatar name={item.name} src={favicon(item)} />
                         <div className="software-title">
                           <b>{item.name}</b>
-                          <small>{t(item.category)}</small>
+                          <small>{t(item.category)} · {item.source ?? 'winget'}</small>
                         </div>
-                        <input type="checkbox" checked={selectedRec.has(item.ident)} onChange={() => toggle(setSelectedRec, item.ident)} />
+                        <input type="checkbox" checked={selectedRec.has(key)} onChange={() => toggle(setSelectedRec, key)} />
                       </div>
                       <p>{item.description}</p>
                       <div className="software-foot">
                         <code>{item.ident}</code>
                         {installed
                           ? <span className="badge badge-green">{t('kurulu')}</span>
-                          : <button className="btn btn-small btn-primary" onClick={() => void installSoftware([item])}>{t('Kur')}</button>}
+                          : <button className="btn btn-small btn-primary" disabled={installing} onClick={() => void installSoftware([item])}>{t('Kur')}</button>}
                       </div>
                     </div>
                   );
@@ -1742,6 +2164,60 @@ export default function App() {
                     {t('Windows 11 menüsüne geç')}
                   </button>
                 </div>
+              </div>
+
+              <div className="card settings-card">
+                <h2>{t('Sağ tık menüsü eklentileri')}</h2>
+                <p className="muted small">
+                  {t('WinRAR, 7-Zip ve benzeri programların Gezgin sağ tık menüsüne eklediği girdileri buradan kapatabilirsiniz. Her değişiklikten önce .reg yedeği alınır.')}
+                </p>
+                <div className="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>{t('Eklenti')}</th>
+                        <th>{t('Konum')}</th>
+                        <th>{t('Tür')}</th>
+                        <th>{t('Durum')}</th>
+                        <th>{t('İşlem')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {shellExtensions.map((item) => (
+                        <tr key={item.id}>
+                          <td>
+                            <b>{item.label}</b>
+                            <div className="muted small mono">{item.name}</div>
+                          </td>
+                          <td>{item.location}</td>
+                          <td>{item.kind === 'shellex' ? t('Menü eklentisi') : t('Komut')}</td>
+                          <td>
+                            <span className={`badge ${item.enabled ? 'badge-green' : ''}`}>
+                              {item.strategy === 'unsupported'
+                                ? t('Desteklenmiyor')
+                                : item.enabled ? t('Etkin') : t('Kapalı')}
+                            </span>
+                          </td>
+                          <td>
+                            <button
+                              className="btn btn-small"
+                              disabled={shellExtensionBusy !== null || item.strategy === 'unsupported'}
+                              onClick={() => toggleShellExtension(item)}
+                            >
+                              {shellExtensionBusy === item.id ? '…' : item.enabled ? t('Kapat') : t('Aç')}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                      {!shellExtensions.length && (
+                        <tr><td colSpan={5} className="empty">{t('Sağ tık menüsü eklentisi bulunamadı.')}</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="muted small" style={{ marginTop: 10 }}>
+                  {t('Sistem bileşenlerini kapatmak Gezgin özelliklerini gizleyebilir. Yedek dosyalarını içe aktararak geri alabilirsiniz.')}
+                </p>
               </div>
             </section>
           )}
@@ -2104,6 +2580,16 @@ export default function App() {
           <div className="modal wide" role="dialog" aria-modal="true" aria-label={t('Kalıntılar')}>
             <h2>{tf('{name} — kalıntılar', { name: leftoverTarget.label })}</h2>
             <p className="muted">{tf('Bulunan {count} öğe. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır; kalıcı silme açık onay gerektirir.', { count: leftovers.length })}</p>
+            {leftoverScanning && (
+              <div className="scan-progress">
+                <div className="scan-progress-head">
+                  <span>{t('Kalıntılar taranıyor')}</span>
+                  <span>{leftoverProgress?.percent ?? 0}% · {tf('{count} öğe', { count: leftoverProgress?.matches ?? 0 })}</span>
+                </div>
+                <div className="progress-track"><div className="progress-fill" style={{ width: `${leftoverProgress?.percent ?? 0}%` }} /></div>
+                <button className="btn btn-danger-ghost" onClick={cancelLeftoverScan}>{t('Taramayı iptal et')}</button>
+              </div>
+            )}
             <div className="leftover-list">
               {leftovers.map((item) => (
                 <label key={item.path} className="leftover-row">
