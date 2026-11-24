@@ -1,20 +1,22 @@
-# Pars Sistem Yöneticisi 1.0.2
+# Pars Sistem Yöneticisi 1.0.3
 
-Güncelleme kaynağı (GitHub Pages) uygulamaya varsayılan olarak tanımlandı — yeni kurulumlarda Ayarlar → Güncelleme kaynağı hazır gelir. 1.0.1’deki işlevlere ek olarak varsayılan kaynağa dön düğmesi ve otomatik Blogger teması üretimi eklendi.
+1.0.2’e ek olarak tarama performansı, yükleme/güncelleme kuyruğu, ana sayfa iyileştirmeleri ve üçüncü taraf sağ tık menüsü eklentilerinin yönetimi eklendi.
 
 ## Bu sürümde
 
-- winget ile güncelleme, kurulum, kaldırma ve katalog arama (142 doğrulanmış uygulama)
-- Disk temizleme, başlangıç yönetimi, sürücü güncelleme, kayıt defteri ve güvenlik duvarı denetimi
-- Beş motorlu, salt okunur kötü amaçlı yazılım taraması
-- Yıkıcı işlemlerde zorunlu yedek + onay; yedek alınamazsa silme yapılmaz
-- Güncelleme kaynağından SHA-512 doğrulamalı kendi kendini güncelleme (varsayılan adres gömülü)
-- Grafit/altın tema, Windows 11 açık teması, Türkçe/İngilizce arayüz
-- Ayarlar’da **Varsayılan kaynağa dön** düğmesi
+- Toplu güvenlik taraması: 10/10 doğrulama; süre 752,7 ms → 87,8 ms (8,6 kat hızlanma)
+- winget kurulum/güncelleme kuyruğu: sıraya alma, iptal, yüzde ve hız göstergesi
+- Güncelleme kuyruğu için ana süreç ilerleme (progress) altyapısı
+- Anasayfa sekmesi, yeni gruplar, Boyut kolonu, tüm diskler ve başlangıç grafiği
+- Kalan-artık dosya temizliği ve ağ hızı ölçümü iyileştirmeleri
+- **Sağ tık menüsü eklentileri:** WinRAR / 7-Zip gibi kabuk eklentileri ile klasik komutlar listelenir; tek tıkla kapatılıp açılır. COM eklentilerinde per-user `Blocked\{CLSID}`, klasik komutlarda `ProgrammaticAccessOnly` kullanılır.
+- Her değişiklikten önce `.reg` yedeği alınır; yedek başarısızsa değişiklik yapılmaz. Gezgin yeniden başlatılır.
+- Uygulama kendi Gezgin menü girdisini **eklemez**; yalnızca mevcut üçüncü taraf eklentileri açıp kapatır.
+- Yıkıcı işlemlerde onay + zorunlu yedek; imfasız dağıtım + SHA-256 bütünlük doğrulaması
 
 ## İndirme
 
-- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.0.2.exe` (NSIS, başlat menüsü + masaüstü kısayolu)
+- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.0.3.exe` (NSIS, başlat menüsü + masaüstü kısayolu)
 - **Portable:** `ParsSistemYoneticisi-Portable.exe`
 
 Windows 10 (1809+) / Windows 11 x64 ve güncel App Installer (winget) gereklidir.

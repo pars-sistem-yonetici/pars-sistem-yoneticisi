@@ -13,7 +13,7 @@ durum ikonları bulunur.
 
 `release/` klasöründe:
 
-- `Pars Sistem Yoneticisi Setup 1.0.2.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu)
+- `Pars Sistem Yoneticisi Setup 1.0.3.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu)
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — açılmış uygulama klasörü
 
@@ -89,19 +89,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.2.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.3.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83530329,
-  "url": "Pars Sistem Yoneticisi Setup 1.0.2.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.0.3.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.2.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.3.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
