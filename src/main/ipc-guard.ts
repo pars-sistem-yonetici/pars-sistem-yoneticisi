@@ -160,6 +160,31 @@ export const leftover: Validator = shape({
   reason: { validate: str({ allowEmpty: true, max: 512 }) },
 });
 
+export const leftoverScanTarget: Validator = shape({
+  name: { validate: str({ max: 512 }) },
+  ident: { validate: str({ allowEmpty: true, max: 256 }) },
+}, true);
+
+export const installItem: Validator = shape({
+  name: { validate: str({ max: 256 }) },
+  ident: { validate: str({ max: 128 }) },
+  source: { validate: oneOf(['winget', 'choco', 'npm', 'scoop'] as const) },
+}, true);
+
+export const bloatwareItem: Validator = shape({
+  id: { validate: str({ max: 512 }) },
+  name: { validate: str({ max: 512 }) },
+  publisher: { validate: str({ allowEmpty: true, max: 512 }) },
+  version: { validate: str({ allowEmpty: true, max: 128 }) },
+  kind: { validate: oneOf(['windows-app', 'oem-app'] as const) },
+  ident: { validate: str({ allowEmpty: true, max: 256 }) },
+  packageName: { validate: str({ allowEmpty: true, max: 256 }) },
+  packageFullName: { validate: str({ allowEmpty: true, max: 512 }) },
+  provisioned: { validate: bool },
+  detail: { validate: str({ allowEmpty: true, max: 2048 }) },
+  reason: { validate: str({ allowEmpty: true, max: 512 }) },
+}, true);
+
 export const updateInfo: Validator = shape({
   available: { validate: bool },
   currentVersion: { validate: str({ max: 32 }) },

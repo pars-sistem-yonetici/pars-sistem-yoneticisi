@@ -1,6 +1,7 @@
 import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import { StringDecoder } from 'string_decoder';
 
 export type LogFn = (line: string) => void;
 
@@ -30,6 +31,12 @@ export function runCommand(
     // çok baytlı karakterlerin parça sınırına denk gelmesinde JSON'u bozuyor.
     const stdoutChunks: Buffer[] = [];
     const stderrChunks: Buffer[] = [];
+    // Paket yöneticileri ilerlemeyi genelde bare \r ile günceller; \r\n, \n ve
+    // bare \r ayrımı yapılabilmesi için akış başına decoder + satır tamponu.
+    const stdoutDecoder = new StringDecoder('utf8');
+    const stderrDecoder = new StringDecoder('utf8');
+    const stdoutPending: string[] = [];
+    const stderrPending: string[] = [];
     let settled = false;
     const timer = setTimeout(() => {
       if (!settled) {
@@ -39,17 +46,23 @@ export function runCommand(
       }
     }, timeout);
 
-    const collect = (chunk: Buffer, target: Buffer[]) => {
+    const flushLines = (text: string, pending: string[]) => {
+      const parts = text.split(/\r\n|\n|\r/);
+      for (let index = 0; index < parts.length - 1; index += 1) {
+        const line = parts[index].trimEnd();
+        if (line) onLine?.(line);
+      }
+      const remainder = parts[parts.length - 1];
+      if (remainder) pending.push(remainder);
+    };
+    const collect = (chunk: Buffer, target: Buffer[], decoder: StringDecoder, pending: string[]) => {
       target.push(chunk);
       if (!onLine) return;
-      for (const raw of chunk.toString('utf8').split(/\r?\n/)) {
-        const line = raw.replace(/\r$/, '');
-        if (line) onLine(line);
-      }
+      flushLines(decoder.write(chunk), pending);
     };
 
-    child.stdout?.on('data', (chunk: Buffer) => collect(chunk, stdoutChunks));
-    child.stderr?.on('data', (chunk: Buffer) => collect(chunk, stderrChunks));
+    child.stdout?.on('data', (chunk: Buffer) => collect(chunk, stdoutChunks, stdoutDecoder, stdoutPending));
+    child.stderr?.on('data', (chunk: Buffer) => collect(chunk, stderrChunks, stderrDecoder, stderrPending));
     child.on('error', (error) => {
       if (settled) return;
       settled = true;
@@ -60,6 +73,13 @@ export function runCommand(
       if (settled) return;
       settled = true;
       clearTimeout(timer);
+      if (onLine) {
+        flushLines(stdoutDecoder.end(), stdoutPending);
+        flushLines(stderrDecoder.end(), stderrPending);
+        for (const line of [...stdoutPending, ...stderrPending]) {
+          if (line.trim()) onLine(line.trim());
+        }
+      }
       const decode = (chunks: Buffer[]): string[] => {
         const text = Buffer.concat(chunks).toString('utf8');
         const result = text.split(/\r?\n/).map((line) => line.replace(/\r$/, ''));

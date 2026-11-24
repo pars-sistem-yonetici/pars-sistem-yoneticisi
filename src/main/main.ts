@@ -2,11 +2,16 @@ import { app, BrowserWindow, dialog, ipcMain, Menu, shell, Tray } from 'electron
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import type { CleanTarget, DownloadResult, LogEntry, MalwareEngine, Package, RegIssue, ScheduleTask, WindowAction } from '../shared/types';
+import type {
+  CleanTarget, DownloadResult, InstallItem, LogEntry, MalwareEngine, Package, RegIssue, ScheduleTask, WindowAction,
+} from '../shared/types';
 import * as appsService from './services/apps';
+import * as bloatwareService from './services/bloatware';
 import * as contextMenuService from './services/contextMenu';
 import * as diskService from './services/disk';
 import * as firewallService from './services/firewall';
+import * as installersService from './services/installers';
+import * as networkService from './services/network';
 import * as driversService from './services/drivers';
 import * as localeService from './services/locales';
 import * as loginItemService from './services/loginItem';
@@ -16,13 +21,14 @@ import * as leftoversService from './services/leftovers';
 import * as malwareService from './services/malware';
 import * as registryService from './services/registry';
 import * as schedulerService from './services/scheduler';
+import * as shellExtensionsService from './services/shellExtensions';
 import * as settingsService from './services/settings';
 import * as startupService from './services/startup';
 import * as systemService from './services/system';
 import * as updaterService from './services/updater';
 import * as winget from './services/winget';
 import {
-  arr, bool, ident, IpcValidationError, isInside, leftover, oneOf, regIssue,
+  arr, bloatwareItem, bool, ident, installItem, IpcValidationError, isInside, leftover, leftoverScanTarget, oneOf, regIssue,
   scheduleTask, searchQuery, settingsPatch, startupItem, str, updateInfo,
   Validator, wingetPkg,
 } from './ipc-guard';
@@ -199,12 +205,11 @@ function allowedOpenRoots(): string[] {
   ].map(canonical);
 }
 
-function deniedRoots(resolved: string): string[] {
+function deniedRoots(): string[] {
   return [
-    path.win32.parse(resolved).root,
     process.env.SystemRoot || 'C:\\Windows',
-    process.env.ProgramFiles || 'C:\\Program Files',
     process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)',
+    process.env.ProgramFiles || 'C:\\Program Files',
   ].map(canonical);
 }
 
@@ -212,7 +217,12 @@ function deniedRoots(resolved: string): string[] {
 const openPath: Validator = (value, field) => {
   const input = str({ max: 4096 })(value, field) as string;
   const resolved = canonical(input);
-  if (deniedRoots(resolved).some((root) => isInside(resolved, root))) reject(field, 'sistem klasörü açılamaz');
+  // Sürücü kökünün kendisi açılamaz; ama C:\ altındaki izinli klasörler açılabilir.
+  const driveRoot = path.win32.parse(resolved).root;
+  if (driveRoot && path.win32.relative(driveRoot, resolved) === '') {
+    reject(field, 'sürücü kökü açılamaz');
+  }
+  if (deniedRoots().some((root) => isInside(resolved, root))) reject(field, 'sistem klasörü açılamaz');
   if (!allowedOpenRoots().some((root) => isInside(resolved, root))) reject(field, 'izin verilmeyen yol');
   return input;
 };
@@ -228,6 +238,14 @@ const updateInstallPath: Validator = (value, field) => {
 
 const optionalDrive: Validator = (value, field) =>
   value === undefined || value === null ? undefined : str({ allowEmpty: true, max: 16 })(value, field);
+const optionalRequestId: Validator = (value, field) =>
+  value === undefined || value === null ? undefined : str({ allowEmpty: true, max: 64 })(value, field);
+const driveLetter: Validator = str({ max: 2, pattern: /^[A-Za-z]:?$/ });
+
+/** Aktif kalıntı taramaları için iptal işlevleri (requestId → cancel). */
+const leftoverCancellations = new Map<string, () => void>();
+/** Aktif kurulum kuyrukları için iptal işlevleri (requestId → cancel). */
+const installCancellations = new Map<string, () => void>();
 
 /** Argüman alan kanallar için tek merkezde şema tanımı. */
 const IPC_SCHEMAS: Record<string, Validator[]> = {
@@ -239,9 +257,16 @@ const IPC_SCHEMAS: Record<string, Validator[]> = {
   'winget:upgrade-all': [bool],
   'winget:uninstall': [wingetPkg, bool],
   'winget:download': [ident],
+  'install:queue': [arr(installItem, 200), bool, optionalRequestId],
+  'install:cancel': [str({ max: 64 })],
+  'update:queue': [arr(wingetPkg, 200), bool, optionalRequestId],
+  'update:queue-cancel': [str({ max: 64 })],
   'apps:leftovers': [str({ max: 256 }), str({ max: 128 })],
+  'apps:leftovers-batch': [arr(leftoverScanTarget, 200), optionalRequestId],
+  'leftovers:cancel': [str({ max: 64 })],
   'apps:delete-leftovers': [arr(leftover, 500), oneOf(['recycle', 'permanent'] as const)],
-  'disk:clean': [arr(str({ max: 128 }), 100)],
+  'bloatware:remove': [arr(bloatwareItem, 300)],
+  'disk:clean': [arr(str({ max: 128 }), 100), arr(driveLetter, 26)],
   'registry:delete': [arr(regIssue, 1000)],
   'startup:set': [startupItem, bool],
   'firewall:set': [str({ max: 512 }), bool],
@@ -254,6 +279,7 @@ const IPC_SCHEMAS: Record<string, Validator[]> = {
   'locale:dictionary': [str({ max: 64 })],
   'prereq:install': [oneOf(['winget', 'powershell', 'vcredist'] as const)],
   'contextMenu:set': [oneOf(['windows10', 'windows11'] as const)],
+  'shell-ext:set': [str({ min: 3, max: 300 }), bool],
   'managedPolicy:save': [oneOf(['windows', 'browsers'] as const)],
   'managedPolicy:apply': [oneOf(['windows', 'browsers'] as const)],
   'update:download': [updateInfo],
@@ -316,6 +342,50 @@ function registerIpc(): void {
   register('winget:upgrade-all', (_event, silent: boolean) => winget.upgradeAll(silent, logger('güncelleme')));
   register('winget:uninstall', (_event, pkg: Package, silent: boolean) => winget.uninstall(pkg, silent, logger('kaldırma')));
   register('winget:download', async (_event, ident: string): Promise<DownloadResult> => winget.download(ident, logger('indirme')));
+  register('package-manager:status', () => installersService.managerStatus());
+  register('network:speed', () => networkService.networkSpeed());
+  register('install:queue', async (
+    _event,
+    items: InstallItem[],
+    silent: boolean,
+    requestId?: string,
+  ) => {
+    let cancelled = false;
+    const id = requestId || `install-${Date.now()}`;
+    if (requestId) installCancellations.set(id, () => { cancelled = true; });
+    try {
+      return await installersService.installQueue(items, silent, id, (progress) => {
+        mainWindow?.webContents.send('install:progress', progress);
+        if (progress.line) emit('kurulum', progress.line);
+      }, () => cancelled);
+    } finally {
+      installCancellations.delete(id);
+    }
+  });
+  register('install:cancel', (_event, requestId: string) => {
+    installCancellations.get(requestId)?.();
+  });
+  register('update:queue', async (
+    _event,
+    items: Package[],
+    silent: boolean,
+    requestId?: string,
+  ) => {
+    let cancelled = false;
+    const id = requestId || `update-${Date.now()}`;
+    if (requestId) installCancellations.set(id, () => { cancelled = true; });
+    try {
+      return await installersService.upgradeQueue(items, silent, id, (progress) => {
+        mainWindow?.webContents.send('update:queue-progress', progress);
+        if (progress.line) emit('güncelleme', progress.line);
+      }, () => cancelled);
+    } finally {
+      installCancellations.delete(id);
+    }
+  });
+  register('update:queue-cancel', (_event, requestId: string) => {
+    installCancellations.get(requestId)?.();
+  });
 
   register('apps:installed', async () => {
     let packages: Package[] = [];
@@ -327,15 +397,41 @@ function registerIpc(): void {
     return appsService.installedApps(packages);
   });
   register('apps:leftovers', (_event, name: string, ident: string) => leftoversService.scanLeftovers(name, ident));
+  register('apps:leftovers-batch', async (
+    _event,
+    targets: Parameters<typeof leftoversService.scanLeftoversBatch>[0],
+    requestId?: string,
+  ) => {
+    let cancelled = false;
+    const id = requestId || `scan-${Date.now()}`;
+    if (requestId) leftoverCancellations.set(id, () => { cancelled = true; });
+    try {
+      return await leftoversService.scanLeftoversBatch(targets, {
+        requestId: id,
+        onProgress: (progress) => mainWindow?.webContents.send('leftovers:progress', progress),
+        cancelled: () => cancelled,
+      });
+    } finally {
+      leftoverCancellations.delete(id);
+    }
+  });
+  register('leftovers:cancel', (_event, requestId: string) => {
+    leftoverCancellations.get(requestId)?.();
+  });
   register('apps:delete-leftovers', (_event, items: Parameters<typeof leftoversService.deleteLeftovers>[0], mode: 'recycle' | 'permanent') =>
     leftoversService.deleteLeftovers(items, mode));
 
-  register('disk:targets', () => diskService.targets());
-  register('disk:scan', () => diskService.scan(diskService.targets(), logger('disk')));
-  register('disk:clean', (_event, keys: string[]) => {
+  register('bloatware:scan', () => bloatwareService.scanBloatware());
+  register('bloatware:remove', (_event, items: Parameters<typeof bloatwareService.removeBloatware>[0]) =>
+    bloatwareService.removeBloatware(items));
+
+  const diskTargets = async (): Promise<CleanTarget[]> => diskService.targetsWithDrives(await systemService.drives());
+  register('disk:targets', diskTargets);
+  register('disk:scan', async () => diskService.scan(await diskTargets(), logger('disk')));
+  register('disk:clean', async (_event, keys: string[], recycleDrives: string[]) => {
     const selected = new Set(keys);
-    const items = diskService.targets().filter((item: CleanTarget) => selected.has(item.key));
-    return diskService.clean(items, logger('disk'));
+    const items = (await diskTargets()).filter((item: CleanTarget) => selected.has(item.key));
+    return diskService.clean(items, logger('disk'), recycleDrives);
   });
 
   register('registry:scan', () => registryService.scanRegistry());
@@ -347,6 +443,7 @@ function registerIpc(): void {
   });
 
   register('startup:list', () => startupService.scanStartup());
+  register('startup:timings', () => startupService.startupTimings());
   register('startup:set', (_event, item: Parameters<typeof startupService.setStartupEnabled>[0], enabled: boolean) =>
     startupService.setStartupEnabled(item, enabled));
 
@@ -379,6 +476,9 @@ function registerIpc(): void {
   register('contextMenu:status', () => contextMenuService.contextMenuStatus());
   register('contextMenu:set', (_event, style: Parameters<typeof contextMenuService.setContextMenuStyle>[0]) =>
     contextMenuService.setContextMenuStyle(style, logger('sağ tık menüsü')));
+  register('shell-ext:list', () => shellExtensionsService.listShellExtensions());
+  register('shell-ext:set', (_event, id: string, enabled: boolean) =>
+    shellExtensionsService.setShellExtension(id, enabled, logger('sağ tık eklentisi')));
   register('managedPolicy:files', () => managedPolicyService.managedPolicyFiles());
   register('managedPolicy:save', (_event, id: Parameters<typeof managedPolicyService.saveManagedPolicyFile>[0]) =>
     managedPolicyService.saveManagedPolicyFile(id));

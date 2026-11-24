@@ -1,5 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { AppApi, LogEntry, UpdateProgress } from '../shared/types';
+import type {
+  AppApi, InstallItem, InstallProgress, InstallResult, LeftoverProgress, LogEntry, UpdateProgress,
+} from '../shared/types';
 
 const api: AppApi = {
   onLog: (callback) => {
@@ -26,16 +28,43 @@ const api: AppApi = {
   wingetUpgradeAll: (silent) => ipcRenderer.invoke('winget:upgrade-all', silent),
   wingetUninstall: (pkg, silent) => ipcRenderer.invoke('winget:uninstall', pkg, silent),
   wingetDownload: (ident) => ipcRenderer.invoke('winget:download', ident),
+  packageManagerStatus: () => ipcRenderer.invoke('package-manager:status'),
+  networkSpeed: () => ipcRenderer.invoke('network:speed'),
+  installQueue: (items: InstallItem[], silent: boolean, requestId?: string): Promise<InstallResult[]> =>
+    ipcRenderer.invoke('install:queue', items, silent, requestId),
+  onInstallProgress: (callback: (progress: InstallProgress) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, progress: InstallProgress) => callback(progress);
+    ipcRenderer.on('install:progress', listener);
+    return () => ipcRenderer.removeListener('install:progress', listener);
+  },
+  installCancel: (requestId) => ipcRenderer.invoke('install:cancel', requestId),
+  updateQueue: (items, silent, requestId) => ipcRenderer.invoke('update:queue', items, silent, requestId),
+  onUpdateQueueProgress: (callback: (progress: InstallProgress) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, progress: InstallProgress) => callback(progress);
+    ipcRenderer.on('update:queue-progress', listener);
+    return () => ipcRenderer.removeListener('update:queue-progress', listener);
+  },
+  updateQueueCancel: (requestId) => ipcRenderer.invoke('update:queue-cancel', requestId),
   installedApps: () => ipcRenderer.invoke('apps:installed'),
   scanLeftovers: (name, ident) => ipcRenderer.invoke('apps:leftovers', name, ident),
+  scanLeftoversBatch: (targets, requestId) => ipcRenderer.invoke('apps:leftovers-batch', targets, requestId),
+  onLeftoverProgress: (callback) => {
+    const listener = (_event: Electron.IpcRendererEvent, progress: LeftoverProgress) => callback(progress);
+    ipcRenderer.on('leftovers:progress', listener);
+    return () => ipcRenderer.removeListener('leftovers:progress', listener);
+  },
+  cancelLeftovers: (requestId) => ipcRenderer.invoke('leftovers:cancel', requestId),
   deleteLeftovers: (items, mode) => ipcRenderer.invoke('apps:delete-leftovers', items, mode),
+  bloatwareScan: () => ipcRenderer.invoke('bloatware:scan'),
+  bloatwareRemove: (items) => ipcRenderer.invoke('bloatware:remove', items),
   diskTargets: () => ipcRenderer.invoke('disk:targets'),
   diskScan: () => ipcRenderer.invoke('disk:scan'),
-  diskClean: (keys) => ipcRenderer.invoke('disk:clean', keys),
+  diskClean: (keys, recycleDrives) => ipcRenderer.invoke('disk:clean', keys, recycleDrives),
   registryScan: () => ipcRenderer.invoke('registry:scan'),
   registryDelete: (issues) => ipcRenderer.invoke('registry:delete', issues),
   registryBackupPath: () => ipcRenderer.invoke('registry:backup-path'),
   startupList: () => ipcRenderer.invoke('startup:list'),
+  startupTimings: () => ipcRenderer.invoke('startup:timings'),
   startupSet: (item, enabled) => ipcRenderer.invoke('startup:set', item, enabled),
   firewallScan: () => ipcRenderer.invoke('firewall:scan'),
   firewallSet: (id, enabled) => ipcRenderer.invoke('firewall:set', id, enabled),
@@ -56,6 +85,8 @@ const api: AppApi = {
   prereqInstall: (id) => ipcRenderer.invoke('prereq:install', id),
   contextMenuStatus: () => ipcRenderer.invoke('contextMenu:status'),
   contextMenuSet: (style) => ipcRenderer.invoke('contextMenu:set', style),
+  shellExtensions: () => ipcRenderer.invoke('shell-ext:list'),
+  shellExtensionSet: (id, enabled) => ipcRenderer.invoke('shell-ext:set', id, enabled),
   managedPolicyFiles: () => ipcRenderer.invoke('managedPolicy:files'),
   managedPolicySave: (id) => ipcRenderer.invoke('managedPolicy:save', id),
   managedPolicyApply: (id) => ipcRenderer.invoke('managedPolicy:apply', id),
