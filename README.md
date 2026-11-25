@@ -11,6 +11,15 @@ durum ikonları bulunur. Aynı anda yalnızca bir uygulama örneği çalışır;
 geri yükleyip öne getirir. Sistem tepsisindeki simge ve “Pencereyi göster” kısayolu da küçültülmüş veya
 gizlenmiş pencereyi açar.
 
+## 1.0.8 yenilikleri
+
+- **Kategori başlıkları:** Uygulama Kütüphanesi’ndeki kartlar üstteki kategori sekmeleriyle aynı sıralamada gruplanıyor. Her grubun üstünde o sekmenin ikonu, kategori adı ve içerdiği uygulama sayısı gösteriliyor; arama ve paket yöneticisi filtresi uygulandığında başlıklar ve sayılar güncelleniyor.
+- **Kaynak etiketi:** Paket yöneticisi sekmelerinden biri seçildiğinde grup başlıklarında hangi kaynağın görüntülendiği (winget, Chocolatey, npm, Scoop) ayrıca belirtiliyor; “Tümü” seçiliyken etiket gizleniyor.
+- **1.0.7 düzeltmeleri korundu:** Doğru NSIS anahtarları (`/S --updated`), eski istemciler için `/SILENT` uyumluluğu, kurulum hata bildirimi ve disk alanı kontrolü sürüyor.
+- **Güvenlik modeli korundu:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama ve `deleteAppDataOnUninstall: false` değişmedi.
+
+Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
+
 ## 1.0.7 yenilikleri
 
 - **Doğru sessiz güncelleme:** Uygulama güncelleyicisi NSIS kurucusunu artık `/S` ve `--updated` anahtarlarıyla başlatıyor. Eski `/SILENT` ve `/CLOSEAPPLICATIONS` anahtarları bu kurucu tarafından tanınmadığı için güncelleme “uygulama çalışıyor” penceresinde takılıyordu; `--updated` ile kurulum güncelleme olarak algılanıyor, kısayollar korunuyor.
@@ -41,7 +50,9 @@ Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 ## Ekran görüntüleri (1.0.6)
 
 Aşağıdaki görüntüler 1.0.6 arayüzünden alınmıştır; 1.0.7 yalnızca güncelleyici düzeltmesi içerdiğinden
-arayüz görünümü değişmemiştir. Tanıtım sitesi ve GitHub Releases sayfası da aynı dosyaları kullanır.
+arayüz aynı kalmıştı. 1.0.8’de Uygulama Kütüphanesi’ne eklenen kategori başlıkları nedeniyle
+`screen-library.png` eski görünümü gösterir; diğer ekranlar güncel görünümü yansıtır. Tanıtım sitesi
+ve GitHub Releases sayfası da aynı dosyaları kullanır.
 
 | Anasayfa | Kurulu Uygulamalar |
 | --- | --- |
@@ -53,12 +64,12 @@ arayüz görünümü değişmemiştir. Tanıtım sitesi ve GitHub Releases sayfa
 
 `release/` klasöründe:
 
-- `Pars Sistem Yoneticisi Setup 1.0.7.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
+- `Pars Sistem Yoneticisi Setup 1.0.8.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
 
 GitHub Releases’taki kurulum dosyasının adı noktalıdır:
-`Pars.Sistem.Yoneticisi.Setup.1.0.7.exe`. Yerel kopyalar
+`Pars.Sistem.Yoneticisi.Setup.1.0.8.exe`. Yerel kopyalar
 `YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`
 klasörlerinde tutulur; depoya eklenmez.
 
@@ -139,19 +150,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.0.7",
+  "version": "1.0.8",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.7.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.8.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
-  "size": 83631005,
-  "url": "Pars Sistem Yoneticisi Setup 1.0.7.exe"
+  "size": 83631370,
+  "url": "Pars Sistem Yoneticisi Setup 1.0.8.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.7.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.8.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
@@ -178,10 +189,10 @@ yükleyeceğiniz klasörü doğrudan hedefleyebilirsiniz. `--embed`
 yalnızca bir sonraki paketlemede gömülü manifest’i günceller; mevcut kurulu sürümlere ulaşmak için
 güncelleme kaynağının sabit bir URL veya klasör olarak ayarlanması gerekir.
 
-Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.0.8):
+Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.0.9):
 
 ```powershell
-npm run bump -- 1.0.8
+npm run bump -- 1.0.9
 ```
 
 Bu komut `package.json`, `package-lock.json` (ilk iki alan), `i18n.ts` başlığı, `README.md`,
@@ -191,7 +202,7 @@ GitHub → Actions → **Sürüm yayınla** → **Run workflow** ile sürümü y
 `%APPDATA%\pars-sistem-yoneticisi-ts\updates` altında tutulur.
 
 > `npm run publish` yalnızca el ile yayın yapıldığında gerekir; GitHub Actions akışı manifest’i
-> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.0.8 --check` değişiklikleri
+> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.0.9 --check` değişiklikleri
 > yazmadan görebilirsiniz.
 
 ## Güvenlik
