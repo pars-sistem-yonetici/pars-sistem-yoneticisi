@@ -88,11 +88,19 @@ export interface CleanResult {
   message: string;
 }
 
+export const REG_SCAN_SCOPES = [
+  'uninstall', 'app-paths', 'com-shell', 'com-hijack', 'file-assoc', 'service', 'shared-dll', 'font', 'odbc',
+] as const;
+export type RegScanScope = (typeof REG_SCAN_SCOPES)[number];
+export type RegIssueCategory = RegScanScope;
+export type RegRisk = 'info' | 'warning' | 'critical';
+
 export interface RegStats {
   scanned: number;
   protected: number;
   system: number;
   broken: number;
+  findings: number;
 }
 
 export interface RegIssue {
@@ -106,6 +114,13 @@ export interface RegIssue {
   detail: string;
   view: 64 | 32;
   system?: boolean;
+  category?: RegIssueCategory;
+  risk?: RegRisk;
+  /** Yalnızca kanıtlanmış bozuk Uninstall/App Paths girdileri yedekli olarak silinebilir. */
+  fixable?: boolean;
+  recommendation?: string;
+  signature?: string;
+  valueName?: string;
 }
 
 export interface RegResult {
@@ -117,6 +132,12 @@ export interface RegResult {
 export interface RegScanResult {
   issues: RegIssue[];
   stats: RegStats;
+}
+
+export interface RegExportResult {
+  ok: boolean;
+  message: string;
+  path: string;
 }
 
 export interface Leftover {
@@ -182,7 +203,7 @@ export type { ManagedPolicyFixId } from './managedPolicy';
 
 /** 'tr' ve 'en' tam çevirili; diğer kodlar Electron dil paketlerinden/ek çeviri dosyalarından gelir. */
 export type Language = string;
-export type Theme = 'default' | 'windows11';
+export type Theme = 'default' | 'windows11' | 'auto';
 export type WindowAction = 'minimize' | 'maximize' | 'close' | 'close-to-tray';
 /** Kapat düğmesine basıldığında ne yapılacağı. 'ask' her seferinde sorar. */
 export type CloseBehavior = 'ask' | 'tray' | 'quit';
@@ -216,6 +237,8 @@ export interface Settings {
   autoUpdateScan: boolean;
   autoLeftoverScan: boolean;
   silentInstall: boolean;
+  /** Kurumsal dağıtımda eksik paket yöneticilerini açılışta onaysız/arka planda kurur. Varsayılan kapalı. */
+  enterpriseSilentPrereqs: boolean;
   drive: string;
   startWithWindows: boolean;
   startMinimizedToTray: boolean;
@@ -330,7 +353,7 @@ export interface DriverBackupResult {
   path?: string;
 }
 
-export type PrerequisiteId = 'winget' | 'powershell' | 'vcredist';
+export type PrerequisiteId = 'winget' | 'choco' | 'npm' | 'scoop' | 'powershell' | 'vcredist';
 
 export interface Prerequisite {
   id: PrerequisiteId;
@@ -453,6 +476,181 @@ export interface ManagedPolicyApplyResult {
   backups: number;
 }
 
+/* ---------- Yeni özellikler: paket yedeği, dosya tarayıcı, disk analizi,
+   sistem onarımı, gelişmiş başlangıç ve gizlilik ayarları ---------- */
+
+export interface PackageBackupEntry {
+  id: string;
+  name: string;
+  version: string;
+  source: string;
+  selected: boolean;
+}
+
+export interface PackageBackupFile {
+  path: string;
+  name: string;
+  createdAt: string;
+  count: number;
+  size: number;
+}
+
+export interface PackageBackupResult {
+  ok: boolean;
+  path: string;
+  count: number;
+  message: string;
+}
+
+export interface PackageImportResult {
+  total: number;
+  ok: boolean;
+  message: string;
+  lines: string[];
+}
+
+export interface PackageBackupOverview {
+  folder: string;
+  files: PackageBackupFile[];
+}
+
+export interface FileScanOptions {
+  roots: string[];
+  referenceRoots: string[];
+  minSize: number;
+  maxResults: number;
+}
+
+export interface DuplicateGroup {
+  hash: string;
+  size: number;
+  files: string[];
+}
+
+export interface LargeFile {
+  path: string;
+  size: number;
+  modified: string;
+}
+
+export interface EmptyItem {
+  path: string;
+  kind: 'folder' | 'file';
+  size: number;
+}
+
+export interface FileScanResult {
+  scanned: number;
+  duplicates: DuplicateGroup[];
+  large: LargeFile[];
+  empty: EmptyItem[];
+  wasted: number;
+  durationMs: number;
+  errors: string[];
+}
+
+export interface DiskTreeNode {
+  name: string;
+  path: string;
+  size: number;
+  files: number;
+  children: DiskTreeNode[];
+}
+
+export interface DiskExtension {
+  extension: string;
+  size: number;
+  files: number;
+}
+
+export interface DiskAnalysisResult {
+  root: string;
+  total: number;
+  files: number;
+  folders: number;
+  topFiles: LargeFile[];
+  extensions: DiskExtension[];
+  tree: DiskTreeNode[];
+  durationMs: number;
+  errors: string[];
+}
+
+/**IPC şeması ile arayüz listesinin aynı kimlikleri kullanması için tek kaynak. */
+export const REPAIR_KINDS = [
+  'sfc', 'dism', 'restore-point',
+  'dism-check', 'dism-scan', 'dism-analyze', 'sfc-verify', 'chkdsk-scan',
+  'update-reset', 'network-reset',
+  'component-cleanup', 'store-cache', 'search-index', 'print-spooler',
+  'full-sequence', 'bcd-backup', 'advanced-restart',
+] as const;
+
+export type RepairKind = (typeof REPAIR_KINDS)[number];
+
+export interface RepairResult {
+  kind: RepairKind;
+  ok: boolean;
+  message: string;
+  lines: string[];
+  durationMs: number;
+  /** Zorunlu yedek dosyası/klasörü (varsa). */
+  backupPath?: string;
+  /** İşlem sonrası yeniden başlatma gerekiyorsa true. */
+  rebootRequired?: boolean;
+}
+
+export type AutorunCategory = 'task' | 'service' | 'winlogon' | 'appinit' | 'ifeo' | 'wmi';
+
+export interface AutorunItem {
+  id: string;
+  category: AutorunCategory;
+  name: string;
+  location: string;
+  command: string;
+  enabled: boolean;
+  publisher: string;
+  sourcePath: string;
+  risk: 'normal' | 'elevated';
+  state: string;
+}
+
+export interface AutorunScanResult {
+  items: AutorunItem[];
+  errors: string[];
+  durationMs: number;
+}
+
+export interface AutorunActionResult {
+  ok: boolean;
+  enabled: boolean;
+  backupPath: string;
+  message: string;
+}
+
+export type PrivacyCategory = 'telemetry' | 'privacy' | 'interface';
+
+export interface PrivacyTweak {
+  id: string;
+  title: string;
+  description: string;
+  category: PrivacyCategory;
+  hive: 'HKCU' | 'HKLM';
+  location: string;
+  name: string;
+  value: string;
+  applied: boolean;
+  current: string;
+  admin: boolean;
+}
+
+export interface PrivacyActionResult {
+  id: string;
+  ok: boolean;
+  applied: boolean;
+  current: string;
+  backupPath: string;
+  message: string;
+}
+
 export interface AppApi {
   onLog: (callback: (entry: LogEntry) => void) => () => void;
   onMaximizedChange: (callback: (maximized: boolean) => void) => () => void;
@@ -460,6 +658,7 @@ export interface AppApi {
   isMaximized: () => Promise<boolean>;
   systemSnapshot: (drive?: string) => Promise<SystemSnapshot>;
   systemDrives: () => Promise<string[]>;
+  systemDriveLabels: () => Promise<Record<string, string>>;
   wingetVersion: () => Promise<{ available: boolean; version: string }>;
   wingetSourceUpdate: () => Promise<number>;
   wingetList: () => Promise<Package[]>;
@@ -489,9 +688,11 @@ export interface AppApi {
   diskTargets: () => Promise<CleanTarget[]>;
   diskScan: () => Promise<CleanTarget[]>;
   diskClean: (keys: string[], recycleDrives?: string[]) => Promise<CleanResult[]>;
-  registryScan: () => Promise<RegScanResult>;
+  diskCleanupLogPath: () => Promise<string>;
+  registryScan: (scopes?: RegScanScope[]) => Promise<RegScanResult>;
   registryDelete: (issues: RegIssue[]) => Promise<RegResult[]>;
   registryBackupPath: () => Promise<string>;
+  registryExportReport: (format: 'json' | 'csv') => Promise<RegExportResult>;
   startupList: () => Promise<StartupItem[]>;
   startupTimings: () => Promise<StartupTiming[]>;
   startupSet: (item: StartupItem, enabled: boolean) => Promise<string>;
@@ -512,6 +713,7 @@ export interface AppApi {
   localeFolder: () => Promise<string>;
   prereqScan: () => Promise<Prerequisite[]>;
   prereqInstall: (id: PrerequisiteId) => Promise<PrereqActionResult>;
+  prereqAutoInstall: () => Promise<PrereqActionResult[]>;
   contextMenuStatus: () => Promise<ContextMenuStatus>;
   contextMenuSet: (style: ContextMenuStyle) => Promise<ContextMenuActionResult>;
   shellExtensions: () => Promise<ShellExtensionItem[]>;
@@ -529,6 +731,22 @@ export interface AppApi {
   getSettings: () => Promise<Settings>;
   setSettings: (patch: Partial<Settings>) => Promise<Settings>;
   openPath: (targetPath: string) => Promise<void>;
+  openExternal: (url: string) => Promise<void>;
+  pickScanFolders: () => Promise<string[]>;
+  packageBackupFolder: () => Promise<string>;
+  packageBackupList: () => Promise<PackageBackupOverview>;
+  packageExport: () => Promise<PackageBackupResult>;
+  packageReadBackup: (filePath: string) => Promise<PackageBackupEntry[]>;
+  packageImport: (filePath: string, idents: string[]) => Promise<PackageImportResult>;
+  fileScan: (options: FileScanOptions) => Promise<FileScanResult>;
+  fileDelete: (paths: string[], referenceRoots: string[], mode: 'recycle' | 'permanent') => Promise<DeleteResult[]>;
+  diskAnalysis: (root: string) => Promise<DiskAnalysisResult>;
+  repairRun: (kind: RepairKind) => Promise<RepairResult>;
+  repairBackupFolder: () => Promise<string>;
+  autorunScan: () => Promise<AutorunScanResult>;
+  autorunSet: (item: AutorunItem, enabled: boolean) => Promise<AutorunActionResult>;
+  privacyList: () => Promise<PrivacyTweak[]>;
+  privacySet: (tweak: PrivacyTweak, apply: boolean) => Promise<PrivacyActionResult>;
 }
 
 declare global {

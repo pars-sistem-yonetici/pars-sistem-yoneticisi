@@ -66,25 +66,26 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'Wireshark', ident: 'WiresharkFoundation.Wireshark', category: 'Güvenlik', description: 'Ağ trafiği analizi', homepage: 'https://www.wireshark.org' },
   { name: 'TCPView', ident: 'Microsoft.Sysinternals.TCPView', category: 'Güvenlik', description: 'Ağ bağlantılarını izleme', homepage: 'https://learn.microsoft.com' },
 
-  // Tarayıcı & İletişim
-  { name: 'Google Chrome', ident: 'Google.Chrome', category: 'Tarayıcı & İletişim', description: 'Web tarayıcısı', homepage: 'https://www.google.com' },
-  { name: 'Mozilla Firefox', ident: 'Mozilla.Firefox', category: 'Tarayıcı & İletişim', description: 'Web tarayıcısı', homepage: 'https://www.mozilla.org' },
-  { name: 'Mozilla Firefox ESR', ident: 'Mozilla.Firefox.ESR', category: 'Tarayıcı & İletişim', description: 'Uzun süreli destek sürümü', homepage: 'https://www.mozilla.org' },
-  { name: 'Brave', ident: 'Brave.Brave', category: 'Tarayıcı & İletişim', description: 'Gizlilik odaklı tarayıcı', homepage: 'https://brave.com' },
-  { name: 'Microsoft Edge', ident: 'Microsoft.Edge', category: 'Tarayıcı & İletişim', description: 'Windows ile gelen tarayıcı', homepage: 'https://www.microsoft.com' },
-  { name: 'Opera', ident: 'Opera.Opera', category: 'Tarayıcı & İletişim', description: 'Yerleşik VPN’li tarayıcı', homepage: 'https://www.opera.com' },
-  { name: 'Vivaldi', ident: 'Vivaldi.Vivaldi', category: 'Tarayıcı & İletişim', description: 'Özelleştirilebilir tarayıcı', homepage: 'https://vivaldi.com' },
-  { name: 'Tor Browser', ident: 'TorProject.TorBrowser', category: 'Tarayıcı & İletişim', description: 'Anonim web tarayıcısı', homepage: 'https://www.torproject.org' },
-  { name: 'Waterfox', ident: 'Waterfox.Waterfox', category: 'Tarayıcı & İletişim', description: 'Gizlilik odaklı Firefox türevi', homepage: 'https://www.waterfox.net' },
-  { name: 'Telegram Desktop', ident: 'Telegram.TelegramDesktop', category: 'Tarayıcı & İletişim', description: 'Mesajlaşma', homepage: 'https://telegram.org' },
-  { name: 'Discord', ident: 'Discord.Discord', category: 'Tarayıcı & İletişim', description: 'Topluluk ve sesli sohbet', homepage: 'https://discord.com' },
-  { name: 'Slack', ident: 'SlackTechnologies.Slack', category: 'Tarayıcı & İletişim', description: 'Ekip iletişimi', homepage: 'https://slack.com' },
-  { name: 'Microsoft Teams', ident: 'Microsoft.Teams', category: 'Tarayıcı & İletişim', description: 'Toplantı ve ekip çalışması', homepage: 'https://www.microsoft.com' },
-  { name: 'Mattermost', ident: 'Mattermost.MattermostDesktop', category: 'Tarayıcı & İletişim', description: 'Açık kaynak ekip sohbeti', homepage: 'https://mattermost.com' },
-  { name: 'Mozilla Thunderbird', ident: 'Mozilla.Thunderbird', category: 'Tarayıcı & İletişim', description: 'E-posta istemcisi', homepage: 'https://www.thunderbird.net' },
-  { name: 'Zoom Workplace', ident: 'Zoom.Zoom', category: 'Tarayıcı & İletişim', description: 'Görüntülü toplantı', homepage: 'https://zoom.us' },
-  { name: 'TeamViewer', ident: 'TeamViewer.TeamViewer', category: 'Tarayıcı & İletişim', description: 'Uzaktan erişim', homepage: 'https://www.teamviewer.com' },
-  { name: 'AnyDesk', ident: 'AnyDesk.AnyDesk', category: 'Tarayıcı & İletişim', description: 'Hızlı uzaktan erişim', homepage: 'https://anydesk.com' },
+  // Tarayıcı
+  { name: 'Google Chrome', ident: 'Google.Chrome', category: 'Tarayıcı', description: 'Web tarayıcısı', homepage: 'https://www.google.com' },
+  { name: 'Mozilla Firefox', ident: 'Mozilla.Firefox', category: 'Tarayıcı', description: 'Web tarayıcısı', homepage: 'https://www.mozilla.org' },
+  { name: 'Mozilla Firefox ESR', ident: 'Mozilla.Firefox.ESR', category: 'Tarayıcı', description: 'Uzun süreli destek sürümü', homepage: 'https://www.mozilla.org' },
+  { name: 'Brave', ident: 'Brave.Brave', category: 'Tarayıcı', description: 'Gizlilik odaklı tarayıcı', homepage: 'https://brave.com' },
+  { name: 'Microsoft Edge', ident: 'Microsoft.Edge', category: 'Tarayıcı', description: 'Windows ile gelen tarayıcı', homepage: 'https://www.microsoft.com' },
+  { name: 'Opera', ident: 'Opera.Opera', category: 'Tarayıcı', description: 'Yerleşik VPN’li tarayıcı', homepage: 'https://www.opera.com' },
+  { name: 'Vivaldi', ident: 'Vivaldi.Vivaldi', category: 'Tarayıcı', description: 'Özelleştirilebilir tarayıcı', homepage: 'https://vivaldi.com' },
+  { name: 'Tor Browser', ident: 'TorProject.TorBrowser', category: 'Tarayıcı', description: 'Anonim web tarayıcısı', homepage: 'https://www.torproject.org' },
+  { name: 'Waterfox', ident: 'Waterfox.Waterfox', category: 'Tarayıcı', description: 'Gizlilik odaklı Firefox türevi', homepage: 'https://www.waterfox.net' },
+  // İletişim
+  { name: 'Telegram Desktop', ident: 'Telegram.TelegramDesktop', category: 'İletişim', description: 'Mesajlaşma', homepage: 'https://telegram.org' },
+  { name: 'Discord', ident: 'Discord.Discord', category: 'İletişim', description: 'Topluluk ve sesli sohbet', homepage: 'https://discord.com' },
+  { name: 'Slack', ident: 'SlackTechnologies.Slack', category: 'İletişim', description: 'Ekip iletişimi', homepage: 'https://slack.com' },
+  { name: 'Microsoft Teams', ident: 'Microsoft.Teams', category: 'İletişim', description: 'Toplantı ve ekip çalışması', homepage: 'https://www.microsoft.com' },
+  { name: 'Mattermost', ident: 'Mattermost.MattermostDesktop', category: 'İletişim', description: 'Açık kaynak ekip sohbeti', homepage: 'https://mattermost.com' },
+  { name: 'Mozilla Thunderbird', ident: 'Mozilla.Thunderbird', category: 'İletişim', description: 'E-posta istemcisi', homepage: 'https://www.thunderbird.net' },
+  { name: 'Zoom Workplace', ident: 'Zoom.Zoom', category: 'İletişim', description: 'Görüntülü toplantı', homepage: 'https://zoom.us' },
+  { name: 'TeamViewer', ident: 'TeamViewer.TeamViewer', category: 'İletişim', description: 'Uzaktan erişim', homepage: 'https://www.teamviewer.com' },
+  { name: 'AnyDesk', ident: 'AnyDesk.AnyDesk', category: 'İletişim', description: 'Hızlı uzaktan erişim', homepage: 'https://anydesk.com' },
 
   // Verimlilik
   { name: 'LibreOffice', ident: 'TheDocumentFoundation.LibreOffice', category: 'Verimlilik', description: 'Ücretsiz ofis paketi', homepage: 'https://www.libreoffice.org' },
@@ -228,7 +229,18 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'GCC (MinGW)', ident: 'gcc', category: 'Paket Yöneticileri', description: 'C/C++ derleyici', source: 'scoop', homepage: 'https://gcc.gnu.org' },
 ];
 
-export const CATEGORIES = Array.from(new Set(CATALOG.map((item) => item.category)));
+/** Kütüphane sekmeleri: istenen sıra sabitlenir; katalogda olmayan adlar da görünür. */
+export const CATEGORIES = [
+  'Tarayıcı',
+  'Medya & Tasarım',
+  'Oyun',
+  'İletişim',
+  'Güvenlik',
+  'Sistem & Çalışma Zamanı',
+  'Verimlilik',
+  'Geliştirme',
+  'Paket Yöneticileri',
+];
 
 /** Aynı kimlik farklı kaynaklarda bulunabileceği için seçim anahtarı kaynağı da içerir. */
 export function recKey(item: RecommendedSoftware): string {
