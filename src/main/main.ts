@@ -4,7 +4,7 @@ import os from 'os';
 import path from 'path';
 import { DNS_PROVIDER_IDS, PROFILE_IDS, REG_SCAN_SCOPES, REPAIR_KINDS } from '../shared/types';
 import type {
-  CleanTarget, DownloadResult, InstallItem, LogEntry, MalwareEngine, Package, RegIssue, RegScanScope, ScheduleTask, Theme, WindowAction,
+  CleanTarget, DownloadResult, InstallItem, LogEntry, MalwareEngine, Package, PackageSource, RegIssue, RegScanScope, ScheduleTask, Theme, WindowAction,
 } from '../shared/types';
 import * as appsService from './services/apps';
 import * as autorunsService from './services/autoruns';
@@ -37,6 +37,7 @@ import * as systemService from './services/system';
 import * as tweaksService from './services/tweaks';
 import * as updaterService from './services/updater';
 import * as winget from './services/winget';
+import * as updatesService from './services/updates';
 import {
   arr, autorunItem, bloatwareItem, bool, filePath, fileScanOptions, ident, installItem, IpcValidationError, isInside,
   leftover, leftoverScanTarget, oneOf, pathList, privacyTweak, regIssue,
@@ -332,6 +333,7 @@ const IPC_SCHEMAS: Record<string, Validator[]> = {
   'winget:upgrade-all': [bool],
   'winget:uninstall': [wingetPkg, bool],
   'winget:download': [ident],
+  'updates:list': [oneOf(['all', 'winget', 'choco', 'npm', 'scoop'] as const)],
   'install:queue': [arr(installItem, 200), bool, optionalRequestId],
   'install:cancel': [str({ max: 64 })],
   'update:queue': [arr(wingetPkg, 200), bool, optionalRequestId],
@@ -428,6 +430,8 @@ function registerIpc(): void {
   register('winget:source-update', () => winget.updateSources(logger('winget')));
   register('winget:list', () => winget.listPackages(logger('winget')));
   register('winget:updates', () => winget.listUpdates(logger('winget')));
+  register('updates:list', (_event, source: 'all' | PackageSource) =>
+    source === 'all' ? updatesService.listAllUpdates(logger('güncelleme')) : updatesService.listUpdates(source, logger('güncelleme')));
   register('winget:search', (_event, query: string) => winget.search(query, logger('winget')));
   register('winget:install', (_event, ident: string, silent: boolean) => winget.install(ident, silent, logger('kurulum')));
   register('winget:upgrade', (_event, pkg: Package, silent: boolean) => winget.upgrade(pkg, silent, logger('güncelleme')));
