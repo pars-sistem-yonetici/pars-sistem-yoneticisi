@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import { categoryIcon, UiIcon } from './uiIcons';
 import { CATALOG, CATEGORIES, favicon, recKey, type RecommendedSoftware } from '../shared/catalog';
 import { APP_LINKS, DEFAULT_UPDATE_SOURCE } from '../shared/constants';
@@ -1190,6 +1190,22 @@ export default function App() {
         return left - right || a.name.localeCompare(b.name, 'tr-TR');
       });
   }, [recCategory, recQuery, recSource]);
+
+  /** Sekmelerdeki kategori sırasıyla aynı sıralamada kart üstü başlıkları üretir. */
+  const groupedRecommended = useMemo(() => {
+    const groups: Array<{ category: string; items: RecommendedSoftware[] }> = [];
+    const byCategory = new Map<string, RecommendedSoftware[]>();
+    for (const item of filteredRecommended) {
+      let items = byCategory.get(item.category);
+      if (!items) {
+        items = [];
+        byCategory.set(item.category, items);
+        groups.push({ category: item.category, items });
+      }
+      items.push(item);
+    }
+    return groups;
+  }, [filteredRecommended]);
 
   const selectedRecommended = useMemo(
     () => CATALOG.filter((item) => selectedRec.has(recKey(item))),
@@ -2649,35 +2665,45 @@ export default function App() {
               />
               <div className="library-layout">
                 <div className="software-grid library-grid">
-                  {filteredRecommended.map((item) => {
-                    const installed = installedIds.has(recKey(item));
-                    const key = recKey(item);
-                    return (
-                      <div
-                        key={key}
-                        role="button"
-                        tabIndex={0}
-                        className={`software-card library-card ${installed ? 'installed' : ''} ${selectedRec.has(key) ? 'selected' : ''}`}
-                        onClick={() => toggle(setSelectedRec, key)}
-                        onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(setSelectedRec, key); } }}
-                        aria-pressed={selectedRec.has(key)}
-                      >
-                        <div className="software-head">
-                          <Avatar name={item.name} src={favicon(item)} />
-                          <div className="software-title">
-                            <b>{item.name}</b>
-                            <small>{t(item.category)} · {sourceLabel(item.source)}</small>
-                          </div>
-                          <input type="checkbox" checked={selectedRec.has(key)} onChange={() => toggle(setSelectedRec, key)} onClick={(event) => event.stopPropagation()} />
-                        </div>
-                        <p>{item.description}</p>
-                        <div className="software-foot">
-                          <code>{item.ident}</code>
-                          {installed && <span className="badge badge-green">{t('kurulu')}</span>}
-                        </div>
+                  {groupedRecommended.map(({ category, items }) => (
+                    <Fragment key={category}>
+                      <div className="library-group-head">
+                        <UiIcon icon={categoryIcon(category)} />
+                        <h3>{t(category)}</h3>
+                        <span className="library-group-count">{tf('{count} uygulama', { count: items.length })}</span>
+                        {recSource !== 'all' && <span className="library-group-source">{sourceLabel(recSource)}</span>}
                       </div>
-                    );
-                  })}
+                      {items.map((item) => {
+                        const installed = installedIds.has(recKey(item));
+                        const key = recKey(item);
+                        return (
+                          <div
+                            key={key}
+                            role="button"
+                            tabIndex={0}
+                            className={`software-card library-card ${installed ? 'installed' : ''} ${selectedRec.has(key) ? 'selected' : ''}`}
+                            onClick={() => toggle(setSelectedRec, key)}
+                            onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(setSelectedRec, key); } }}
+                            aria-pressed={selectedRec.has(key)}
+                          >
+                            <div className="software-head">
+                              <Avatar name={item.name} src={favicon(item)} />
+                              <div className="software-title">
+                                <b>{item.name}</b>
+                                <small>{t(item.category)} · {sourceLabel(item.source)}</small>
+                              </div>
+                              <input type="checkbox" checked={selectedRec.has(key)} onChange={() => toggle(setSelectedRec, key)} onClick={(event) => event.stopPropagation()} />
+                            </div>
+                            <p>{item.description}</p>
+                            <div className="software-foot">
+                              <code>{item.ident}</code>
+                              {installed && <span className="badge badge-green">{t('kurulu')}</span>}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </Fragment>
+                  ))}
                   {!filteredRecommended.length && <p className="empty">{t('Kriterlere uygun yazılım yok.')}</p>}
                 </div>
                 <aside className="library-selection">
