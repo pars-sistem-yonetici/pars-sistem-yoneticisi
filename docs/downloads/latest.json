@@ -1,13 +1,13 @@
 {
-  "version": "1.0.7",
-  "notes": "Güncelleyici artık NSIS kurucusunu doğru anahtarlarla başlatıyor: `/S` ve `--updated`. 1.0.4–1.0.6 sürümlerinden gelen güncellemeler de sessiz kurulabiliyor; disk doluluğu ve bağlantı kesilmesi artık anlaşılır hata mesajı veriyor.",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.7.exe",
-  "sha512": "7793acbd7e781f3de6bf36c66f53b2972694e8c2deb1b6294f0c64c57cc235c89ec40ec30f60a13263c1ff9a2dc48f267d63473d8c4c2a507f414921cfab4d6a",
-  "sha256": "803738419d64043dafbe9ab3d3bcd43b5820868473ef7dc2dc1e094c0aff8ee3",
-  "size": 83631005,
-  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.7/Pars.Sistem.Yoneticisi.Setup.1.0.7.exe",
+  "version": "1.0.8",
+  "notes": "Uygulama Kütüphanesi’ndeki kartlar artık üstteki kategori sekmeleriyle aynı sıralamada gruplanıyor; her grubun üstünde kategori ikonu, adı ve kart sayısı gösteriliyor. 1.0.7’deki güncelleyici düzeltmeleri de korunuyor.",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.8.exe",
+  "sha512": "c480e692c8f2b97f9d7792d5b3e938e91e309cbc805c1c8e60dcaff9a499fc3e84f0c33d6372ceb0b5e529e36581f7e21675aaeeb48af085291bee842879aaca",
+  "sha256": "4203c30fb29fcdbf851acebdd076651b86bd9ff5a65b0282d60c87483fd51d7a",
+  "size": 83631370,
+  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.8/Pars.Sistem.Yoneticisi.Setup.1.0.8.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
-  "portableSha256": "913aa2c88050d9f1c501979413370891180ed2aab0485d60d490348d233f3df8",
-  "portableSize": 83417496,
-  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.7/ParsSistemYoneticisi-Portable.exe"
+  "portableSha256": "14ee09c026be7a18568350ef0510d955bdbd9f720d90c63da053b75101854beb",
+  "portableSize": 83417774,
+  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.8/ParsSistemYoneticisi-Portable.exe"
 }
