@@ -125,6 +125,15 @@ export const regIssue: Validator = shape({
   detail: { validate: str({ allowEmpty: true, max: 2048 }) },
   view: { validate: oneOf([64, 32] as const) },
   system: { validate: bool, optional: true },
+  category: {
+    validate: oneOf(['uninstall', 'app-paths', 'com-shell', 'com-hijack', 'file-assoc', 'service', 'shared-dll', 'font', 'odbc'] as const),
+    optional: true,
+  },
+  risk: { validate: oneOf(['info', 'warning', 'critical'] as const), optional: true },
+  fixable: { validate: bool, optional: true },
+  recommendation: { validate: str({ allowEmpty: true, max: 512 }), optional: true },
+  signature: { validate: str({ allowEmpty: true, max: 64 }), optional: true },
+  valueName: { validate: str({ allowEmpty: true, max: 2048 }), optional: true },
 });
 
 export const scheduleTask: Validator = shape({
@@ -200,12 +209,13 @@ export const updateInfo: Validator = shape({
 
 export const settingsPatch: Validator = shape({
   language: { validate: str({ max: 64 }), optional: true },
-  theme: { validate: oneOf(['default', 'windows11'] as const), optional: true },
+  theme: { validate: oneOf(['default', 'windows11', 'auto'] as const), optional: true },
   wingetVersion: { validate: str({ allowEmpty: true, max: 128 }), optional: true },
   wingetAvailable: { validate: bool, optional: true },
   autoUpdateScan: { validate: bool, optional: true },
   autoLeftoverScan: { validate: bool, optional: true },
   silentInstall: { validate: bool, optional: true },
+  enterpriseSilentPrereqs: { validate: bool, optional: true },
   drive: { validate: str({ allowEmpty: true, max: 16 }), optional: true },
   startWithWindows: { validate: bool, optional: true },
   startMinimizedToTray: { validate: bool, optional: true },
@@ -214,6 +224,43 @@ export const settingsPatch: Validator = shape({
   updateCheckOnStartup: { validate: bool, optional: true },
   excludedFolders: { validate: arr(str({ max: 4096 }), 500), optional: true },
   excludedExtensions: { validate: arr(str({ min: 1, max: 32 }), 500), optional: true },
+}, true);
+
+export const filePath: Validator = str({ min: 2, max: 4096 });
+export const pathList: Validator = arr(filePath, 2000);
+
+export const fileScanOptions: Validator = shape({
+  roots: { validate: pathList },
+  referenceRoots: { validate: pathList },
+  minSize: { validate: num },
+  maxResults: { validate: num },
+}, true);
+
+export const autorunItem: Validator = shape({
+  id: { validate: str({ max: 1024 }) },
+  category: { validate: oneOf(['task', 'service', 'winlogon', 'appinit', 'ifeo', 'wmi'] as const) },
+  name: { validate: str({ max: 512 }) },
+  location: { validate: str({ allowEmpty: true, max: 1024 }) },
+  command: { validate: str({ allowEmpty: true, max: 4096 }) },
+  enabled: { validate: bool },
+  publisher: { validate: str({ allowEmpty: true, max: 512 }) },
+  sourcePath: { validate: str({ allowEmpty: true, max: 2048 }) },
+  risk: { validate: oneOf(['normal', 'elevated'] as const) },
+  state: { validate: str({ allowEmpty: true, max: 128 }) },
+}, true);
+
+export const privacyTweak: Validator = shape({
+  id: { validate: str({ max: 64 }) },
+  title: { validate: str({ max: 256 }) },
+  description: { validate: str({ allowEmpty: true, max: 1024 }) },
+  category: { validate: oneOf(['telemetry', 'privacy', 'interface'] as const) },
+  hive: { validate: oneOf(['HKCU', 'HKLM'] as const) },
+  location: { validate: str({ max: 1024 }) },
+  name: { validate: str({ max: 256 }) },
+  value: { validate: str({ max: 256 }) },
+  applied: { validate: bool },
+  current: { validate: str({ allowEmpty: true, max: 256 }) },
+  admin: { validate: bool },
 }, true);
 
 /** child, parent klasörünün içinde mi? (sembolik bağlantılar çözülmüş yollarla karşılaştırılır) */

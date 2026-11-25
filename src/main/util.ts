@@ -12,6 +12,11 @@ export interface CommandResult {
   stderr: string;
 }
 
+function cmdArgument(value: string): string {
+  if (/^[\w./:@+=-]+$/.test(value)) return value;
+  return `"${value.replace(/"/g, '""')}"`;
+}
+
 /** Komutu konsol penceresi açmadan çalıştırır, çıktıyı satır satır döndürür. */
 export function runCommand(
   command: string,
@@ -20,10 +25,19 @@ export function runCommand(
   timeout = 15 * 60 * 1000,
 ): Promise<CommandResult> {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, {
-      windowsHide: true,
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
+    // Node, Windows'ta .cmd/.bat dosyalarını doğrudan spawn edemiyor (EINVAL).
+    // Kabuk gerektiren bu komutlar cmd.exe /c ile, diğerleri doğrudan çalıştırılır.
+    const isBatch = /\.(?:cmd|bat)$/i.test(command);
+    const child = isBatch
+      ? spawn('cmd.exe', ['/d', '/s', '/c', `"${[cmdArgument(command), ...args.map(cmdArgument)].join(' ')}"`], {
+        windowsHide: true,
+        windowsVerbatimArguments: true,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      })
+      : spawn(command, args, {
+        windowsHide: true,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
 
     // stdout ve stderr asla tek akışta birleştirilmez; aksi halde PowerShell
     // progress/CLIXML çıktısı JSON'un ortasına girebilir.
@@ -255,26 +269,30 @@ export function directorySize(target: string, limit = 100_000, shouldSkip?: (tar
 
 /**
  * Bir klasörü, atlanması gereken alt yolları koruyarak siler.
- * shouldSkip true dönen dosya/klasörlere hiç dokunulmaz.
+ * shouldSkip true dönen dosya/klasörlere hiç dokunulmaz. Korumalı kökler,
+ * uygulamanın çalışma klasörü ve reparse point'ler her düzeyde tekrar denetlenir.
  */
 export function removeTree(target: string, shouldSkip?: (target: string) => boolean, onLine?: LogFn): number {
   let freed = 0;
+  const blocked = (targetPath: string): boolean =>
+    Boolean(shouldSkip?.(targetPath) || isProtectedPath(targetPath) || isRuntimePath(targetPath));
   const removeDir = (dir: string): void => {
     let entries: fs.Dirent[];
     try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
     for (const entry of entries) {
       const full = path.join(dir, entry.name);
-      if (shouldSkip?.(full)) {
+      if (blocked(full)) {
         onLine?.(`ATLANDI: ${full}`);
         continue;
       }
       try {
-        if (entry.isSymbolicLink()) continue;
-        if (entry.isDirectory()) {
+        const stat = fs.lstatSync(full);
+        if (stat.isSymbolicLink()) continue;
+        if (stat.isDirectory()) {
           removeDir(full);
-        } else if (entry.isFile()) {
-          freed += fs.statSync(full).size;
+        } else if (stat.isFile()) {
           fs.rmSync(full, { force: true });
+          freed += stat.size;
         }
       } catch {
         // Kilitli dosyalar atlanır.
@@ -284,13 +302,37 @@ export function removeTree(target: string, shouldSkip?: (target: string) => bool
   };
   try {
     const stat = fs.lstatSync(target);
-    if (stat.isSymbolicLink() || shouldSkip?.(target)) return 0;
+    if (stat.isSymbolicLink() || blocked(target)) return 0;
     if (stat.isDirectory()) removeDir(target);
     else { freed = stat.size; fs.rmSync(target, { force: true }); }
   } catch {
     return freed;
   }
   return freed;
+}
+
+/**
+ * Komutu PATH üzerinde ve bilinen kurulum konumlarında arar. Kurulumdan sonra
+ * süreç PATH'i yenilenmediği için yedek konumların denenmesi gerekir.
+ */
+export function commandCandidates(command: string, fallbacks: string[] = []): string[] {
+  const found: string[] = [];
+  const add = (candidate: string): void => {
+    const key = path.resolve(candidate).toLowerCase();
+    if (!found.some((item) => path.resolve(item).toLowerCase() === key)) found.push(candidate);
+  };
+  const extensions = path.extname(command) ? [''] : ['.exe', '.cmd', '.bat', ''];
+  for (const folder of (process.env.PATH || process.env.Path || '').split(path.delimiter).filter(Boolean)) {
+    for (const extension of extensions) {
+      const candidate = path.join(folder, command + extension);
+      if (fs.existsSync(candidate)) add(candidate);
+    }
+  }
+  for (const fallback of fallbacks) {
+    if (fallback && fs.existsSync(fallback)) add(fallback);
+  }
+  if (!found.length) found.push(command);
+  return found;
 }
 
 export function expandVars(value: string): string {

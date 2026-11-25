@@ -1,14 +1,19 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, shell, Tray } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, shell, Tray } from 'electron';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { REG_SCAN_SCOPES, REPAIR_KINDS } from '../shared/types';
 import type {
-  CleanTarget, DownloadResult, InstallItem, LogEntry, MalwareEngine, Package, RegIssue, ScheduleTask, WindowAction,
+  CleanTarget, DownloadResult, InstallItem, LogEntry, MalwareEngine, Package, RegIssue, RegScanScope, ScheduleTask, Theme, WindowAction,
 } from '../shared/types';
 import * as appsService from './services/apps';
+import * as autorunsService from './services/autoruns';
 import * as bloatwareService from './services/bloatware';
+import * as cleanupLogService from './services/cleanupLog';
 import * as contextMenuService from './services/contextMenu';
+import * as diskAnalysisService from './services/diskAnalysis';
 import * as diskService from './services/disk';
+import * as fileScanService from './services/fileScan';
 import * as firewallService from './services/firewall';
 import * as installersService from './services/installers';
 import * as networkService from './services/network';
@@ -19,7 +24,10 @@ import * as managedPolicyService from './services/managedPolicy';
 import * as prereqService from './services/prereqs';
 import * as leftoversService from './services/leftovers';
 import * as malwareService from './services/malware';
+import * as packagesService from './services/packages';
+import * as privacyService from './services/privacy';
 import * as registryService from './services/registry';
+import * as repairService from './services/repair';
 import * as schedulerService from './services/scheduler';
 import * as shellExtensionsService from './services/shellExtensions';
 import * as settingsService from './services/settings';
@@ -28,7 +36,8 @@ import * as systemService from './services/system';
 import * as updaterService from './services/updater';
 import * as winget from './services/winget';
 import {
-  arr, bloatwareItem, bool, ident, installItem, IpcValidationError, isInside, leftover, leftoverScanTarget, oneOf, regIssue,
+  arr, autorunItem, bloatwareItem, bool, filePath, fileScanOptions, ident, installItem, IpcValidationError, isInside,
+  leftover, leftoverScanTarget, oneOf, pathList, privacyTweak, regIssue,
   scheduleTask, searchQuery, settingsPatch, startupItem, str, updateInfo,
   Validator, wingetPkg,
 } from './ipc-guard';
@@ -115,20 +124,64 @@ function applyLocale(language?: string): void {
   if (value) process.env.LC_LANGUAGE = value;
 }
 
+/** Tepsi simgesi için önce paket dışındaki kopyayı, sonra uygulama içindekileri dener. */
+function trayIconPaths(): string[] {
+  const candidates = [
+    path.join(process.resourcesPath || '', 'icons', 'tray.ico'),
+    path.join(__dirname, '..', '..', 'dist', 'icon.ico'),
+    path.join(app.getAppPath(), 'dist', 'icon.ico'),
+    path.join(__dirname, '..', '..', 'build', 'icon.ico'),
+  ];
+  return candidates.filter((candidate, index) => candidate && candidates.indexOf(candidate) === index);
+}
+
+/** Küçültülmüş veya gizlenmiş pencereyi görünür ve öne getirir. */
+function showMainWindow(): void {
+  let win = mainWindow;
+  if (!win || win.isDestroyed()) {
+    createWindow();
+    win = mainWindow;
+  }
+  if (!win) return;
+  if (win.isMinimized()) win.restore();
+  win.show();
+  win.focus();
+}
+
 function setupTray(): void {
   if (tray) return;
+  for (const iconPath of trayIconPaths()) {
+    try {
+      tray = new Tray(iconPath);
+      break;
+    } catch {
+      tray = null;
+    }
+  }
+  if (!tray) return;
   try {
-    tray = new Tray(path.join(__dirname, '..', '..', 'dist', 'icon.ico'));
     tray.setToolTip('Pars Sistem Yöneticisi');
     tray.setContextMenu(Menu.buildFromTemplate([
-      { label: 'Pencereyi göster', click: () => { mainWindow?.show(); mainWindow?.focus(); } },
+      { label: 'Pencereyi göster', click: () => showMainWindow() },
       { type: 'separator' },
       { label: 'Çıkış', click: () => app.exit(0) },
     ]));
-    tray.on('click', () => { mainWindow?.show(); mainWindow?.focus(); });
+    tray.on('click', () => showMainWindow());
+    tray.on('double-click', () => showMainWindow());
   } catch {
+    tray?.destroy();
     tray = null;
   }
+}
+
+/** Windows temasını izleyen seçenek için pencere arka planını çözümler. */
+function resolvedTheme(theme: Theme): 'default' | 'windows11' {
+  if (theme === 'auto') return nativeTheme.shouldUseDarkColors ? 'default' : 'windows11';
+  return theme;
+}
+
+function themeBackground(theme: Theme): string {
+  return resolvedTheme(theme) === 'windows11' ? '#f3f3f3' : '#171719';
 }
 
 function createWindow(): void {
@@ -141,7 +194,7 @@ function createWindow(): void {
     minHeight: 640,
     title: 'Pars Sistem Yöneticisi',
     frame: false,
-    backgroundColor: settingsService.getSettings().theme === 'windows11' ? '#f3f3f3' : '#171719',
+    backgroundColor: themeBackground(settingsService.getSettings().theme),
     autoHideMenuBar: true,
     icon: path.join(__dirname, '..', '..', 'dist', 'icon.ico'),
     webPreferences: {
@@ -227,6 +280,18 @@ const openPath: Validator = (value, field) => {
   return input;
 };
 
+/** Yalnızca uygulamaya ait resmi HTTPS bağlantıları tarayıcıda açılabilir. */
+const externalUrl: Validator = (value, field) => {
+  const input = str({ max: 2048 })(value, field) as string;
+  let parsed: URL | null = null;
+  try { parsed = new URL(input); } catch { reject(field, 'geçerli bir adres değil'); }
+  if (!parsed || parsed.protocol !== 'https:') reject(field, 'yalnızca https bağlantıları açılabilir');
+  const host = parsed.hostname.toLowerCase();
+  const allowed = ['github.com', 'www.github.com', 'buymeacoffee.com', 'www.buymeacoffee.com', 'pars-sistem-yonetici.github.io'];
+  if (!allowed.includes(host)) reject(field, 'izin verilmeyen adres');
+  return input;
+};
+
 /** Kurulacak exe yalnızca indirilen güncellemeler klasöründen gelebilir. */
 const updateInstallPath: Validator = (value, field) => {
   const input = str({ max: 4096 })(value, field) as string;
@@ -240,7 +305,15 @@ const optionalDrive: Validator = (value, field) =>
   value === undefined || value === null ? undefined : str({ allowEmpty: true, max: 16 })(value, field);
 const optionalRequestId: Validator = (value, field) =>
   value === undefined || value === null ? undefined : str({ allowEmpty: true, max: 64 })(value, field);
-const driveLetter: Validator = str({ max: 2, pattern: /^[A-Za-z]:?$/ });
+/** Tarama kapsamı verilmezse tüm gruplar taranır (eski çağrılarla uyumlu). */
+const optionalRegScopes: Validator = (value, field) =>
+  value === undefined || value === null
+    ? undefined
+    : arr(oneOf(REG_SCAN_SCOPES), REG_SCAN_SCOPES.length)(value, field);
+/** system:drives "C:\" biçiminde döner; doğrulayıcı bu biçimi de kabul etmeli. */
+const driveLetter: Validator = str({ max: 3, pattern: /^[A-Za-z]:?\\?$/ });
+const optionalDriveList: Validator = (value, field) =>
+  value === undefined || value === null ? [] : arr(driveLetter, 26)(value, field);
 
 /** Aktif kalıntı taramaları için iptal işlevleri (requestId → cancel). */
 const leftoverCancellations = new Map<string, () => void>();
@@ -266,8 +339,10 @@ const IPC_SCHEMAS: Record<string, Validator[]> = {
   'leftovers:cancel': [str({ max: 64 })],
   'apps:delete-leftovers': [arr(leftover, 500), oneOf(['recycle', 'permanent'] as const)],
   'bloatware:remove': [arr(bloatwareItem, 300)],
-  'disk:clean': [arr(str({ max: 128 }), 100), arr(driveLetter, 26)],
+  'disk:clean': [arr(str({ max: 128 }), 100), optionalDriveList],
+  'registry:scan': [optionalRegScopes],
   'registry:delete': [arr(regIssue, 1000)],
+  'registry:export': [oneOf(['json', 'csv'] as const)],
   'startup:set': [startupItem, bool],
   'firewall:set': [str({ max: 512 }), bool],
   'firewall:delete': [str({ max: 512 })],
@@ -277,7 +352,7 @@ const IPC_SCHEMAS: Record<string, Validator[]> = {
   'drivers:download': [arr(str({ max: 256 }), 500)],
   'drivers:install': [arr(str({ max: 256 }), 500), bool],
   'locale:dictionary': [str({ max: 64 })],
-  'prereq:install': [oneOf(['winget', 'powershell', 'vcredist'] as const)],
+  'prereq:install': [oneOf(['winget', 'choco', 'npm', 'scoop', 'powershell', 'vcredist'] as const)],
   'contextMenu:set': [oneOf(['windows10', 'windows11'] as const)],
   'shell-ext:set': [str({ min: 3, max: 300 }), bool],
   'managedPolicy:save': [oneOf(['windows', 'browsers'] as const)],
@@ -286,6 +361,15 @@ const IPC_SCHEMAS: Record<string, Validator[]> = {
   'update:install': [updateInstallPath],
   'settings:set': [settingsPatch],
   'shell:open-path': [openPath],
+  'shell:open-external': [externalUrl],
+  'package:read-backup': [filePath],
+  'package:import': [filePath, arr(ident, 500)],
+  'files:scan': [fileScanOptions],
+  'files:delete': [pathList, pathList, oneOf(['recycle', 'permanent'] as const)],
+  'analysis:scan': [filePath],
+  'repair:run': [oneOf(REPAIR_KINDS)],
+  'autoruns:set': [autorunItem, bool],
+  'privacy:set': [privacyTweak, bool],
 };
 
 /** Şeması olan kanallarda argümanları doğrulayıp sonra asıl handler'a geçirir. */
@@ -308,6 +392,8 @@ function register(channel: string, handler: IpcHandler): void {
 }
 
 function registerIpc(): void {
+  /** Son taramanın hedefleri; temizlik kaydına gerçek öğe sayılarını yazmak için kullanılır. */
+  let lastDiskTargets: CleanTarget[] = [];
   register('window:is-maximized', () => mainWindow?.isMaximized() ?? false);
   register('window:action', (_event, action: WindowAction) => {
     const win = mainWindow;
@@ -327,6 +413,7 @@ function registerIpc(): void {
 
   register('system:snapshot', (_event, drive?: string) => systemService.snapshot(drive));
   register('system:drives', () => systemService.drives());
+  register('system:drive-labels', () => systemService.driveLabels());
 
   register('winget:version', async () => {
     const result = await winget.version();
@@ -425,22 +512,28 @@ function registerIpc(): void {
   register('bloatware:remove', (_event, items: Parameters<typeof bloatwareService.removeBloatware>[0]) =>
     bloatwareService.removeBloatware(items));
 
-  const diskTargets = async (): Promise<CleanTarget[]> => diskService.targetsWithDrives(await systemService.drives());
+  const diskTargets = async (): Promise<CleanTarget[]> => {
+    lastDiskTargets = await diskService.targetsWithDrives(await systemService.drives());
+    return lastDiskTargets;
+  };
   register('disk:targets', diskTargets);
   register('disk:scan', async () => diskService.scan(await diskTargets(), logger('disk')));
-  register('disk:clean', async (_event, keys: string[], recycleDrives: string[]) => {
+  register('disk:clean', async (_event, keys: string[], recycleDrives: string[] = []) => {
     const selected = new Set(keys);
-    const items = (await diskTargets()).filter((item: CleanTarget) => selected.has(item.key));
+    const source = lastDiskTargets.length ? lastDiskTargets : await diskTargets();
+    const items = source.filter((item: CleanTarget) => selected.has(item.key));
     return diskService.clean(items, logger('disk'), recycleDrives);
   });
+  register('disk:log-path', () => cleanupLogService.ensureCleanupLog());
 
-  register('registry:scan', () => registryService.scanRegistry());
+  register('registry:scan', (_event, scopes?: RegScanScope[]) => registryService.scanRegistry(scopes));
   register('registry:delete', (_event, issues: RegIssue[]) => registryService.deleteRegistryIssues(issues));
   register('registry:backup-path', () => {
     const folder = registryService.backupFolder();
     try { fs.mkdirSync(folder, { recursive: true }); } catch { /* klasör silme sırasında oluşturulur */ }
     return folder;
   });
+  register('registry:export', (_event, format: 'json' | 'csv') => registryService.exportReport(format));
 
   register('startup:list', () => startupService.scanStartup());
   register('startup:timings', () => startupService.startupTimings());
@@ -473,6 +566,14 @@ function registerIpc(): void {
   register('prereq:scan', () => prereqService.scanPrerequisites());
   register('prereq:install', (_event, id: Parameters<typeof prereqService.installPrerequisite>[0]) =>
     prereqService.installPrerequisite(id, logger('gerekli bileşen')));
+  register('prereq:auto-install', async () => {
+    if (!settingsService.getSettings().enterpriseSilentPrereqs) return [];
+    const results = await prereqService.installMissingManagers(logger('kurumsal kurulum'));
+    for (const result of results) {
+      emit('kurumsal kurulum', `${result.id}: ${result.ok ? result.message : `HATA: ${result.message}`}`);
+    }
+    return results;
+  });
   register('contextMenu:status', () => contextMenuService.contextMenuStatus());
   register('contextMenu:set', (_event, style: Parameters<typeof contextMenuService.setContextMenuStyle>[0]) =>
     contextMenuService.setContextMenuStyle(style, logger('sağ tık menüsü')));
@@ -508,10 +609,20 @@ function registerIpc(): void {
     return result.filePaths;
   });
 
+  register('files:pick-folders', async () => {
+    const result = await dialog.showOpenDialog({
+      title: 'Taranacak klasörleri seçin',
+      properties: ['openDirectory', 'multiSelections'],
+    });
+    if (result.canceled) return [];
+    for (const folder of result.filePaths) sessionFolders.add(canonical(folder));
+    return result.filePaths;
+  });
+
   register('settings:get', () => settingsService.getSettings());
   register('settings:set', (_event, patch: Parameters<typeof settingsService.setSettings>[0]) => {
     const next = settingsService.setSettings(patch);
-    if (patch.theme) mainWindow?.setBackgroundColor(next.theme === 'windows11' ? '#f3f3f3' : '#171719');
+    if (patch.theme) mainWindow?.setBackgroundColor(themeBackground(next.theme));
     if (patch.language) applyLocale(next.language);
     if (patch.startWithWindows !== undefined || patch.startMinimizedToTray !== undefined) void applyStartupSettings();
     return next;
@@ -526,36 +637,77 @@ function registerIpc(): void {
       emit('sistem', `Yol açılamadı: ${(error as Error).message}`);
     }
   });
+
+  register('shell:open-external', async (_event, url: string) => {
+    await shell.openExternal(url);
+  });
+
+  // Paket listesi yedeği
+  register('package:backup-folder', () => packagesService.backupFolder());
+  register('package:backup-list', () => packagesService.listBackups());
+  register('package:export', () => packagesService.exportPackages(logger('paket yedeği')));
+  register('package:read-backup', (_event, file: string) => packagesService.readBackup(file));
+  register('package:import', (_event, file: string, idents: string[]) =>
+    packagesService.importPackages(file, idents, logger('paket geri yükleme')));
+
+  // Dosya tarayıcı ve disk analizi
+  register('files:scan', (_event, options: Parameters<typeof fileScanService.scanFiles>[0]) =>
+    fileScanService.scanFiles(options));
+  register('files:delete', (_event, paths: string[], references: string[], mode: 'recycle' | 'permanent') =>
+    fileScanService.deleteScannedFiles(paths, references, mode));
+  register('analysis:scan', (_event, root: string) => diskAnalysisService.analyzeDisk(root));
+
+  // Sistem onarımı, gelişmiş başlangıç ve gizlilik
+  register('repair:backup-folder', () => repairService.backupFolder());
+  register('repair:run', (_event, kind: Parameters<typeof repairService.runRepair>[0]) =>
+    repairService.runRepair(kind, logger('onarım')));
+  register('autoruns:scan', () => autorunsService.scanAutoruns(logger('başlangıç')));
+  register('autoruns:set', (_event, item: Parameters<typeof autorunsService.setAutorun>[0], enabled: boolean) =>
+    autorunsService.setAutorun(item, enabled, logger('başlangıç')));
+  register('privacy:list', () => privacyService.listPrivacy());
+  register('privacy:set', (_event, tweak: Parameters<typeof privacyService.setPrivacy>[0], apply: boolean) =>
+    privacyService.setPrivacy(tweak, apply, logger('gizlilik')));
 }
 
-app.whenReady().then(() => {
-  app.setName('Pars Sistem Yöneticisi');
-  migrateLegacyData();
-  try {
-    app.setPath('userData', path.join(app.getPath('appData'), 'pars-sistem-yoneticisi-ts'));
-  } catch {
-    // Varsayılan yol zaten paket adından gelir.
-  }
-  applyLocale();
-  registerIpc();
-  void applyStartupSettings();
-  setupTray();
-  createWindow();
-  stopScheduler = schedulerService.startScheduler(logger('zamanlama'));
+// Tek örnek: ikinci başlatma mevcut pencereyi öne getirip kapanır.
+const singleInstance = app.requestSingleInstanceLock();
+if (!singleInstance) {
+  app.quit();
+} else {
+  app.on('second-instance', () => showMainWindow());
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-    else mainWindow?.show();
+  app.whenReady().then(() => {
+    app.setName('Pars Sistem Yöneticisi');
+    migrateLegacyData();
+    try {
+      app.setPath('userData', path.join(app.getPath('appData'), 'pars-sistem-yoneticisi-ts'));
+    } catch {
+      // Varsayılan yol zaten paket adından gelir.
+    }
+    applyLocale();
+    registerIpc();
+    void applyStartupSettings();
+    setupTray();
+    createWindow();
+    nativeTheme.on('updated', () => {
+      if (settingsService.getSettings().theme === 'auto') mainWindow?.setBackgroundColor(themeBackground('auto'));
+    });
+    stopScheduler = schedulerService.startScheduler(logger('zamanlama'));
+
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+      else showMainWindow();
+    });
   });
-});
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'win32') app.quit();
-});
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'win32') app.quit();
+  });
 
-app.on('before-quit', () => {
-  forceClose = true;
-  stopScheduler?.();
-  tray?.destroy();
-  tray = null;
-});
+  app.on('before-quit', () => {
+    forceClose = true;
+    stopScheduler?.();
+    tray?.destroy();
+    tray = null;
+  });
+}
