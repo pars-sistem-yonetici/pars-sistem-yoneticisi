@@ -1,13 +1,13 @@
 {
-  "version": "1.0.6",
-  "notes": "1.0.5’e ek olarak Uygulama Kütüphanesi filtreleri dock görünümüne taşındı; Güncellemeler artık winget yanında Chocolatey, npm ve Scoop kaynaklarından da salt-okunur tarama yapabiliyor.",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.6.exe",
-  "sha512": "0a90dfc37a81a1bb5460df76375d13b89421e238fecf204be08d5e03eddbf2d2f9618dcd6b09d0214557b30b6dbc71edef06a21f6a4675177dfdcfa8c46b2b02",
-  "sha256": "8c7654990a492777aaa7c7fda97d8a290363e00c42a4acd63750bf1ca5b1e08a",
-  "size": 83630321,
-  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.6/Pars.Sistem.Yoneticisi.Setup.1.0.6.exe",
+  "version": "1.0.7",
+  "notes": "Güncelleyici artık NSIS kurucusunu doğru anahtarlarla başlatıyor: `/S` ve `--updated`. 1.0.4–1.0.6 sürümlerinden gelen güncellemeler de sessiz kurulabiliyor; disk doluluğu ve bağlantı kesilmesi artık anlaşılır hata mesajı veriyor.",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.7.exe",
+  "sha512": "7793acbd7e781f3de6bf36c66f53b2972694e8c2deb1b6294f0c64c57cc235c89ec40ec30f60a13263c1ff9a2dc48f267d63473d8c4c2a507f414921cfab4d6a",
+  "sha256": "803738419d64043dafbe9ab3d3bcd43b5820868473ef7dc2dc1e094c0aff8ee3",
+  "size": 83631005,
+  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.7/Pars.Sistem.Yoneticisi.Setup.1.0.7.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
-  "portableSha256": "24d1e7a894b1092310375dd3a26c3596c184f01459e3fb1214e3f0ca7ed8381b",
-  "portableSize": 83417346,
-  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.6/ParsSistemYoneticisi-Portable.exe"
+  "portableSha256": "913aa2c88050d9f1c501979413370891180ed2aab0485d60d490348d233f3df8",
+  "portableSize": 83417496,
+  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.7/ParsSistemYoneticisi-Portable.exe"
 }
