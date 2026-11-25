@@ -860,6 +860,22 @@ tbody tr:last-child td { border-bottom: none; }
 .library-card { cursor: pointer; }
 .library-card.selected { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(var(--accent-rgb), .35) inset; }
 .library-card input[type='checkbox'] { cursor: pointer; }
+/* Kategori sekmesiyle aynı ikon/ad/sıralamayı kullanan kart üstü başlıkları. */
+.library-group-head {
+  grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-top: 4px; padding: 0 2px 8px; border-bottom: 1px solid var(--line);
+}
+.library-group-head:not(:first-child) { margin-top: 14px; }
+.library-group-head .ui-icon { animation: none; color: var(--nav-icon-color); font-size: 14px; }
+.library-group-head h3 { margin: 0; font-size: 13px; letter-spacing: .02em; }
+.library-group-count, .library-group-source {
+  border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px;
+  font-size: 10px; font-weight: 700; color: var(--muted);
+}
+.library-group-source {
+  color: var(--active-text); background: rgba(var(--accent-rgb), .12);
+  border-color: rgba(var(--accent-rgb), .35);
+}
 .library-selection {
   position: sticky; top: 12px; border: 1px solid var(--line); border-radius: 13px;
   padding: 14px; background: linear-gradient(180deg, var(--panel-2), var(--panel));
