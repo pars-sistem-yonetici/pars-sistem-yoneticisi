@@ -17,12 +17,13 @@
 
 ## Ekran görüntüleri
 
-Görüntüler 1.0.4 arayüzünden alınmıştır; tanıtım sitesi, README ve bu release notu aynı dosyaları kullanır.
+Görüntüler 1.0.6 arayüzünden alınmıştır; tanıtım sitesi, README ve bu release notu aynı dosyaları kullanır.
 
 | Anasayfa | Kurulu Uygulamalar |
 | --- | --- |
 | ![Anasayfa](https://raw.githubusercontent.com/pars-sistem-yonetici/pars-sistem-yoneticisi/main/website/assets/screen-home.png) | ![Kurulu uygulamalar](https://raw.githubusercontent.com/pars-sistem-yonetici/pars-sistem-yoneticisi/main/website/assets/screen-apps.png) |
-| ![Güncellemeler](https://raw.githubusercontent.com/pars-sistem-yonetici/pars-sistem-yoneticisi/main/website/assets/screen-updates.png) | ![Sağ tık menüsü](https://raw.githubusercontent.com/pars-sistem-yonetici/pars-sistem-yoneticisi/main/website/assets/screen-context.png) |
+| ![Güncellemeler](https://raw.githubusercontent.com/pars-sistem-yonetici/pars-sistem-yoneticisi/main/website/assets/screen-updates.png) | ![Uygulama Kütüphanesi dock filtreleri](https://raw.githubusercontent.com/pars-sistem-yonetici/pars-sistem-yoneticisi/main/website/assets/screen-library.png) |
+| ![Sağ tık menüsü](https://raw.githubusercontent.com/pars-sistem-yonetici/pars-sistem-yoneticisi/main/website/assets/screen-context.png) | |
 
 ## İndirme
 
