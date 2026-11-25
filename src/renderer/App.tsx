@@ -13,6 +13,10 @@ import type {
   CleanTarget,
   ContextMenuStatus,
   ContextMenuStyle,
+  DnsBenchmarkResult,
+  DnsCurrentResult,
+  DnsProvider,
+  DnsProviderId,
   DiskAnalysisResult,
   DiskTreeNode,
   DriverScanResult,
@@ -36,9 +40,12 @@ import type {
   MalwareScanResult,
   ManagedPolicyFile,
   ManagedPolicyFixId,
+  OptimizationProfile,
   Package,
   PackageManagerStatus,
   Prerequisite,
+  ProfileApplyResult,
+  ProfileId,
   RegIssue,
   RegRisk,
   RegScanScope,
@@ -49,14 +56,17 @@ import type {
   StartupItem,
   StartupTiming,
   SystemSnapshot,
+  SystemTweak,
   Theme,
+  TweakActionResult,
+  TweakCategory,
   UpdateDownloadResult,
   UpdateProgress,
 } from '../shared/types';
 
 const api: AppApi = window.api;
 
-type Tab = 'home' | 'updates' | 'apps' | 'packages' | 'bloatware' | 'startup' | 'firewall' | 'malware' | 'disk' | 'duplicates' | 'analysis' | 'repair' | 'drivers' | 'recommended' | 'registry' | 'schedule' | 'search' | 'autoruns' | 'privacy' | 'contextmenu' | 'debugging' | 'settings';
+type Tab = 'home' | 'updates' | 'apps' | 'packages' | 'bloatware' | 'startup' | 'firewall' | 'malware' | 'disk' | 'duplicates' | 'analysis' | 'repair' | 'drivers' | 'recommended' | 'registry' | 'schedule' | 'search' | 'autoruns' | 'privacy' | 'tweaks' | 'profiles' | 'dns' | 'contextmenu' | 'debugging' | 'settings';
 
 const REG_SCOPE_LABELS: Record<RegScanScope, string> = {
   uninstall: 'Uninstall girdileri',
@@ -90,6 +100,14 @@ const MALWARE_ENGINES: Array<{ id: MalwareEngine; label: string }> = [
   { id: 'integrity', label: 'Sistem bütünlüğü' },
   { id: 'persistence', label: 'Kalıcılık taraması' },
 ];
+
+const TWEAK_CATEGORY_META: Record<TweakCategory, { label: string; icon: string; description: string }> = {
+  network: { label: 'Ağ & Gecikme', icon: '🌐', description: 'TCP, NIC, DNS önbelleği ve eski protokol ayarları.' },
+  performance: { label: 'Sistem & Performans', icon: '⚡', description: 'Güç planı, dosya sistemi, görsel efektler ve arka plan yükü.' },
+  interface: { label: 'Arayüz & Deneyim', icon: '🎨', description: 'Görev çubuğu, Gezgin, tema ve görünürlük ayarları.' },
+  privacy: { label: 'Gizlilik & Telemetri', icon: '🔒', description: 'Tanılama, reklam kimliği, konum ve yapay zekâ özellikleri.' },
+  services: { label: 'Servis Yönetimi', icon: '⚙️', description: 'Gereksiz Windows hizmetleri; özgün başlangıç türü saklanır.' },
+};
 
 interface RepairAction {
   id: RepairKind;
@@ -146,6 +164,21 @@ const REPAIR_GROUPS: Array<{ title: string; description: string; actions: Repair
       { id: 'store-cache', icon: '🛍️', title: 'Store önbelleğini sıfırla', detail: 'wsreset.exe — Microsoft Store önbelleğini temizler; yeniden oturum açma isteyebilir.' },
       { id: 'search-index', icon: '🔍', title: 'Windows Search dizinini yeniden oluştur', detail: 'WSearch durdurulur, dizin sıfırlanır ve servis yeniden başlatılır. Yeniden indeksleme birkaç dakika sürer.', backup: true },
       { id: 'print-spooler', icon: '🖨️', title: 'Yazıcı kuyruğunu temizle', detail: 'Spooler durdurulur, bekleyen yazdırma dosyaları önce yedeklenip sonra silinir; servis yeniden başlatılır.', backup: true },
+    ],
+  },
+  {
+    title: 'Gelişmiş onarımlar',
+    description: 'Sürücü, sayaç, zaman ve önyükleme ayarları. Değiştirilen her değer için .reg, JSON, ACL veya BCD yedeği zorunludur.',
+    actions: [
+      { id: 'nic-latency', icon: '📶', title: 'NIC düşük gecikme ayarları', detail: 'Etkin ağ bağdaştırıcılarında kesme moderasasyonu, akış kontrolü ve güç tasarrufu özelliklerini kapatır; özgün değerler JSON’a kaydedilir.', backup: true, rebootRequired: true },
+      { id: 'nic-latency-revert', icon: '↩️', title: 'NIC ayarlarını geri yükle', detail: 'Son NIC düşük gecikme çalıştırmasında kaydedilen özgün sürücü değerlerini geri yazar.', backup: true, rebootRequired: true },
+      { id: 'prefetch-cleanup', icon: '🧹', title: 'Prefetch önbelleği temizliği', detail: 'C:\\Windows\\Prefetch içindeki .pf dosyaları önce yedeklenir, doğrulanır ve sonra silinir.', backup: true },
+      { id: 'counters-wmi', icon: '📈', title: 'Performans sayaçları / WMI', detail: 'WMI deposunu yedekler, lodctr /R ve winmgmt /resyncperf ile performans sayaçlarını yeniden kaydeder.', backup: true },
+      { id: 'installer-perms', icon: '🔐', title: 'Installer 2502/2503 yetki onarımı', detail: 'C:\\Windows\\Temp ve Installer klasörlerine yönetici tam yetkisi verir; özgün ACL’ler icacls /save ile yedeklenir.', backup: true },
+      { id: 'time-sync', icon: '🕒', title: 'NTP zaman senkronizasyonu', detail: 'W32Time ayarlarını yedekler ve w32tm /resync /force ile saati NTP sunucusuna senkronize eder.', backup: true },
+      { id: 'safe-mode-status', icon: '🔍', title: 'Güvenli Mod durumunu sorgula', detail: 'bcdedit /enum {current} komutuyla sonraki açılışın Güvenli Mod’a ayarlı olup olmadığını salt okunur bildirir.', readOnly: true },
+      { id: 'safe-mode-on', icon: '⛑️', title: 'Güvenli Mod’u etkinleştir', detail: 'BCD yedeği alındıktan sonra bcdedit /set {current} safeboot minimal uygulanır; sonraki açılış Güvenli Mod’dur.', backup: true, rebootRequired: true },
+      { id: 'safe-mode-off', icon: '✅', title: 'Güvenli Mod’u kaldır', detail: 'BCD yedeği alındıktan sonra bcdedit /deletevalue {current} safeboot ile normal açılış geri yüklenir.', backup: true, rebootRequired: true },
     ],
   },
 ];
@@ -216,6 +249,9 @@ const TABS: Array<{ id: Tab; label: string; icon: string }> = [
   { id: 'search', label: 'Uygulama Ara', icon: '⌕' },
   { id: 'autoruns', label: 'Gelişmiş Başlangıç', icon: '➤' },
   { id: 'privacy', label: 'Gizlilik Ayarları', icon: '◈' },
+  { id: 'tweaks', label: 'Sistem Ayarları', icon: '◉' },
+  { id: 'profiles', label: 'Optimizasyon Profilleri', icon: '⚡' },
+  { id: 'dns', label: 'DNS Karşılaştırma', icon: '🌐' },
   { id: 'contextmenu', label: 'Sağ tık menüsü', icon: '≡' },
   { id: 'debugging', label: 'Hata Ayıklama', icon: '⚗' },
   { id: 'settings', label: 'Ayarlar', icon: '⚙' },
@@ -225,6 +261,7 @@ const TAB_GROUPS: Array<{ id: string; label: string; icon: string; tabs: Tab[] }
   { id: 'general', label: 'Genel', icon: '🧭', tabs: ['search', 'recommended'] },
   { id: 'software', label: 'Yazılım Yönetimi', icon: '📦', tabs: ['updates', 'apps', 'packages', 'drivers'] },
   { id: 'maintenance', label: 'Sistem Bakımı', icon: '🛠️', tabs: ['disk', 'duplicates', 'analysis', 'repair', 'registry', 'bloatware', 'startup', 'schedule'] },
+  { id: 'optimization', label: 'Optimizasyon & Ağ', icon: '⚡', tabs: ['tweaks', 'profiles', 'dns'] },
   { id: 'security', label: 'Güvenlik', icon: '🛡️', tabs: ['firewall', 'malware', 'autoruns', 'privacy'] },
   // Sağ tık menüsü Windows kabuğunu kişiselleştirir; hata ayıklamadan ayrıldı.
   { id: 'personalization', label: 'Kişiselleştirme', icon: '🎨', tabs: ['contextmenu'] },
@@ -517,6 +554,19 @@ export default function App() {
   const [autorunFilter, setAutorunFilter] = useState<'all' | AutorunItem['category'] | 'elevated'>('all');
   // Gizlilik
   const [privacyTweaks, setPrivacyTweaks] = useState<PrivacyTweak[]>([]);
+  // Sistem ayarları & optimizasyon profilleri
+  const [systemTweaks, setSystemTweaks] = useState<SystemTweak[]>([]);
+  const [tweakCategory, setTweakCategory] = useState<TweakCategory | 'all'>('all');
+  const [tweakQuery, setTweakQuery] = useState('');
+  const [tweakBackupPath, setTweakBackupPath] = useState('');
+  const [tweakActionResult, setTweakActionResult] = useState<TweakActionResult | null>(null);
+  const [profiles, setProfiles] = useState<OptimizationProfile[]>([]);
+  const [profileResult, setProfileResult] = useState<ProfileApplyResult | null>(null);
+  // DNS karşılaştırma ve değiştirme
+  const [dnsProviders, setDnsProviders] = useState<DnsProvider[]>([]);
+  const [dnsCurrentState, setDnsCurrentState] = useState<DnsCurrentResult | null>(null);
+  const [dnsBenchmark, setDnsBenchmark] = useState<DnsBenchmarkResult | null>(null);
+  const [dnsSwitchResult, setDnsSwitchResult] = useState<string>('');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Package[]>([]);
@@ -1085,6 +1135,17 @@ export default function App() {
     if (tab === 'privacy') {
       void api.privacyList().then(setPrivacyTweaks).catch((error: Error) => notify('error', error.message));
     }
+    if (tab === 'tweaks') {
+      void api.tweaksList().then(setSystemTweaks).catch((error: Error) => notify('error', error.message));
+      void api.tweaksBackupFolder().then(setTweakBackupPath).catch(() => undefined);
+    }
+    if (tab === 'profiles') {
+      void api.profileList().then(setProfiles).catch((error: Error) => notify('error', error.message));
+    }
+    if (tab === 'dns') {
+      void api.dnsProviders().then(setDnsProviders).catch((error: Error) => notify('error', error.message));
+      void api.dnsCurrent().then(setDnsCurrentState).catch((error: Error) => notify('error', error.message));
+    }
     if (tab === 'analysis' && !analysisRoot) setAnalysisRoot(settings?.drive || 'C:\\');
   }, [tab, settings?.drive, analysisRoot, notify]);
 
@@ -1153,6 +1214,89 @@ export default function App() {
           const result = await api.privacySet(tweak, apply);
           notify(result.ok ? 'ok' : 'error', result.ok ? result.message : result.message);
           setPrivacyTweaks(await api.privacyList());
+        });
+      },
+    });
+  }
+
+  function askTweak(tweak: SystemTweak, apply: boolean) {
+    const label = apply ? t('Ayarı uygula') : t('Geri al');
+    setConfirm({
+      title: `${label}: ${tweak.title}`,
+      message: apply
+        ? tf('{title} uygulanacak. Değişiklik öncesi zorunlu .reg yedeği alınır ve özgün değer JSON dosyasına kaydedilir; yedek alınamazsa ayar değiştirilmez.', { title: t(tweak.title) })
+        : t('Özgün değer geri yazılacak. Mevcut durum yeniden yedeklenir; önceki JSON kaydından özgün değer okunur.'),
+      warning: tweak.admin ? t('Bu ayar yönetici izni gerektirir.') : undefined,
+      options: [{ label: t('Vazgeç'), value: 'cancel' }, { label, value: 'apply', kind: apply ? 'primary' : 'danger' }],
+      onChoose: (value) => {
+        if (value !== 'apply') return;
+        void run(label, async () => {
+          const result = await api.tweaksSet(tweak.id, apply);
+          setTweakActionResult(result);
+          notify(result.ok ? 'ok' : 'error', result.ok
+            ? `${result.message}${result.backupPath ? ` ${t('Yedek:')} ${result.backupPath}` : ''}`
+            : result.message);
+          setSystemTweaks(await api.tweaksList());
+        });
+      },
+    });
+  }
+
+  function askProfile(profile: OptimizationProfile, apply: boolean) {
+    const label = apply ? t('Profili uygula') : t('Profili geri al');
+    setConfirm({
+      title: `${label}: ${profile.title}`,
+      message: tf('{title} profili {count} ayarı {action}. Her ayar için ayrı yedek alınır; başarısız ayarlar raporlanır ve diğerlerine devam edilir.', {
+        title: profile.title, count: profile.tweakIds.length, action: apply ? t('uygulayacak') : t('geri alacak'),
+      }),
+      warning: t('Profil uygulandıktan sonra bazı ayarlar için yeniden başlatma gerekebilir.'),
+      options: [{ label: t('Vazgeç'), value: 'cancel' }, { label, value: 'apply', kind: apply ? 'primary' : 'danger' }],
+      onChoose: (value) => {
+        if (value !== 'apply') return;
+        void run(label, async () => {
+          const result = await api.profileApply(profile.id as ProfileId, apply);
+          setProfileResult(result);
+          notify(result.ok ? 'ok' : 'error', result.message);
+          setSystemTweaks(await api.tweaksList());
+        });
+      },
+    });
+  }
+
+  function askDnsSwitch(provider: DnsProvider) {
+    setConfirm({
+      title: tf('DNS değiştir: {name}', { name: provider.name }),
+      message: tf('Etkin tüm ağ bağdaştırıcılarının DNS sunucuları {primary} ve {secondary} olarak ayarlanacak. Değişiklikten önce arabirim kayıt defteri yedeği alınır.', {
+        primary: provider.primary, secondary: provider.secondary,
+      }),
+      warning: t('Bağlantı kısa süre kesilebilir. VPN veya kurumsal DNS kullanıyorsanız devam etmeyin.'),
+      options: [{ label: t('Vazgeç'), value: 'cancel' }, { label: t('Değiştir'), value: 'apply', kind: 'primary' }],
+      onChoose: (value) => {
+        if (value !== 'apply') return;
+        void run(t('DNS değiştiriliyor'), async () => {
+          const result = await api.dnsSwitch(provider.id as DnsProviderId);
+          if (!result.ok) throw new Error(result.message);
+          setDnsSwitchResult(result.message);
+          notify('ok', `${result.message}${result.backupPath ? ` ${t('Yedek:')} ${result.backupPath}` : ''}`);
+          setDnsCurrentState(await api.dnsCurrent());
+        });
+      },
+    });
+  }
+
+  function askDnsReset() {
+    setConfirm({
+      title: t('DNS ayarlarını sıfırla'),
+      message: t('Etkin ağ bağdaştırıcılarındaki özel DNS sunucuları kaldırılacak ve adresler DHCP’den alınacak. Arabirim kayıt defteri yedeği zorunludur.'),
+      options: [{ label: t('Vazgeç'), value: 'cancel' }, { label: t('Sıfırla'), value: 'apply', kind: 'danger' }],
+      onChoose: (value) => {
+        if (value !== 'apply') return;
+        void run(t('DNS sıfırlanıyor'), async () => {
+          const result = await api.dnsReset();
+          if (!result.ok) throw new Error(result.message);
+          setDnsSwitchResult(result.message);
+          notify('ok', `${result.message}${result.backupPath ? ` ${t('Yedek:')} ${result.backupPath}` : ''}`);
+          setDnsCurrentState(await api.dnsCurrent());
         });
       },
     });
@@ -1704,7 +1848,7 @@ export default function App() {
           </div>
           <div className="sidebar-foot">
             <span className="dot" style={{ background: 'var(--accent)' }} />
-            {t('Sistem Bakım Merkezi · v1.0.4')}
+            {t('Sistem Bakım Merkezi · v1.0.5')}
           </div>
         </div>
       </aside>
@@ -3630,6 +3774,179 @@ export default function App() {
                   </div>
                 );
               })}
+            </section>
+          )}
+
+          {tab === 'tweaks' && (
+            <section className="page">
+              <div className="toolbar">
+                <div>
+                  <h2><UiIcon label="Sistem ayarları" />{t('Sistem ayarları')}</h2>
+                  <p className="muted">{tf('{count} tersine çevrilebilir Windows ve ağ ayarı; beş kategoride düzenlenir. Hiçbiri otomatik uygulanmaz.', { count: systemTweaks.length })}</p>
+                </div>
+                <div className="toolbar-actions">
+                  <select value={tweakCategory} onChange={(event) => setTweakCategory(event.target.value as TweakCategory | 'all')}>
+                    <option value="all">{t('Tüm kategoriler')}</option>
+                    {(Object.keys(TWEAK_CATEGORY_META) as TweakCategory[]).map((category) => (
+                      <option key={category} value={category}>{t(TWEAK_CATEGORY_META[category].label)}</option>
+                    ))}
+                  </select>
+                  <input value={tweakQuery} onChange={(event) => setTweakQuery(event.target.value)} placeholder={t('Ayar ara…')} aria-label={t('Ayar ara')} />
+                  <button className="btn" onClick={() => void run(t('Ayarlar okunuyor'), async () => setSystemTweaks(await api.tweaksList()))}><UiIcon label="Yenile" />{t('Yenile')}</button>
+                </div>
+              </div>
+              <div className="notice">
+                <b><UiIcon label="Önemli" />{t('Önemli')}</b>
+                <p className="muted">{t('Her değişiklikten önce .reg yedeği alınır ve özgün değer JSON dosyasına kaydedilir. Yedek alınamazsa ayar değiştirilmez. UserChoice, COM/CLSID, sertifika depoları ve dosya ilişkilendirme sahipliği bu listede yer almaz.')}</p>
+                {tweakBackupPath && <code className="path-value">{tweakBackupPath}</code>}
+              </div>
+              {(tweakActionResult || profileResult) && (
+                <div className="card">
+                  <div className="card-top"><h3 style={{ margin: 0 }}><UiIcon label="Son işlem" />{t('Son işlem')}</h3><span className={`badge ${(tweakActionResult?.ok ?? profileResult?.ok) ? 'badge-green' : 'badge-warn'}`}>{(tweakActionResult?.ok ?? profileResult?.ok) ? t('tamamlandı') : t('sorun var')}</span></div>
+                  <p className="muted">{tweakActionResult?.message ?? profileResult?.message}</p>
+                  {tweakActionResult?.rebootRequired && <p className="muted small">{t('Bu ayar için yeniden başlatma gerekebilir.')}</p>}
+                  {!!profileResult?.failed.length && <ul className="muted small">{profileResult.failed.map((item) => <li key={item.id}><code>{item.id}</code>: {item.message}</li>)}</ul>}
+                </div>
+              )}
+              {(Object.keys(TWEAK_CATEGORY_META) as TweakCategory[]).map((category) => {
+                const rows = systemTweaks.filter((item) => item.category === category
+                  && (tweakCategory === 'all' || tweakCategory === category)
+                  && (!tweakQuery || `${item.title} ${item.description} ${item.id}`.toLocaleLowerCase('tr').includes(tweakQuery.toLocaleLowerCase('tr'))));
+                if (!rows.length) return null;
+                const meta = TWEAK_CATEGORY_META[category];
+                return (
+                  <div className="card" key={category}>
+                    <div className="card-top">
+                      <h3><UiIcon icon={meta.icon} />{t(meta.label)}</h3>
+                      <span className="badge">{rows.length}</span>
+                    </div>
+                    <p className="muted">{t(meta.description)}</p>
+                    <div className="mini-list privacy-list">
+                      {rows.map((tweak) => (
+                        <div className="setting-row" key={tweak.id}>
+                          <div>
+                            <strong>{t(tweak.title)}</strong>
+                            <small>{t(tweak.description)}</small>
+                            <div className="muted small mono">
+                              {tweak.mode === 'registry'
+                                ? `${tweak.hive}\\${tweak.location} → ${tweak.name} = ${tweak.value}`
+                                : t('Komut tabanlı ayar')}
+                            </div>
+                            <div className="muted small mono">{t('Şu anki değer:')} {tweak.current || '—'}</div>
+                          </div>
+                          <div className="row-actions">
+                            {tweak.admin && <span className="badge badge-warn">{t('yönetici')}</span>}
+                            {tweak.rebootRequired && <span className="badge">{t('yeniden başlatma')}</span>}
+                            <span className={`badge ${tweak.applied ? 'badge-green' : ''}`}>{tweak.applied ? t('uygulandı') : t('varsayılan')}</span>
+                            <button className="btn btn-small" disabled={tweak.applied} onClick={() => askTweak(tweak, true)}><UiIcon label="Uygula" />{t('Uygula')}</button>
+                            <button className="btn btn-small" disabled={!tweak.applied} onClick={() => askTweak(tweak, false)}><UiIcon label="Geri al" />{t('Geri al')}</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </section>
+          )}
+
+          {tab === 'profiles' && (
+            <section className="page">
+              <div className="toolbar">
+                <div>
+                  <h2><UiIcon label="Optimizasyon profilleri" />{t('Optimizasyon profilleri')}</h2>
+                  <p className="muted">{t('Dört hazır profil, yalnızca onayladığınızda ve tek tek yedeklenerek uygulanır. Profilleri geri almak aynı ayarları özgün değerlerine döndürür.')}</p>
+                </div>
+                <div className="toolbar-actions">
+                  <button className="btn" onClick={() => void run(t('Profiller okunuyor'), async () => setProfiles(await api.profileList()))}><UiIcon label="Yenile" />{t('Yenile')}</button>
+                </div>
+              </div>
+              <div className="feature-grid">
+                {profiles.map((profile) => (
+                  <div className="card" key={profile.id}>
+                    <div className="card-top">
+                      <div className="feature-icon">{profile.icon}</div>
+                      <span className="badge">{tf('{count} ayar', { count: profile.tweakIds.length })}</span>
+                    </div>
+                    <h3><UiIcon label={profile.title} />{t(profile.title)}</h3>
+                    <p className="muted">{t(profile.description)}</p>
+                    <div className="row-actions">
+                      <button className="btn btn-primary btn-small" onClick={() => askProfile(profile, true)}><UiIcon label="Uygula" />{t('Uygula')}</button>
+                      <button className="btn btn-small" onClick={() => askProfile(profile, false)}><UiIcon label="Geri al" />{t('Geri al')}</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {profileResult && (
+                <div className="card">
+                  <div className="card-top"><h3 style={{ margin: 0 }}><UiIcon label="Profil sonucu" />{t('Profil sonucu')}</h3><span className={`badge ${profileResult.ok ? 'badge-green' : 'badge-warn'}`}>{profileResult.ok ? t('tamamlandı') : t('sorun var')}</span></div>
+                  <p className="muted">{profileResult.message}</p>
+                  <p className="muted small">{t('Uygulanan ayarlar:')} {profileResult.applied.join(', ') || '—'}</p>
+                  <p className="muted small">{t('Yedekler:')} {profileResult.backupPath}</p>
+                  {!!profileResult.failed.length && <ul className="muted small">{profileResult.failed.map((item) => <li key={item.id}><code>{item.id}</code>: {item.message}</li>)}</ul>}
+                </div>
+              )}
+            </section>
+          )}
+
+          {tab === 'dns' && (
+            <section className="page">
+              <div className="toolbar">
+                <div>
+                  <h2><UiIcon label="DNS karşılaştırma" />{t('DNS karşılaştırma')}</h2>
+                  <p className="muted">{t('Beş herkese açık DNS sağlayıcısının gecikmesi ölçülür; en düşük yanıt süresi seçilerek tek tıkla uygulanabilir. Değişiklikten önce arabirim kayıt defteri yedeği alınır.')}</p>
+                </div>
+                <div className="toolbar-actions">
+                  <button className="btn btn-primary" onClick={() => void run(t('DNS sunucuları ölçülüyor'), async () => setDnsBenchmark(await api.dnsBenchmark()))}><UiIcon label="Ölç" />{t('Ölç')}</button>
+                  <button className="btn" onClick={() => void run(t('DNS durumu okunuyor'), async () => setDnsCurrentState(await api.dnsCurrent()))}><UiIcon label="Yenile" />{t('Yenile')}</button>
+                  <button className="btn" onClick={askDnsReset}><UiIcon label="DHCP’ye sıfırla" />{t('DHCP’ye sıfırla')}</button>
+                </div>
+              </div>
+              <div className="notice">
+                <b><UiIcon label="Önemli" />{t('Önemli')}</b>
+                <p className="muted">{t('Ölçüm salt okunurdur; yalnızca nslookup sorgusu yapar. DNS değiştirme işlemi yönetici izni gerektirir ve etkin tüm ağ bağdaştırıcılarına uygulanır.')}</p>
+              </div>
+              <div className="card">
+                <div className="card-top"><h3 style={{ margin: 0 }}><UiIcon label="Sağlayıcılar" />{t('Sağlayıcılar')}</h3><span className="badge">{dnsProviders.length}</span></div>
+                <table className="dns-table">
+                  <thead><tr><th>{t('Sağlayıcı')}</th><th>{t('Birincil')}</th><th>{t('İkincil')}</th><th>{t('Gecikme')}</th><th>{t('Durum')}</th><th /></tr></thead>
+                  <tbody>
+                    {dnsProviders.map((provider) => {
+                      const row = dnsBenchmark?.rows.find((item) => item.id === provider.id);
+                      const measured = (dnsBenchmark?.rows ?? []).filter((item) => item.ok && item.latencyMs !== null);
+                      const best = measured.length ? Math.min(...measured.map((item) => item.latencyMs as number)) : null;
+                      return (
+                        <tr key={provider.id}>
+                          <td><strong>{provider.name}</strong></td>
+                          <td className="mono">{provider.primary}</td>
+                          <td className="mono">{provider.secondary}</td>
+                          <td>{row?.latencyMs !== null && row?.latencyMs !== undefined ? tf('{ms} ms', { ms: row.latencyMs }) : '—'}</td>
+                          <td>
+                            {row
+                              ? <span className={`badge ${row.ok && row.latencyMs === best ? 'badge-green' : row.ok ? '' : 'badge-warn'}`}>{row.ok ? (row.latencyMs === best ? t('en hızlı') : t('yanıt verdi')) : t('yanıt yok')}</span>
+                              : <span className="muted">{t('ölçülmedi')}</span>}
+                          </td>
+                          <td><button className="btn btn-small" onClick={() => askDnsSwitch(provider)}><UiIcon label="Uygula" />{t('Uygula')}</button></td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                {dnsBenchmark && <p className="muted small">{tf('{sample} için {count} sağlayıcı ölçüldü; toplam {ms} ms. Her sağlayıcı iki kez sorgulandı, en düşük değer gösterildi.', { sample: dnsBenchmark.sample, count: dnsBenchmark.rows.length, ms: dnsBenchmark.durationMs })}</p>}
+              </div>
+              <div className="card">
+                <div className="card-top"><h3 style={{ margin: 0 }}><UiIcon label="Mevcut DNS sunucuları" />{t('Mevcut DNS sunucuları')}</h3><span className="badge">{dnsCurrentState?.adapters.length ?? 0}</span></div>
+                <p className="muted">{dnsCurrentState?.message || t('Etkin bağdaştırıcılar okunuyor…')}</p>
+                <div className="mini-list">
+                  {(dnsCurrentState?.adapters ?? []).map((adapter) => (
+                    <div className="setting-row" key={adapter.index}>
+                      <div><strong>{adapter.name}</strong><small>{t('Arayüz')} #{adapter.index}</small></div>
+                      <code className="mono">{adapter.servers.join(', ') || 'DHCP'}</code>
+                    </div>
+                  ))}
+                </div>
+                {dnsSwitchResult && <p className="muted small">{dnsSwitchResult}</p>}
+              </div>
             </section>
           )}
         </div>
