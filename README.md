@@ -29,7 +29,7 @@ Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 
 Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 
-## Ekran görüntüleri (1.0.4)
+## Ekran görüntüleri (1.0.6)
 
 Aşağıdaki görüntüler güncel sürüm çalışırken uygulamanın kendisinden alınmıştır; tanıtım sitesi ve
 GitHub Releases sayfası da aynı dosyaları kullanır.
@@ -37,7 +37,8 @@ GitHub Releases sayfası da aynı dosyaları kullanır.
 | Anasayfa | Kurulu Uygulamalar |
 | --- | --- |
 | ![Pars Sistem Yöneticisi anasayfa ekranı](website/assets/screen-home.png) | ![Kurulu uygulamalar listesi](website/assets/screen-apps.png) |
-| ![Güncellemeler ekranı](website/assets/screen-updates.png) | ![Sağ tık menüsü eklentileri](website/assets/screen-context.png) |
+| ![Güncellemeler ekranı](website/assets/screen-updates.png) | ![Uygulama Kütüphanesi dock filtreleri](website/assets/screen-library.png) |
+| ![Sağ tık menüsü eklentileri](website/assets/screen-context.png) | |
 
 ## Hazır çıktılar
 
