@@ -2,12 +2,12 @@
   "version": "1.0.4",
   "notes": "1.0.3’e ek olarak altı yeni özellik, simgeli/daraltılabilir sol gezinme, destek ve lisans bağlantıları, disk adları, güncelleme ikonları ve eski sürümü algılayan kurulum eklendi.",
   "fileName": "Pars Sistem Yoneticisi Setup 1.0.4.exe",
-  "sha512": "1abe67777894a1133a4087f9d62570b6fdab515309711870d2e83e0db5db092b5b06de1b47a1d2db21a704264e07ed0e0a877d3d3beadb98dfd7f87706ef8c26",
-  "sha256": "92cf58bd87491002a76afc1cc43689c400f84a698cbda94fde4a3097c6755bcb",
-  "size": 83613422,
+  "sha512": "a727b94135ecc7f7fbbde67980fdf21887d02b4358f1283fac701068e76202b9f68e620c5b0cf9a1fb7ec96d81c2ea8853670e76c60eb2bd3c83e5e1bf598c1b",
+  "sha256": "bb6e4c0da491728273b86bbc6ebbf1305ecb1e0e6e07fa03b03580a10a371f19",
+  "size": 83613990,
   "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.4/Pars.Sistem.Yoneticisi.Setup.1.0.4.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
-  "portableSha256": "d77abf93e6a17669883bc7f71d29d8c4ade962d60bf54726fde780bc31fddf17",
-  "portableSize": 83400450,
+  "portableSha256": "8ebe45bff6d37ba2878c688e97d9d78a13e1e4d876fc29344ae6c58136bdfb89",
+  "portableSize": 83400933,
   "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.4/ParsSistemYoneticisi-Portable.exe"
 }
