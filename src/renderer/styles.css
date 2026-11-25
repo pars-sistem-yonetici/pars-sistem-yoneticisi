@@ -666,6 +666,51 @@ tbody tr:last-child td { border-bottom: none; }
 .chip { border: 1px solid var(--line); background: var(--soft); color: var(--muted); border-radius: 999px; padding: 6px 12px; font-size: 12px; }
 .chip.active { background: rgba(var(--accent-rgb), .22); border-color: rgba(var(--accent-rgb), .6); color: var(--active-text); }
 
+/* Filtreler, sol gezinmedeki dock paneliyle aynı dilde bir seçiciye dönüştürülür. */
+.dock-bar {
+  display: flex; align-items: center; gap: 10px; padding: 6px 8px;
+  border: 1px solid var(--line); border-radius: 14px;
+  background: rgba(var(--accent-rgb), .05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
+  overflow-x: auto; scrollbar-width: thin;
+}
+.dock-bar + .dock-bar { margin-top: 10px; }
+.dock-title {
+  display: inline-flex; align-items: center; flex: 0 0 auto;
+  padding: 0 8px 0 4px; margin-right: 2px;
+  color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; border-right: 1px solid var(--line);
+}
+.dock-title .ui-icon { margin-right: 5px; animation: none; color: var(--nav-icon-color); }
+.dock-items { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.dock-btn {
+  display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto;
+  padding: 7px 11px; border: 1px solid transparent; border-radius: 10px;
+  background: transparent; color: var(--nav-text); font-size: 12px;
+  white-space: nowrap; transition: .16s ease; position: relative;
+}
+.dock-btn:hover:not(:disabled) { background: var(--soft); color: var(--text); }
+.dock-btn.active {
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), .2), rgba(var(--accent-2-rgb), .08));
+  border-color: rgba(var(--accent-rgb), .45); color: var(--active-text);
+  font-weight: 800; animation: nav-pop .28s cubic-bezier(.34, 1.56, .64, 1);
+}
+.dock-btn:disabled { opacity: .45; cursor: not-allowed; }
+.dock-btn .ui-icon { margin-right: 2px; font-size: 12px; }
+.dock-btn-label { line-height: 1.1; }
+.dock-meta {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 9px; font-weight: 600; color: var(--muted); text-transform: lowercase;
+}
+.dock-meta::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.dock-meta.ok { color: var(--green); }
+.dock-meta.warn { color: var(--warn); }
+@media (max-width: 760px) {
+  .dock-bar { align-items: flex-start; flex-direction: column; }
+  .dock-title { border-right: 0; border-bottom: 1px solid var(--line); padding-bottom: 5px; }
+  .dock-items { flex-wrap: wrap; }
+}
+
 .software-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
 .software-card {
   border: 1px solid var(--line); border-radius: 13px; padding: 14px;
