@@ -11,6 +11,16 @@ durum ikonları bulunur. Aynı anda yalnızca bir uygulama örneği çalışır;
 geri yükleyip öne getirir. Sistem tepsisindeki simge ve “Pencereyi göster” kısayolu da küçültülmüş veya
 gizlenmiş pencereyi açar.
 
+## 1.0.5 yenilikleri
+
+- **Sistem Ayarları:** 63 tersine çevrilebilir Windows & ağ ayarı; Ağ & Gecikme 11, Sistem & Performans 14, Arayüz & Deneyim 17, Gizlilik & Telemetri 11, Servis Yönetimi 10. Hiçbiri otomatik uygulanmaz; her değişiklikte zorunlu `.reg` + JSON yedeği alınır.
+- **Optimizasyon Profilleri:** Rekabetçi Oyuncu, Düşük Gecikme Ağ, Dengeli Optimizasyon ve Güvenli Gizlilik. Profiller açık onayla uygulanır/geri alınır; başarısız ayarlar raporlanır.
+- **DNS Karşılaştırma:** Cloudflare, Google, Quad9, AdGuard ve OpenDNS gecikmeleri ölçülür; en hızlı sağlayıcı tek tıkla uygulanır, DHCP sıfırlama ve zorunlu yedek vardır. Ölçüm salt okunurdur.
+- **Gelişmiş Onarımlar:** NIC düşük gecikme ayarları (+ geri yükleme), Prefetch temizliği, performans sayaçları/WMI rebuild, Installer 2502/2503 `icacls` yetki onarımı, `w32tm` NTP senkronizasyonu ve `bcdedit` Güvenli Mod aç/kapat + durum sorgulama.
+- Sol gezinmede yeni **Optimizasyon & Ağ** grubu; kategori filtresi, ayar arama ve sonuç kartları eklendi.
+
+Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
+
 ## Ekran görüntüleri (1.0.4)
 
 Aşağıdaki görüntüler güncel sürüm çalışırken uygulamanın kendisinden alınmıştır; tanıtım sitesi ve
@@ -25,12 +35,12 @@ GitHub Releases sayfası da aynı dosyaları kullanır.
 
 `release/` klasöründe:
 
-- `Pars Sistem Yoneticisi Setup 1.0.4.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
+- `Pars Sistem Yoneticisi Setup 1.0.5.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
 
 GitHub Releases’taki kurulum dosyasının adı noktalıdır:
-`Pars.Sistem.Yoneticisi.Setup.1.0.4.exe`. Yerel kopyalar
+`Pars.Sistem.Yoneticisi.Setup.1.0.5.exe`. Yerel kopyalar
 `YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`
 klasörlerinde tutulur; depoya eklenmez.
 
@@ -108,19 +118,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.0.4",
+  "version": "1.0.5",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.4.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.5.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83613422,
-  "url": "Pars Sistem Yoneticisi Setup 1.0.4.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.0.5.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.4.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.5.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
