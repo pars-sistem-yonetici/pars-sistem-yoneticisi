@@ -23,6 +23,7 @@ const api: AppApi = {
   wingetSourceUpdate: () => ipcRenderer.invoke('winget:source-update'),
   wingetList: () => ipcRenderer.invoke('winget:list'),
   wingetUpdates: () => ipcRenderer.invoke('winget:updates'),
+  updateList: (source) => ipcRenderer.invoke('updates:list', source),
   wingetSearch: (query) => ipcRenderer.invoke('winget:search', query),
   wingetInstall: (ident, silent) => ipcRenderer.invoke('winget:install', ident, silent),
   wingetUpgrade: (pkg, silent) => ipcRenderer.invoke('winget:upgrade', pkg, silent),
