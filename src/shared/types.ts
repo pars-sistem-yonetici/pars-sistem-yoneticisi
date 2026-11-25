@@ -582,6 +582,8 @@ export const REPAIR_KINDS = [
   'update-reset', 'network-reset',
   'component-cleanup', 'store-cache', 'search-index', 'print-spooler',
   'full-sequence', 'bcd-backup', 'advanced-restart',
+  'nic-latency', 'nic-latency-revert', 'prefetch-cleanup', 'counters-wmi', 'installer-perms', 'time-sync',
+  'safe-mode-status', 'safe-mode-on', 'safe-mode-off',
 ] as const;
 
 export type RepairKind = (typeof REPAIR_KINDS)[number];
@@ -649,6 +651,101 @@ export interface PrivacyActionResult {
   current: string;
   backupPath: string;
   message: string;
+}
+
+/** Yerel Windows & ağ ayarları: beş kategori, toplam 63 tersine çevrilebilir ayar. */
+export const TWEAK_CATEGORIES = ['network', 'performance', 'interface', 'privacy', 'services'] as const;
+export type TweakCategory = (typeof TWEAK_CATEGORIES)[number];
+
+export interface SystemTweak {
+  id: string;
+  title: string;
+  description: string;
+  category: TweakCategory;
+  /** Ayarın türü; arayüzde rozet ve yedek açıklaması için kullanılır. */
+  mode: 'registry' | 'command';
+  hive: 'HKCU' | 'HKLM';
+  /** Kayıt defteri ayarları için anahtar/değer; komut ayarları için boş olabilir. */
+  location: string;
+  name: string;
+  value: string;
+  current: string;
+  applied: boolean;
+  admin: boolean;
+  rebootRequired: boolean;
+  /** Komut tabanlı ayarlarda özgün durum JSON yedeğe kaydedilir. */
+  original?: string;
+}
+
+export interface TweakActionResult {
+  id: string;
+  ok: boolean;
+  applied: boolean;
+  current: string;
+  backupPath: string;
+  message: string;
+  rebootRequired: boolean;
+}
+
+export const PROFILE_IDS = ['competitive-gamer', 'low-latency-network', 'balanced', 'safe-privacy'] as const;
+export type ProfileId = (typeof PROFILE_IDS)[number];
+
+export interface OptimizationProfile {
+  id: ProfileId;
+  title: string;
+  description: string;
+  icon: string;
+  tweakIds: string[];
+}
+
+export interface ProfileApplyResult {
+  id: ProfileId;
+  ok: boolean;
+  applied: string[];
+  failed: Array<{ id: string; message: string }>;
+  backupPath: string;
+  message: string;
+  rebootRequired: boolean;
+}
+
+export const DNS_PROVIDER_IDS = ['cloudflare', 'google', 'quad9', 'adguard', 'opendns'] as const;
+export type DnsProviderId = (typeof DNS_PROVIDER_IDS)[number];
+
+export interface DnsProvider {
+  id: DnsProviderId;
+  name: string;
+  primary: string;
+  secondary: string;
+}
+
+export interface DnsBenchmarkRow {
+  id: DnsProviderId;
+  name: string;
+  primary: string;
+  secondary: string;
+  latencyMs: number | null;
+  ok: boolean;
+  detail: string;
+  durationMs: number;
+}
+
+export interface DnsBenchmarkResult {
+  rows: DnsBenchmarkRow[];
+  sample: string;
+  durationMs: number;
+}
+
+export interface DnsCurrentResult {
+  adapters: Array<{ name: string; index: number; servers: string[] }>;
+  message: string;
+}
+
+export interface DnsSwitchResult {
+  ok: boolean;
+  id: DnsProviderId;
+  message: string;
+  backupPath: string;
+  previous: string[];
 }
 
 export interface AppApi {
@@ -747,6 +844,16 @@ export interface AppApi {
   autorunSet: (item: AutorunItem, enabled: boolean) => Promise<AutorunActionResult>;
   privacyList: () => Promise<PrivacyTweak[]>;
   privacySet: (tweak: PrivacyTweak, apply: boolean) => Promise<PrivacyActionResult>;
+  tweaksList: () => Promise<SystemTweak[]>;
+  tweaksSet: (id: string, apply: boolean) => Promise<TweakActionResult>;
+  tweaksBackupFolder: () => Promise<string>;
+  profileList: () => Promise<OptimizationProfile[]>;
+  profileApply: (id: ProfileId, apply: boolean) => Promise<ProfileApplyResult>;
+  dnsProviders: () => Promise<DnsProvider[]>;
+  dnsCurrent: () => Promise<DnsCurrentResult>;
+  dnsBenchmark: () => Promise<DnsBenchmarkResult>;
+  dnsSwitch: (id: DnsProviderId) => Promise<DnsSwitchResult>;
+  dnsReset: () => Promise<DnsSwitchResult>;
 }
 
 declare global {
