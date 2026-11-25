@@ -12,6 +12,7 @@ const DEFAULTS: Settings = {
   autoUpdateScan: true,
   autoLeftoverScan: true,
   silentInstall: true,
+  enterpriseSilentPrereqs: false,
   drive: 'C:\\',
   startWithWindows: true,
   startMinimizedToTray: true,
@@ -40,6 +41,7 @@ export function getSettings(): Settings {
       ? parsed.closeBehavior as Settings['closeBehavior']
       : 'ask';
     cache.updateCheckOnStartup = parsed.updateCheckOnStartup !== false;
+    cache.enterpriseSilentPrereqs = parsed.enterpriseSilentPrereqs === true;
     cache.excludedFolders = Array.isArray(parsed.excludedFolders) ? parsed.excludedFolders.filter((item) => typeof item === 'string') : [];
     cache.excludedExtensions = Array.isArray(parsed.excludedExtensions) ? parsed.excludedExtensions.filter((item) => typeof item === 'string') : [];
   } catch {
@@ -61,6 +63,7 @@ export function setSettings(patch: Partial<Settings>): Settings {
       : 'ask';
   }
   if (patch.updateCheckOnStartup !== undefined) cache.updateCheckOnStartup = patch.updateCheckOnStartup !== false;
+  if (patch.enterpriseSilentPrereqs !== undefined) cache.enterpriseSilentPrereqs = patch.enterpriseSilentPrereqs === true;
   if (patch.excludedFolders !== undefined) cache.excludedFolders = Array.isArray(patch.excludedFolders) ? patch.excludedFolders.filter((item) => typeof item === 'string') : [];
   if (patch.excludedExtensions !== undefined) cache.excludedExtensions = Array.isArray(patch.excludedExtensions) ? patch.excludedExtensions.filter((item) => typeof item === 'string') : [];
   try {

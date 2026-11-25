@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import type { CleanResult, CleanTarget } from '../../shared/types';
-import { LogFn, directorySize, humanSize, isProtectedPath, isRuntimePath, isSafeEntry, psLiteral, removeTree, runCommand, runPowerShell } from '../util';
+import { LogFn, directorySize, humanSize, isProtectedPath, isRuntimePath, isSafeEntry, removeTree, runCommand, runPowerShell } from '../util';
+import { appendCleanupLog, type CleanupLogEntry } from './cleanupLog';
 import { exclusionReason, isExcludedPath } from './exclusions';
 
 function env(name: string, fallback: string): string {
@@ -32,6 +33,52 @@ export function targetsWithDrives(drives: string[] = []): CleanTarget[] {
   return items;
 }
 
+/** Yalnızca gerçek alt klasörleri döner; sembolik bağlantıları asla izlemez. */
+function childDirs(root: string): string[] {
+  try {
+    return fs.readdirSync(root, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && !entry.isSymbolicLink())
+      .map((entry) => path.join(root, entry.name));
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Edge/Chrome profillerinin yalnızca cache alt klasörleri ile Firefox cache2
+ * klasörleri. Profil köklerinin kendisi hiçbir zaman hedefe eklenmez.
+ */
+function browserCacheDirs(local: string): string[] {
+  const roots: string[] = [];
+  for (const userData of [
+    path.join(local, 'Microsoft', 'Edge', 'User Data'),
+    path.join(local, 'Google', 'Chrome', 'User Data'),
+  ]) {
+    for (const profile of childDirs(userData)) {
+      for (const cache of ['Cache', 'Code Cache', 'GPUCache']) {
+        const candidate = path.join(profile, cache);
+        if (fs.existsSync(candidate)) roots.push(candidate);
+      }
+    }
+  }
+  const firefox = path.join(local, 'Mozilla', 'Firefox', 'Profiles');
+  for (const profile of childDirs(firefox)) {
+    const candidate = path.join(profile, 'cache2');
+    if (fs.existsSync(candidate)) roots.push(candidate);
+  }
+  return roots;
+}
+
+/** Yalnızca yeniden indirilebilir paket önbellekleri; proje/node_modules değil. */
+function developerCacheDirs(local: string, home: string): string[] {
+  return [
+    path.join(local, 'npm-cache'),
+    path.join(local, 'npm', 'cache'),
+    path.join(home, '.nuget', 'packages'),
+    path.join(local, 'pip', 'Cache'),
+  ];
+}
+
 export function targets(): CleanTarget[] {
   const home = env('USERPROFILE', 'C:\\Users\\user');
   const local = env('LOCALAPPDATA', path.join(home, 'AppData', 'Local'));
@@ -52,6 +99,22 @@ export function targets(): CleanTarget[] {
       path.join(programData, 'Microsoft', 'Windows', 'WER', 'ReportArchive'),
     ], files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false },
     { key: 'internet_cache', name: 'İnternet Önbelleği', description: 'WinINet geçici internet dosyaları.', dirs: [path.join(local, 'Microsoft', 'Windows', 'INetCache')], files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false },
+    {
+      key: 'delivery_optimization', name: 'Delivery Optimization Önbelleği',
+      description: 'Windows Update eşler arası indirme önbelleği; gerektiğinde yeniden indirilir.',
+      dirs: [path.join(local, 'Microsoft', 'Windows', 'DeliveryOptimization'), path.join(windows, 'SoftwareDistribution', 'DeliveryOptimization')],
+      files: [], action: '', needsAdmin: true, size: 0, count: 0, available: false,
+    },
+    {
+      key: 'browser_cache', name: 'Tarayıcı Önbellekleri',
+      description: 'Yalnızca Edge/Chrome Cache, Code Cache, GPUCache ve Firefox cache2 klasörleri. Çerez, geçmiş ve parolalara dokunulmaz.',
+      dirs: browserCacheDirs(local), files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false,
+    },
+    {
+      key: 'developer_cache', name: 'Geliştirici Paket Önbellekleri',
+      description: 'npm, NuGet ve pip önbellekleri. Paketler gerektiğinde yeniden indirilir; proje klasörleri dahil edilmez.',
+      dirs: developerCacheDirs(local, home), files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false,
+    },
     { key: 'dns', name: 'DNS Önbelleği', description: 'Çözülmüş alan adı kayıtlarını temizler (ipconfig /flushdns).', dirs: [], files: [], action: 'flushdns', needsAdmin: false, size: 0, count: 0, available: true },
     { key: 'recycle', name: 'Geri Dönüşüm Kutusu', description: 'Silinmiş dosyaları kalıcı olarak kaldırır. GERİ ALINAMAZ!', dirs: [], files: [], action: 'recycle', needsAdmin: false, size: 0, count: 0, available: true },
   ];
@@ -127,6 +190,8 @@ function safeFileSize(filePath: string): number {
 
 export async function clean(items: CleanTarget[], onLine?: LogFn, recycleDrives: string[] = []): Promise<CleanResult[]> {
   const results: CleanResult[] = [];
+  const logEntries: CleanupLogEntry[] = [];
+  const letters = [...new Set(recycleDrives.map((drive) => drive.replace(/[:\\/]/g, '').toUpperCase()).filter((letter) => /^[A-Z]$/.test(letter)))];
   for (const target of items) {
     let freed = 0;
     let failures = 0;
@@ -138,11 +203,16 @@ export async function clean(items: CleanTarget[], onLine?: LogFn, recycleDrives:
       ok = result.code === 0;
       message = ok ? 'DNS önbelleği temizlendi' : (result.text.trim().slice(0, 200) || 'ipconfig hatası');
     } else if (target.action === 'recycle') {
-      const letters = [...new Set(recycleDrives.map((drive) => drive.replace(/[:\\/]/g, '').toUpperCase()).filter((letter) => /^[A-Z]$/.test(letter)))];
       const list = letters.length ? letters : [(env('SystemDrive', 'C:').replace(/[:\\/]/g, '') || 'C').toUpperCase()];
-      const script = list.map((letter) => `
-Clear-RecycleBin -DriveLetter ${psLiteral(letter)} -Force -ErrorAction SilentlyContinue
-`).join('') + '\nif ($?) { "OK" } else { "HATA" }';
+      const driveList = list.map((letter) => `'${letter}'`).join(', ');
+      const script = `
+$hepsiBasarili = $true
+foreach ($harf in @(${driveList})) {
+  try { Clear-RecycleBin -DriveLetter $harf -Force -ErrorAction Stop }
+  catch { $hepsiBasarili = $false }
+}
+if ($hepsiBasarili) { 'OK' } else { 'HATA' }
+`;
       const result = await runPowerShell(script, onLine, 120_000);
       ok = /OK/.test(result.text);
       message = ok ? `${list.join(', ')}: Geri Dönüşüm Kutusu boşaltıldı` : 'Geri Dönüşüm Kutusu boşaltılamadı';
@@ -157,8 +227,9 @@ Clear-RecycleBin -DriveLetter ${psLiteral(letter)} -Force -ErrorAction SilentlyC
           if (entry.isDir) {
             freed += removeTree(entry.filePath, isExcludedPath, onLine);
           } else {
-            freed += safeFileSize(entry.filePath);
+            const size = safeFileSize(entry.filePath);
             fs.rmSync(entry.filePath, { force: true });
+            freed += size;
           }
         } catch (error) {
           failures += 1;
@@ -171,7 +242,21 @@ Clear-RecycleBin -DriveLetter ${psLiteral(letter)} -Force -ErrorAction SilentlyC
     }
 
     results.push({ key: target.key, name: target.name, ok, freed, message });
+    logEntries.push({
+      time: new Date().toISOString(),
+      key: target.key,
+      name: target.name,
+      action: target.action || 'delete',
+      ok,
+      freed,
+      message,
+      count: target.count,
+      dirs: target.dirs,
+      files: target.files,
+      ...(target.action === 'recycle' ? { recycleDrives: letters } : {}),
+    });
     onLine?.(`${ok ? 'TAMAM' : 'UYARI'}: ${target.name} — ${message}`);
   }
+  appendCleanupLog(logEntries);
   return results;
 }

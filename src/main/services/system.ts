@@ -42,3 +42,37 @@ $names | ConvertTo-Json -Compress
   const result = await powershellJson<string | string[]>(script, undefined, 20_000);
   return (Array.isArray(result) ? result : [result]).map((item) => item.trim()).filter(Boolean);
 }
+
+/** Sürücü harflerini kullanıcıya anlamlı gelen birim adlarına eşler. */
+export async function driveLabels(): Promise<Record<string, string>> {
+  const script = `
+$ErrorActionPreference = 'Stop'
+$items = @(Get-CimInstance Win32_LogicalDisk -Filter 'DriveType=3' | ForEach-Object {
+  [pscustomobject]@{
+    DeviceID = $_.DeviceID
+    VolumeName = $_.VolumeName
+    Caption = $_.Caption
+  }
+})
+$items | ConvertTo-Json -Compress
+`;
+  const result = await powershellJson<
+    Array<{ DeviceID?: string; VolumeName?: string; Caption?: string }> | Record<string, { DeviceID?: string; VolumeName?: string; Caption?: string }>
+  >(script, undefined, 20_000);
+  const rows = Array.isArray(result) ? result : Object.values(result || {});
+  const labels: Record<string, string> = {};
+  const systemDrive = (process.env.SystemDrive || 'C:').toUpperCase();
+  for (const row of rows) {
+    const letter = String(row.DeviceID || '').replace('\\', '').toUpperCase();
+    if (!/^[A-Z]:$/.test(letter)) continue;
+    const name = String(row.VolumeName || '').trim();
+    const label = name || (letter === systemDrive ? 'Windows' : 'Yerel Disk');
+    labels[letter] = label;
+    labels[`${letter}\\`] = label;
+  }
+  if (!labels[systemDrive]) {
+    labels[systemDrive] = 'Windows';
+    labels[`${systemDrive}\\`] = 'Windows';
+  }
+  return labels;
+}

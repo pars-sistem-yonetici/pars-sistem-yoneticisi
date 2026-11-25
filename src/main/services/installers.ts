@@ -1,5 +1,6 @@
 import type { InstallItem, InstallProgress, InstallResult, Package, PackageManagerStatus, PackageSource } from '../../shared/types';
 import { LogFn, runCommand } from '../util';
+import { probeManager } from './prereqs';
 import * as winget from './winget';
 
 export type InstallProgressFn = (progress: InstallProgress) => void;
@@ -98,20 +99,23 @@ async function installOne(item: InstallItem, silent: boolean, onLine?: LogFn): P
 
 /** Paket yöneticilerinin kurulu olup olmadığını ve sürümlerini döner. */
 export async function managerStatus(): Promise<PackageManagerStatus[]> {
-  const commands: Array<{ source: PackageSource; command: string }> = [
-    { source: 'winget', command: 'winget' },
-    { source: 'choco', command: 'choco' },
-    { source: 'npm', command: 'npm.cmd' },
-    { source: 'scoop', command: 'scoop.cmd' },
+  const [wingetResult, chocoResult, npmResult, scoopResult] = await Promise.all([
+    winget.version().catch(() => ({ available: false, version: '' })),
+    probeManager('choco'),
+    probeManager('npm'),
+    probeManager('scoop'),
+  ]);
+  const rows: Array<{ source: PackageSource; available: boolean; version: string }> = [
+    { source: 'winget', available: wingetResult.available, version: wingetResult.version },
+    { source: 'choco', ...chocoResult },
+    { source: 'npm', ...npmResult },
+    { source: 'scoop', ...scoopResult },
   ];
-  return Promise.all(commands.map(async ({ source, command }) => {
-    try {
-      const result = await runCommand(command, ['--version'], undefined, 20_000);
-      const version = result.text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean)[0] || '';
-      return { source, label: LABELS[source], available: result.code === 0 && !!version, version: version.slice(0, 80) };
-    } catch {
-      return { source, label: LABELS[source], available: false, version: '' };
-    }
+  return rows.map((row) => ({
+    source: row.source,
+    label: LABELS[row.source],
+    available: row.available,
+    version: (row.version || '').slice(0, 80),
   }));
 }
 

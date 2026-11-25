@@ -1,3 +1,4 @@
+import { spawnSync } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -211,6 +212,19 @@ export async function scanLeftoversBatch(targets: LeftoverScanTarget[], options:
     await walkBatch(list[index].dir, list[index].depth, state, options, index, list.length);
     await yieldEventLoop();
   }
+  // Dosya taraması bittikten sonra kayıt defterindeki kaldırma kalıntıları eklenir.
+  // Böylece kaldırma sonrası sorusu "Evet" dendiğinde hem dosyalar hem registry taranır.
+  if (!state.aborted && !options.cancelled?.()) {
+    const registry = await registryLeftoversBatch(targets);
+    for (let index = 0; index < targets.length; index += 1) {
+      for (const item of registry[index]) {
+        const key = item.path.toLocaleLowerCase('tr-TR');
+        if (state.found[index].has(key) || state.results[index].length >= PER_APP_LIMIT) continue;
+        state.found[index].add(key);
+        state.results[index].push(item);
+      }
+    }
+  }
   if (state.aborted && options.onProgress) {
     options.onProgress({
       requestId: options.requestId ?? '',
@@ -282,10 +296,15 @@ foreach ($target in $targets) {
 export async function deleteLeftovers(items: Leftover[], mode: 'recycle' | 'permanent'): Promise<DeleteResult[]> {
   const results: DeleteResult[] = new Array(items.length);
   const pending: PendingItem[] = [];
+  const registryPending: PendingItem[] = [];
 
   // Önce tüm güvenlik kontrolleri yapılır; yalnızca geçenler silme kuyruğuna girer.
   for (let index = 0; index < items.length; index += 1) {
     const item = items[index];
+    if (item.kind === 'registry') {
+      registryPending.push({ index, item });
+      continue;
+    }
     if (isExcludedPath(item.path)) {
       results[index] = { path: item.path, ok: false, message: `${exclusionReason(item.path)}; atlandı.` };
       continue;
@@ -300,6 +319,9 @@ export async function deleteLeftovers(items: Leftover[], mode: 'recycle' | 'perm
     }
     pending.push({ index, item });
   }
+
+  // Kayıt girdileri mod farkı etmeksizin yedek alınarak silinir.
+  await deleteRegistryBatch(registryPending, results);
 
   if (mode === 'permanent') {
     for (const { index, item } of pending) {
@@ -320,29 +342,96 @@ export async function deleteLeftovers(items: Leftover[], mode: 'recycle' | 'perm
   return results;
 }
 
-export async function registryLeftovers(name: string): Promise<Leftover[]> {
+/** Kayıt defterinde kaldırılmış uygulamaların bıraktığı Uninstall girdilerini tarar. */
+async function registryLeftoversBatch(targets: LeftoverScanTarget[]): Promise<Leftover[][]> {
+  const rows = targets.map((target, index) =>
+    `  @{ i = ${index}; n = ${psLiteral(target.name)}; d = ${psLiteral(target.ident || '')} },`);
+  if (rows.length) rows[rows.length - 1] = rows[rows.length - 1].replace(/,$/, '');
   const script = String.raw`
-$name = ${psLiteral(name)}
-$path = 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
-$found = @()
-foreach ($hive in @([Microsoft.Win32.RegistryHive]::LocalMachine, [Microsoft.Win32.RegistryHive]::CurrentUser)) {
+$ErrorActionPreference = 'SilentlyContinue'
+$targets = @(
+${rows.join('\n')}
+)
+$roots = @(
+  'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall',
+  'HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall',
+  'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall',
+  'HKCU\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
+)
+$out = @()
+foreach ($root in $roots) {
+  $hive = if ($root.StartsWith('HKLM\')) { [Microsoft.Win32.RegistryHive]::LocalMachine } else { [Microsoft.Win32.RegistryHive]::CurrentUser }
+  $hivePath = $root.Substring(5)
   $base = [Microsoft.Win32.RegistryKey]::OpenBaseKey($hive, [Microsoft.Win32.RegistryView]::Registry64)
-  $key = $base.OpenSubKey($path)
+  $key = $base.OpenSubKey($hivePath)
   if (-not $key) { continue }
   foreach ($subName in $key.GetSubKeyNames()) {
     $sub = $key.OpenSubKey($subName)
+    if (-not $sub) { continue }
     $display = [string]$sub.GetValue('DisplayName')
-    if ($display -and $display.ToLowerInvariant().Contains($name.ToLowerInvariant())) {
-      $found += [pscustomobject]@{ path = ($hive.ToString() + '\' + $path + '\' + $subName); kind = 'registry'; size = 0; reason = $display }
+    $hay = ($display + ' ' + $subName).ToLowerInvariant()
+    foreach ($target in $targets) {
+      $name = ([string]$target.n).ToLowerInvariant()
+      $ident = ([string]$target.d).ToLowerInvariant()
+      $hit = ''
+      if ($name.Length -ge 3 -and $hay.Contains($name)) { $hit = $name }
+      elseif ($ident.Length -ge 3 -and $hay.Contains($ident)) { $hit = $ident }
+      if (-not $hit) { continue }
+      $out += [pscustomobject]@{
+        i = [int]$target.i
+        path = $root + '\' + $subName
+        kind = 'registry'
+        size = 0
+        reason = $(if ($display) { $display } else { $subName }) + ' [' + $hit + ']'
+      }
     }
+    $sub.Close()
   }
+  $key.Close(); $base.Close()
 }
-$found | ConvertTo-Json -Compress
+@{ items = @($out) } | ConvertTo-Json -Compress -Depth 4
 `;
+  const empty = targets.map(() => [] as Leftover[]);
   try {
-    const result = await powershellJson<Leftover[] | Leftover>(script, undefined, 60_000);
-    return Array.isArray(result) ? result : result ? [result] : [];
-  } catch {
-    return [];
+    const parsed = await powershellJson<{ items?: Array<Leftover & { i: number }> | (Leftover & { i: number }) }>(script, undefined, 90_000);
+    const raw = parsed?.items;
+    const returned = !raw ? [] : Array.isArray(raw) ? raw : [raw];
+    for (const row of returned) {
+      const index = Number(row.i);
+      if (index < 0 || index >= empty.length) continue;
+      empty[index].push({ path: row.path, kind: 'registry', size: 0, reason: row.reason });
+    }
+  } catch { /* kayıt defteri okunamadıysa dosya sonuçları korunur */ }
+  return empty;
+}
+
+/** Yalnızca bilinen Uninstall anahtarları silinir; her silmeden önce .reg yedeği alınır. */
+const REGISTRY_ALLOWED = /^(HKLM|HKCU)\\SOFTWARE\\(WOW6432Node\\)?Microsoft\\Windows\\CurrentVersion\\Uninstall\\[^\\]+$/i;
+
+function isRegistryPathSafe(target: string): boolean {
+  return REGISTRY_ALLOWED.test(target) && !/[<>:"|?*]|\.\./.test(target);
+}
+
+async function deleteRegistryBatch(pending: PendingItem[], results: DeleteResult[]): Promise<void> {
+  if (!pending.length) return;
+  const folder = path.join(process.env.LOCALAPPDATA || os.tmpdir(), 'ParsSistemYoneticisi', 'registry_backups');
+  try { fs.mkdirSync(folder, { recursive: true }); } catch { /* ignore */ }
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+  for (const { index, item } of pending) {
+    if (!isRegistryPathSafe(item.path)) {
+      results[index] = { path: item.path, ok: false, message: 'Korumalı veya bilinmeyen kayıt yolu; silinmedi.' };
+      continue;
+    }
+    const leaf = (item.path.split('\\').pop() || 'key').replace(/[^A-Za-z0-9_.-]/g, '_').slice(0, 80);
+    const backup = path.join(folder, `leftover_${leaf}_${stamp}.reg`);
+    const exported = spawnSync('reg.exe', ['export', item.path, backup, '/y'], { windowsHide: true });
+    if (exported.status !== 0 || !fs.existsSync(backup)) {
+      results[index] = { path: item.path, ok: false, message: 'Kayıt yedeği alınamadı; silinmedi.' };
+      continue;
+    }
+    const removed = spawnSync('reg.exe', ['delete', item.path, '/f'], { windowsHide: true });
+    results[index] = removed.status === 0
+      ? { path: item.path, ok: true, message: `Kayıt girdisi silindi. Yedek: ${path.basename(backup)}` }
+      : { path: item.path, ok: false, message: String(removed.stderr?.toString() || 'Silinemedi.').slice(0, 160) };
   }
 }
