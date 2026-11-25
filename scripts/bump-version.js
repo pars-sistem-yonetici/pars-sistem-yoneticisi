@@ -11,7 +11,8 @@
  *
  * Guncellenen dosyalar:
  *   package.json, package-lock.json (ilk iki "version"),
- *   src/shared/i18n.ts (baslikdaki surum), README.md, RELEASE_NOTES.md,
+ *   src/shared/i18n.ts ve src/renderer/App.tsx (baslik/altbilgi surumu),
+ *   README.md, RELEASE_NOTES.md,
  *   build/updates/latest.json (gOmulu manifest sablonu).
  *
  * website/ ve docs/ dosyalari CI (ci-release.js) tarafindan uretilir;
@@ -101,6 +102,16 @@ update('src/shared/i18n.ts', (text) => {
   return { text: next, count };
 });
 
+update('src/renderer/App.tsx', (text) => {
+  let count = 0;
+  const next = text.replace(/(Sistem Bakım Merkezi · v)\d+\.\d+\.\d+/g, (_full, prefix) => {
+    count += 1;
+    return `${prefix}${version}`;
+  });
+  if (count < 1) throw new Error('App.tsx: altbilgi surumu bulunamadi.');
+  return { text: next, count };
+});
+
 update('README.md', (text) => {
   let count = 0;
   let next = text.replace(/Setup \d+\.\d+\.\d+\.exe/g, () => {
@@ -139,7 +150,7 @@ update('build/updates/latest.json', (text) => {
     count += 1;
     return `${prefix}${version}${suffix}`;
   });
-  next = next.replace(/^(\s*"url":\s*"Pars Sistem Yoneticisi Setup )[^"]+(\.exe")/m, (_full, prefix, suffix) => {
+  next = next.replace(/^(\s*"url":\s*"[^"]*Setup[ .])[^"/]+(\.exe")/m, (_full, prefix, suffix) => {
     count += 1;
     return `${prefix}${version}${suffix}`;
   });
