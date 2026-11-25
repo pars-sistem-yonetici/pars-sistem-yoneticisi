@@ -1,20 +1,19 @@
-# Pars Sistem Yöneticisi 1.0.5
+# Pars Sistem Yöneticisi 1.0.6
 
-1.0.4’e ek olarak 63 tersine çevrilebilir Windows & ağ ayarı, 4 optimizasyon profili, 9 gelişmiş onarım aracı ve 5 sağlayıcılı DNS karşılaştırma/switcher eklendi.
+1.0.5’e ek olarak Uygulama Kütüphanesi filtreleri dock görünümüne taşındı; Güncellemeler artık winget yanında Chocolatey, npm ve Scoop kaynaklarından da salt-okunur tarama yapabiliyor.
 
 ## Bu sürümde
 
-- **Sistem Ayarları (63):** Beş kategoride toplanan ayarlar — Ağ & Gecikme 11, Sistem & Performans 14, Arayüz & Deneyim 17, Gizlilik & Telemetri 11, Servis Yönetimi 10. TCP ACK/Nagle/ECN, NIC güç yönetimi, DNS önbelleği, SMBv1/NetBIOS, güç planı, NTFS davranışı, HAGS, hızlı başlatma, görev çubuğu/Gezgin/tema, telemetri, reklam kimliği, konum, Recall/Copilot ve gereksiz hizmetler tek listede yönetilir.
-- **Güvenli yazma:** Hiçbir ayar otomatik uygulanmaz. Her değişiklikten önce ilgili kayıt anahtarının `.reg` yedeği alınır; özgün değer ayrıca JSON dosyasına kaydedilir. Yedek alınamazsa değişiklik yapılmaz. `UserChoice`, COM/CLSID, sertifika depoları, dosya ilişkilendirme sahipliği ve korumalı sistem girdileri katalogda yer almaz. Ayarlar tek tek geri alınabilir.
-- **Optimizasyon Profilleri (4):** Rekabetçi Oyuncu (14 ayar), Düşük Gecikme Ağ (11), Dengeli Optimizasyon (10) ve Güvenli Gizlilik (14). Profiller yalnızca açık onayla uygulanır; her ayar kendi yedeğini üretir, başarısız ayarlar raporlanır ve diğerleri çalışmaya devam eder. Geri alma aynı ayarları ters sırada özgün değerlerine döndürür.
-- **DNS Karşılaştırma ve Switcher:** Cloudflare `1.1.1.1`, Google `8.8.8.8`, Quad9 `9.9.9.9`, AdGuard `94.140.14.14` ve OpenDNS `208.67.222.222` için ikişer `nslookup` sorgusu yapılır; en düşük gecikme “en hızlı” olarak işaretlenir. Seçilen sağlayıcı etkin tüm bağdaştırıcılara uygulanır; değişiklik öncesi arabirim kayıt defteri zorunlu yedeklenir. “DHCP’ye sıfırla” özel DNS sunucularını kaldırır ve adresleri yeniden DHCP’den alır. Ölçüm salt okunurdur.
-- **Gelişmiş Onarımlar (9):** NIC sürücüsü düşük gecikme varsayılanları ve geri yükleme, Prefetch temizliği (dosyalar önce yedeklenir), performans sayaçları/WMI deposu yeniden oluşturma (`lodctr /R`, `winmgmt /resyncperf`), Installer 2502/2503 yetki onarımı (`icacls /save` + yönetici tam yetkisi), `w32tm` NTP senkronizasyonu, Güvenli Mod durumu sorgulama ve Güvenli Mod aç/kapat (`bcdedit` + zorunlu BCD yedeği).
-- **Arayüz:** “Optimizasyon & Ağ” grubu altında Sistem Ayarları, Optimizasyon Profilleri ve DNS Karşılaştırma sekmeleri; kategori filtresi, ayar arama, yedek klasörü gösterimi, profil sonuç kartı ve DNS gecikme tablosu eklendi. İngilizce çeviriler tamamlandı.
-- **Güvenlik modeli korundu:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama varsayılanı ve korumalı kayıt/klasör kuralları tüm yeni işlemlerde geçerlidir. Kurulum manuel onaylıdır; varsayılan kapalı “kurumsal sessiz” mod isteğe bağlıdır. Eski sürüm algılanıp kaldırılır, uygulama verileri silinmez (`deleteAppDataOnUninstall: false`).
+- **Dock filtreleri:** Uygulama Kütüphanesi’ndeki “Tümü / Tarayıcı / Medya & Tasarım …” kategori satırı ve “Tümü / winget / Chocolatey / npm / Scoop” paket yöneticisi satırı, sol gezinmedeki dock paneliyle aynı dilde iki yatay seçiciye dönüştürüldü. Aktif seçim altın vurgu, ikon ve `aria-pressed` ile belirtiliyor; kurulu olmayan yöneticiler devre dışı, dar ekranlarda seçiciler sarıyor.
+- **Çok kaynaklı güncellemeler:** Güncellemeler sekmesine “Tümü / winget / Chocolatey / npm / Scoop” kaynak seçicisi eklendi. `Tümü` dört kaynağı paralel tarar; bir kaynak hata verirse diğerlerinin sonucu korunur. Chocolatey `choco outdated --limit-output`, npm `npm outdated -g --json`, Scoop `scoop status`, winget `--upgrade-available` kullanılır. Tüm taramalar salt okunurdur; hiçbiri kendiliğinden kurulum yapmaz.
+- **Kaynak bilincini koruyan kuyruk:** Seçilen güncellemeler artık kendi paket yöneticisiyle güncellenir; kimlikler kaynağa özel düzenli ifadelerle doğrulanır, seçenek/enjeksiyon karakterleri komut satırına geçmez. Aynı kimlik farklı kaynaklarda olsa bile seçimler birbirine karışmaz.
+- **Doğru winget listesi:** “1 package(s) have version numbers that cannot be determined …” bilgilendirme satırı tabloda sahte uygulama olarak görünmez. `--include-unknown` kullanılmaya devam edilmez; bilgilendirme yalnızca uyarı niteliğindedir.
+- **Görünür kaynak adları:** Güncelleme tablosu ve kütüphane kartları `choco` yerine `Chocolatey`, `npm`, `Scoop`, `winget` etiketlerini gösterir; yeni İngilizce çeviriler eklendi.
+- **Güvenlik modeli korundu:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama varsayılanı ve korumalı kayıt/klasör kuralları değişmedi. Kurulum manuel onaylıdır; varsayılan kapalı “kurumsal sessiz” mod isteğe bağlıdır. Eski sürüm algılanıp kaldırılır, uygulama verileri silinmez (`deleteAppDataOnUninstall: false`).
 
-### 1.0.4’ten gelenler
+### 1.0.5’ten gelenler
 
-Yazılım yedeği, dosya tarayıcı, disk analizi, 17 onarım aracı, gelişmiş başlangıç, 7 gizlilik ayarı, genişletilmiş kayıt defteri taraması, paket yöneticisi kurulumu, uygulama kütüphanesi, sistem tepsisi ve destek/lisans bağlantıları.
+63 tersine çevrilebilir Windows & ağ ayarı, 4 optimizasyon profili, 5 sağlayıcılı DNS karşılaştırma/switcher, 9 gelişmiş onarım aracı, yazılım yedeği, dosya tarayıcı, disk analizi, paket yöneticisi kurulumu, uygulama kütüphanesi, sistem tepsisi ve destek/lisans bağlantıları.
 
 ## Ekran görüntüleri
 
@@ -27,10 +26,10 @@ Görüntüler 1.0.4 arayüzünden alınmıştır; tanıtım sitesi, README ve bu
 
 ## İndirme
 
-- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.0.5.exe` (NSIS, başlat menüsü + masaüstü kısayolu)
+- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.0.6.exe` (NSIS, başlat menüsü + masaüstü kısayolu)
 - **Portable:** `ParsSistemYoneticisi-Portable.exe`
 
-Windows 10 (1809+) / Windows 11 x64 ve güncel App Installer (winget) gereklidir.
+Windows 10 (1809+) / Windows 11 x64 ve güncel App Installer (winget) gereklidir. Chocolatey, npm ve Scoop taramaları yalnızca ilgili araç kuruluysa seçilebilir.
 Uygulama yönetici izinleriyle çalışır; açılışta UAC onayı görünür.
 
 > İmzasız dağıtım olduğu için SmartScreen uyarısı çıkabilir. İndirme sayfasındaki SHA-256
