@@ -35,6 +35,20 @@ export function hasUpdate(pkg: Package): boolean {
   return Boolean(value) && !['unknown', 'n/a', '-'].includes(value);
 }
 
+/**
+ * winget'in sürümü belirlenemeyen paketler hakkındaki bilgilendirme satırı
+ * tablo sütunlarına yayılır; gerçek bir paket gibi görünmesin diye birleşik
+ * metinden ayıklanır. `--include-unknown` bilinçli olarak kullanılmıyor.
+ */
+function isNoticeRow(...cells: string[]): boolean {
+  const text = cells.join(' ').replace(/\s+/g, ' ').trim().toLowerCase();
+  if (!text) return false;
+  return /package\(s\) have version numbers that cannot be determined/i.test(text)
+    || /include-unknown/i.test(text)
+    || /^\d+\s+upgrades? available\.?$/i.test(text)
+    || /^\d+\s+package\(s\)/i.test(text);
+}
+
 async function run(args: string[], onLine?: LogFn, timeout = 15 * 60 * 1000) {
   try {
     return await runCommand('winget', args, onLine, timeout);
@@ -66,7 +80,8 @@ function fromJson(text: string): Package[] {
       available: String(row.AvailableVersion || ''),
       source: String(row.Source || ''),
     }))
-    .filter((pkg) => pkg.name.length > 0);
+    .filter((pkg) => pkg.name.length > 0)
+    .filter((pkg) => !isNoticeRow(pkg.name, pkg.version, pkg.available));
 }
 
 function parseTable(text: string): Package[] {
@@ -107,7 +122,8 @@ function parseTable(text: string): Package[] {
     if (!name || !ident) continue;
     const lowered = name.toLowerCase();
     if (/^(no installed package|no available package|the following)/.test(lowered)) continue;
-    if (/^package\(s\) have/i.test(versionText)) continue;
+    if (isNoticeRow(name, ident, versionText, available, source)) continue;
+    if (!hasUpdate({ name, ident, version: versionText, available, source })) continue;
     packages.push({ name, ident, version: versionText, available, source });
   }
   return packages;
