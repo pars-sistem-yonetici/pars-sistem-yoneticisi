@@ -5,7 +5,7 @@ export const EN: Record<string, string> = {
   // Ortak
   'Pars Sistem Yöneticisi': 'Pars System Manager',
   'Sistem Bakım Merkezi': 'System Maintenance Center',
-  'Sistem Bakım Merkezi · v1.0.5': 'System Maintenance Center · v1.0.5',
+  'Sistem Bakım Merkezi · v1.0.6': 'System Maintenance Center · v1.0.6',
   'Sistem bakım ve yazılım yönetimi paneli': 'System maintenance and software management panel',
   'Anasayfa': 'Home',
   'Güncellemeler': 'Updates',
@@ -942,6 +942,13 @@ export const EN: Record<string, string> = {
   'Güvenli Mod’u kaldır': 'Disable Safe Mode',
   'Gelişmiş onarımlar': 'Advanced repairs',
   'Sürücü, sayaç, zaman ve önyükleme ayarları. Değiştirilen her değer için .reg, JSON, ACL veya BCD yedeği zorunludur.': 'Driver, counter, time and boot settings. Every change requires a .reg, JSON, ACL or BCD backup.',
+
+  // Dock filtreleri ve çok kaynaklı güncellemeler
+  'Paket yöneticisi': 'Package manager',
+  'Tüm kaynaklar': 'All sources',
+  'Seçili kaynak taraması tamamlandı; güncellenmesi gereken uygulama bulunamadı.': 'Scan of the selected source is complete; no applications need updating.',
+  'Chocolatey': 'Chocolatey',
+  'Scoop': 'Scoop',
 };
 
 export function translate(text: string, lang: Language, dictionary?: Record<string, string>): string {
