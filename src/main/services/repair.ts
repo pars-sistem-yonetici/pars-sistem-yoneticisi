@@ -27,6 +27,15 @@ const TITLE: Record<RepairKind, string> = {
   'full-sequence': 'Tek tıkla sıralı onarım (DISM → SFC → doğrulama)',
   'bcd-backup': 'Önyükleme yapılandırması (BCD) yedeği',
   'advanced-restart': 'Gelişmiş başlatmaya yeniden başlat',
+  'nic-latency': 'NIC sürücüsü düşük gecikme varsayılanları',
+  'nic-latency-revert': 'NIC sürücü ayarlarını geri yükle',
+  'prefetch-cleanup': 'Prefetch önbelleği temizliği',
+  'counters-wmi': 'Performans sayaçları ve WMI yeniden oluşturma',
+  'installer-perms': 'Installer 2502/2503 yetki onarımı',
+  'time-sync': 'w32tm NTP zaman senkronizasyonu',
+  'safe-mode-status': 'Güvenli Mod durumu (salt okunur)',
+  'safe-mode-on': 'Güvenli Mod’u etkinleştir (sonraki açılış)',
+  'safe-mode-off': 'Güvenli Mod’u kaldır',
 };
 
 const RESTORE_SCRIPT = String.raw`
@@ -141,6 +150,126 @@ try {
   }
 }
 'SPOOLER_OK'
+`;
+
+const NIC_LATENCY_SCRIPT = String.raw`
+$ErrorActionPreference = 'Stop'
+$meta = __META__
+$props = @(
+  @{ Name = 'Interrupt Moderation'; Value = 'Disabled' },
+  @{ Name = 'Interrupt Moderation Rate'; Value = 'Off' },
+  @{ Name = 'Adaptive Interframe Spacing'; Value = 'Disabled' },
+  @{ Name = 'Flow Control'; Value = 'Disabled' },
+  @{ Name = 'Green Ethernet'; Value = 'Disabled' },
+  @{ Name = 'Energy Efficient Ethernet'; Value = 'Disabled' }
+)
+$original = @()
+foreach ($a in @(Get-NetAdapter -ErrorAction SilentlyContinue | Where-Object { $_.Status -eq 'Up' })) {
+  foreach ($p in $props) {
+    $found = @(Get-NetAdapterAdvancedProperty -InterfaceDescription $a.InterfaceDescription -DisplayName $p.Name -ErrorAction SilentlyContinue)
+    foreach ($entry in $found) {
+      $original += [pscustomobject]@{
+        adapter = [string]$a.InterfaceDescription
+        name = [string]$entry.DisplayName
+        value = [string]$entry.DisplayValue
+      }
+      try {
+        Set-NetAdapterAdvancedProperty -InterfaceDescription $a.InterfaceDescription -DisplayName $p.Name -DisplayValue $p.Value -ErrorAction Stop
+      } catch {
+        Write-Output ('ATLANDI: ' + $a.Name + ' / ' + $p.Name)
+      }
+    }
+  }
+}
+Set-Content -LiteralPath $meta -Value (@{ original = @($original) } | ConvertTo-Json -Compress -Depth 5) -Encoding utf8
+'NIC_LATENCY_OK'
+`;
+
+const NIC_LATENCY_REVERT_SCRIPT = String.raw`
+$ErrorActionPreference = 'Stop'
+$raw = __ORIGINAL__
+if ($raw) {
+  foreach ($i in @($raw | ConvertFrom-Json)) {
+    try {
+      Set-NetAdapterAdvancedProperty -InterfaceDescription $i.adapter -DisplayName $i.name -DisplayValue $i.value -ErrorAction Stop
+    } catch { Write-Output ('GERI_ALINAMADI: ' + $i.name) }
+  }
+}
+'NIC_LATENCY_OK'
+`;
+
+const PREFETCH_SCRIPT = String.raw`
+$ErrorActionPreference = 'Stop'
+$backup = __BACKUP__
+$source = Join-Path $env:WINDIR 'Prefetch'
+if (-not (Test-Path -LiteralPath $source)) { 'PREFETCH_YOK'; exit }
+New-Item -ItemType Directory -Path $backup -Force -ErrorAction Stop | Out-Null
+$files = @(Get-ChildItem -LiteralPath $source -File -Filter '*.pf' -ErrorAction Stop)
+foreach ($f in $files) { Copy-Item -LiteralPath $f.FullName -Destination (Join-Path $backup $f.Name) -Force -ErrorAction Stop }
+$copied = @(Get-ChildItem -LiteralPath $backup -File -Filter '*.pf' -ErrorAction SilentlyContinue).Count
+if ($copied -lt $files.Count) { throw 'Prefetch yedeği doğrulanamadı; temizlik yapılmadı.' }
+foreach ($f in $files) { Remove-Item -LiteralPath $f.FullName -Force -ErrorAction Stop }
+Write-Output ('PREFETCH_TEMIZLENDI: ' + $files.Count)
+'PREFETCH_OK'
+`;
+
+const COUNTERS_SCRIPT = String.raw`
+$ErrorActionPreference = 'Stop'
+$backup = __BACKUP__
+New-Item -ItemType Directory -Path $backup -Force -ErrorAction Stop | Out-Null
+$repoBackup = Join-Path $backup 'wmi_repository'
+& winmgmt.exe /backuprepository $repoBackup 2>&1 | ForEach-Object { Write-Output ([string]$_) }
+if (-not (Test-Path -LiteralPath $repoBackup)) { throw 'Zorunlu WMI deposu yedeği alınamadı; değişiklik yapılmadı.' }
+& lodctr.exe /R 2>&1 | ForEach-Object { Write-Output ([string]$_) }
+& winmgmt.exe /resyncperf 2>&1 | ForEach-Object { Write-Output ([string]$_) }
+$status = & winmgmt.exe /status 2>&1 | Out-String
+Write-Output $status.Trim()
+'COUNTERS_OK'
+`;
+
+const INSTALLER_PERMS_SCRIPT = String.raw`
+$ErrorActionPreference = 'Stop'
+$folder = __BACKUP__
+New-Item -ItemType Directory -Path $folder -Force -ErrorAction Stop | Out-Null
+$dirs = @((Join-Path $env:WINDIR 'Temp'), (Join-Path $env:WINDIR 'Installer'))
+$grant = '*S-1-5-32-544:(OI)(CI)F'
+$n = 0
+foreach ($dir in $dirs) {
+  if (-not (Test-Path -LiteralPath $dir)) { Write-Output ('ATLANDI: ' + $dir); continue }
+  $aclFile = Join-Path $folder ('acl_' + $n + '_' + [guid]::NewGuid().ToString('N') + '.txt')
+  & icacls.exe $dir '/save' $aclFile '/T' '/C' | Out-Null
+  if (-not (Test-Path -LiteralPath $aclFile) -or (Get-Item -LiteralPath $aclFile).Length -lt 20) {
+    throw ('Zorunlu ACL yedeği alınamadı: ' + $dir)
+  }
+  & icacls.exe $dir '/grant' $grant '/T' '/C' | Out-Null
+  Write-Output ('YETKI_VERILDI: ' + $dir + ' (yedek: ' + $aclFile + ')')
+  $n++
+}
+'INSTALLER_PERMS_OK'
+`;
+
+const TIME_SYNC_SCRIPT = String.raw`
+$ErrorActionPreference = 'Stop'
+try { Start-Service -Name 'W32Time' -ErrorAction SilentlyContinue } catch { }
+$before = & w32tm.exe /query /status 2>&1 | Out-String
+Write-Output ('ONCE: ' + ($before -replace '\s+', ' ').Trim())
+$result = & w32tm.exe /resync /force 2>&1 | Out-String
+Write-Output ('SENKRON: ' + ($result -replace '\s+', ' ').Trim())
+$after = & w32tm.exe /query /status 2>&1 | Out-String
+Write-Output ('SONRA: ' + ($after -replace '\s+', ' ').Trim())
+'TIME_SYNC_OK'
+`;
+
+const SAFE_MODE_STATUS_SCRIPT = String.raw`
+$ErrorActionPreference = 'Stop'
+$text = & bcdedit.exe /enum '{current}' 2>&1 | Out-String
+$line = @($text -split '\r?\n' | Where-Object { $_ -match '(?i)safeboot' }) -join ' '
+if ($line -match '(?i)safeboot') {
+  Write-Output ('GUVENLI_MOD: ACIK — ' + $line.Trim())
+} else {
+  Write-Output 'GUVENLI_MOD: KAPALI'
+}
+'SAFE_MODE_OK'
 `;
 
 export function backupFolder(): string {
@@ -376,6 +505,73 @@ async function execute(kind: RepairKind, onLine?: LogFn): Promise<Outcome> {
         result,
         { backupPath: target, rebootRequired: result.code === 0 },
       );
+    }
+    case 'nic-latency': {
+      const folder = prepareBackup();
+      const regBackup = exportRegistry('SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e972-e325-11ce-bfc1-08002be10318}', 'nic-latency', folder);
+      const meta = path.join(folder, `nic_latency_${stamp()}.json`);
+      const power = await runPowerShell(NIC_LATENCY_SCRIPT.replace('__META__', psLiteral(meta)), onLine, SHORT);
+      const ok = power.code === 0 && power.text.includes('NIC_LATENCY_OK');
+      return commandOutcome(
+        ok,
+        ok ? 'NIC gelişmiş sürücü ayarları düşük gecikme için düzenlendi; özgün değerler JSON yedeğinde.' : 'NIC ayarları uygulanamadı; kayıt defteri yedeği korundu.',
+        power,
+        { backupPath: regBackup, rebootRequired: ok },
+      );
+    }
+    case 'nic-latency-revert': {
+      const folder = prepareBackup();
+      const files = fs.readdirSync(folder).filter((name) => name.startsWith('nic_latency_') && name.endsWith('.json')).sort();
+      const latest = files.length ? path.join(folder, files[files.length - 1]) : '';
+      if (!latest) return { ok: false, message: 'Geri yüklenecek NIC ayar yedeği bulunamadı.', lines: [] };
+      const meta = JSON.parse(fs.readFileSync(latest, 'utf8')) as { original?: unknown };
+      const script = NIC_LATENCY_REVERT_SCRIPT.replace('__ORIGINAL__', psLiteral(JSON.stringify(meta.original ?? [])));
+      const power = await runPowerShell(script, onLine, SHORT);
+      const ok = power.code === 0 && power.text.includes('NIC_LATENCY_OK');
+      return commandOutcome(ok, ok ? 'NIC sürücü ayarları yedeğe döndürüldü.' : 'NIC ayarları geri yüklenemedi; yedek korundu.', power, { backupPath: latest, rebootRequired: ok });
+    }
+    case 'prefetch-cleanup': {
+      const folder = prepareBackup();
+      const backup = path.join(folder, `prefetch_${stamp()}`);
+      const power = await runPowerShell(PREFETCH_SCRIPT.replace('__BACKUP__', psLiteral(backup)), onLine, SHORT);
+      const ok = power.code === 0 && /PREFETCH_OK|PREFETCH_YOK/.test(power.text);
+      return commandOutcome(ok, ok ? 'Prefetch dosyaları yedeklenip temizlendi.' : 'Prefetch temizlenemedi; yedek klasörü korundu.', power, { backupPath: backup });
+    }
+    case 'counters-wmi': {
+      const folder = prepareBackup();
+      const regBackup = exportRegistry('SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Perflib', 'counters-wmi', folder);
+      const power = await runPowerShell(COUNTERS_SCRIPT.replace('__BACKUP__', psLiteral(path.join(folder, `counters_${stamp()}`))), onLine, MEDIUM);
+      const ok = power.code === 0 && power.text.includes('COUNTERS_OK');
+      return commandOutcome(ok, ok ? 'Performans sayaçları yeniden kaydedildi ve WMI deposu yedeklendi.' : 'Sayaç/WMI onarımı tamamlanamadı; yedek korundu.', power, { backupPath: regBackup });
+    }
+    case 'installer-perms': {
+      const folder = prepareBackup();
+      const power = await runPowerShell(INSTALLER_PERMS_SCRIPT.replace('__BACKUP__', psLiteral(path.join(folder, `installer_acl_${stamp()}`))), onLine, SHORT);
+      const ok = power.code === 0 && power.text.includes('INSTALLER_PERMS_OK');
+      return commandOutcome(ok, ok ? 'Installer/Temp yetkileri düzeltildi; özgün ACL’ler yedeklendi.' : 'Yetki onarımı tamamlanamadı; alınan ACL yedekleri korundu.', power, { backupPath: folder });
+    }
+    case 'time-sync': {
+      const folder = prepareBackup();
+      const regBackup = exportRegistry('SYSTEM\\CurrentControlSet\\Services\\W32Time\\Parameters', 'time-sync', folder);
+      const power = await runPowerShell(TIME_SYNC_SCRIPT, onLine, SHORT);
+      const ok = power.code === 0 && power.text.includes('TIME_SYNC_OK');
+      return commandOutcome(ok, ok ? 'Saat NTP ile senkronize edildi; W32Time yapılandırması yedeklendi.' : 'Zaman senkronizasyonu başarısız oldu; yapılandırma değiştirilmedi.', power, { backupPath: regBackup });
+    }
+    case 'safe-mode-status': {
+      const power = await runPowerShell(SAFE_MODE_STATUS_SCRIPT, onLine, SHORT);
+      const ok = power.code === 0 && power.text.includes('SAFE_MODE_OK');
+      return commandOutcome(ok, ok ? 'Güvenli Mod durumu okundu.' : 'Güvenli Mod durumu okunamadı.', power);
+    }
+    case 'safe-mode-on': {
+      const target = await backupBcd(onLine);
+      const result = await runCommand('bcdedit.exe', ['/set', '{current}', 'safeboot', 'minimal'], onLine, SHORT);
+      return commandOutcome(result.code === 0, result.code === 0 ? 'Güvenli Mod sonraki açılış için etkinleştirildi; BCD yedeği alındı.' : 'Güvenli Mod etkinleştirilemedi; BCD yedeği korundu.', result, { backupPath: target, rebootRequired: result.code === 0 });
+    }
+    case 'safe-mode-off': {
+      const target = await backupBcd(onLine);
+      const result = await runCommand('bcdedit.exe', ['/deletevalue', '{current}', 'safeboot'], onLine, SHORT);
+      const ok = result.code === 0 || /not found|bulunamad/i.test(result.stderr || '');
+      return commandOutcome(ok, ok ? 'Güvenli Mod ayarı kaldırıldı; BCD yedeği alındı.' : 'Güvenli Mod kaldırılamadı; BCD yedeği korundu.', result, { backupPath: target, rebootRequired: ok });
     }
     default:
       throw new Error('Bilinmeyen onarım işlemi.');
