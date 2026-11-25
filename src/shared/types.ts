@@ -760,6 +760,7 @@ export interface AppApi {
   wingetSourceUpdate: () => Promise<number>;
   wingetList: () => Promise<Package[]>;
   wingetUpdates: () => Promise<Package[]>;
+  updateList: (source: 'all' | PackageSource) => Promise<Package[]>;
   wingetSearch: (query: string) => Promise<Package[]>;
   wingetInstall: (ident: string, silent: boolean) => Promise<number>;
   packageManagerStatus: () => Promise<PackageManagerStatus[]>;
