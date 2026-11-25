@@ -44,7 +44,7 @@ GitHub Releases sayfası da aynı dosyaları kullanır.
 
 `release/` klasöründe:
 
-- `Pars Sistem Yoneticisi Setup 1.0.6.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
+- `Pars Sistem Yoneticisi Setup 1.0.7.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
 
@@ -127,19 +127,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.0.6",
+  "version": "1.0.7",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.6.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.7.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83613422,
-  "url": "Pars Sistem Yoneticisi Setup 1.0.6.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.0.7.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.6.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.7.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
