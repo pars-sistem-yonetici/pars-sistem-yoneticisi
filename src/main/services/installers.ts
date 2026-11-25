@@ -20,14 +20,20 @@ const LABELS: Record<PackageSource, string> = {
   winget: 'winget', choco: 'Chocolatey', npm: 'npm', scoop: 'Scoop',
 };
 
-export function requireInstallItem(item: InstallItem): InstallItem {
-  const source = item.source || 'winget';
+/** Kaynağa göre paket kimliğini doğrular; komut satırına yalnızca geçerli değer gider. */
+export function requireIdent(source: PackageSource, ident: string): string {
   if (!(source in IDENT_PATTERNS)) throw new Error(`Desteklenmeyen paket kaynağı: ${source}`);
-  const ident = String(item.ident || '').trim();
+  const value = String(ident || '').trim();
   const pattern = IDENT_PATTERNS[source];
-  if (ident.length < 1 || ident.length > 128 || !pattern.test(ident)) {
+  if (value.length < 1 || value.length > 128 || !pattern.test(value)) {
     throw new Error(`${LABELS[source]}: geçersiz paket kimliği.`);
   }
+  return value;
+}
+
+export function requireInstallItem(item: InstallItem): InstallItem {
+  const source = item.source || 'winget';
+  const ident = requireIdent(source, String(item.ident || ''));
   const name = String(item.name || '').trim();
   if (name.length < 1 || name.length > 256 || /[\r\n]/.test(name)) {
     throw new Error('Geçersiz uygulama adı.');
@@ -207,18 +213,49 @@ export async function installQueue(
 }
 
 function requireUpgradeItem(pkg: Package): Package {
+  const source: PackageSource = (pkg?.source || 'winget') as PackageSource;
+  if (!(source in IDENT_PATTERNS)) throw new Error(`Desteklenmeyen güncelleme kaynağı: ${source}`);
   const name = String(pkg?.name || '').trim();
-  const ident = String(pkg?.ident || '').trim();
   if (name.length < 1 || name.length > 512 || /^[-/]/.test(name) || /[\r\n]/.test(name)) {
     throw new Error('Geçersiz güncelleme paketi adı.');
   }
-  if (ident.length > 128 || /[\r\n]/.test(ident)) {
-    throw new Error('Geçersiz güncelleme kimliği.');
-  }
-  return { name, ident, version: String(pkg.version || ''), available: String(pkg.available || ''), source: 'winget' };
+  const ident = requireIdent(source, String(pkg?.ident || ''));
+  return {
+    name, ident,
+    version: String(pkg.version || '').slice(0, 80),
+    available: String(pkg.available || '').slice(0, 80),
+    source,
+  };
 }
 
-/** winget güncellemeleri sırayla uygulanır; her adım canlı yüzde/hız bildirir. */
+/** Kaynağa göre güncelleme komutu; kimlik yukarıda doğrulanır. */
+function upgradeOne(pkg: Package, silent: boolean, onLine?: LogFn): Promise<number> {
+  if (pkg.source === 'winget') return winget.upgrade(pkg, silent, onLine);
+  const ident = requireIdent(pkg.source as PackageSource, pkg.ident);
+  let command: string;
+  let args: string[];
+  switch (pkg.source) {
+    case 'choco':
+      command = 'choco';
+      args = ['upgrade', ident, '-y', '--no-progress', '--limit-output', ...(silent ? ['--quiet'] : [])];
+      break;
+    case 'npm':
+      command = 'npm.cmd';
+      args = ['update', '-g', ident, '--no-audit', '--no-fund', ...(silent ? ['--silent'] : [])];
+      break;
+    case 'scoop':
+      command = 'scoop.cmd';
+      args = ['update', ident];
+      break;
+    default:
+      throw new Error(`Desteklenmeyen güncelleme kaynağı: ${pkg.source}`);
+  }
+  return runCommand(command, args, onLine, 20 * 60 * 1000)
+    .then((result) => result.code)
+    .catch((error) => { throw new Error(`${LABELS[pkg.source as PackageSource]} güncellemesi başlatılamadı: ${(error as Error).message}`); });
+}
+
+/** Seçilen güncellemeler kaynaklarına göre sırayla uygulanır; her adım canlı ilerleme bildirir. */
 export async function upgradeQueue(
   items: Package[],
   silent: boolean,
@@ -230,8 +267,8 @@ export async function upgradeQueue(
   return runQueue(safe.map((pkg) => ({
     name: pkg.name,
     ident: pkg.ident,
-    source: 'winget' as const,
-    run: (onLine) => winget.upgrade(pkg, silent, onLine),
+    source: pkg.source as PackageSource,
+    run: (onLine) => upgradeOne(pkg, silent, onLine),
     doneText: 'Güncelleme tamamlandı.',
   })), requestId, onProgress, cancelled);
 }
