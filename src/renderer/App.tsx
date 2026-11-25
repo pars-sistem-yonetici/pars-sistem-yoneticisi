@@ -43,6 +43,7 @@ import type {
   OptimizationProfile,
   Package,
   PackageManagerStatus,
+  PackageSource,
   Prerequisite,
   ProfileApplyResult,
   ProfileId,
@@ -323,7 +324,18 @@ function installedIdSet(list: InstalledApp[]): Set<string> {
 }
 
 function pkgKey(pkg: Package): string {
-  return pkg.ident || pkg.name;
+  return `${pkg.source || 'winget'}:${pkg.ident || pkg.name}`;
+}
+
+/** Kısa kaynak kimliklerini arayüzde okunabilir adla gösterir. */
+function sourceLabel(source?: string): string {
+  switch (source) {
+    case 'choco': return 'Chocolatey';
+    case 'npm': return 'npm';
+    case 'scoop': return 'Scoop';
+    case 'winget': return 'winget';
+    default: return 'winget';
+  }
 }
 
 function cleanExtension(value: string): string {
@@ -351,6 +363,77 @@ function Avatar({ name, src, color = '#2c2c31' }: { name: string; src?: string; 
   return (
     <div className="avatar avatar-letter" style={{ background: color }}>
       {name.trim().charAt(0).toLocaleUpperCase('tr-TR')}
+    </div>
+  );
+}
+
+/** Paket yöneticisi ve kategori filtreleri için yatay dock seçici. */
+function SourceDock({ value, onChange, statuses, t, title, titleIcon }: {
+  value: 'all' | PackageSource;
+  onChange: (source: 'all' | PackageSource) => void;
+  statuses: PackageManagerStatus[];
+  t: (text: string) => string;
+  title: string;
+  titleIcon: string;
+}) {
+  const sources: Array<'all' | PackageSource> = ['all', 'winget', 'choco', 'npm', 'scoop'];
+  const icons: Record<'all' | PackageSource, string> = {
+    all: '☑️', winget: '⊞', choco: '🍫', npm: '📦', scoop: '🥄',
+  };
+  const labels: Record<'all' | PackageSource, string> = {
+    all: t('Tümü'), winget: 'winget', choco: 'Chocolatey', npm: 'npm', scoop: 'Scoop',
+  };
+  return (
+    <div className="dock-bar" role="group" aria-label={title}>
+      <span className="dock-title"><UiIcon icon={titleIcon} />{title}</span>
+      <div className="dock-items">
+        {sources.map((source) => {
+          const status = statuses.find((manager) => manager.source === source);
+          const meta = source === 'all' ? '' : status
+            ? (status.available ? t('kullanılabilir') : t('kurulu değil'))
+            : t('kurulu değil');
+          return (
+            <button
+              key={source} type="button"
+              className={`dock-btn ${value === source ? 'active' : ''}`}
+              aria-pressed={value === source}
+              disabled={source !== 'all' && !status?.available}
+              onClick={() => onChange(source)}
+              title={source === 'all' ? t('Tüm kaynaklar') : `${labels[source]} · ${status?.version || meta}`}
+            >
+              <UiIcon icon={icons[source]} />
+              <span className="dock-btn-label">{labels[source]}</span>
+              {meta && <span className={`dock-meta ${status?.available ? 'ok' : 'warn'}`}>{meta}</span>}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function CategoryDock({ value, onChange, categories, t }: {
+  value: string;
+  onChange: (category: string) => void;
+  categories: string[];
+  t: (text: string) => string;
+}) {
+  return (
+    <div className="dock-bar" role="group" aria-label={t('Kategori')}>
+      <span className="dock-title"><UiIcon icon="▦" />{t('Kategori')}</span>
+      <div className="dock-items">
+        {categories.map((category) => (
+          <button
+            key={category} type="button"
+            className={`dock-btn ${value === category ? 'active' : ''}`}
+            aria-pressed={value === category}
+            onClick={() => onChange(category)}
+          >
+            <UiIcon icon={categoryIcon(category)} />
+            <span className="dock-btn-label">{t(category)}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -498,6 +581,7 @@ export default function App() {
   const [drivesLoading, setDrivesLoading] = useState(true);
 
   const [updates, setUpdates] = useState<Package[]>([]);
+  const [updateSource, setUpdateSource] = useState<'all' | PackageSource>('all');
   const [selectedUpdates, setSelectedUpdates] = useState<Set<string>>(new Set());
   const [apps, setApps] = useState<InstalledApp[]>([]);
   const [appQuery, setAppQuery] = useState('');
@@ -906,11 +990,15 @@ export default function App() {
     void api.openExternal(url).catch((error: Error) => notify('error', error.message));
   }
 
-  const refreshUpdates = useCallback(async () => {
-    const list = await api.wingetUpdates();
+  const refreshUpdates = useCallback(async (source: 'all' | PackageSource = updateSource) => {
+    const [list, statuses] = await Promise.all([
+      api.updateList(source),
+      api.packageManagerStatus().catch(() => managerStatus),
+    ]);
+    setManagerStatus(statuses);
     setUpdates(list);
     setSelectedUpdates(new Set());
-  }, []);
+  }, [updateSource, managerStatus]);
 
   const refreshApps = useCallback(async () => {
     const list = await api.installedApps();
@@ -1848,7 +1936,7 @@ export default function App() {
           </div>
           <div className="sidebar-foot">
             <span className="dot" style={{ background: 'var(--accent)' }} />
-            {t('Sistem Bakım Merkezi · v1.0.5')}
+            {t('Sistem Bakım Merkezi · v1.0.6')}
           </div>
         </div>
       </aside>
@@ -1943,7 +2031,7 @@ export default function App() {
               <div className="toolbar">
                 <div>
                   <h2><UiIcon label="{count} uygulama için güncelleme var" />{updates.length ? tf('{count} uygulama için güncelleme var', { count: updates.length }) : t('Tüm programlar güncel')}</h2>
-                  <p className="muted">{updates.length ? t('Seçili güncellemeleri uygulayın veya tümünü tek seferde güncelleyin.') : t('winget taraması tamamlandı; güncellenmesi gereken uygulama bulunamadı.')}</p>
+                  <p className="muted">{updates.length ? t('Seçili güncellemeleri uygulayın veya tümünü tek seferde güncelleyin.') : t('Seçili kaynak taraması tamamlandı; güncellenmesi gereken uygulama bulunamadı.')}</p>
                 </div>
                 <div className="toolbar-actions">
                   <button className="btn" onClick={() => void run(t('Güncellemeler taranıyor'), refreshUpdates)}><UiIcon label="Yeniden tara" />{t('Yeniden tara')}</button>
@@ -1956,6 +2044,15 @@ export default function App() {
                   </button>
                 </div>
               </div>
+              <SourceDock
+                value={updateSource}
+                onChange={(source) => {
+                  setUpdateSource(source);
+                  void run(t('Güncellemeler taranıyor'), () => refreshUpdates(source)).catch(() => undefined);
+                }}
+                statuses={managerStatus} t={t}
+                title={t('Güncelleme kaynağı')} titleIcon="⟳"
+              />
               {updates.length ? (
                 <div className="table-wrap">
                   <table>
@@ -1973,7 +2070,7 @@ export default function App() {
                           <td className="mono">{pkg.ident}</td>
                           <td><span className="version-current" title={t('Mevcut sürüm')}>{pkg.version}</span></td>
                           <td><span className="badge badge-green">{pkg.available}</span></td>
-                          <td>{pkg.source || 'winget'}</td>
+                          <td>{sourceLabel(pkg.source)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -2542,27 +2639,14 @@ export default function App() {
                   <input className="search" placeholder={t('Yazılım ara…')} value={recQuery} onChange={(event) => setRecQuery(event.target.value)} />
                 </div>
               </div>
-              <div className="chips">
-                {(['all', 'winget', 'choco', 'npm', 'scoop'] as const).map((source) => {
-                  const status = managerStatus.find((manager) => manager.source === source);
-                  const managerLabel = source === 'all' ? t('Tümü') : source === 'winget' ? 'winget' : source === 'choco' ? 'Chocolatey' : source === 'npm' ? 'npm' : 'Scoop';
-                  const statusText = source === 'all'
-                    ? ''
-                    : status ? (status.available ? t('kullanılabilir') : t('kurulu değil')) : t('kurulu değil');
-                  return (
-                    <button key={source} className={`chip ${recSource === source ? 'active' : ''}`} onClick={() => setRecSource(source)}>
-                      <UiIcon label="Tümü" />
-                      {managerLabel}
-                      {statusText && <span className={`manager-dot ${status?.available ? 'ok' : 'warn'}`} title={status?.version || ''}>{statusText}</span>}
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="chips">
-                {['Tümü', ...CATEGORIES].map((category) => (
-                  <button key={category} className={`chip ${recCategory === category ? 'active' : ''}`} onClick={() => setRecCategory(category)}><UiIcon icon={categoryIcon(category)} />{t(category)}</button>
-                ))}
-              </div>
+              <SourceDock
+                value={recSource} onChange={setRecSource} statuses={managerStatus} t={t}
+                title={t('Paket yöneticisi')} titleIcon="⚙"
+              />
+              <CategoryDock
+                value={recCategory} onChange={setRecCategory}
+                categories={['Tümü', ...CATEGORIES]} t={t}
+              />
               <div className="library-layout">
                 <div className="software-grid library-grid">
                   {filteredRecommended.map((item) => {
@@ -2582,7 +2666,7 @@ export default function App() {
                           <Avatar name={item.name} src={favicon(item)} />
                           <div className="software-title">
                             <b>{item.name}</b>
-                            <small>{t(item.category)} · {item.source ?? 'winget'}</small>
+                            <small>{t(item.category)} · {sourceLabel(item.source)}</small>
                           </div>
                           <input type="checkbox" checked={selectedRec.has(key)} onChange={() => toggle(setSelectedRec, key)} onClick={(event) => event.stopPropagation()} />
                         </div>
