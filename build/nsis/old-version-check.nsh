@@ -5,6 +5,19 @@
 
 Var /GLOBAL parsOldVersion
 Var /GLOBAL parsOldLocation
+Var /GLOBAL parsCmdLine
+Var /GLOBAL parsCmdOption
+
+# 1.0.4-1.0.6 istemcileri kurucuyu /SILENT /CLOSEAPPLICATIONS ile başlatır.
+# Bu anahtarlar NSIS'te tanınmaz ve "uygulama çalışıyor" penceresinde beklenir.
+# preInit, bu kontrolün öncesinde çalışır; eski istemciler de sessiz kurulabilir.
+!macro preInit
+  ${GetParameters} $parsCmdLine
+  ${GetOptions} $parsCmdLine "/SILENT" $parsCmdOption
+  ${IfNot} ${Errors}
+    SetSilent silent
+  ${EndIf}
+!macroend
 
 !macro customInit
   StrCpy $parsOldVersion ""
