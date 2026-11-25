@@ -1,6 +1,6 @@
 {
   "name": "pars-sistem-yoneticisi-ts",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "private": true,
   "description": "Windows sistem bakım ve winget tabanlı yazılım yöneticisi (TypeScript / Electron)",
   "license": "MIT",
