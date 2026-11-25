@@ -928,6 +928,16 @@ tbody tr:last-child td { border-bottom: none; }
 .mini-row.link-row { grid-template-columns: 1fr auto; width: 100%; background: transparent; border: 0; color: inherit; cursor: pointer; text-align: left; padding: 3px 0; }
 .mini-row.link-row:hover { color: var(--accent); }
 .log-block { max-height: 300px; overflow: auto; padding: 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--soft); color: var(--muted); font-size: 11px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+/* Sistem ayarları filtreleri ve DNS karşılaştırma tablosu */
+.toolbar-actions input:not([type='checkbox']),
+.toolbar-actions select {
+  background: var(--input-bg); border: 1px solid var(--line); border-radius: 9px;
+  padding: 9px 12px; min-width: 190px; outline: none;
+}
+.toolbar-actions input:focus,
+.toolbar-actions select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .2); }
+.dns-table tbody td:last-child { text-align: right; }
+.dns-table .mono { white-space: nowrap; }
 @media (max-width: 900px) {
   .two-column { grid-template-columns: 1fr; }
   .feature-grid { grid-template-columns: 1fr; }
