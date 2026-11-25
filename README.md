@@ -11,6 +11,15 @@ durum ikonları bulunur. Aynı anda yalnızca bir uygulama örneği çalışır;
 geri yükleyip öne getirir. Sistem tepsisindeki simge ve “Pencereyi göster” kısayolu da küçültülmüş veya
 gizlenmiş pencereyi açar.
 
+## 1.0.7 yenilikleri
+
+- **Doğru sessiz güncelleme:** Uygulama güncelleyicisi NSIS kurucusunu artık `/S` ve `--updated` anahtarlarıyla başlatıyor. Eski `/SILENT` ve `/CLOSEAPPLICATIONS` anahtarları bu kurucu tarafından tanınmadığı için güncelleme “uygulama çalışıyor” penceresinde takılıyordu; `--updated` ile kurulum güncelleme olarak algılanıyor, kısayollar korunuyor.
+- **Eski sürüm uyumu:** Kurucuya `preInit` aşamasında `/SILENT` tanıma eklendi. 1.0.4, 1.0.5 ve 1.0.6 kullanıcıları bu sürümü indirdiğinde eski argümanlarla da olsa sessiz kurulum yapılabiliyor.
+- **Anlaşılır hatalar:** Kurulum başlatılamazsa artık hata mesajı gösteriliyor; sessizce “başarılı” denip kapanmıyor. İndirmeden önce disk alanı kontrolü yapılıyor; disk doluysa veya bağlantı koparsa Türkçe uyarı veriliyor.
+- **Güvenlik modeli korundu:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama ve `deleteAppDataOnUninstall: false` değişmedi.
+
+Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
+
 ## 1.0.6 yenilikleri
 
 - **Dock filtreleri:** Uygulama Kütüphanesi’ndeki kategori ve paket yöneticisi satırları, sol gezinmeyle aynı dock görünümünde iki yatay seçiciye dönüştürüldü. Aktif seçim, ikonlar, kullanılabilirlik durumu ve klavye/erişilebilirlik özellikleri korundu.
@@ -31,8 +40,8 @@ Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 
 ## Ekran görüntüleri (1.0.6)
 
-Aşağıdaki görüntüler güncel sürüm çalışırken uygulamanın kendisinden alınmıştır; tanıtım sitesi ve
-GitHub Releases sayfası da aynı dosyaları kullanır.
+Aşağıdaki görüntüler 1.0.6 arayüzünden alınmıştır; 1.0.7 yalnızca güncelleyici düzeltmesi içerdiğinden
+arayüz görünümü değişmemiştir. Tanıtım sitesi ve GitHub Releases sayfası da aynı dosyaları kullanır.
 
 | Anasayfa | Kurulu Uygulamalar |
 | --- | --- |
@@ -49,7 +58,7 @@ GitHub Releases sayfası da aynı dosyaları kullanır.
 - `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
 
 GitHub Releases’taki kurulum dosyasının adı noktalıdır:
-`Pars.Sistem.Yoneticisi.Setup.1.0.6.exe`. Yerel kopyalar
+`Pars.Sistem.Yoneticisi.Setup.1.0.7.exe`. Yerel kopyalar
 `YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`
 klasörlerinde tutulur; depoya eklenmez.
 
@@ -117,9 +126,12 @@ Node.js 20+ gerekir. Windows 10 (1809+) / Windows 11 ve güncel App Installer (w
 
 Uygulama, winget ile diğer yazılımları güncellemekten ayrı olarak **kendi sürümünü** de kontrol edebilir.
 Açılışta kontrol varsayılan olarak açıktır; yeni sürüm bulunursa onay penceresi gösterilir. İndirme
-öncesi bildirimdeki SHA-512 özeti doğrulanır, özet uyuşmazsa dosya silinir. Kurulumdan önce ikinci
-bir onay alınır ve NSIS kurucusu sessiz modda başlatılır. Portable sürümde exe değiştirilemediği için
-indirilenler klasörü açılır ve dosyayı elle kopyalama yönergesi gösterilir.
+öncesi bildirimdeki SHA-512 özeti doğrulanır, özet uyuşmazsa dosya silinir. İndirmeden önce hedef
+sürücüde yeterli boş alan denetlenir; disk doluysa veya bağlantı koparsa anlaşılır hata mesajı gösterilir.
+Kurulumdan önce ikinci bir onay alınır ve NSIS kurucusu `/S --updated` anahtarlarıyla sessiz modda
+başlatılır. Kurulum başlatılamazsa uygulama “başarılı” demeden hatayı bildirir. 1.0.4–1.0.6 sürümlerinden
+gelen istemciler de yeni kurucuyu `/SILENT` ile çağırsa bile `preInit` uyumluluğu sayesinde sessizce kurulur.
+Portable sürümde exe değiştirilemediği için indirilenler klasörü açılır ve dosyayı elle kopyalama yönergesi gösterilir.
 
 Varsayılan kaynak, exe yanındaki `updates\latest.json` dosyasıdır (pakete `build/updates/` altından
 eklenir). Ayarlar → **Güncelleme kaynağı** alanına bir http(s) adresi veya yerel klasör yazabilirsiniz.
@@ -131,7 +143,7 @@ Bildirim biçimi:
   "notes": "Yeni özellikler ve düzeltmeler",
   "fileName": "Pars Sistem Yoneticisi Setup 1.0.7.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
-  "size": 83613422,
+  "size": 83631005,
   "url": "Pars Sistem Yoneticisi Setup 1.0.7.exe"
 }
 ```
@@ -166,10 +178,10 @@ yükleyeceğiniz klasörü doğrudan hedefleyebilirsiniz. `--embed`
 yalnızca bir sonraki paketlemede gömülü manifest’i günceller; mevcut kurulu sürümlere ulaşmak için
 güncelleme kaynağının sabit bir URL veya klasör olarak ayarlanması gerekir.
 
-Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.0.7):
+Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.0.8):
 
 ```powershell
-npm run bump -- 1.0.7
+npm run bump -- 1.0.8
 ```
 
 Bu komut `package.json`, `package-lock.json` (ilk iki alan), `i18n.ts` başlığı, `README.md`,
@@ -179,7 +191,7 @@ GitHub → Actions → **Sürüm yayınla** → **Run workflow** ile sürümü y
 `%APPDATA%\pars-sistem-yoneticisi-ts\updates` altında tutulur.
 
 > `npm run publish` yalnızca el ile yayın yapıldığında gerekir; GitHub Actions akışı manifest’i
-> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.0.7 --check` değişiklikleri
+> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.0.8 --check` değişiklikleri
 > yazmadan görebilirsiniz.
 
 ## Güvenlik
@@ -207,7 +219,10 @@ GitHub → Actions → **Sürüm yayınla** → **Run workflow** ile sürümü y
 - Sağ tık menüsü değişikliği `HKCU` altında tek bir CLSID kaydını ekler/siler ve Gezgin’i yeniden
   başlatır. İşlemden önce onay istenir; açık dosya pencereleri kapanabilir.
 - Uygulama güncelleyici yalnızca bildirimde geçerli SHA-512 özeti olan dosyaları kabul eder; özet veya
-  boyut uyuşmazsa indirme iptal edilir ve dosya silinir. Kurulum yalnızca kullanıcı onayından sonra başlar.
+  boyut uyuşmazsa indirme iptal edilir ve dosya silinir. İndirme öncesi disk alanı denetlenir; yetersiz
+  alan, bağlantı kesilmesi veya kurulum başlatılamaması durumunda açık hata mesajı gösterilir. Kurulum
+  yalnızca kullanıcı onayından sonra başlar; NSIS `/S --updated` ile sessiz kurulur ve eski istemcilerin
+  `/SILENT` çağrıları kurucu tarafından uyumluluk için tanınır.
 - Sürücü kurulumu yönetici izni gerektirir; yedekler `%LOCALAPPDATA%\ParsSistemYoneticisi\driver_backups` altına yazılır.
   Kurulumdan önce yedek alma varsayılan olarak açıktır.
 - Renderer’dan gelen IPC argümanları `src/main/ipc-guard.ts` içindeki şemalarla doğrulanır; eksik, yanlış
