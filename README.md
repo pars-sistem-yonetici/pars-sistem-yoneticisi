@@ -46,7 +46,8 @@ klasörlerinde tutulur; depoya eklenmez.
 Yerel görüntülemek için `website/index.html` dosyasını tarayıcıda açın. Yayınlanan site `docs/`
 klasöründen GitHub Pages üzerinde durur. Sürüm, URL, SHA özetleri ve Blogger teması
 `.github/workflows/release.yml` tarafından otomatik üretilir; elle kopyalama gerekmez.
-Ayrıntılar `GitHubYukleme\05_ACTIONS_REHBER.md` dosyasındadır.
+Ayrıntılar `GitHubYukleme\05_ACTIONS_REHBER.md` dosyasındadır. Kullanım kılavuzu ve sık sorulan
+sorular [GitHub Wiki](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/wiki) sayfasındadır.
 
 ## Özellikler
 
@@ -225,3 +226,22 @@ release/         Üretilen .exe dosyaları (depoya eklenmez)
 Site `docs/` altında bulunur ve GitHub Pages üzerinden yayınlanır. Kurulum dosyaları depoya
 eklenmez; **Releases** bölümünde tutulur. Sürüm akışı `GitHubYukleme\05_ACTIONS_REHBER.md`,
 Blogger teması `GitHubYukleme\08_BLOGGER_TEMA\OKUNMAMI_REHBER.md` dosyalarında anlatılır.
+
+## Destek
+
+Uygulamayı faydalı bulduysanız geliştirmenin sürmesine yardımcı olabilirsiniz:
+[Buy me a coffee](https://buymeacoffee.com/parssistemyonetici)
+
+İndirme, güncelleme ve tüm temel özellikler her zaman ücretsizdir. Bu bağlantı yalnızca
+gönüllü destek içindir; uygulama içindeki **Ayarlar → Destek ve Lisans** kartından da açılır.
+
+## Lisans & Telif Hakkı
+
+Pars Sistem Yöneticisi **MIT Lisansı** ile dağıtılır.
+
+- Telif hakkı: **Copyright (c) 2026 Pars Sistem Yöneticisi**
+- Kullanım, kopyalama, değiştirme, birleştirme, yayımlama ve dağıtım koşulları depodaki
+  [`LICENSE`](LICENSE) dosyasında yer alır.
+- Uygulama içinde bu bilgi **Ayarlar → Lisans & Telif Hakkı** kartında gösterilir.
+- Üçüncü taraf bileşenler (Electron, React, winget ve diğer paket yöneticileri) kendi
+  lisanslarına tabidir; bu proje onların telif haklarını kapsamaz.
