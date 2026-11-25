@@ -1,32 +1,20 @@
-# Pars Sistem Yöneticisi 1.0.4
+# Pars Sistem Yöneticisi 1.0.5
 
-1.0.3’e ek olarak altı yeni özellik, simgeli/daraltılabilir sol gezinme, destek ve lisans bağlantıları, disk adları, güncelleme ikonları ve eski sürümü algılayan kurulum eklendi.
+1.0.4’e ek olarak 63 tersine çevrilebilir Windows & ağ ayarı, 4 optimizasyon profili, 9 gelişmiş onarım aracı ve 5 sağlayıcılı DNS karşılaştırma/switcher eklendi.
 
 ## Bu sürümde
 
-- **Yazılım Yedeği:** `winget export` ile kurulu paket listesini JSON olarak yedekler; yeni kurulumda yedeği inceleyip yalnızca seçtiğiniz paketleri `winget import` ile geri yükler. Yedekler uygulama veri klasöründe saklanır ve klasör dışından okunamaz.
-- **Dosya Tarayıcı:** SHA-256 ile doğrulanmış yinelenen dosya grupları, 20 MB üzeri dosyalar, boş dosya/klasörler ve geri kazanılabilir alan. Referans klasörleri koruma, sembolik bağlantı atlama, varsayılan Geri Dönüşüm Kutusu silme ve açık onaylı kalıcı silme.
-- **Disk Analizi:** Salt okunur tek geçişli tarama; klasör ağacı, treemap alan haritası, en büyük dosyalar ve uzantı istatistikleri.
-- **Sistem Onarımı:** `sfc /scannow`, `DISM /RestoreHealth` ve geri yükleme noktasına ek olarak 5 salt okunur tanılama (`/CheckHealth`, `/ScanHealth`, `/AnalyzeComponentStore`, `sfc /verifyonly`, `chkdsk /scan`), Windows Update bileşen sıfırlama (klasörler ".old" olarak korunur), ağ yığını sıfırlama, bileşen deposu/Store/Search/yazıcı kuyruğu bakımı, tek tıkla sıralı onarım ve WinRE komut rehberi. Değişiklik yapan işlemlerde onay ve zorunlu yedek; yedek başarısızsa değişiklik yapılmaz. BCD yedeği ve Gelişmiş başlatmaya yeniden başlatma ayrıca sunulur.
-- **Gelişmiş Başlangıç:** Zamanlı görevler, servisler, Winlogon, AppInit, IFEO ve WMI aboneliklerini listeleyen Autoruns benzeri görünüm; filtreleme ve yedek zorunlu aç/kapat. Winlogon ve WMI girdileri salt okunur.
-- **Gizlilik Ayarları:** Telemetri, reklam kimliği, arama önerileri, Widgets/haber akışı, dosya uzantıları ve gizli dosyalar için önizlemeli, geri alınabilir ayarlar. Her değişiklikte `.reg` yedeği ve özgün değer kaydı zorunludur.
-- **Genişletilmiş Kayıt Defteri Taraması:** Uninstall detaylarına ek olarak App Paths, COM/Shell bileşenleri, HKCU CLSID geçersiz kılma şüphesi (imza kontrolü), dosya ilişkilendirmeleri, hizmet/sürücü yolları, SharedDLLs, yazı tipleri ve ODBC taranır. Tüm kapsamlar varsayılan olarak salt okunurdur; `UserChoice`, COM, servis ve referans kayıtlarına dokunulmaz. Kategori/risk filtreleri ve JSON/CSV rapor dışa aktarma eklendi. Yalnızca kanıtlanmış bozuk Uninstall/App Paths girdileri zorunlu `.reg` yedek + onayla silinebilir.
-- **Genişletilmiş Disk Temizleme:** Delivery Optimization önbelleği, Edge/Chrome/Firefox yalnızca cache alt klasörleri ve npm/NuGet/pip önbellekleri eklendi. Özyinelemeli koruma/sembolik bağlantı denetimi güçlendirildi; her temizleme kalıcı JSONL kaydına yazılıyor.
-- **Paket Yöneticisi Kurulumu:** Ayarlar artık winget / Chocolatey / npm / Scoop durumunu gösterir. Manuel kurulum açık onayla yapılır; varsayılan kapalı olan **Kurumsal sessiz kurulum** açıldığında eksik paket yöneticileri açılışta arka planda, penceresiz ve loglu kurulur. npm için Node.js LTS MSI'si SHA-256 + Authenticode ile doğrulanır.
-- 38 yeni doğrulama geçti: dosya tarama/silme, referans koruması, disk analizi, winget yedek/okuma, gizlilik listesi, başlangıç taraması ve IPC şemaları. Kayıt defteri tarama betiği 2.362 kayıt üzerinde doğrulandı; yanlış pozitif bozuk bulgusu yok.
-- Yıkıcı işlemlerde onay + zorunlu yedek; yedek başarısızsa değişiklik yapılmaz.
-- Hariç tutma kuralları, korumalı yollar ve salt-okunur tarama varsayılanı tüm yeni servislerde geçerlidir.
-- **Uygulama Kütüphanesi:** “Önerilen yazılımlar” sekmesi yeniden düzenlendi. Kategoriler Tümü, Tarayıcı, Medya & Tasarım, Oyun, İletişim, Güvenlik, Sistem & Çalışma Zamanı, Verimlilik, Geliştirme ve Paket Yöneticileri sırasında; kart tıklaması uygulamayı seçer, seçilenler sağ panelde listelenir ve **Yükle** düğmesi kurulumu başlatır. winget, Chocolatey, npm ve Scoop uygunluk durumu artık ilgili düğmenin içinde gösterilir.
-- **Tek örnek ve sistem tepsisi:** Aynı anda yalnızca bir uygulama penceresi açılır; ikinci başlatma mevcut pencereyi küçültülmüş/gizli olsa bile geri yükleyip öne getirir. Tepsi simgesi ve “Pencereyi göster” kısayolu artık küçültülmüş pencereyi de açar; simge paket dışından yüklenerek asar kaynaklı görünmezliğe karşı sağlamlaştırıldı.
-- **Sol gezinme paneli:** Grup başlıkları artık simgeli; sekmeler dock görünümlü küçük bir panelde toplanır. Brand alanındaki düğme paneli tamamen daraltıp genişletir; daraltılmış halde simgeler ve grup ikonları görünür kalır. Kişiselleştirme grubu ayrı bir grup olarak listelenir.
-- **Destek ve lisans:** Ayarlar’a Buy me a coffee, GitHub deposu, web sitesi ve MIT lisansı/telif hakkı kartı eklendi. Sol alt kısımda aynı bağlantılara hızlı erişim düğmeleri var; bağlantılar yalnızca onaylı HTTPS adreslerinde tarayıcıda açılır.
-- **Anasayfa ve güncellemeler:** Disk kartlarında sürücü harfiyle birlikte birim adı gösterilir; bilgiler okunurken “Disk bilgileri alınıyor…” animasyonu görünür. Güncelleme tablosunda uygulama ikonları ve mevcut sürüm kırmızı baloncukta gösterilir. Uygulama Kütüphanesi kartları kategori sırasına göre sıralanır.
-- **Kurulum:** NSIS kurulumu eski sürümü kayıt defterinden algılar, yükseltmede eski sürümü kaldırıp yeniden kurar; kurulum günlüğünde durum açıkça belirtilir. Uygulama verileri (`deleteAppDataOnUninstall: false`) korunur.
-- İmzasız dağıtım + SHA-256 bütünlük doğrulaması sürüyor.
+- **Sistem Ayarları (63):** Beş kategoride toplanan ayarlar — Ağ & Gecikme 11, Sistem & Performans 14, Arayüz & Deneyim 17, Gizlilik & Telemetri 11, Servis Yönetimi 10. TCP ACK/Nagle/ECN, NIC güç yönetimi, DNS önbelleği, SMBv1/NetBIOS, güç planı, NTFS davranışı, HAGS, hızlı başlatma, görev çubuğu/Gezgin/tema, telemetri, reklam kimliği, konum, Recall/Copilot ve gereksiz hizmetler tek listede yönetilir.
+- **Güvenli yazma:** Hiçbir ayar otomatik uygulanmaz. Her değişiklikten önce ilgili kayıt anahtarının `.reg` yedeği alınır; özgün değer ayrıca JSON dosyasına kaydedilir. Yedek alınamazsa değişiklik yapılmaz. `UserChoice`, COM/CLSID, sertifika depoları, dosya ilişkilendirme sahipliği ve korumalı sistem girdileri katalogda yer almaz. Ayarlar tek tek geri alınabilir.
+- **Optimizasyon Profilleri (4):** Rekabetçi Oyuncu (14 ayar), Düşük Gecikme Ağ (11), Dengeli Optimizasyon (10) ve Güvenli Gizlilik (14). Profiller yalnızca açık onayla uygulanır; her ayar kendi yedeğini üretir, başarısız ayarlar raporlanır ve diğerleri çalışmaya devam eder. Geri alma aynı ayarları ters sırada özgün değerlerine döndürür.
+- **DNS Karşılaştırma ve Switcher:** Cloudflare `1.1.1.1`, Google `8.8.8.8`, Quad9 `9.9.9.9`, AdGuard `94.140.14.14` ve OpenDNS `208.67.222.222` için ikişer `nslookup` sorgusu yapılır; en düşük gecikme “en hızlı” olarak işaretlenir. Seçilen sağlayıcı etkin tüm bağdaştırıcılara uygulanır; değişiklik öncesi arabirim kayıt defteri zorunlu yedeklenir. “DHCP’ye sıfırla” özel DNS sunucularını kaldırır ve adresleri yeniden DHCP’den alır. Ölçüm salt okunurdur.
+- **Gelişmiş Onarımlar (9):** NIC sürücüsü düşük gecikme varsayılanları ve geri yükleme, Prefetch temizliği (dosyalar önce yedeklenir), performans sayaçları/WMI deposu yeniden oluşturma (`lodctr /R`, `winmgmt /resyncperf`), Installer 2502/2503 yetki onarımı (`icacls /save` + yönetici tam yetkisi), `w32tm` NTP senkronizasyonu, Güvenli Mod durumu sorgulama ve Güvenli Mod aç/kapat (`bcdedit` + zorunlu BCD yedeği).
+- **Arayüz:** “Optimizasyon & Ağ” grubu altında Sistem Ayarları, Optimizasyon Profilleri ve DNS Karşılaştırma sekmeleri; kategori filtresi, ayar arama, yedek klasörü gösterimi, profil sonuç kartı ve DNS gecikme tablosu eklendi. İngilizce çeviriler tamamlandı.
+- **Güvenlik modeli korundu:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama varsayılanı ve korumalı kayıt/klasör kuralları tüm yeni işlemlerde geçerlidir. Kurulum manuel onaylıdır; varsayılan kapalı “kurumsal sessiz” mod isteğe bağlıdır. Eski sürüm algılanıp kaldırılır, uygulama verileri silinmez (`deleteAppDataOnUninstall: false`).
 
-### 1.0.3’ten gelenler
+### 1.0.4’ten gelenler
 
-Toplu güvenlik taraması (8,6 kat hızlanma), kurulum/güncelleme kuyruğu, ana sayfa iyileştirmeleri ve WinRAR/7-Zip gibi üçüncü taraf sağ tık menüsü eklentilerinin yönetimi.
+Yazılım yedeği, dosya tarayıcı, disk analizi, 17 onarım aracı, gelişmiş başlangıç, 7 gizlilik ayarı, genişletilmiş kayıt defteri taraması, paket yöneticisi kurulumu, uygulama kütüphanesi, sistem tepsisi ve destek/lisans bağlantıları.
 
 ## Ekran görüntüleri
 
@@ -39,7 +27,7 @@ Görüntüler 1.0.4 arayüzünden alınmıştır; tanıtım sitesi, README ve bu
 
 ## İndirme
 
-- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.0.4.exe` (NSIS, başlat menüsü + masaüstü kısayolu)
+- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.0.5.exe` (NSIS, başlat menüsü + masaüstü kısayolu)
 - **Portable:** `ParsSistemYoneticisi-Portable.exe`
 
 Windows 10 (1809+) / Windows 11 x64 ve güncel App Installer (winget) gereklidir.
