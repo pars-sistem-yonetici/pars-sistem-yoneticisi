@@ -11,6 +11,14 @@ durum ikonları bulunur. Aynı anda yalnızca bir uygulama örneği çalışır;
 geri yükleyip öne getirir. Sistem tepsisindeki simge ve “Pencereyi göster” kısayolu da küçültülmüş veya
 gizlenmiş pencereyi açar.
 
+## 1.0.6 yenilikleri
+
+- **Dock filtreleri:** Uygulama Kütüphanesi’ndeki kategori ve paket yöneticisi satırları, sol gezinmeyle aynı dock görünümünde iki yatay seçiciye dönüştürüldü. Aktif seçim, ikonlar, kullanılabilirlik durumu ve klavye/erişilebilirlik özellikleri korundu.
+- **Çok kaynaklı güncellemeler:** Güncellemeler sekmesinde `Tümü / winget / Chocolatey / npm / Scoop` seçicisi eklendi. Taramalar salt okunurdur; başarısız kaynak diğerlerini etkilemez. Sahte winget uyarı satırı filtrelendi.
+- **Kaynak güvenliği:** Her kaynak için ayrı kimlik doğrulama kalıbı uygulanır; güncellemeler kendi paket yöneticisiyle uygulanır. Kurulum yine manuel onaylıdır, varsayılan salt-okunur davranış değişmedi.
+
+Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
+
 ## 1.0.5 yenilikleri
 
 - **Sistem Ayarları:** 63 tersine çevrilebilir Windows & ağ ayarı; Ağ & Gecikme 11, Sistem & Performans 14, Arayüz & Deneyim 17, Gizlilik & Telemetri 11, Servis Yönetimi 10. Hiçbiri otomatik uygulanmaz; her değişiklikte zorunlu `.reg` + JSON yedeği alınır.
@@ -35,12 +43,12 @@ GitHub Releases sayfası da aynı dosyaları kullanır.
 
 `release/` klasöründe:
 
-- `Pars Sistem Yoneticisi Setup 1.0.5.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
+- `Pars Sistem Yoneticisi Setup 1.0.6.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
 
 GitHub Releases’taki kurulum dosyasının adı noktalıdır:
-`Pars.Sistem.Yoneticisi.Setup.1.0.5.exe`. Yerel kopyalar
+`Pars.Sistem.Yoneticisi.Setup.1.0.6.exe`. Yerel kopyalar
 `YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`
 klasörlerinde tutulur; depoya eklenmez.
 
@@ -64,7 +72,7 @@ sorular [GitHub Wiki](https://github.com/pars-sistem-yonetici/pars-sistem-yoneti
 | Sekme | Yapılan iş |
 | --- | --- |
 | **Anasayfa** | CPU, RAM ve seçili sürücüde boş alan kartları (15 sn’de bir yenilenir) ve sistem özeti. Disk kartlarında birim adı (ör. `Windows`, `Yerel Disk`) gösterilir; bilgiler okunurken animasyonlu “Disk bilgileri alınıyor…” durumu görünür. |
-| **Güncellemeler** | winget ile güncellemesi olan paketleri listeler; seçilenleri veya tümünü günceller. Tabloda kurulu uygulama/katalog ikonu ve mevcut sürüm kırmızı baloncukta gösterilir. |
+| **Güncellemeler** | `Tümü / winget / Chocolatey / npm / Scoop` kaynak seçicisiyle güncelleme tarar; seçilenleri veya tümünü kendi paket yöneticisiyle günceller. Taramalar salt okunurdur, başarısız kaynaklar diğerlerini engellemez. Tabloda kurulu uygulama/katalog ikonu, okunabilir kaynak adı ve mevcut sürüm gösterilir. winget’in saptanamayan sürüm uyarısı sahte satır olarak eklenmez. |
 | **Kurulu Uygulamalar** | Kayıt defterinden gerçek ikonlarla uygulamaları listeler; arama, seçim, winget ile kaldırma ve kaldırma sonrası kalıntı taraması. Kaldırma bitince liste birkaç kez yenilenip kaldırılan uygulama kaybolana kadar bekler; güncelleme listesi de otomatik tazelenir. Toplu kaldırmada tarama yalnızca tüm kaldırma işlemleri bittikten sonra başlar; başarısız kaldırmalar taranmaz. Kalıntılar Geri Dönüşüm Kutusu’na taşınabilir veya açık onayla kalıcı silinebilir. |
 | **Yazılım Yedeği** | `winget export` ile kurulu paket listesini JSON olarak yedekler; yeni kurulumdan sonra yedek dosyasını inceleyip yalnızca seçtiğiniz paketleri `winget import` ile geri yükler. Yedekler uygulama veri klasöründe tutulur, dosya yolu dışarıdan okunamaz. Program verileri yedeklenmez. |
 | **Başlangıç** | Windows ile açılan uygulamaları (HKCU/HKLM `Run`, `RunOnce` ve Başlangıç klasörleri) listeler; tek tıkla kapatıp açar. Devre dışı bırakılan kayıt girdileri yedeklenir, kısayollar `.disabled` olarak yeniden adlandırılır; geri açma anında geçerlidir. |
@@ -75,7 +83,7 @@ sorular [GitHub Wiki](https://github.com/pars-sistem-yonetici/pars-sistem-yoneti
 | **Disk Analizi** | Bir sürücü/klasörün toplam boyutunu, klasör ağacını, uzantı dağılımını ve en büyük dosyaları tek geçişte çıkarır; treemap üzerinden klasörleri açar. Tamamen salt okunurdur, hiçbir şey silmez. |
 | **Sistem Onarımı** | `sfc /scannow`, `DISM /RestoreHealth` ve geri yükleme noktasının yanında salt okunur tanılama (`/CheckHealth`, `/ScanHealth`, `/AnalyzeComponentStore`, `sfc /verifyonly`, `chkdsk /scan`), Windows Update ve ağ yığını sıfırlama, bileşen deposu/Store/Search/yazıcı kuyruğu bakımı, tek tıkla sıralı onarım ve WinRE komut rehberi sunar. Değişiklik yapan işlemlerde onay ve zorunlu yedek vardır; yedek başarısızsa değişiklik yapılmaz. WinRE öncesi BCD yedeği alınabilir. |
 | **Sürücüler** | Win32_PnPSignedDriver ile kurulu sürücüleri listeler; Windows Update Agent COM API ile sürücü güncellemelerini tarar, indirir ve kurar. Kurulum öncesi `dism /export-driver` ile yedek alma seçeneği vardır. Yönetici izni gerektiren işlemler açıkça bildirilir. |
-| **Uygulama Kütüphanesi** | 9 kategoride winget, Chocolatey, npm ve Scoop uygulamaları. Kartlar kategori sırasına göre sıralanır; kart tıklamasıyla seçim, sağ panelde seçili liste ve **Yükle** düğmesi; paket yöneticisi uygunluğu düğmelerin içinde görünür. |
+| **Uygulama Kütüphanesi** | 9 kategoride winget, Chocolatey, npm ve Scoop uygulamaları. Kategori ve paket yöneticisi filtreleri dock görünümünde yatay seçicilerdir; kurulu olmayan yöneticiler devre dışıdır. Kartlar kategori sırasına göre sıralanır; kart tıklamasıyla seçim, sağ panelde seçili liste ve **Yükle** düğmesi. |
 | **Kayıt Defteri** | Dokuz kapsamda **salt okunur** tarama: `Uninstall` (yinelenen/boş ad, eksik simge-kurulum klasörü, Temp altındaki kaldırıcı), `App Paths`, COM/`InprocServer32`/`LocalServer32`, HKCU CLSID geçersiz kılma şüphesi (imza kontrolü), dosya ilişkilendirmeleri, hizmet/sürücü `ImagePath`, `SharedDLLs`, yazı tipleri ve ODBC. Kapsamlar ayrı seçilir; tabloda kategori, risk ve öneri sütunları ile `Tümü / Bozuk / Güvenlik uyarısı / Sistem kritik` filtreleri vardır. `UserChoice`, COM, servis, SharedDLLs, font ve ODBC kayıtları **asla otomatik değiştirilmez**. Yalnızca kanıtlanmış bozuk `Uninstall`/`App Paths` girdileri `fixable` işaretlenir; bunlar için zorunlu `.reg` yedek + açık onay gerekir, yedek alınamazsa silinmez. Sistem/korumalı girdilerde onay penceresinde ek uyarı gösterilir. Tarama sonucu JSON veya CSV olarak dışa aktarılabilir; rapor yedeğin yerine geçmez. |
 | **Zamanlama** | Haftalık tam temizlik, günlük hafif temizlik, aylık derin temizlik ve özel aralık olmak üzere dört devre dışı hazır plan. Saat/gün/aralık düzenlenebilir, planlar açıkça "Şimdi çalıştır" ile test edilebilir. Çalışma uygulama açıkken 60 saniyelik zamanlayıcı ile yapılır; Geri Dönüşüm Kutusu hiçbir plana dahil edilmez. |
 | **Uygulama Ara** | winget kataloğunda arama, indirme (`winget download`) ve kurulum. |
@@ -118,19 +126,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.0.5",
+  "version": "1.0.6",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.5.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.6.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83613422,
-  "url": "Pars Sistem Yoneticisi Setup 1.0.5.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.0.6.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.5.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.6.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
@@ -157,10 +165,10 @@ yükleyeceğiniz klasörü doğrudan hedefleyebilirsiniz. `--embed`
 yalnızca bir sonraki paketlemede gömülü manifest’i günceller; mevcut kurulu sürümlere ulaşmak için
 güncelleme kaynağının sabit bir URL veya klasör olarak ayarlanması gerekir.
 
-Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.0.5):
+Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.0.7):
 
 ```powershell
-npm run bump -- 1.0.5
+npm run bump -- 1.0.7
 ```
 
 Bu komut `package.json`, `package-lock.json` (ilk iki alan), `i18n.ts` başlığı, `README.md`,
@@ -170,7 +178,7 @@ GitHub → Actions → **Sürüm yayınla** → **Run workflow** ile sürümü y
 `%APPDATA%\pars-sistem-yoneticisi-ts\updates` altında tutulur.
 
 > `npm run publish` yalnızca el ile yayın yapıldığında gerekir; GitHub Actions akışı manifest’i
-> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.0.5 --check` değişiklikleri
+> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.0.7 --check` değişiklikleri
 > yazmadan görebilirsiniz.
 
 ## Güvenlik
