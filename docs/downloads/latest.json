@@ -2,12 +2,12 @@
   "version": "1.0.6",
   "notes": "1.0.5’e ek olarak Uygulama Kütüphanesi filtreleri dock görünümüne taşındı; Güncellemeler artık winget yanında Chocolatey, npm ve Scoop kaynaklarından da salt-okunur tarama yapabiliyor.",
   "fileName": "Pars Sistem Yoneticisi Setup 1.0.6.exe",
-  "sha512": "0a90dfc37a81a1bb5460df76375d13b89421e238fecf204be08d5e03eddbf2d2f9618dcd6b09d0214557b30b6dbc71edef06a21f6a4675177dfdcfa8c46b2b02",
-  "sha256": "8c7654990a492777aaa7c7fda97d8a290363e00c42a4acd63750bf1ca5b1e08a",
-  "size": 83630321,
+  "sha512": "d0675bb36d87372f9f6febc694e94cf4f873cdc4aa501eb9658a89d9c86bd44a164d6eb2e677ba383f3ec6a69f5195dbe0721fededb1b451a490da0826df3958",
+  "sha256": "20e5ec8b0c7786d0a59561cfb8f39bb41435997bd70a3a909656b047ed27418b",
+  "size": 83630390,
   "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.6/Pars.Sistem.Yoneticisi.Setup.1.0.6.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
-  "portableSha256": "24d1e7a894b1092310375dd3a26c3596c184f01459e3fb1214e3f0ca7ed8381b",
-  "portableSize": 83417346,
+  "portableSha256": "36b24f883e56852a87373f99b946e4acee8e5dec8ad67b38d62c206f8a370edd",
+  "portableSize": 83417428,
   "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.6/ParsSistemYoneticisi-Portable.exe"
 }
