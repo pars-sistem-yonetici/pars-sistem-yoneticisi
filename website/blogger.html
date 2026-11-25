@@ -291,87 +291,6 @@ pre.code-block { margin: 0; }
 .site-footer a { color: var(--accent); }
 .site-footer a:hover { color: var(--highlight); }
 
-/* ---------- Kaydirma animasyonu ---------- */
-.reveal {
-  opacity: 0; transform: translateY(36px);
-  transition: opacity .75s cubic-bezier(.2,.75,.2,1), transform .75s cubic-bezier(.2,.75,.2,1);
-  transition-delay: var(--d, 0s); will-change: opacity, transform;
-}
-.reveal.is-visible { opacity: 1; transform: none; }
-
-/* ---------- Uygulamadan ekran vitrini ---------- */
-.showcase-frame {
-  position: relative; aspect-ratio: 16 / 9; overflow: hidden;
-  border: 1px solid var(--line); border-radius: 16px; background: #101012;
-  box-shadow: 0 26px 60px rgba(0, 0, 0, .4);
-}
-.showcase-frame::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .05);
-}
-.shot {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; object-position: left top;
-  opacity: 0; transform: scale(1.06); animation: shot-cycle 24s linear infinite;
-}
-.shot:nth-of-type(1) { animation-delay: 0s; }
-.shot:nth-of-type(2) { animation-delay: 6s; }
-.shot:nth-of-type(3) { animation-delay: 12s; }
-.shot:nth-of-type(4) { animation-delay: 18s; }
-@keyframes shot-cycle {
-  0%   { opacity: 0; transform: scale(1.06); }
-  2%   { opacity: 1; transform: scale(1.02); }
-  23%  { opacity: 1; transform: scale(1); }
-  25%  { opacity: 0; transform: scale(1.01); }
-  100% { opacity: 0; transform: scale(1.06); }
-}
-.showcase-bar {
-  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-  margin-top: 13px; padding: 12px 16px; border-radius: 11px;
-  background: var(--panel); border: 1px solid var(--line);
-}
-.shot-caption { position: relative; flex: 1 1 260px; min-height: 22px; overflow: hidden; }
-.shot-caption span {
-  position: absolute; left: 0; top: 0; white-space: nowrap;
-  font-size: 13px; font-weight: 650; color: var(--text);
-  opacity: 0; animation: label-cycle 24s linear infinite;
-}
-.shot-caption span:nth-of-type(1) { animation-delay: 0s; }
-.shot-caption span:nth-of-type(2) { animation-delay: 6s; }
-.shot-caption span:nth-of-type(3) { animation-delay: 12s; }
-.shot-caption span:nth-of-type(4) { animation-delay: 18s; }
-@keyframes label-cycle {
-  0%   { opacity: 0; transform: translateY(8px); }
-  2%   { opacity: 1; transform: none; }
-  23%  { opacity: 1; transform: none; }
-  25%  { opacity: 0; transform: translateY(-8px); }
-  100% { opacity: 0; transform: translateY(8px); }
-}
-.showcase-dots { display: flex; gap: 7px; flex: 0 0 auto; }
-.showcase-dots i {
-  display: block; width: 22px; height: 4px; border-radius: 999px;
-  background: var(--panel-3); overflow: hidden; position: relative;
-}
-.showcase-dots i::after {
-  content: ''; position: absolute; inset: 0; width: 0;
-  background: linear-gradient(90deg, var(--accent-2), var(--highlight));
-  animation: dot-cycle 24s linear infinite;
-}
-.showcase-dots i:nth-of-type(1)::after { animation-delay: 0s; }
-.showcase-dots i:nth-of-type(2)::after { animation-delay: 6s; }
-.showcase-dots i:nth-of-type(3)::after { animation-delay: 12s; }
-.showcase-dots i:nth-of-type(4)::after { animation-delay: 18s; }
-@keyframes dot-cycle {
-  0%   { width: 0; }
-  2%   { width: 100%; }
-  25%  { width: 100%; }
-  26%  { width: 0; }
-  100% { width: 0; }
-}
-.showcase:hover .shot,
-.showcase:hover .shot-caption span,
-.showcase:hover .showcase-dots i::after { animation-play-state: paused; }
-
 /* ---------- Uyarlanabilir ---------- */
 @media (max-width: 1000px) {
   .hero-grid, .security-wrap { grid-template-columns: 1fr; gap: 40px; }
@@ -408,13 +327,6 @@ pre.code-block { margin: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-  .reveal { opacity: 1; transform: none; }
-  .shot { animation: none; opacity: 0; }
-  .shot:nth-of-type(1) { opacity: 1; transform: none; }
-  .shot-caption span { animation: none; opacity: 0; }
-  .shot-caption span:nth-of-type(1) { opacity: 1; }
-  .showcase-dots i::after { animation: none; width: 0; }
-  .showcase-dots i:nth-of-type(1)::after { width: 100%; }
 }
 
 
@@ -511,75 +423,47 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
       </div>
     </section>
 
-    <!-- B:SHOWCASE -->
-    <section class="section-tight" id="ekranlar">
-      <div class="wrap">
-        <div class="section-head reveal">
-          <p class="eyebrow">Uygulamadan</p>
-          <h2>Paneli çalışırken görün</h2>
-          <p>Gerçek arayüzden alınmış ekran görüntüleri otomatik olarak sırayla gösterilir. Üzerine gelerek durdurabilirsiniz.</p>
-        </div>
-        <div class="showcase reveal">
-          <div class="showcase-frame">
-            <img class="shot" src="assets/screen-home.png" alt="Pars Sistem Yöneticisi anasayfa ekranı" />
-            <img class="shot" src="assets/screen-apps.png" alt="Kurulu uygulamalar listesi" />
-            <img class="shot" src="assets/screen-updates.png" alt="Güncellemeler ekranı" />
-            <img class="shot" src="assets/screen-context.png" alt="Sağ tık menüsü eklentileri ekranı" />
-          </div>
-          <div class="showcase-bar">
-            <div class="shot-caption">
-              <span>Anasayfa · sistem özeti ve disk durumu</span>
-              <span>Kurulu uygulamalar · sürüm ve boyut envanteri</span>
-              <span>Güncellemeler · winget tarama sonuçları</span>
-              <span>Sağ tık menüsü · üçüncü taraf eklentileri</span>
-            </div>
-            <div class="showcase-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
 <section class="stats-band" aria-label="Özet bilgiler">
       <div class="wrap stats-grid">
-        <div class="stat reveal"><b>142</b><span>doğrulanmış winget uygulaması</span></div>
-        <div class="stat reveal"><b>5</b><span>salt-okunur yerel tarama motoru</span></div>
-        <div class="stat reveal"><b>4</b><span>hazır sistem bakım planı</span></div>
-        <div class="stat reveal"><b>55+</b><span>arayüz dili ve iki tam çeviri</span></div>
+        <div class="stat"><b>142</b><span>doğrulanmış winget uygulaması</span></div>
+        <div class="stat"><b>5</b><span>salt-okunur yerel tarama motoru</span></div>
+        <div class="stat"><b>4</b><span>hazır sistem bakım planı</span></div>
+        <div class="stat"><b>55+</b><span>arayüz dili ve iki tam çeviri</span></div>
       </div>
     </section>
 
 <section class="section" id="ozellikler">
       <div class="wrap">
-        <div class="section-head reveal">
+        <div class="section-head">
           <p class="eyebrow">Özellikler</p>
           <h2>Bir bakım aracından fazlası</h2>
           <p>Günlük bakımdan kurumsal ilke kaynaklı sorunlara kadar yaygın Windows baş ağrılarını tek bir arayüzde toplar.</p>
         </div>
         <div class="features">
-          <article class="feature reveal"><div class="feature-icon">↑</div><h3>Güncellemeler</h3><p>winget ile güncellemesi olan paketleri tarar, seçili veya tüm güncellemeleri tek seferde uygular.</p></article>
-          <article class="feature reveal"><div class="feature-icon">▦</div><h3>Kaldırma ve kalıntılar</h3><p>Uygulamaları kaldırır, geride kalan dosya ve kayıt girdilerini tarar. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır.</p></article>
-          <article class="feature reveal"><div class="feature-icon">◫</div><h3>Disk temizleme</h3><p>Geçici dosyalar, önbellekler, Windows Update indirmeleri ve DNS dahil yedi kategoride güvenli temizlik.</p></article>
-          <article class="feature reveal"><div class="feature-icon">⚙</div><h3>Kayıt defteri</h3><p>Bozuk kaldırma girdilerini 64 ve 32-bit üzerinde tarar. Silmeden önce her girdi .reg olarak yedeklenir.</p></article>
-          <article class="feature reveal"><div class="feature-icon">⚑</div><h3>Güvenlik duvarı</h3><p>Etkin gelen kuralları denetler; geniş kapsam, eksik program yolu ve imzasız ikilileri kritik olarak işaretler.</p></article>
-          <article class="feature reveal"><div class="feature-icon">☣</div><h3>Kötü amaçlı yazılım</h3><p>Beş yerel, salt-okunur motor: imzalar, sezgisel analiz, betikler, sistem bütünlüğü ve kalıcılık izleri.</p></article>
-          <article class="feature reveal"><div class="feature-icon">⚒</div><h3>Sürücüler</h3><p>Windows Update Agent ile sürücü güncellemelerini tarar; kurulum öncesi DISM ile yedek alma seçeneği sunar.</p></article>
-          <article class="feature reveal"><div class="feature-icon">◷</div><h3>Zamanlama</h3><p>Haftalık, günlük, aylık ve özel olmak üzere dört devre dışı plan. Uygulama açıkken 60 saniyelik döngüyle çalışır.</p></article>
-          <article class="feature reveal"><div class="feature-icon">≡</div><h3>Sağ tık menüsü</h3><p>Windows 10 klasik menüsü ile Windows 11 modern menüsü arasında geçiş yapar ve Gezgin’i otomatik yeniden başlatır.</p></article>
-          <article class="feature reveal"><div class="feature-icon">⚗</div><h3>Hata Ayıklama</h3><p>“Kuruluşunuz tarafından yönetiliyor” uyarısını düzelten Windows ve tarayıcı .reg dosyalarını içerir; uygulama öncesi yedek alınır.</p></article>
-          <article class="feature reveal"><div class="feature-icon">⟳</div><h3>Kendi kendini güncelleme</h3><p>Yeni sürümü kontrol eder, SHA-512 ile doğrular ve onayınızla indirip kurar. Portable sürümde dosyayı değiştirmez.</p></article>
-          <article class="feature reveal"><div class="feature-icon">✦</div><h3>Kişiselleştirme</h3><p>Grafit/altın veya Windows 11 açık teması, Türkçe/İngilizce ve 55 dil, hariç tutma listeleri ve gruplu animasyonlu menü.</p></article>
+          <article class="feature"><div class="feature-icon">↑</div><h3>Güncellemeler</h3><p>winget ile güncellemesi olan paketleri tarar, seçili veya tüm güncellemeleri tek seferde uygular.</p></article>
+          <article class="feature"><div class="feature-icon">▦</div><h3>Kaldırma ve kalıntılar</h3><p>Uygulamaları kaldırır, geride kalan dosya ve kayıt girdilerini tarar. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır.</p></article>
+          <article class="feature"><div class="feature-icon">◫</div><h3>Disk temizleme</h3><p>Geçici dosyalar, önbellekler, Windows Update indirmeleri ve DNS dahil yedi kategoride güvenli temizlik.</p></article>
+          <article class="feature"><div class="feature-icon">⚙</div><h3>Kayıt defteri</h3><p>Bozuk kaldırma girdilerini 64 ve 32-bit üzerinde tarar. Silmeden önce her girdi .reg olarak yedeklenir.</p></article>
+          <article class="feature"><div class="feature-icon">⚑</div><h3>Güvenlik duvarı</h3><p>Etkin gelen kuralları denetler; geniş kapsam, eksik program yolu ve imzasız ikilileri kritik olarak işaretler.</p></article>
+          <article class="feature"><div class="feature-icon">☣</div><h3>Kötü amaçlı yazılım</h3><p>Beş yerel, salt-okunur motor: imzalar, sezgisel analiz, betikler, sistem bütünlüğü ve kalıcılık izleri.</p></article>
+          <article class="feature"><div class="feature-icon">⚒</div><h3>Sürücüler</h3><p>Windows Update Agent ile sürücü güncellemelerini tarar; kurulum öncesi DISM ile yedek alma seçeneği sunar.</p></article>
+          <article class="feature"><div class="feature-icon">◷</div><h3>Zamanlama</h3><p>Haftalık, günlük, aylık ve özel olmak üzere dört devre dışı plan. Uygulama açıkken 60 saniyelik döngüyle çalışır.</p></article>
+          <article class="feature"><div class="feature-icon">≡</div><h3>Sağ tık menüsü</h3><p>Windows 10 klasik menüsü ile Windows 11 modern menüsü arasında geçiş yapar ve Gezgin’i otomatik yeniden başlatır.</p></article>
+          <article class="feature"><div class="feature-icon">⚗</div><h3>Hata Ayıklama</h3><p>“Kuruluşunuz tarafından yönetiliyor” uyarısını düzelten Windows ve tarayıcı .reg dosyalarını içerir; uygulama öncesi yedek alınır.</p></article>
+          <article class="feature"><div class="feature-icon">⟳</div><h3>Kendi kendini güncelleme</h3><p>Yeni sürümü kontrol eder, SHA-512 ile doğrular ve onayınızla indirip kurar. Portable sürümde dosyayı değiştirmez.</p></article>
+          <article class="feature"><div class="feature-icon">✦</div><h3>Kişiselleştirme</h3><p>Grafit/altın veya Windows 11 açık teması, Türkçe/İngilizce ve 55 dil, hariç tutma listeleri ve gruplu animasyonlu menü.</p></article>
         </div>
       </div>
     </section>
 
 <section class="section-tight" id="guvenlik">
       <div class="wrap security-wrap">
-        <div class="section-head reveal" style="margin:0">
+        <div class="section-head" style="margin:0">
           <p class="eyebrow">Güvenlik yaklaşımı</p>
           <h2>Yıkıcı işlemlerde durur, yedek alır, sorar</h2>
           <p>Hız için güvenlikten ödün verilmez: korumalı kökler hiçbir temizleme işlemine dahil edilmez, sembolik bağlantılar atlanır.</p>
         </div>
-        <div class="security-panel reveal">
+        <div class="security-panel">
           <h3>Varsayılan güvenli davranış</h3>
           <p>Uygulama yönetici izinleriyle çalışır; ancak aşağıdaki kurallar her işlemde geçerlidir.</p>
           <ul class="security-list">
@@ -604,7 +488,7 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
 <section class="section-tight">
       <div class="wrap">
         <div class="download-grid">
-          <article class="download-card reveal recommended" id="setup">
+          <article class="download-card recommended" id="setup">
             <span class="tag">Önerilen · Kalıcı kurulum</span>
             <h2>Kurulum Dosyası</h2>
             <p class="sub">Başlat menüsüne kayıt olur, yönetici izniyle kurulur. Günlük kullanım ve birden fazla oturum için önerilir.</p>
@@ -621,13 +505,13 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
             <div class="checksum">
               <small>SHA-256 · dosya bütünlüğü</small>
               <div class="checksum-row">
-                <code data-setup-checksum>bb6e4c0da491728273b86bbc6ebbf1305ecb1e0e6e07fa03b03580a10a371f19</code>
-                <button class="copy-btn" type="button" data-setup-copy data-copy="bb6e4c0da491728273b86bbc6ebbf1305ecb1e0e6e07fa03b03580a10a371f19">Kopyala</button>
+                <code data-setup-checksum>92cf58bd87491002a76afc1cc43689c400f84a698cbda94fde4a3097c6755bcb</code>
+                <button class="copy-btn" type="button" data-setup-copy data-copy="92cf58bd87491002a76afc1cc43689c400f84a698cbda94fde4a3097c6755bcb">Kopyala</button>
               </div>
             </div>
           </article>
 
-          <article class="download-card reveal" id="portable">
+          <article class="download-card" id="portable">
             <span class="tag">Tek dosya · Kurulum gerektirmez</span>
             <h2>Portable Sürüm</h2>
             <p class="sub">Çalıştırınca geçici klasöre çıkarılır, kapatınca temizlenir. Ayarlar ve yedekler kullanıcı klasörünüzde kalır.</p>
@@ -644,8 +528,8 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
             <div class="checksum">
               <small>SHA-256 · dosya bütünlüğü</small>
               <div class="checksum-row">
-                <code data-portable-checksum>8ebe45bff6d37ba2878c688e97d9d78a13e1e4d876fc29344ae6c58136bdfb89</code>
-                <button class="copy-btn" type="button" data-portable-copy data-copy="8ebe45bff6d37ba2878c688e97d9d78a13e1e4d876fc29344ae6c58136bdfb89">Kopyala</button>
+                <code data-portable-checksum>d77abf93e6a17669883bc7f71d29d8c4ade962d60bf54726fde780bc31fddf17</code>
+                <button class="copy-btn" type="button" data-portable-copy data-copy="d77abf93e6a17669883bc7f71d29d8c4ade962d60bf54726fde780bc31fddf17">Kopyala</button>
               </div>
             </div>
           </article>
@@ -657,53 +541,25 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
       </div>
     </section>
 
-    <!-- B:SHOWCASE -->
-    <section class="section-tight" id="ekranlar">
-      <div class="wrap">
-        <div class="section-head reveal">
-          <p class="eyebrow">Uygulamadan</p>
-          <h2>Ne indirdiğinizi görün</h2>
-          <p>Gerçek arayüzden alınmış ekran görüntüleri otomatik olarak sırayla gösterilir. Üzerine gelerek durdurabilirsiniz.</p>
-        </div>
-        <div class="showcase reveal">
-          <div class="showcase-frame">
-            <img class="shot" src="assets/screen-home.png" alt="Pars Sistem Yöneticisi anasayfa ekranı" />
-            <img class="shot" src="assets/screen-apps.png" alt="Kurulu uygulamalar listesi" />
-            <img class="shot" src="assets/screen-updates.png" alt="Güncellemeler ekranı" />
-            <img class="shot" src="assets/screen-context.png" alt="Sağ tık menüsü eklentileri ekranı" />
-          </div>
-          <div class="showcase-bar">
-            <div class="shot-caption">
-              <span>Anasayfa · sistem özeti ve disk durumu</span>
-              <span>Kurulu uygulamalar · sürüm ve boyut envanteri</span>
-              <span>Güncellemeler · winget tarama sonuçları</span>
-              <span>Sağ tık menüsü · üçüncü taraf eklentileri</span>
-            </div>
-            <div class="showcase-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
 <section class="section-tight" id="kurulum">
       <div class="wrap">
-        <div class="section-head reveal">
+        <div class="section-head">
           <p class="eyebrow">Başlangıç</p>
           <h2>Beş dakikada hazır</h2>
           <p>Kurulum sihirbazını izleyin veya portable dosyayı doğrudan çalıştırın. İlk açılışta dil ve tema tercihlerinizi ayarlayabilirsiniz.</p>
         </div>
         <div class="steps">
-          <div class="step reveal"><span>1</span><h3>İndir</h3><p>Yukarıdaki bağlantılardan dosyayı alın ve SHA-256 değerini kontrol edin.</p></div>
-          <div class="step reveal"><span>2</span><h3>Çalıştır</h3><p>Kurulumu onaylayın veya portable exe’yi açın. UAC onayı gerekecek.</p></div>
-          <div class="step reveal"><span>3</span><h3>Tarama yap</h3><p>Güncellemeler, kalıntılar, güvenlik duvarı ve disk alanı için ilgili sekmeyi açın.</p></div>
-          <div class="step reveal"><span>4</span><h3>Güvenle uygula</h3><p>Yıkıcı işlemler yedek ve onay ister; “Kuruluşunuz tarafından yönetiliyor” onarımları da bu kurala dahildir.</p></div>
+          <div class="step"><span>1</span><h3>İndir</h3><p>Yukarıdaki bağlantılardan dosyayı alın ve SHA-256 değerini kontrol edin.</p></div>
+          <div class="step"><span>2</span><h3>Çalıştır</h3><p>Kurulumu onaylayın veya portable exe’yi açın. UAC onayı gerekecek.</p></div>
+          <div class="step"><span>3</span><h3>Tarama yap</h3><p>Güncellemeler, kalıntılar, güvenlik duvarı ve disk alanı için ilgili sekmeyi açın.</p></div>
+          <div class="step"><span>4</span><h3>Güvenle uygula</h3><p>Yıkıcı işlemler yedek ve onay ister; “Kuruluşunuz tarafından yönetiliyor” onarımları da bu kurala dahildir.</p></div>
         </div>
       </div>
     </section>
 
 <section class="section-tight" id="dogruLama">
       <div class="wrap">
-        <div class="section-head reveal">
+        <div class="section-head">
           <p class="eyebrow">Doğrulama</p>
           <h2>İndirdiğiniz dosyayı kontrol edin</h2>
           <p>PowerShell’i dosyanın bulunduğu klasörde açın ve aşağıdaki komutlardan birini çalıştırın. Sonuç yukarıdaki değerle aynı olmalıdır.</p>
@@ -715,21 +571,21 @@ Get-FileHash ".\ParsSistemYoneticisi-Portable.exe" -Algorithm SHA256</code></pre
 
 <section class="section-tight">
       <div class="wrap">
-        <div class="section-head reveal">
+        <div class="section-head">
           <p class="eyebrow">Gereksinimler</p>
           <h2>Cihazınız uygun mu?</h2>
         </div>
         <div class="features">
-          <article class="feature reveal"><div class="feature-icon">▣</div><h3>İşletim sistemi</h3><p>Windows 10 64-bit (19041 ve üzeri) veya Windows 11 x64.</p></article>
-          <article class="feature reveal"><div class="feature-icon">↑</div><h3>winget</h3><p>Yazılım kataloğu, güncelleme ve kaldırma işlemleri için App Installer / winget gereklidir. Uygulama eksik bileşeni uyarı olarak gösterir.</p></article>
-          <article class="feature reveal"><div class="feature-icon">◈</div><h3>Bağlantı ve alan</h3><p>Yerel bakım araçları çevrimdışı çalışır. winget, sürücü taraması ve güncelleyici için internet; portable sürüm için geçici disk alanı gerekir.</p></article>
+          <article class="feature"><div class="feature-icon">▣</div><h3>İşletim sistemi</h3><p>Windows 10 64-bit (19041 ve üzeri) veya Windows 11 x64.</p></article>
+          <article class="feature"><div class="feature-icon">↑</div><h3>winget</h3><p>Yazılım kataloğu, güncelleme ve kaldırma işlemleri için App Installer / winget gereklidir. Uygulama eksik bileşeni uyarı olarak gösterir.</p></article>
+          <article class="feature"><div class="feature-icon">◈</div><h3>Bağlantı ve alan</h3><p>Yerel bakım araçları çevrimdışı çalışır. winget, sürücü taraması ve güncelleyici için internet; portable sürüm için geçici disk alanı gerekir.</p></article>
         </div>
       </div>
     </section>
 
 <section class="section" id="sss">
       <div class="wrap">
-        <div class="section-head reveal">
+        <div class="section-head">
           <p class="eyebrow">Sık sorulan sorular</p>
           <h2>Merak edilenler</h2>
         </div>
@@ -747,7 +603,7 @@ Get-FileHash ".\ParsSistemYoneticisi-Portable.exe" -Algorithm SHA256</code></pre
 
   <footer class="site-footer">
     <div class="wrap">
-      <span><strong>Pars Sistem Yöneticisi</strong> · Sistem Bakım Merkezi · <span data-latest-version>v1.0.2</span></span>
+      <span><strong>Pars Sistem Yöneticisi</strong> · Sistem Bakım Merkezi · <span data-latest-version>v1.0.4</span></span>
       <span>Windows 10 / 11 x64 · <a href="#indir">İndir</a></span>
     </div>
   </footer>
