@@ -2,7 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, shell, Tray } f
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { REG_SCAN_SCOPES, REPAIR_KINDS } from '../shared/types';
+import { DNS_PROVIDER_IDS, PROFILE_IDS, REG_SCAN_SCOPES, REPAIR_KINDS } from '../shared/types';
 import type {
   CleanTarget, DownloadResult, InstallItem, LogEntry, MalwareEngine, Package, RegIssue, RegScanScope, ScheduleTask, Theme, WindowAction,
 } from '../shared/types';
@@ -11,6 +11,7 @@ import * as autorunsService from './services/autoruns';
 import * as bloatwareService from './services/bloatware';
 import * as cleanupLogService from './services/cleanupLog';
 import * as contextMenuService from './services/contextMenu';
+import * as dnsService from './services/dns';
 import * as diskAnalysisService from './services/diskAnalysis';
 import * as diskService from './services/disk';
 import * as fileScanService from './services/fileScan';
@@ -33,6 +34,7 @@ import * as shellExtensionsService from './services/shellExtensions';
 import * as settingsService from './services/settings';
 import * as startupService from './services/startup';
 import * as systemService from './services/system';
+import * as tweaksService from './services/tweaks';
 import * as updaterService from './services/updater';
 import * as winget from './services/winget';
 import {
@@ -370,6 +372,9 @@ const IPC_SCHEMAS: Record<string, Validator[]> = {
   'repair:run': [oneOf(REPAIR_KINDS)],
   'autoruns:set': [autorunItem, bool],
   'privacy:set': [privacyTweak, bool],
+  'tweaks:set': [str({ min: 2, max: 120, pattern: /^[a-z0-9-]+$/ }), bool],
+  'profile:apply': [oneOf(PROFILE_IDS), bool],
+  'dns:switch': [oneOf(DNS_PROVIDER_IDS)],
 };
 
 /** Şeması olan kanallarda argümanları doğrulayıp sonra asıl handler'a geçirir. */
@@ -667,6 +672,21 @@ function registerIpc(): void {
   register('privacy:list', () => privacyService.listPrivacy());
   register('privacy:set', (_event, tweak: Parameters<typeof privacyService.setPrivacy>[0], apply: boolean) =>
     privacyService.setPrivacy(tweak, apply, logger('gizlilik')));
+
+  // Sistem ayarları, optimizasyon profilleri ve DNS
+  register('tweaks:list', () => tweaksService.listTweaks());
+  register('tweaks:set', (_event, id: string, apply: boolean) =>
+    tweaksService.setTweak(id, apply, logger('sistem ayarı')));
+  register('tweaks:backup-folder', () => tweaksService.tweakBackupFolder());
+  register('profile:list', () => tweaksService.profileList());
+  register('profile:apply', (_event, id: Parameters<typeof tweaksService.applyProfile>[0], apply: boolean) =>
+    tweaksService.applyProfile(id, apply, logger('optimizasyon profili')));
+  register('dns:providers', () => dnsService.dnsProviders());
+  register('dns:current', () => dnsService.dnsCurrent());
+  register('dns:benchmark', () => dnsService.dnsBenchmark(logger('dns ölçümü')));
+  register('dns:switch', (_event, id: Parameters<typeof dnsService.dnsSwitch>[0]) =>
+    dnsService.dnsSwitch(id, logger('dns değiştirme')));
+  register('dns:reset', () => dnsService.dnsReset(logger('dns sıfırlama')));
 }
 
 // Tek örnek: ikinci başlatma mevcut pencereyi öne getirip kapanır.
