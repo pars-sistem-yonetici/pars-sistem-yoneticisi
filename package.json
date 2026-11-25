@@ -1,8 +1,9 @@
 {
   "name": "pars-sistem-yoneticisi-ts",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "description": "Windows sistem bakım ve winget tabanlı yazılım yöneticisi (TypeScript / Electron)",
+  "license": "MIT",
   "main": "dist-electron/main/main.js",
   "scripts": {
     "dev": "vite",
@@ -36,7 +37,8 @@
     "files": [
       "dist-electron/**/*",
       "dist/**/*",
-      "package.json"
+      "package.json",
+      "LICENSE"
     ],
     "extraResources": [
       {
@@ -53,6 +55,10 @@
         "from": "build/regfix",
         "to": "regfix",
         "filter": "**/*"
+      },
+      {
+        "from": "build/icon.ico",
+        "to": "icons/tray.ico"
       }
     ],
     "win": {
@@ -79,7 +85,9 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Pars Sistem Yoneticisi"
+      "shortcutName": "Pars Sistem Yoneticisi",
+      "include": "build/nsis/old-version-check.nsh",
+      "deleteAppDataOnUninstall": false
     },
     "portable": {
       "artifactName": "ParsSistemYoneticisi-Portable.exe",
