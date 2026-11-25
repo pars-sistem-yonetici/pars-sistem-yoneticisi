@@ -1936,7 +1936,7 @@ export default function App() {
           </div>
           <div className="sidebar-foot">
             <span className="dot" style={{ background: 'var(--accent)' }} />
-            {t('Sistem Bakım Merkezi · v1.0.6')}
+            {t('Sistem Bakım Merkezi · v1.0.7')}
           </div>
         </div>
       </aside>
