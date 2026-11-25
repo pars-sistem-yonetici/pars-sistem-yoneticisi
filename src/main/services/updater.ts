@@ -45,6 +45,25 @@ export function updateFolder(): string {
   return folder;
 }
 
+function freeSpaceBytes(folder: string): number {
+  try {
+    const stats = fs.statfsSync(folder);
+    return stats.bavail * stats.bsize;
+  } catch {
+    return 0;
+  }
+}
+
+function downloadErrorMessage(error: unknown): string {
+  const raw = (error as Error)?.message || 'bilinmeyen hata';
+  const code = (error as NodeJS.ErrnoException)?.code;
+  if (code === 'ENOSPC') return 'Diskte yeterli alan kalmadı; güncelleme indirilemedi. Lütfen alan açıp yeniden deneyin.';
+  if (/terminated|aborted|socket hang up|network/i.test(raw)) {
+    return `Bağlantı kesildi; güncelleme indirilemedi. Lütfen yeniden deneyin. (${raw})`;
+  }
+  return `Güncelleme indirilemedi: ${raw}`;
+}
+
 function normalizeHash(value: unknown): string {
   if (typeof value !== 'string') return '';
   const text = value.trim().replace(/^sha512[-:]?/i, '').replace(/\s/g, '');
@@ -236,6 +255,15 @@ export async function downloadUpdate(info: AppUpdateInfo, onProgress: ProgressFn
   let downloaded = 0;
   let source: AsyncIterable<Buffer>;
 
+  const free = freeSpaceBytes(path.dirname(destination));
+  const needed = total + 64 * 1024 * 1024;
+  if (free && free < needed) {
+    return {
+      ok: false,
+      message: `Güncelleme için yeterli disk alanı yok (${Math.round(free / 1024 / 1024)} MB boş, yaklaşık ${Math.round(needed / 1024 / 1024)} MB gerekli). Lütfen ${path.dirname(destination)} sürücüsünde alan açın.`,
+    };
+  }
+
   try {
     if (isHttp(resolved.target)) {
       logger?.(`Güncelleme indiriliyor: ${resolved.target}`);
@@ -273,11 +301,11 @@ export async function downloadUpdate(info: AppUpdateInfo, onProgress: ProgressFn
     return { ok: true, message: `${resolved.fileName} indirildi ve doğrulandı.`, path: destination };
   } catch (error) {
     fs.rmSync(destination, { force: true });
-    return { ok: false, message: (error as Error).message };
+    return { ok: false, message: downloadErrorMessage(error) };
   }
 }
 
-export function installUpdate(filePath: string, logger?: LogFn): UpdateInstallResult {
+export async function installUpdate(filePath: string, logger?: LogFn): Promise<UpdateInstallResult> {
   const target = path.resolve(filePath);
   const folder = path.resolve(updateFolder());
   if (path.dirname(target).toLowerCase() !== folder.toLowerCase() || !/\.exe$/i.test(target) || !fs.existsSync(target)) {
@@ -295,17 +323,20 @@ export function installUpdate(filePath: string, logger?: LogFn): UpdateInstallRe
 
   try {
     logger?.(`Güncelleme kurulumu başlatılıyor: ${target}`);
-    const child = spawn(target, ['/SILENT', '/CLOSEAPPLICATIONS'], {
+    const child = spawn(target, ['/S', '--updated'], {
       detached: true,
       stdio: 'ignore',
       windowsHide: true,
     });
-    child.on('error', (error) => logger?.(`Kurulum başlatılamadı: ${error.message}`));
+    await new Promise<void>((resolve, reject) => {
+      child.once('spawn', resolve);
+      child.once('error', reject);
+    });
     child.unref();
     const timer = setTimeout(() => app.exit(0), 1500);
     timer.unref();
     return { ok: true, message: 'Kurulum başlatıldı. Uygulama kapanıyor...', restarting: true };
   } catch (error) {
-    return { ok: false, message: (error as Error).message, restarting: false };
+    return { ok: false, message: `Kurulum başlatılamadı: ${(error as Error).message}`, restarting: false };
   }
 }
