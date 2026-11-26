@@ -11,6 +11,16 @@ durum ikonları bulunur. Aynı anda yalnızca bir uygulama örneği çalışır;
 geri yükleyip öne getirir. Sistem tepsisindeki simge ve “Pencereyi göster” kısayolu da küçültülmüş veya
 gizlenmiş pencereyi açar.
 
+## 1.1.0 yenilikleri
+
+- **Kurucuya winget kurulumu:** NSIS kurulumu `winget.exe` denetler; eksikse gömülü `install-winget.ps1` betiğiyle Microsoft.WinGet.Client üzerinden resmi kaynaktan sessizce kurar ve doğrular. `/S --updated` ile yapılan sessiz güncellemelerde de aynı akış çalışır; ek onay penceresi çıkmaz.
+- **Hata toleransı:** winget kurulamazsa uygulama kurulumu tamamlanır, NSIS günlüğüne uyarı yazılır ve “Gerekli bileşenler” panelinden yeniden denenebilir. Betik tekrar çalıştırıldığında winget varsa doğrudan `OK` döner.
+- **Site metinleri:** İndirme sayfası ve ana sayfa, kurucunun otomatik winget kurulumunu ve portable sürümdeki elle kurulum seçeneğini açıklıyor.
+- **1.0.9 ve önceki düzeltmeler korundu:** Alt bilgi dağıtımı, kütüphane kategori başlıkları, doğru NSIS anahtarları, eski istemci uyumu ve salt-okunur tarama sürüyor.
+- **Güvenlik modeli korundu:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama ve `deleteAppDataOnUninstall: false` değişmedi.
+
+Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
+
 ## 1.0.9 yenilikleri
 
 - **Alt bilgi dağıtıldı:** 1.0.8 exe’sinin içinde kalan `v1.0.7` yazısı düzeltildi. Sürüm arttığı için 1.0.7 ve 1.0.8 kullanıcıları self-updater ile güncelleme onayı alıyor; indirme SHA-512 ile doğrulanıyor.
@@ -74,12 +84,12 @@ ve GitHub Releases sayfası da aynı dosyaları kullanır.
 
 `release/` klasöründe:
 
-- `Pars Sistem Yoneticisi Setup 1.0.9.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
+- `Pars Sistem Yoneticisi Setup 1.1.0.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur ve winget eksikse resmi kaynaktan otomatik kurar
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
 
 GitHub Releases’taki kurulum dosyasının adı noktalıdır:
-`Pars.Sistem.Yoneticisi.Setup.1.0.9.exe`. Yerel kopyalar
+`Pars.Sistem.Yoneticisi.Setup.1.1.0.exe`. Yerel kopyalar
 `YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`
 klasörlerinde tutulur; depoya eklenmez.
 
@@ -162,19 +172,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.0.9",
+  "version": "1.1.0",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.9.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.1.0.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83631421,
-  "url": "Pars Sistem Yoneticisi Setup 1.0.9.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.1.0.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.9.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.1.0.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
@@ -201,10 +211,10 @@ yükleyeceğiniz klasörü doğrudan hedefleyebilirsiniz. `--embed`
 yalnızca bir sonraki paketlemede gömülü manifest’i günceller; mevcut kurulu sürümlere ulaşmak için
 güncelleme kaynağının sabit bir URL veya klasör olarak ayarlanması gerekir.
 
-Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.1.0):
+Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.2.0):
 
 ```powershell
-npm run bump -- 1.1.0
+npm run bump -- 1.2.0
 ```
 
 Bu komut `package.json`, `package-lock.json` (ilk iki alan), `i18n.ts` başlığı, `README.md`,
@@ -214,7 +224,7 @@ GitHub → Actions → **Sürüm yayınla** → **Run workflow** ile sürümü y
 `%APPDATA%\pars-sistem-yoneticisi-ts\updates` altında tutulur.
 
 > `npm run publish` yalnızca el ile yayın yapıldığında gerekir; GitHub Actions akışı manifest’i
-> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.1.0 --check` değişiklikleri
+> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.2.0 --check` değişiklikleri
 > yazmadan görebilirsiniz.
 
 ## Güvenlik
