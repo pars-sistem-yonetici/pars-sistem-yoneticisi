@@ -1,6 +1,12 @@
-# Pars Sistem Yöneticisi 
+# Pars Sistem Yöneticisi (TypeScript / Electron)
 
-Windows için winget tabanlı sistem bakım ve yazılım yöneticisi paneli. 
+Windows için winget tabanlı sistem bakım ve yazılım yöneticisi paneli. Mevcut Python uygulamasının
+TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klasörüne dokunulmaz.
+
+[![Son sürüm](https://img.shields.io/github/v/release/pars-sistem-yonetici/pars-sistem-yoneticisi?label=s%C3%BCr%C3%BCm&style=for-the-badge)](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/latest)
+[![İndirmeler](https://img.shields.io/github/downloads/pars-sistem-yonetici/pars-sistem-yoneticisi/total?label=indirme&style=for-the-badge)](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases)
+[![Lisans](https://img.shields.io/badge/lisans-MIT-gold?style=for-the-badge)](LICENSE)
+[![Windows](https://img.shields.io/badge/Windows-10%2F11-x64-blue?style=for-the-badge)](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
 
 Arayüz, grafit/gümüş palet ve koyu sarı vurgularla temalandırılmıştır. **Ayarlar → Tema** üzerinden
 Windows 11 açık temasına anında geçilebilir; tercih `settings.json` içinde saklanır. Windows'un native
@@ -78,6 +84,21 @@ ve GitHub Releases sayfası da aynı dosyaları kullanır.
 | ![Pars Sistem Yöneticisi anasayfa ekranı](website/assets/screen-home.png) | ![Kurulu uygulamalar listesi](website/assets/screen-apps.png) |
 | ![Güncellemeler ekranı](website/assets/screen-updates.png) | ![Uygulama Kütüphanesi dock filtreleri](website/assets/screen-library.png) |
 | ![Sağ tık menüsü eklentileri](website/assets/screen-context.png) | |
+
+## Hızlı kurulum
+
+- **Son sürüm:** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/latest)
+- **Kurulum dosyası (1.1.0):** [`Pars.Sistem.Yoneticisi.Setup.1.1.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/Pars.Sistem.Yoneticisi.Setup.1.1.0.exe)
+- **Portable (1.1.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/ParsSistemYoneticisi-Portable.exe)
+- **Doğrulama:** [İndirme sayfasındaki SHA-256 özetleri](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
+
+winget kataloğuna alındığında tek satır kurulum:
+
+```powershell
+winget install --id ParsSistemYonetici.ParsSistemYoneticisi --exact
+```
+
+Kurulum UAC onayı ister; `winget.exe` eksikse kurucu Microsoft.WinGet.Client üzerinden resmi kaynaktan sessizce kurar. Manifest taslağı `winget/` klasöründedir.
 
 ## Hazır çıktılar
 
