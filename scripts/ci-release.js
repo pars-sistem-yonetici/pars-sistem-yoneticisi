@@ -88,15 +88,19 @@ function versionText(text) {
 }
 
 function checksumText(text, setupSha, portableSha, label) {
-  let index = 0;
-  const result = text.replace(/\b[0-9a-f]{64}\b/g, () => {
-    index += 1;
-    return index <= 2 ? setupSha : portableSha;
-  });
-  if (index !== 0 && index !== 4) {
-    throw new Error(`${label}: beklenen 4 SHA-256 alani, bulunan ${index}`);
+  // download.html icinde JSON-LD checksum alani da gercek hex oldugu icin
+  // 5. bir SHA-256 ortaya cikar: ilk 3 kurulum, son 2 portable alanidir.
+  // Eski 4 alanli sablonlar (yalniz indirme kartlari) da desteklenir.
+  const count = (text.match(/\b[0-9a-f]{64}\b/g) || []).length;
+  if (count !== 0 && count !== 4 && count !== 5) {
+    throw new Error(`${label}: beklenen 4 veya 5 SHA-256 alani, bulunan ${count}`);
   }
-  return result;
+  const setupCount = count === 5 ? 3 : 2;
+  let index = 0;
+  return text.replace(/\b[0-9a-f]{64}\b/g, () => {
+    index += 1;
+    return index <= setupCount ? setupSha : portableSha;
+  });
 }
 
 // Site sablonlarindaki yer tutucularini doldurur. JSON-LD icindeki ozet/boyut
