@@ -1,4 +1,8 @@
 !ifndef BUILD_UNINSTALLER
+# electron-builder bu dosyayı LogicLib'ten önce include eder; fonksiyon gövdesindeki
+# kosullu ifadeler include anında genişlediği için kütüphaneyi burada yüklüyoruz.
+!include "LogicLib.nsh"
+
 # Kurulum başlarken aynı uygulamanın önceki sürümünü algılar.
 # electron-builder'ın yerleşik uninstallOldVersion akışı eski sürümü kaldırıp
 # ardından yeni dosyaları kurar; bu macro yalnızca durumu görünür kılar.
