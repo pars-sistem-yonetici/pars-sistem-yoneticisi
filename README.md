@@ -1,7 +1,6 @@
-# Pars Sistem Yöneticisi (TypeScript / Electron)
+# Pars Sistem Yöneticisi
 
-Windows için winget tabanlı sistem bakım ve yazılım yöneticisi paneli. Mevcut Python uygulamasının
-TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klasörüne dokunulmaz.
+Windows için winget tabanlı sistem bakım ve yazılım yöneticisi paneli. 
 
 Arayüz, grafit/gümüş palet ve koyu sarı vurgularla temalandırılmıştır. **Ayarlar → Tema** üzerinden
 Windows 11 açık temasına anında geçilebilir; tercih `settings.json` içinde saklanır. Windows'un native
