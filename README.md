@@ -1,6 +1,7 @@
-# Pars Sistem Yöneticisi
+# Pars Sistem Yöneticisi (TypeScript / Electron)
 
-Windows için winget tabanlı sistem bakım ve yazılım yöneticisi paneli. 
+Windows için winget tabanlı sistem bakım ve yazılım yöneticisi paneli. Mevcut Python uygulamasının
+TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klasörüne dokunulmaz.
 
 Arayüz, grafit/gümüş palet ve koyu sarı vurgularla temalandırılmıştır. **Ayarlar → Tema** üzerinden
 Windows 11 açık temasına anında geçilebilir; tercih `settings.json` içinde saklanır. Windows'un native
@@ -9,6 +10,16 @@ küçültme/büyütme/kapatma düğmeleri de aynı paleti izler. Anasayfadaki CP
 durum ikonları bulunur. Aynı anda yalnızca bir uygulama örneği çalışır; ikinci başlatma mevcut pencereyi
 geri yükleyip öne getirir. Sistem tepsisindeki simge ve “Pencereyi göster” kısayolu da küçültülmüş veya
 gizlenmiş pencereyi açar.
+
+## 1.0.9 yenilikleri
+
+- **Alt bilgi dağıtıldı:** 1.0.8 exe’sinin içinde kalan `v1.0.7` yazısı düzeltildi. Sürüm arttığı için 1.0.7 ve 1.0.8 kullanıcıları self-updater ile güncelleme onayı alıyor; indirme SHA-512 ile doğrulanıyor.
+- **Site ve Blogger metinleri:** İndirme sayfası ve Blogger çıktısındaki eski `1.0.7` metin/URL’leri temizlendi; indirme düğmeleri doğrudan GitHub Releases adreslerini kullanıyor.
+- **Yayın üretimi:** `ci-release.js` site dosyalarındaki sürüm belirteçlerini artık manifestteki eski sürüme bakmadan güncelliyor. 1.0.9, kaynaklar `main`’e eşitlendikten sonra tek kaynaktan üretildi; etiket/dosya yarışı kaldırıldı.
+- **1.0.8 ve 1.0.7 düzeltmeleri korundu:** Kütüphane kategori başlıkları, doğru NSIS anahtarları, eski istemci uyumu, hata bildirimi ve disk alanı kontrolü sürüyor.
+- **Güvenlik modeli korundu:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama ve `deleteAppDataOnUninstall: false` değişmedi.
+
+Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 
 ## 1.0.8 yenilikleri
 
@@ -63,12 +74,12 @@ ve GitHub Releases sayfası da aynı dosyaları kullanır.
 
 `release/` klasöründe:
 
-- `Pars Sistem Yoneticisi Setup 1.0.8.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
+- `Pars Sistem Yoneticisi Setup 1.0.9.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
 
 GitHub Releases’taki kurulum dosyasının adı noktalıdır:
-`Pars.Sistem.Yoneticisi.Setup.1.0.8.exe`. Yerel kopyalar
+`Pars.Sistem.Yoneticisi.Setup.1.0.9.exe`. Yerel kopyalar
 `YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`
 klasörlerinde tutulur; depoya eklenmez.
 
@@ -143,25 +154,27 @@ başlatılır. Kurulum başlatılamazsa uygulama “başarılı” demeden hatay
 gelen istemciler de yeni kurucuyu `/SILENT` ile çağırsa bile `preInit` uyumluluğu sayesinde sessizce kurulur.
 Portable sürümde exe değiştirilemediği için indirilenler klasörü açılır ve dosyayı elle kopyalama yönergesi gösterilir.
 
-Varsayılan kaynak, exe yanındaki `updates\latest.json` dosyasıdır (pakete `build/updates/` altından
-eklenir). Ayarlar → **Güncelleme kaynağı** alanına bir http(s) adresi veya yerel klasör yazabilirsiniz.
+Varsayılan kaynak, projenin Pages adresindeki `downloads/latest.json` dosyasıdır
+(`https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/downloads`). Pakete ayrıca
+`build/updates/latest.json` örnek bildirimi eklenir; Ayarlar → **Güncelleme kaynağı** alanına bir
+http(s) adresi veya yerel klasör yazılarak başka bir kaynak kullanılabilir.
 Bildirim biçimi:
 
 ```json
 {
-  "version": "1.0.8",
+  "version": "1.0.9",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.8.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.9.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83631477,
-  "url": "Pars Sistem Yoneticisi Setup 1.0.8.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.0.9.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.8.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.0.9.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
@@ -188,10 +201,10 @@ yükleyeceğiniz klasörü doğrudan hedefleyebilirsiniz. `--embed`
 yalnızca bir sonraki paketlemede gömülü manifest’i günceller; mevcut kurulu sürümlere ulaşmak için
 güncelleme kaynağının sabit bir URL veya klasör olarak ayarlanması gerekir.
 
-Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.0.9):
+Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.1.0):
 
 ```powershell
-npm run bump -- 1.0.9
+npm run bump -- 1.1.0
 ```
 
 Bu komut `package.json`, `package-lock.json` (ilk iki alan), `i18n.ts` başlığı, `README.md`,
@@ -201,7 +214,7 @@ GitHub → Actions → **Sürüm yayınla** → **Run workflow** ile sürümü y
 `%APPDATA%\pars-sistem-yoneticisi-ts\updates` altında tutulur.
 
 > `npm run publish` yalnızca el ile yayın yapıldığında gerekir; GitHub Actions akışı manifest’i
-> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.0.9 --check` değişiklikleri
+> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.1.0 --check` değişiklikleri
 > yazmadan görebilirsiniz.
 
 ## Güvenlik
