@@ -99,11 +99,18 @@ function checksumText(text, setupSha, portableSha, label) {
   return result;
 }
 
-function bloggerText(text) {
+// Site sablonlarindaki yer tutucularini doldurur. JSON-LD icindeki ozet/boyut
+// alanlari da burada uretilir; checksumText yalnizca gercek hex ozetlerini sayar.
+function templateText(text) {
   return text
     .split('{{SETUP_URL}}').join(setupUrl)
     .split('{{PORTABLE_URL}}').join(portableUrl)
-    .split('{{LATEST_JSON_URL}}').join(latestJsonUrl);
+    .split('{{LATEST_JSON_URL}}').join(latestJsonUrl)
+    .split('{{SETUP_SHA256}}').join(setupSha256)
+    .split('{{PORTABLE_SHA256}}').join(portableSha256)
+    .split('{{SETUP_SHA512}}').join(setupSha512)
+    .split('{{SETUP_SIZE}}').join(String(setupSize))
+    .split('{{PORTABLE_SIZE}}').join(String(portableSize));
 }
 
 // 1) Setup exe'yi GitHub asset adiyla kopyala (web arayuzu de ayni adi uretir).
@@ -156,11 +163,10 @@ for (const dir of [docsDir, webDir]) {
     if (!fs.existsSync(file)) continue;
     replacer(file, (text) => {
       let out = versionText(text);
-      out = bloggerText(out);
       if (name === 'download.html' || name === 'blogger.html' || name === 'blogger.js') {
         out = checksumText(out, setupSha256, portableSha256, name);
       }
-      return out;
+      return templateText(out);
     });
   }
 }
