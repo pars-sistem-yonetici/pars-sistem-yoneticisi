@@ -1,13 +1,13 @@
 {
-  "version": "1.0.9",
-  "notes": "Alt bilgi ve tüm sürüm etiketleri artık her dağıtım kanalında 1.0.9’u gösteriyor; 1.0.7 ve 1.0.8 kullananlar self-updater üzerinden güncelleme onayı alabiliyor.",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.9.exe",
-  "sha512": "eb7c869cf9c821ca2f070253fd5a2d59c4acf631e75a5e23117ed0412bcd7f23b150320f1d00b2c20a1651c4e80604e07dd7e4d3685e5a1109c9125fbbcfc040",
-  "sha256": "5a25a428af9484d6168968c312270bc2527c2c826241321d896bc97fcba089cf",
-  "size": 83631421,
-  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.9/Pars.Sistem.Yoneticisi.Setup.1.0.9.exe",
+  "version": "1.1.0",
+  "notes": "Kurulum exe’si winget’i denetliyor; eksikse Microsoft’un resmi kaynağından sessizce kurup doğruluyor. Görünür kurulumda ve `/S --updated` ile yapılan sessiz güncellemede aynı akış çalışır.",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.1.0.exe",
+  "sha512": "7ace7474d14610fade9aa536d898457b218e2a69e403dcc08cf3f4bc2526eb5c05dd0931971a7525dc1145bb57008c8812dcc7e819bfe6dd41dea658dbd6a4fb",
+  "sha256": "df6dab2907f93c396b5f498df093bdef68977344270eb30872e8ede6af87877d",
+  "size": 83632376,
+  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/Pars.Sistem.Yoneticisi.Setup.1.1.0.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
-  "portableSha256": "f8ef45551f653390f7b70b94b3ff18258b5f1f963431e0b5a76b288f79e60506",
-  "portableSize": 83417918,
-  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.9/ParsSistemYoneticisi-Portable.exe"
+  "portableSha256": "1fe9b7e44a68d3b5ab2e3620e7252b21b3df85f19a3ba9a3951db3f592004c3a",
+  "portableSize": 83418309,
+  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/ParsSistemYoneticisi-Portable.exe"
 }

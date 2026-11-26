@@ -6,7 +6,7 @@
   <title><data:blog.pageTitle/></title>
   <b:skin><![CDATA[
 /* =========================================================
-   Pars Sistem Yoneticisi -tam- Blogger temasi 1.0.9
+   Pars Sistem Yoneticisi -tam- Blogger temasi 1.1.0
    Grafit / amber. Tum icerik temanin icindedir.
    ========================================================= */
 :root {
@@ -356,21 +356,21 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
           <div>
             <span class="eyebrow">Sistem bakım merkezi</span>
             <h1><a expr:href="data:blog.homepageUrl"><data:blog.title/></a></h1>
-            <p>Windows bakımı, yazılım yönetimi ve güvenli temizlik tek panelde. Güncel sürüm:<b> 1.0.9</b></p>
+            <p>Windows bakımı, yazılım yönetimi ve güvenli temizlik tek panelde. Güncel sürüm:<b> 1.1.0</b></p>
             <div class="pillrow">
-              <span class="pill">Sürüm <b>v1.0.9</b></span>
+              <span class="pill">Sürüm <b>v1.1.0</b></span>
               <span class="pill">Windows 10 / 11</span>
               <span class="pill">x64</span>
               <span class="pill">İmzasız · SHA doğrulamalı</span>
             </div>
             <div class="btnrow">
-              <a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.9/Pars.Sistem.Yoneticisi.Setup.1.0.9.exe">Kurulumu indir</a>
+              <a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/Pars.Sistem.Yoneticisi.Setup.1.1.0.exe">Kurulumu indir</a>
               <a class="btn-2" href="#indir">Portable ve SHA özetleri</a>
             </div>
           </div>
           <div class="release-card">
             <span class="tag">Güncel sürüm</span>
-            <div class="ver">1.0.9</div>
+            <div class="ver">1.1.0</div>
             <div class="desc">Doğrudan GitHub Releases üzerinden indirilir.</div>
             <div class="rows">
               <div class="release-row"><span>Kurulum</span><b>83,6 MB</b></div>
@@ -433,7 +433,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
             <p class="section-sub">Yaklaşık 1 dakika sürer. Windows 10/11 x64 gereklidir.</p>
             <div class="steps">
               <div class="step reveal" style="--d:.05s"><b>Kurulum dosyasını indirin</b><span>Aşağıdaki “Kurulumu indir” düğmesini kullanın.</span></div>
-              <div class="step reveal" style="--d:.12s"><b>SHA-256 özetini doğrulayın</b><span>PowerShell: <code class="mono">Get-FileHash .\Pars.Sistem.Yoneticisi.Setup.1.0.9.exe -Algorithm SHA256</code></span></div>
+              <div class="step reveal" style="--d:.12s"><b>SHA-256 özetini doğrulayın</b><span>PowerShell: <code class="mono">Get-FileHash .\Pars.Sistem.Yoneticisi.Setup.1.1.0.exe -Algorithm SHA256</code></span></div>
               <div class="step reveal" style="--d:.19s"><b>Kurulumu başlatın</b><span>“Windows korudu” uyarısında <b>Daha fazla bilgi → Yine de çalıştır</b> seçin.</span></div>
               <div class="step reveal" style="--d:.26s"><b>Yönetici olarak açın</b><span>Sistem değişiklikleri için uygulama yönetici izni isteyecektir.</span></div>
             </div>
@@ -446,17 +446,17 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
             <div class="dlgrid">
               <div class="dlcard main reveal" style="--d:.06s">
                 <h3>Kurulum sürümü · Önerilen</h3>
-                <div class="meta">Pars.Sistem.Yoneticisi.Setup.1.0.9.exe · 83,6 MB · NSIS</div>
-                <a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.9/Pars.Sistem.Yoneticisi.Setup.1.0.9.exe">Kurulumu indir</a>
+                <div class="meta">Pars.Sistem.Yoneticisi.Setup.1.1.0.exe · 83,6 MB · NSIS</div>
+                <a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/Pars.Sistem.Yoneticisi.Setup.1.1.0.exe">Kurulumu indir</a>
                 <span class="hash-label">SHA-256</span>
-                <code class="hash">5a25a428af9484d6168968c312270bc2527c2c826241321d896bc97fcba089cf</code>
+                <code class="hash">df6dab2907f93c396b5f498df093bdef68977344270eb30872e8ede6af87877d</code>
               </div>
               <div class="dlcard reveal" style="--d:.14s">
                 <h3>Portable sürüm</h3>
                 <div class="meta">ParsSistemYoneticisi-Portable.exe · 83,4 MB · Kurulum gerektirmez</div>
-                <a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.9/ParsSistemYoneticisi-Portable.exe">Portable indir</a>
+                <a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/ParsSistemYoneticisi-Portable.exe">Portable indir</a>
                 <span class="hash-label">SHA-256</span>
-                <code class="hash">f8ef45551f653390f7b70b94b3ff18258b5f1f963431e0b5a76b288f79e60506</code>
+                <code class="hash">1fe9b7e44a68d3b5ab2e3620e7252b21b3df85f19a3ba9a3951db3f592004c3a</code>
               </div>
             </div>
             <div class="note"><b>Dijital imza henüz yok.</b> Windows “bilinmeyen yayımcı” uyarısı gösterebilir. Dosyanın değişmediğini yukarıdaki SHA-256 özetiyle doğrulayabilirsiniz.</div>
@@ -496,7 +496,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
     <b:widget id="HTML1" locked="false" title="Alt bilgi" type="HTML" version="2">
       <b:includable id="main">
         <div class="footer-inner">
-          <span>Pars Sistem Yöneticisi · Sürüm 1.0.9 · Windows 10/11 x64</span>
+          <span>Pars Sistem Yöneticisi · Sürüm 1.1.0 · Windows 10/11 x64</span>
           <span><a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi">Kaynak kod</a> · <a href="https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/">Web sitesi</a> · <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases">Tüm sürümler</a></span>
         </div>
       </b:includable>
