@@ -39,4 +39,51 @@ Var /GLOBAL parsCmdOption
     DetailPrint "Onceki surum bulunamadi; temiz kurulum yapilacak."
   ${EndIf}
 !macroend
+
+# winget eksikse kurulum sirasinda Microsoft'un resmi WinGet.Client moduluyle
+# App Installer onarilir. nsExec konsol penceresi acmadan calistirir;
+# /S --updated ile yapilan sessiz guncellemede de kullanicaya pencere cikmaz.
+# Hata durumunda uygulama kurulumu yarim birakilmaz, sadece uyarı yazılır.
+
+Var /GLOBAL parsWingetCode
+Var /GLOBAL parsWingetOutput
+Var /GLOBAL parsWingetScript
+
+!macro customInstall
+  Call EnsureWingetInstalled
+!macroend
+
+Function EnsureWingetInstalled
+  StrCpy $parsWingetScript "$INSTDIR\resources\prereqs\install-winget.ps1"
+  ${IfNot} ${FileExists} "$parsWingetScript"
+    DetailPrint "UYARI: winget betigi pakette bulunamadi; otomatik kurulum atlandi."
+    Return
+  ${EndIf}
+
+  DetailPrint "winget denetimi yapiliyor..."
+  nsExec::ExecToStack /TIMEOUT=60000 `"$WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -NonInteractive -Command "if (Get-Command winget.exe -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }"`
+  Pop $parsWingetCode
+  Pop $parsWingetOutput
+  ${If} $parsWingetCode == "0"
+    DetailPrint "winget zaten kurulu; otomatik kurulum atlandi."
+    Return
+  ${EndIf}
+
+  DetailPrint "winget eksik; resmi kaynaktan kuruluyor (birkac dakika surebilir)..."
+  nsExec::ExecToStack /TIMEOUT=900000 `"$WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "$parsWingetScript"`
+  Pop $parsWingetCode
+  Pop $parsWingetOutput
+  ${If} $parsWingetOutput != ""
+    DetailPrint $parsWingetOutput
+  ${EndIf}
+
+  nsExec::ExecToStack /TIMEOUT=60000 `"$WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -NonInteractive -Command "if (Get-Command winget.exe -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }"`
+  Pop $parsWingetCode
+  Pop $parsWingetOutput
+  ${If} $parsWingetCode == "0"
+    DetailPrint "winget kuruldu ve dogrulandi."
+  ${Else}
+    DetailPrint "UYARI: winget otomatik kurulumu tamamlanamadi. Uygulama kuruldu; Gerekli bilesenler panelinden yeniden deneyebilirsiniz."
+  ${EndIf}
+FunctionEnd
 !endif
