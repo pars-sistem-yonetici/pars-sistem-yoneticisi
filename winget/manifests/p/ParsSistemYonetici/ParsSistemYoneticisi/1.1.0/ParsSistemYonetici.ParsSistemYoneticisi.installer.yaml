@@ -1,0 +1,25 @@
+PackageIdentifier: ParsSistemYonetici.ParsSistemYoneticisi
+PackageVersion: 1.1.0
+InstallerLocale: tr-TR
+Platform:
+- Windows.Desktop
+InstallerType: nsis
+Scope: machine
+InstallModes:
+- silent
+- silentWithProgress
+InstallerSwitches:
+  Silent: /S
+  SilentWithProgress: /S
+AppsAndFeaturesEntries:
+- DisplayName: Pars Sistem Yöneticisi
+  DisplayVersion: 1.1.0
+  Publisher: Pars Sistem Yöneticisi
+Installers:
+- Architecture: x64
+  InstallerType: nsis
+  InstallerUrl: https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/Pars.Sistem.Yoneticisi.Setup.1.1.0.exe
+  InstallerSha256: DF6DAB2907F93C396B5F498DF093BDEF68977344270EB30872E8EDE6AF87877D
+  ElevationRequirement: elevationRequired
+ManifestType: installer
+ManifestVersion: 1.28.0
