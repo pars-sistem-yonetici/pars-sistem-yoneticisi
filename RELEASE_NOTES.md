@@ -1,18 +1,19 @@
-# Pars Sistem Yöneticisi 1.0.9
+# Pars Sistem Yöneticisi 1.1.0
 
-Alt bilgi ve tüm sürüm etiketleri artık her dağıtım kanalında 1.0.9’u gösteriyor; 1.0.7 ve 1.0.8 kullananlar self-updater üzerinden güncelleme onayı alabiliyor.
+Kurulum exe’si winget’i denetliyor; eksikse Microsoft’un resmi kaynağından sessizce kurup doğruluyor. Görünür kurulumda ve `/S --updated` ile yapılan sessiz güncellemede aynı akış çalışır.
 
 ## Bu sürümde
 
-- **Alt bilgi düzeltmesi dağıtıldı:** 1.0.8 exe’sinin içinde eski `v1.0.7` alt bilgisi kalmıştı. Kaynak artık doğru ve sürüm numarası bir arttığı için güncelleyici 1.0.8 kurulu sistemlerde yeni sürümü algılıyor; SHA-512 doğrulaması ve açık onaydan sonra `/S --updated` ile sessiz kurulum yapılıyor.
-- **Site ve Blogger metinleri temizlendi:** İndirme sayfası, Blogger HTML’i ve `blogger.js` içinde kalan `1.0.7` sürüm metinleri ve eski sürüm URL’leri kaldırıldı. İndirme düğmeleri artık doğrudan GitHub Releases adreslerini kullanıyor; JavaScript çalışmasa da bağlantı doğru dosyayı gösteriyor.
-- **Yayın üretimi sağlamlaştırıldı:** `ci-release.js` artık manifestteki eski sürüme bakmadan site dosyalarındaki tüm sürüm belirteçlerini hedef sürüme getiriyor. 1.0.9; kaynak dosyalar `main`’e eşitlendikten sonra tek kaynaktan `workflow_dispatch` ile derlendi; etiket ile dosya eşitlemesi arasındaki yarış ortadan kaldırıldı.
-- **1.0.8’den gelenler:** Uygulama Kütüphanesi kartları kategori sekmeleriyle aynı sıralamada gruplanıyor; her grubun üstünde sekme ikonu, adı ve kart sayısı, paket yöneticisi seçiliyse kaynak etiketi gösteriliyor.
-- **Güvenlik modeli korundu:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama varsayılanı ve korumalı kayıt/klasör kuralları değişmedi. Kurulum manuel onaylıdır; varsayılan kapalı “kurumsal sessiz” mod isteğe bağlıdır. Eski sürüm algılanıp kaldırılır, uygulama verileri silinmez (`deleteAppDataOnUninstall: false`).
+- **Kurucuya winget kurulumu eklendi:** NSIS, dosyalar kopyalandıktan sonra `winget.exe` varlığını denetler. Eksikse pakete gömülü `install-winget.ps1` betiğini yönetici yetkisiyle, konsol penceresi açmadan çalıştırır; betik Microsoft.WinGet.Client modülüyle `Repair-WinGetPackageManager -AllUsers` uygular ve sonucu yeniden doğrular.
+- **Sessiz güncellemeyle uyumlu:** `nsExec` kullanıldığı için `/S --updated` sırasında ek pencere veya onay kutusu çıkmaz. Kurucunun UAC onayı yeterlidir; kurumsal sessiz mod varsayılan olarak kapalıdır.
+- **Hata toleransı:** winget kurulamazsa uygulamanın kurulumu yarım bırakılmaz; NSIS günlüğüne uyarı yazılır ve “Gerekli bileşenler” panelinden yeniden denenebilir. Betik artık tekrar çalıştırıldığında winget varsa doğrudan `OK` döner.
+- **1.0.9’dan gelenler:** Alt bilgi dağıtımı düzeltildi, site/Blogger metinlerindeki eski sürüm kalıntıları temizlendi, `ci-release.js` sürüm belirteçlerini manifeste bakmadan güncelliyor ve etiket tek kaynaktan üretiliyor.
+- **1.0.8’den gelenler:** Uygulama Kütüphanesi kartları kategori başlıklarıyla gruplanıyor; doğru NSIS anahtarları, eski istemci uyumu, kurulum hata bildirimi ve disk alanı kontrolü etkin.
+- **Güvenlik modeli korundu:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama varsayılanı ve korumalı kayıt/klasör kuralları değişmedi. Eski sürüm algılanıp kaldırılır, uygulama verileri silinmez (`deleteAppDataOnUninstall: false`).
 
-### 1.0.8’den gelenler
+### 1.0.9’dan gelenler
 
-Uygulama Kütüphanesi’nde gruplu liste ve kaynak etiketleri eklendi. Güncelleyici, NSIS `/S --updated` uyumluluğu, eski istemciler için `preInit` desteği, hata bildirimi ve disk alanı kontrolü 1.0.7’den itibaren etkin.
+Alt bilgi ve tüm sürüm etiketleri her dağıtım kanalında aynı sürümü gösteriyor; indirme bağlantıları doğrudan GitHub Releases adreslerini kullanıyor.
 
 ### 1.0.6’dan gelenler
 
@@ -30,13 +31,10 @@ Tanıtım sitesi, README ve bu release notu aynı dosyaları kullanır. Görsell
 
 ## İndirme
 
-- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.0.9.exe` (NSIS, başlat menüsü + masaüstü kısayolu) — 83.631.421 bayt
-  - SHA-256: `5a25a428af9484d6168968c312270bc2527c2c826241321d896bc97fcba089cf`
-  - SHA-512: `eb7c869cf9c821ca2f070253fd5a2d59c4acf631e75a5e23117ed0412bcd7f23b150320f1d00b2c20a1651c4e80604e07dd7e4d3685e5a1109c9125fbbcfc040`
-- **Portable:** `ParsSistemYoneticisi-Portable.exe` — 83.417.918 bayt
-  - SHA-256: `f8ef45551f653390f7b70b94b3ff18258b5f1f963431e0b5a76b288f79e60506`
+- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.1.0.exe` (NSIS, başlat menüsü + masaüstü kısayolu) — doğrulama özetleri workflow tamamlandıktan sonra eklenecek.
+- **Portable:** `ParsSistemYoneticisi-Portable.exe`
 
-Windows 10 (1809+) / Windows 11 x64 ve güncel App Installer (winget) gereklidir. Chocolatey, npm ve Scoop taramaları yalnızca ilgili araç kuruluysa seçilebilir.
+Windows 10 (1809+) / Windows 11 x64 gereklidir. Kurulum exe’si winget eksikse resmi kaynaktan kurar; portable sürümde winget “Gerekli bileşenler” panelinden kurulabilir. Chocolatey, npm ve Scoop taramaları yalnızca ilgili araç kuruluysa seçilebilir.
 Uygulama yönetici izinleriyle çalışır; açılışta UAC onayı görünür.
 
 > İmzasız dağıtım olduğu için SmartScreen uyarısı çıkabilir. İndirme sayfasındaki SHA-256
