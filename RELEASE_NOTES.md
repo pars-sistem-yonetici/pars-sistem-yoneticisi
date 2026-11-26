@@ -31,8 +31,11 @@ Tanıtım sitesi, README ve bu release notu aynı dosyaları kullanır. Görsell
 
 ## İndirme
 
-- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.1.0.exe` (NSIS, başlat menüsü + masaüstü kısayolu) — doğrulama özetleri workflow tamamlandıktan sonra eklenecek.
-- **Portable:** `ParsSistemYoneticisi-Portable.exe`
+- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.1.0.exe` (NSIS, başlat menüsü + masaüstü kısayolu) — 83.632.376 bayt
+  - SHA-256: `df6dab2907f93c396b5f498df093bdef68977344270eb30872e8ede6af87877d`
+  - SHA-512: `7ace7474d14610fade9aa536d898457b218e2a69e403dcc08cf3f4bc2526eb5c05dd0931971a7525dc1145bb57008c8812dcc7e819bfe6dd41dea658dbd6a4fb`
+- **Portable:** `ParsSistemYoneticisi-Portable.exe` — 83.418.309 bayt
+  - SHA-256: `1fe9b7e44a68d3b5ab2e3620e7252b21b3df85f19a3ba9a3951db3f592004c3a`
 
 Windows 10 (1809+) / Windows 11 x64 gereklidir. Kurulum exe’si winget eksikse resmi kaynaktan kurar; portable sürümde winget “Gerekli bileşenler” panelinden kurulabilir. Chocolatey, npm ve Scoop taramaları yalnızca ilgili araç kuruluysa seçilebilir.
 Uygulama yönetici izinleriyle çalışır; açılışta UAC onayı görünür.
