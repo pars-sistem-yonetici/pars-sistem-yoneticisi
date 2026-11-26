@@ -52,12 +52,6 @@ const latestJsonUrl = `https://${owner.toLowerCase()}.github.io/${repo}/download
 const docsDir = path.join(root, 'docs');
 const webDir = path.join(root, 'website');
 
-// Onceki surumu site manifestinden oku (metinlerde eski->yeni degistirmek icin).
-const oldManifestPath = path.join(docsDir, 'downloads', 'latest.json');
-const oldVersion = fs.existsSync(oldManifestPath)
-  ? (JSON.parse(fs.readFileSync(oldManifestPath, 'utf8')).version || '')
-  : '';
-
 function hashFile(file, algorithm) {
   return crypto.createHash(algorithm).update(fs.readFileSync(file)).digest('hex');
 }
@@ -79,9 +73,11 @@ function replacer(file, transform) {
   if (after !== before) fs.writeFileSync(file, after, 'utf8');
 }
 
+// Site dosyalari her zaman hedef surumu gostermeli. Manifestteki eski surume
+// guvenmek, ayni surum yeniden derlendiginde veya site bir onceki surumden
+// kaldiginda yanlis metinlerin (ornek 1.0.7) yayinda kalmasina yol aciyordu.
 function versionText(text) {
-  if (!oldVersion || oldVersion === version) return text;
-  return text.split(oldVersion).join(version);
+  return text.replace(/(?<![\d.%])\d+\.\d+\.\d+(?![\d.])/g, version);
 }
 
 function checksumText(text, setupSha, portableSha, label) {
