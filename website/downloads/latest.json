@@ -1,13 +1,13 @@
 {
-  "version": "1.0.8",
-  "notes": "Uygulama Kütüphanesi’ndeki kartlar artık üstteki kategori sekmeleriyle aynı sıralamada gruplanıyor; her grubun üstünde kategori ikonu, adı ve kart sayısı gösteriliyor. 1.0.7’deki güncelleyici düzeltmeleri de korunuyor.",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.0.8.exe",
-  "sha512": "7a48f6b2befed3ea3dd0a75d4fff17cf30a18532017a754dab15cc2a0dc74927ff0c88b63462c29190c0ad6042b4eaa22e81e52dab0c2579ae293dbef7aa5fc9",
-  "sha256": "24f56d428f8a5672ef4f2682cc95014b11d27c38b7f79346ff448e069ff299a5",
-  "size": 83631477,
-  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.8/Pars.Sistem.Yoneticisi.Setup.1.0.8.exe",
+  "version": "1.0.9",
+  "notes": "Alt bilgi ve tüm sürüm etiketleri artık her dağıtım kanalında 1.0.9’u gösteriyor; 1.0.7 ve 1.0.8 kullananlar self-updater üzerinden güncelleme onayı alabiliyor.",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.0.9.exe",
+  "sha512": "eb7c869cf9c821ca2f070253fd5a2d59c4acf631e75a5e23117ed0412bcd7f23b150320f1d00b2c20a1651c4e80604e07dd7e4d3685e5a1109c9125fbbcfc040",
+  "sha256": "5a25a428af9484d6168968c312270bc2527c2c826241321d896bc97fcba089cf",
+  "size": 83631421,
+  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.9/Pars.Sistem.Yoneticisi.Setup.1.0.9.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
-  "portableSha256": "8d8a4de1486430b3c9da6f77dc12d7381e955c82f4d862312c75a0f53c1c41f2",
-  "portableSize": 83417983,
-  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.8/ParsSistemYoneticisi-Portable.exe"
+  "portableSha256": "f8ef45551f653390f7b70b94b3ff18258b5f1f963431e0b5a76b288f79e60506",
+  "portableSize": 83417918,
+  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.9/ParsSistemYoneticisi-Portable.exe"
 }
