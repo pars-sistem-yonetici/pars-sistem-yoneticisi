@@ -1,13 +1,13 @@
 {
   "version": "1.0.9",
-  "notes": "63 tersine çevrilebilir Windows & ağ ayarı, 4 optimizasyon profili, 9 gelişmiş onarım aracı ve 5 sağlayıcılı DNS karşılaştırma/switcher eklendi.",
+  "notes": "Alt bilgi ve tüm sürüm etiketleri artık her dağıtım kanalında 1.0.9’u gösteriyor; 1.0.7 ve 1.0.8 kullananlar self-updater üzerinden güncelleme onayı alabiliyor.",
   "fileName": "Pars Sistem Yoneticisi Setup 1.0.9.exe",
-  "sha512": "28805743531d0c89afc649b6012f0fa017d10694391c0cdf03e51b79afa35b448854f6d09e68287361be5030b81867b3d17dd41dfc695fd777e1cb05a2faaea1",
-  "sha256": "90f9fd6d66f8838021871bf1b5c482e827b9c08f2400124e0547f8b5cc256fc9",
-  "size": 83628152,
-  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.5/Pars.Sistem.Yoneticisi.Setup.1.0.9.exe",
+  "sha512": "eb7c869cf9c821ca2f070253fd5a2d59c4acf631e75a5e23117ed0412bcd7f23b150320f1d00b2c20a1651c4e80604e07dd7e4d3685e5a1109c9125fbbcfc040",
+  "sha256": "5a25a428af9484d6168968c312270bc2527c2c826241321d896bc97fcba089cf",
+  "size": 83631421,
+  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.9/Pars.Sistem.Yoneticisi.Setup.1.0.9.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
-  "portableSha256": "827a77ef05b8afecd6ce3c08e32ab6a8a2054340e89ad9be3f7ce90934ec4307",
-  "portableSize": 83415093,
-  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.5/ParsSistemYoneticisi-Portable.exe"
+  "portableSha256": "f8ef45551f653390f7b70b94b3ff18258b5f1f963431e0b5a76b288f79e60506",
+  "portableSize": 83417918,
+  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.0.9/ParsSistemYoneticisi-Portable.exe"
 }
