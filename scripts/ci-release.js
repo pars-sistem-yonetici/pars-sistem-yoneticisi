@@ -77,7 +77,14 @@ function replacer(file, transform) {
 // guvenmek, ayni surum yeniden derlendiginde veya site bir onceki surumden
 // kaldiginda yanlis metinlerin (ornek 1.0.7) yayinda kalmasina yol aciyordu.
 function versionText(text) {
-  return text.replace(/(?<![\d.%])\d+\.\d+\.\d+(?![\d.])/g, version);
+  // Surum; duz metinde, "%20" ile kodlanmis URL'de ve "Setup.1.0.9.exe"
+  // gibi noktali dosya adinda geciyor. Sonraki karakter ".exe" oldugunda
+  // da eslesmeye izin vererek hicbir eski surumun yayinda kalmamasini sagla.
+  const versionLookahead = String.raw`(?=\.exe\b|(?![.\d]))`;
+  return text
+    .replace(new RegExp(String.raw`(Setup[ .])\d+\.\d+\.\d+(\.exe)`, 'g'), (_full, prefix, ext) => `${prefix}${version}${ext}`)
+    .replace(new RegExp(String.raw`(%[0-9A-Fa-f]{2})\d+\.\d+\.\d+` + versionLookahead, 'g'), (_full, encoded) => `${encoded}${version}`)
+    .replace(new RegExp(String.raw`(?<![\d.%])\d+\.\d+\.\d+` + versionLookahead, 'g'), version);
 }
 
 function checksumText(text, setupSha, portableSha, label) {
