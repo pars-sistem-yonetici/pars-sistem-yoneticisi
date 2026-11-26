@@ -133,7 +133,7 @@
         </div>
         <div class="steps">
           <div class="step reveal"><span>1</span><h3>İndir</h3><p>Yukarıdaki bağlantılardan dosyayı alın ve SHA-256 değerini kontrol edin.</p></div>
-          <div class="step reveal"><span>2</span><h3>Çalıştır</h3><p>Kurulumu onaylayın veya portable exe’yi açın. UAC onayı gerekecek.</p></div>
+          <div class="step reveal"><span>2</span><h3>Çalıştır</h3><p>Kurulumu onaylayın veya portable exe’yi açın. UAC onayı gerekecek. Kurucu winget eksikse resmi kaynaktan otomatik kurar; başarısız olursa uygulama içinden yeniden denenebilir.</p></div>
           <div class="step reveal"><span>3</span><h3>Tarama yap</h3><p>Güncellemeler, kalıntılar, güvenlik duvarı ve disk alanı için ilgili sekmeyi açın.</p></div>
           <div class="step reveal"><span>4</span><h3>Güvenle uygula</h3><p>Yıkıcı işlemler yedek ve onay ister; “Kuruluşunuz tarafından yönetiliyor” onarımları da bu kurala dahildir.</p></div>
         </div>
@@ -162,7 +162,7 @@ Get-FileHash ".\ParsSistemYoneticisi-Portable.exe" -Algorithm SHA256</code></pre
         </div>
         <div class="features">
           <article class="feature reveal"><div class="feature-icon">▣</div><h3>İşletim sistemi</h3><p>Windows 10 64-bit (19041 ve üzeri) veya Windows 11 x64.</p></article>
-          <article class="feature reveal"><div class="feature-icon">↑</div><h3>winget</h3><p>Yazılım kataloğu, güncelleme ve kaldırma işlemleri için App Installer / winget gereklidir. Uygulama eksik bileşeni uyarı olarak gösterir.</p></article>
+          <article class="feature reveal"><div class="feature-icon">↑</div><h3>winget</h3><p>Yazılım kataloğu, güncelleme ve kaldırma işlemleri için App Installer / winget gereklidir. Kurulum exe’si eksikse Microsoft’un resmi WinGet.Client modülüyle otomatik kurar; portable sürümde “Gerekli bileşenler” paneli kullanılır.</p></article>
           <article class="feature reveal"><div class="feature-icon">◈</div><h3>Bağlantı ve alan</h3><p>Yerel bakım araçları çevrimdışı çalışır. winget, sürücü taraması ve güncelleyici için internet; portable sürüm için geçici disk alanı gerekir.</p></article>
         </div>
       </div>
