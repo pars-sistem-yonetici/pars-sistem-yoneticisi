@@ -540,13 +540,14 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
                 <code class="hash">{{PORTABLE_SHA256}}</code>
               </div>
             </div>
-            <div class="note"><b>Dijital imza henüz yok.</b> Windows “bilinmeyen yayımcı” uyarısı gösterebilir. Dosyanın değişmediğini yukarıdaki SHA-256 özetiyle doğrulayabilirsiniz.</div>
+            <div class="note"><b>Dijital imza henüz yok.</b> Windows “bilinmeyen yayımcı” uyarısı gösterebilir. Dosyanın değişmediğini yukarıdaki SHA-256 özetiyle doğrulayabilirsiniz. Kurucu, winget eksikse Microsoft’un resmi kaynağından sessizce kurar.</div>
           </div>
 
           <div class="block reveal" id="sss">
             <p class="kicker">SSS</p>
             <h2 class="section-title">Sık sorulan sorular</h2>
             <details class="faq reveal"><summary>Ücretsiz mi?</summary><p>Evet, kişisel kullanım için ücretsizdir.</p></details>
+            <details class="faq reveal"><summary>winget kurulu değilse ne olur?</summary><p>Kurulum exe’si winget’i algılar ve eksikse Microsoft’un resmi kaynağından sessizce kurar. Başarısız olursa uygulama Ayarlar → Gerekli bileşenler alanından yeniden deneyebilirsiniz.</p></details>
             <details class="faq reveal"><summary>Portable sürüm kurulum gerektirmez mi?</summary><p>Portable sürümü doğrudan çalıştırabilirsiniz; kurulum sürümü Başlat menüsüne kısayol ekler.</p></details>
             <details class="faq reveal"><summary>Neden “Windows korudu” diyor?</summary><p>Çünkü exe henüz dijital olarak imzalanmadı. SHA-256 özetini kontrol edip “Yine de çalıştır” diyebilirsiniz.</p></details>
             <details class="faq reveal"><summary>Yedek almak zorunlu mu?</summary><p>Evet. Yıkıcı işlemlerde yedek alınamazsa uygulama değişiklik yapmaz.</p></details>
