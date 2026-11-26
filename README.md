@@ -166,7 +166,7 @@ Bildirim biçimi:
   "notes": "Yeni özellikler ve düzeltmeler",
   "fileName": "Pars Sistem Yoneticisi Setup 1.0.9.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
-  "size": 83631477,
+  "size": 83631421,
   "url": "Pars Sistem Yoneticisi Setup 1.0.9.exe"
 }
 ```
