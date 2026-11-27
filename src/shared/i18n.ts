@@ -5,7 +5,7 @@ export const EN: Record<string, string> = {
   // Ortak
   'Pars Sistem Yöneticisi': 'Pars System Manager',
   'Sistem Bakım Merkezi': 'System Maintenance Center',
-  'Sistem Bakım Merkezi · v1.2.0': 'System Maintenance Center · v1.2.0',
+  'Sistem Bakım Merkezi · v1.3.0': 'System Maintenance Center · v1.3.0',
   'Sistem bakım ve yazılım yönetimi paneli': 'System maintenance and software management panel',
   'Anasayfa': 'Home',
   'Güncellemeler': 'Updates',
