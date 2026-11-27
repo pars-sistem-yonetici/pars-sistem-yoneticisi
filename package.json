@@ -92,7 +92,7 @@
       "category": "public.app-category.utilities"
     },
     "dmg": {
-      "title": "Pars Sistem Yoneticisi ${version}"
+      "title": "Pars Sistem Yoneticisi ${version}${arch}"
     },
     "win": {
       "target": [
