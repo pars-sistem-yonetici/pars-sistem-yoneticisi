@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
-import { categoryIcon, UiIcon } from './uiIcons';
+import { categoryIcon, Glyph, UiIcon } from './uiIcons';
 import { CATALOG, CATEGORIES, favicon, recKey, type RecommendedSoftware } from '../shared/catalog';
 import { APP_LINKS, DEFAULT_UPDATE_SOURCE } from '../shared/constants';
 import { translate, translateFormat } from '../shared/i18n';
@@ -88,10 +88,10 @@ const REG_RISK_LABELS: Record<RegRisk, string> = {
 };
 
 const SCHEDULE_INFO: Record<ScheduleKind, { description: string; icon: string }> = {
-  'weekly-full': { description: 'Her hafta belirlenen günde kapsamlı temizlik (Windows Update indirmeleri hariç).', icon: '◷' },
-  'daily-light': { description: 'Her gün geçici dosyalar, önbellekler ve DNS temizliği.', icon: '◴' },
-  'monthly-deep': { description: 'Ayda bir kez Windows Update indirmeleri dahil derin temizlik.', icon: '◳' },
-  custom: { description: 'Belirlediğiniz aralıkla tekrarlanan özel temizlik.', icon: '◵' },
+  'weekly-full': { description: 'Her hafta belirlenen günde kapsamlı temizlik (Windows Update indirmeleri hariç).', icon: 'CalendarClock' },
+  'daily-light': { description: 'Her gün geçici dosyalar, önbellekler ve DNS temizliği.', icon: 'CalendarClock' },
+  'monthly-deep': { description: 'Ayda bir kez Windows Update indirmeleri dahil derin temizlik.', icon: 'CalendarClock' },
+  custom: { description: 'Belirlediğiniz aralıkla tekrarlanan özel temizlik.', icon: 'CalendarClock' },
 };
 
 const MALWARE_ENGINES: Array<{ id: MalwareEngine; label: string }> = [
@@ -103,11 +103,11 @@ const MALWARE_ENGINES: Array<{ id: MalwareEngine; label: string }> = [
 ];
 
 const TWEAK_CATEGORY_META: Record<TweakCategory, { label: string; icon: string; description: string }> = {
-  network: { label: 'Ağ & Gecikme', icon: '🌐', description: 'TCP, NIC, DNS önbelleği ve eski protokol ayarları.' },
-  performance: { label: 'Sistem & Performans', icon: '⚡', description: 'Güç planı, dosya sistemi, görsel efektler ve arka plan yükü.' },
-  interface: { label: 'Arayüz & Deneyim', icon: '🎨', description: 'Görev çubuğu, Gezgin, tema ve görünürlük ayarları.' },
-  privacy: { label: 'Gizlilik & Telemetri', icon: '🔒', description: 'Tanılama, reklam kimliği, konum ve yapay zekâ özellikleri.' },
-  services: { label: 'Servis Yönetimi', icon: '⚙️', description: 'Gereksiz Windows hizmetleri; özgün başlangıç türü saklanır.' },
+  network: { label: 'Ağ & Gecikme', icon: 'Globe', description: 'TCP, NIC, DNS önbelleği ve eski protokol ayarları.' },
+  performance: { label: 'Sistem & Performans', icon: 'Zap', description: 'Güç planı, dosya sistemi, görsel efektler ve arka plan yükü.' },
+  interface: { label: 'Arayüz & Deneyim', icon: 'Palette', description: 'Görev çubuğu, Gezgin, tema ve görünürlük ayarları.' },
+  privacy: { label: 'Gizlilik & Telemetri', icon: 'Lock', description: 'Tanılama, reklam kimliği, konum ve yapay zekâ özellikleri.' },
+  services: { label: 'Servis Yönetimi', icon: 'Settings', description: 'Gereksiz Windows hizmetleri; özgün başlangıç türü saklanır.' },
 };
 
 interface RepairAction {
@@ -128,11 +128,11 @@ const REPAIR_GROUPS: Array<{ title: string; description: string; actions: Repair
     title: 'Temel onarımlar',
     description: 'Windows yerleşik onarım komutları ve tek tıkla sıralı akış. Uzun sürebilir; işlem sırasında bilgisayarı kapatmayın.',
     actions: [
-      { id: 'sfc', icon: '◈', title: 'Sistem dosyası denetimi', detail: 'sfc /scannow — bozuk Windows sistem dosyalarını tarar ve onarır.' },
-      { id: 'dism', icon: '⚒', title: 'Windows görüntüsü onarımı', detail: 'DISM /RestoreHealth — bileşen deposunu Windows Update ile onarır.' },
-      { id: 'restore-point', icon: '⏱', title: 'Geri yükleme noktası', detail: 'Checkpoint-Computer — değişiklik öncesinde geri dönüş noktası oluşturur.' },
+      { id: 'sfc', icon: 'ScanSearch', title: 'Sistem dosyası denetimi', detail: 'sfc /scannow — bozuk Windows sistem dosyalarını tarar ve onarır.' },
+      { id: 'dism', icon: 'Hammer', title: 'Windows görüntüsü onarımı', detail: 'DISM /RestoreHealth — bileşen deposunu Windows Update ile onarır.' },
+      { id: 'restore-point', icon: 'RotateCcwClock', title: 'Geri yükleme noktası', detail: 'Checkpoint-Computer — değişiklik öncesinde geri dönüş noktası oluşturur.' },
       {
-        id: 'full-sequence', icon: '⚡', title: 'Tek tıkla sıralı onarım', backup: true,
+        id: 'full-sequence', icon: 'Zap', title: 'Tek tıkla sıralı onarım', backup: true,
         detail: 'Geri yükleme noktası → DISM /RestoreHealth → sfc /scannow → sfc /verifyonly. Bir adım başarısız olursa devam edilmez.',
         confirm: 'Önce geri yükleme noktası oluşturulacak; oluşturulamazsa hiçbir değişiklik yapılmayacak. Ardından DISM, SFC ve doğrulama sırayla çalışacak. Devam edilsin mi?',
       },
@@ -142,44 +142,44 @@ const REPAIR_GROUPS: Array<{ title: string; description: string; actions: Repair
     title: 'Salt okunur tanılama',
     description: 'Yalnızca rapor üretir; sistem dosyası, kayıt defteri veya hizmet değiştirmez. Onay dışında ek işlem gerekmez.',
     actions: [
-      { id: 'dism-check', icon: '🔎', title: 'DISM hızlı durum kontrolü', detail: 'DISM /CheckHealth — görüntünün bozuk bayraklı olup olmadığını saniyeler içinde bildirir.', readOnly: true },
-      { id: 'dism-scan', icon: '🔬', title: 'DISM bileşen deposu taraması', detail: 'DISM /ScanHealth — bileşen deposunu tarar, onarmaz; birkaç dakika sürebilir.', readOnly: true },
-      { id: 'dism-analyze', icon: '📊', title: 'Bileşen deposu analizi', detail: 'DISM /AnalyzeComponentStore — WinSxS boyutunu ve temizlenebilecek paketleri gösterir.', readOnly: true },
-      { id: 'sfc-verify', icon: '🩺', title: 'Sistem dosyası doğrulaması', detail: 'sfc /verifyonly — dosyaları tarar, düzeltmeden rapor verir.', readOnly: true },
-      { id: 'chkdsk-scan', icon: '💽', title: 'Disk çevrimiçi taraması', detail: 'chkdsk <sistem sürücüsü> /scan — sistem açıkken güvenli tarama; /f ve /r kullanılmaz.', readOnly: true },
+      { id: 'dism-check', icon: 'Search', title: 'DISM hızlı durum kontrolü', detail: 'DISM /CheckHealth — görüntünün bozuk bayraklı olup olmadığını saniyeler içinde bildirir.', readOnly: true },
+      { id: 'dism-scan', icon: 'Microscope', title: 'DISM bileşen deposu taraması', detail: 'DISM /ScanHealth — bileşen deposunu tarar, onarmaz; birkaç dakika sürebilir.', readOnly: true },
+      { id: 'dism-analyze', icon: 'PieChart', title: 'Bileşen deposu analizi', detail: 'DISM /AnalyzeComponentStore — WinSxS boyutunu ve temizlenebilecek paketleri gösterir.', readOnly: true },
+      { id: 'sfc-verify', icon: 'Stethoscope', title: 'Sistem dosyası doğrulaması', detail: 'sfc /verifyonly — dosyaları tarar, düzeltmeden rapor verir.', readOnly: true },
+      { id: 'chkdsk-scan', icon: 'HardDrive', title: 'Disk çevrimiçi taraması', detail: 'chkdsk <sistem sürücüsü> /scan — sistem açıkken güvenli tarama; /f ve /r kullanılmaz.', readOnly: true },
     ],
   },
   {
     title: 'Windows Update ve ağ',
     description: 'Servisler durdurulup klasörler ".old" adıyla korunur; kayıt defteri yedeği alınamazsa değişiklik yapılmaz.',
     actions: [
-      { id: 'update-reset', icon: '⬆️', title: 'Windows Update bileşenlerini sıfırla', detail: 'wuauserv, cryptsvc, bits, msiserver durdurulur; SoftwareDistribution ve catroot2 silinmez, ".old" olarak yeniden adlandırılır.', backup: true, rebootRequired: true },
-      { id: 'network-reset', icon: '🌐', title: 'Ağ yığınını sıfırla', detail: 'netsh winsock reset, netsh int ip reset, ipconfig /flushdns ve /registerdns. Bağlantı geçici olarak kesilebilir.', backup: true, rebootRequired: true },
+      { id: 'update-reset', icon: 'ArrowUp', title: 'Windows Update bileşenlerini sıfırla', detail: 'wuauserv, cryptsvc, bits, msiserver durdurulur; SoftwareDistribution ve catroot2 silinmez, ".old" olarak yeniden adlandırılır.', backup: true, rebootRequired: true },
+      { id: 'network-reset', icon: 'Globe', title: 'Ağ yığınını sıfırla', detail: 'netsh winsock reset, netsh int ip reset, ipconfig /flushdns ve /registerdns. Bağlantı geçici olarak kesilebilir.', backup: true, rebootRequired: true },
     ],
   },
   {
     title: 'Bakım onarımları',
     description: 'Önbellek ve kuyruk temizliği. Yedek zorunlu olan işlemlerde yedek başarısızsa temizlik yapılmaz.',
     actions: [
-      { id: 'component-cleanup', icon: '🧱', title: 'Bileşen deposu temizliği', detail: 'DISM /StartComponentCleanup — eski bileşenleri kaldırır. /ResetBase kullanılmaz; güncellemeler kaldırılabilir kalır.', backup: true },
-      { id: 'store-cache', icon: '🛍️', title: 'Store önbelleğini sıfırla', detail: 'wsreset.exe — Microsoft Store önbelleğini temizler; yeniden oturum açma isteyebilir.' },
-      { id: 'search-index', icon: '🔍', title: 'Windows Search dizinini yeniden oluştur', detail: 'WSearch durdurulur, dizin sıfırlanır ve servis yeniden başlatılır. Yeniden indeksleme birkaç dakika sürer.', backup: true },
-      { id: 'print-spooler', icon: '🖨️', title: 'Yazıcı kuyruğunu temizle', detail: 'Spooler durdurulur, bekleyen yazdırma dosyaları önce yedeklenip sonra silinir; servis yeniden başlatılır.', backup: true },
+      { id: 'component-cleanup', icon: 'Boxes', title: 'Bileşen deposu temizliği', detail: 'DISM /StartComponentCleanup — eski bileşenleri kaldırır. /ResetBase kullanılmaz; güncellemeler kaldırılabilir kalır.', backup: true },
+      { id: 'store-cache', icon: 'ShoppingBag', title: 'Store önbelleğini sıfırla', detail: 'wsreset.exe — Microsoft Store önbelleğini temizler; yeniden oturum açma isteyebilir.' },
+      { id: 'search-index', icon: 'Search', title: 'Windows Search dizinini yeniden oluştur', detail: 'WSearch durdurulur, dizin sıfırlanır ve servis yeniden başlatılır. Yeniden indeksleme birkaç dakika sürer.', backup: true },
+      { id: 'print-spooler', icon: 'Printer', title: 'Yazıcı kuyruğunu temizle', detail: 'Spooler durdurulur, bekleyen yazdırma dosyaları önce yedeklenip sonra silinir; servis yeniden başlatılır.', backup: true },
     ],
   },
   {
     title: 'Gelişmiş onarımlar',
     description: 'Sürücü, sayaç, zaman ve önyükleme ayarları. Değiştirilen her değer için .reg, JSON, ACL veya BCD yedeği zorunludur.',
     actions: [
-      { id: 'nic-latency', icon: '📶', title: 'NIC düşük gecikme ayarları', detail: 'Etkin ağ bağdaştırıcılarında kesme moderasasyonu, akış kontrolü ve güç tasarrufu özelliklerini kapatır; özgün değerler JSON’a kaydedilir.', backup: true, rebootRequired: true },
-      { id: 'nic-latency-revert', icon: '↩️', title: 'NIC ayarlarını geri yükle', detail: 'Son NIC düşük gecikme çalıştırmasında kaydedilen özgün sürücü değerlerini geri yazar.', backup: true, rebootRequired: true },
-      { id: 'prefetch-cleanup', icon: '🧹', title: 'Prefetch önbelleği temizliği', detail: 'C:\\Windows\\Prefetch içindeki .pf dosyaları önce yedeklenir, doğrulanır ve sonra silinir.', backup: true },
-      { id: 'counters-wmi', icon: '📈', title: 'Performans sayaçları / WMI', detail: 'WMI deposunu yedekler, lodctr /R ve winmgmt /resyncperf ile performans sayaçlarını yeniden kaydeder.', backup: true },
-      { id: 'installer-perms', icon: '🔐', title: 'Installer 2502/2503 yetki onarımı', detail: 'C:\\Windows\\Temp ve Installer klasörlerine yönetici tam yetkisi verir; özgün ACL’ler icacls /save ile yedeklenir.', backup: true },
-      { id: 'time-sync', icon: '🕒', title: 'NTP zaman senkronizasyonu', detail: 'W32Time ayarlarını yedekler ve w32tm /resync /force ile saati NTP sunucusuna senkronize eder.', backup: true },
-      { id: 'safe-mode-status', icon: '🔍', title: 'Güvenli Mod durumunu sorgula', detail: 'bcdedit /enum {current} komutuyla sonraki açılışın Güvenli Mod’a ayarlı olup olmadığını salt okunur bildirir.', readOnly: true },
-      { id: 'safe-mode-on', icon: '⛑️', title: 'Güvenli Mod’u etkinleştir', detail: 'BCD yedeği alındıktan sonra bcdedit /set {current} safeboot minimal uygulanır; sonraki açılış Güvenli Mod’dur.', backup: true, rebootRequired: true },
-      { id: 'safe-mode-off', icon: '✅', title: 'Güvenli Mod’u kaldır', detail: 'BCD yedeği alındıktan sonra bcdedit /deletevalue {current} safeboot ile normal açılış geri yüklenir.', backup: true, rebootRequired: true },
+      { id: 'nic-latency', icon: 'Wifi', title: 'NIC düşük gecikme ayarları', detail: 'Etkin ağ bağdaştırıcılarında kesme moderasasyonu, akış kontrolü ve güç tasarrufu özelliklerini kapatır; özgün değerler JSON’a kaydedilir.', backup: true, rebootRequired: true },
+      { id: 'nic-latency-revert', icon: 'Undo2', title: 'NIC ayarlarını geri yükle', detail: 'Son NIC düşük gecikme çalıştırmasında kaydedilen özgün sürücü değerlerini geri yazar.', backup: true, rebootRequired: true },
+      { id: 'prefetch-cleanup', icon: 'Mop', title: 'Prefetch önbelleği temizliği', detail: 'C:\\Windows\\Prefetch içindeki .pf dosyaları önce yedeklenir, doğrulanır ve sonra silinir.', backup: true },
+      { id: 'counters-wmi', icon: 'TrendingUp', title: 'Performans sayaçları / WMI', detail: 'WMI deposunu yedekler, lodctr /R ve winmgmt /resyncperf ile performans sayaçlarını yeniden kaydeder.', backup: true },
+      { id: 'installer-perms', icon: 'KeyRound', title: 'Installer 2502/2503 yetki onarımı', detail: 'C:\\Windows\\Temp ve Installer klasörlerine yönetici tam yetkisi verir; özgün ACL’ler icacls /save ile yedeklenir.', backup: true },
+      { id: 'time-sync', icon: 'Clock', title: 'NTP zaman senkronizasyonu', detail: 'W32Time ayarlarını yedekler ve w32tm /resync /force ile saati NTP sunucusuna senkronize eder.', backup: true },
+      { id: 'safe-mode-status', icon: 'Search', title: 'Güvenli Mod durumunu sorgula', detail: 'bcdedit /enum {current} komutuyla sonraki açılışın Güvenli Mod’a ayarlı olup olmadığını salt okunur bildirir.', readOnly: true },
+      { id: 'safe-mode-on', icon: 'LifeBuoy', title: 'Güvenli Mod’u etkinleştir', detail: 'BCD yedeği alındıktan sonra bcdedit /set {current} safeboot minimal uygulanır; sonraki açılış Güvenli Mod’dur.', backup: true, rebootRequired: true },
+      { id: 'safe-mode-off', icon: 'Check', title: 'Güvenli Mod’u kaldır', detail: 'BCD yedeği alındıktan sonra bcdedit /deletevalue {current} safeboot ile normal açılış geri yüklenir.', backup: true, rebootRequired: true },
     ],
   },
 ];
@@ -193,12 +193,12 @@ const WINRE_COMMANDS = [
 ].join('\n');
 
 const BCD_ACTION: RepairAction = {
-  id: 'bcd-backup', icon: '💾', title: 'BCD yedeği al', backup: true,
+  id: 'bcd-backup', icon: 'Save', title: 'BCD yedeği al', backup: true,
   detail: 'bcdedit /export ile önyükleme yapılandırmasını yedekler. Gelişmiş başlatmada komut uygulamadan önce bunu kullanın.',
 };
 
 const RESTART_ACTION: RepairAction = {
-  id: 'advanced-restart', icon: '↻', title: 'Gelişmiş başlatmaya yeniden başlat', backup: true, danger: true, rebootRequired: true,
+  id: 'advanced-restart', icon: 'RotateCw', title: 'Gelişmiş başlatmaya yeniden başlat', backup: true, danger: true, rebootRequired: true,
   detail: 'shutdown /r /o ile Windows Kurtarma Ortamı’na yeniden başlatır. Önce BCD yedeği alınır.',
   confirm: 'Bilgisayar 10 saniye içinde Gelişmiş başlatma seçenekleriyle yeniden başlayacak. Kaydedilmemiş işler kapanacak; önce BCD yedeği alınacak. Devam edilsin mi?',
   warning: 'Bu işlem oturumu kapatır. Tüm dosyalarınızı kaydettiğinizden emin olun.',
@@ -231,43 +231,43 @@ interface LeftoverTarget {
 }
 
 const TABS: Array<{ id: Tab; label: string; icon: string }> = [
-  { id: 'home', label: 'Anasayfa', icon: '⌂' },
-  { id: 'updates', label: 'Güncellemeler', icon: '↑' },
-  { id: 'apps', label: 'Kurulu Uygulamalar', icon: '▦' },
-  { id: 'packages', label: 'Yazılım Yedeği', icon: '▣' },
-  { id: 'bloatware', label: 'Gereksiz Yazılım Temizleyici', icon: '⌫' },
-  { id: 'startup', label: 'Başlangıç', icon: '⏻' },
-  { id: 'firewall', label: 'Güvenlik Duvarı', icon: '⚑' },
-  { id: 'malware', label: 'Kötü Amaçlı Yazılım', icon: '☣' },
-  { id: 'disk', label: 'Disk Temizleme', icon: '◫' },
-  { id: 'duplicates', label: 'Dosya Tarayıcı', icon: '⧉' },
-  { id: 'analysis', label: 'Disk Analizi', icon: '▤' },
-  { id: 'repair', label: 'Sistem Onarımı', icon: '✚' },
-  { id: 'drivers', label: 'Sürücüler', icon: '⚒' },
-  { id: 'recommended', label: 'Uygulama Kütüphanesi', icon: '✦' },
-  { id: 'registry', label: 'Kayıt Defteri', icon: '⚙' },
-  { id: 'schedule', label: 'Zamanlama', icon: '◷' },
-  { id: 'search', label: 'Uygulama Ara', icon: '⌕' },
-  { id: 'autoruns', label: 'Gelişmiş Başlangıç', icon: '➤' },
-  { id: 'privacy', label: 'Gizlilik Ayarları', icon: '◈' },
-  { id: 'tweaks', label: 'Sistem Ayarları', icon: '◉' },
-  { id: 'profiles', label: 'Optimizasyon Profilleri', icon: '⚡' },
-  { id: 'dns', label: 'DNS Karşılaştırma', icon: '🌐' },
-  { id: 'contextmenu', label: 'Sağ tık menüsü', icon: '≡' },
-  { id: 'debugging', label: 'Hata Ayıklama', icon: '⚗' },
-  { id: 'settings', label: 'Ayarlar', icon: '⚙' },
+  { id: 'home', label: 'Anasayfa', icon: 'House' },
+  { id: 'updates', label: 'Güncellemeler', icon: 'ArrowUp' },
+  { id: 'apps', label: 'Kurulu Uygulamalar', icon: 'LayoutGrid' },
+  { id: 'packages', label: 'Yazılım Yedeği', icon: 'Save' },
+  { id: 'bloatware', label: 'Gereksiz Yazılım Temizleyici', icon: 'Trash2' },
+  { id: 'startup', label: 'Başlangıç', icon: 'Power' },
+  { id: 'firewall', label: 'Güvenlik Duvarı', icon: 'Shield' },
+  { id: 'malware', label: 'Kötü Amaçlı Yazılım', icon: 'Virus' },
+  { id: 'disk', label: 'Disk Temizleme', icon: 'HardDrive' },
+  { id: 'duplicates', label: 'Dosya Tarayıcı', icon: 'Copy' },
+  { id: 'analysis', label: 'Disk Analizi', icon: 'PieChart' },
+  { id: 'repair', label: 'Sistem Onarımı', icon: 'Wrench' },
+  { id: 'drivers', label: 'Sürücüler', icon: 'Hammer' },
+  { id: 'recommended', label: 'Uygulama Kütüphanesi', icon: 'Sparkles' },
+  { id: 'registry', label: 'Kayıt Defteri', icon: 'Settings' },
+  { id: 'schedule', label: 'Zamanlama', icon: 'CalendarClock' },
+  { id: 'search', label: 'Uygulama Ara', icon: 'Search' },
+  { id: 'autoruns', label: 'Gelişmiş Başlangıç', icon: 'Rocket' },
+  { id: 'privacy', label: 'Gizlilik Ayarları', icon: 'ScanSearch' },
+  { id: 'tweaks', label: 'Sistem Ayarları', icon: 'Target' },
+  { id: 'profiles', label: 'Optimizasyon Profilleri', icon: 'Zap' },
+  { id: 'dns', label: 'DNS Karşılaştırma', icon: 'Globe' },
+  { id: 'contextmenu', label: 'Sağ tık menüsü', icon: 'Menu' },
+  { id: 'debugging', label: 'Hata Ayıklama', icon: 'Bug' },
+  { id: 'settings', label: 'Ayarlar', icon: 'Settings' },
 ];
 
 const TAB_GROUPS: Array<{ id: string; label: string; icon: string; tabs: Tab[] }> = [
-  { id: 'general', label: 'Genel', icon: '🧭', tabs: ['search', 'recommended'] },
-  { id: 'software', label: 'Yazılım Yönetimi', icon: '📦', tabs: ['updates', 'apps', 'packages', 'drivers'] },
-  { id: 'maintenance', label: 'Sistem Bakımı', icon: '🛠️', tabs: ['disk', 'duplicates', 'analysis', 'repair', 'registry', 'bloatware', 'startup', 'schedule'] },
-  { id: 'optimization', label: 'Optimizasyon & Ağ', icon: '⚡', tabs: ['tweaks', 'profiles', 'dns'] },
-  { id: 'security', label: 'Güvenlik', icon: '🛡️', tabs: ['firewall', 'malware', 'autoruns', 'privacy'] },
+  { id: 'general', label: 'Genel', icon: 'Compass', tabs: ['search', 'recommended'] },
+  { id: 'software', label: 'Yazılım Yönetimi', icon: 'Package', tabs: ['updates', 'apps', 'packages', 'drivers'] },
+  { id: 'maintenance', label: 'Sistem Bakımı', icon: 'Wrench', tabs: ['disk', 'duplicates', 'analysis', 'repair', 'registry', 'bloatware', 'startup', 'schedule'] },
+  { id: 'optimization', label: 'Optimizasyon & Ağ', icon: 'Zap', tabs: ['tweaks', 'profiles', 'dns'] },
+  { id: 'security', label: 'Güvenlik', icon: 'Shield', tabs: ['firewall', 'malware', 'autoruns', 'privacy'] },
   // Sağ tık menüsü Windows kabuğunu kişiselleştirir; hata ayıklamadan ayrıldı.
-  { id: 'personalization', label: 'Kişiselleştirme', icon: '🎨', tabs: ['contextmenu'] },
+  { id: 'personalization', label: 'Kişiselleştirme', icon: 'Palette', tabs: ['contextmenu'] },
   // Ayarlar sol alt köşeye sabitlendi; Yapılandırma yalnızca hata ayıklamayı içerir.
-  { id: 'config', label: 'Yapılandırma', icon: '⚙️', tabs: ['debugging'] },
+  { id: 'config', label: 'Yapılandırma', icon: 'Settings', tabs: ['debugging'] },
 ];
 
 /** Anasayfa bağımsız sekmedir; hiçbir gruba ait değildir. */
@@ -378,7 +378,7 @@ function SourceDock({ value, onChange, statuses, t, title, titleIcon }: {
 }) {
   const sources: Array<'all' | PackageSource> = ['all', 'winget', 'choco', 'npm', 'scoop'];
   const icons: Record<'all' | PackageSource, string> = {
-    all: '☑️', winget: '⊞', choco: '🍫', npm: '📦', scoop: '🥄',
+    all: 'SquareCheck', winget: 'AppWindow', choco: 'Package', npm: 'Package', scoop: 'Boxes',
   };
   const labels: Record<'all' | PackageSource, string> = {
     all: t('Tümü'), winget: 'winget', choco: 'Chocolatey', npm: 'npm', scoop: 'Scoop',
@@ -420,7 +420,7 @@ function CategoryDock({ value, onChange, categories, t }: {
 }) {
   return (
     <div className="dock-bar" role="group" aria-label={t('Kategori')}>
-      <span className="dock-title"><UiIcon icon="▦" />{t('Kategori')}</span>
+      <span className="dock-title"><UiIcon icon="LayoutGrid" />{t('Kategori')}</span>
       <div className="dock-items">
         {categories.map((category) => (
           <button
@@ -514,8 +514,8 @@ function ConfirmDialog({ state, onClose }: { state: ConfirmState; onClose: () =>
   return (
     <div className="modal-backdrop modal-front" role="presentation">
       <div className="modal" role="dialog" aria-modal="true" aria-label={state.title}>
-        <div className="modal-icon">!</div>
-        <h2><UiIcon icon="⚠️" />{state.title}</h2>
+        <div className="modal-icon"><Glyph name="TriangleAlert" size={14} /></div>
+        <h2><UiIcon icon="TriangleAlert" />{state.title}</h2>
         <p>{state.message}</p>
         {state.warning && <div className="danger-zone"><b>DİKKAT</b><p>{state.warning}</p></div>}
         <div className="modal-actions">
@@ -528,7 +528,7 @@ function ConfirmDialog({ state, onClose }: { state: ConfirmState; onClose: () =>
                 onClose();
               }}
             >
-              <UiIcon icon={option.kind === 'danger' ? '⚠️' : option.kind === 'primary' ? '✅' : '↩️'} />{option.label}
+              <UiIcon icon={option.kind === 'danger' ? 'TriangleAlert' : option.kind === 'primary' ? 'Check' : 'Undo2'} />{option.label}
             </button>
           ))}
         </div>
@@ -1774,7 +1774,7 @@ export default function App() {
               aria-haspopup="menu"
               onClick={() => setThemeMenuOpen((open) => !open)}
             >
-              {currentTheme === 'auto' ? '◐' : currentTheme === 'windows11' ? '☀' : '☾'}
+              <Glyph name={currentTheme === 'auto' ? 'SunMoon' : currentTheme === 'windows11' ? 'Sun' : 'Moon'} size={15} />
             </button>
             {themeMenuOpen && (
               <div className="theme-menu" role="menu">
@@ -1784,7 +1784,7 @@ export default function App() {
                   className={currentTheme === 'default' ? 'active' : ''}
                   onClick={() => applyTheme('default')}
                 >
-                  <span className="theme-icon" aria-hidden="true">☾</span>
+                  <span className="theme-icon" aria-hidden="true"><Glyph name="Moon" size={14} /></span>
                   {t('Koyu Mod')}
                 </button>
                 <button
@@ -1793,7 +1793,7 @@ export default function App() {
                   className={currentTheme === 'windows11' ? 'active' : ''}
                   onClick={() => applyTheme('windows11')}
                 >
-                  <span className="theme-icon" aria-hidden="true">☀</span>
+                  <span className="theme-icon" aria-hidden="true"><Glyph name="Sun" size={14} /></span>
                   {t('Açık Mod')}
                 </button>
                 <button
@@ -1802,22 +1802,22 @@ export default function App() {
                   className={currentTheme === 'auto' ? 'active' : ''}
                   onClick={() => applyTheme('auto')}
                 >
-                  <span className="theme-icon" aria-hidden="true">◐</span>
+                  <span className="theme-icon" aria-hidden="true"><Glyph name="SunMoon" size={14} /></span>
                   {t('Sistem')}
                 </button>
               </div>
             )}
           </div>
-          <button className="window-btn" title={t('Pencereyi küçült')} aria-label={t('Pencereyi küçült')} onClick={() => void api.windowAction('minimize')}>─</button>
+          <button className="window-btn" title={t('Pencereyi küçült')} aria-label={t('Pencereyi küçült')} onClick={() => void api.windowAction('minimize')}><Glyph name="Minus" size={14} /></button>
           <button
             className="window-btn"
             title={t(maximized ? 'Pencereyi geri yükle' : 'Pencereyi büyüt')}
             aria-label={t(maximized ? 'Pencereyi geri yükle' : 'Pencereyi büyüt')}
             onClick={() => void api.windowAction('maximize')}
           >
-            {maximized ? '❐' : '□'}
+            <Glyph name={maximized ? 'Maximize2' : 'Maximize'} size={14} />
           </button>
-          <button className="window-btn window-close" title={t('Kapat')} aria-label={t('Kapat')} onClick={requestClose}>✕</button>
+          <button className="window-btn window-close" title={t('Kapat')} aria-label={t('Kapat')} onClick={requestClose}><Glyph name="X" size={14} /></button>
         </div>
       </header>
 
@@ -1882,7 +1882,7 @@ export default function App() {
             title={t('Anasayfa')}
             onClick={() => setTab('home')}
           >
-            <span className="nav-icon">⌂</span>
+            <span className="nav-icon"><Glyph name="House" size={14} /></span>
             <span>{t('Anasayfa')}</span>
           </button>
           {TAB_GROUPS.map((group) => {
@@ -1907,7 +1907,7 @@ export default function App() {
                     });
                   }}
                 >
-                  <span className="nav-group-icon" aria-hidden="true"><UiIcon icon={group.icon} /></span>
+                  <span className="nav-group-icon" aria-hidden="true"><Glyph name={group.icon} size={13} /></span>
                   <span className="nav-group-label">{t(group.label)}</span>
                   <span className="nav-arrow" aria-hidden="true">›</span>
                 </button>
@@ -1923,7 +1923,7 @@ export default function App() {
                           title={t(item.label)}
                           onClick={() => setTab(item.id)}
                         >
-                          <span className="nav-icon">{item.icon}</span>
+                          <span className="nav-icon"><Glyph name={item.icon} size={15} /></span>
                           <span>{t(item.label)}</span>
                         </button>
                       );
@@ -1941,7 +1941,7 @@ export default function App() {
             title={t('Ayarlar')}
             onClick={() => setTab('settings')}
           >
-            <span className="nav-icon">⚙</span>
+            <span className="nav-icon"><Glyph name="Settings" size={14} /></span>
             <span>{t('Ayarlar')}</span>
           </button>
           <div className="sidebar-links">
@@ -2067,7 +2067,7 @@ export default function App() {
                   void run(t('Güncellemeler taranıyor'), () => refreshUpdates(source)).catch(() => undefined);
                 }}
                 statuses={managerStatus} t={t}
-                title={t('Güncelleme kaynağı')} titleIcon="⟳"
+                title={t('Güncelleme kaynağı')} titleIcon="RefreshCw"
               />
               {updates.length ? (
                 <div className="table-wrap">
@@ -2094,7 +2094,7 @@ export default function App() {
                 </div>
               ) : (
                 <div className="all-updated">
-                  <div className="all-updated-icon" aria-hidden="true">✓</div>
+                  <div className="all-updated-icon" aria-hidden="true"><Glyph name="Check" size={14} /></div>
                   <h3><UiIcon label="Tüm programlar güncel" />{t('Tüm programlar güncel')}</h3>
                   <p className="muted">{t('Kurulu uygulamalarınızın tamamı güncel görünüyor. Yeni sürümler çıktığında burada görebilirsiniz.')}</p>
                   <button className="btn" onClick={() => void run(t('Güncellemeler taranıyor'), refreshUpdates)}><UiIcon label="Yeniden tara" />{t('Yeniden tara')}</button>
@@ -2160,7 +2160,7 @@ export default function App() {
                         <td className="col-actions">
                           <div className="row-actions">
                             <button className="link-btn danger" onClick={() => void uninstallApp(app)}>
-                              <span className="trash-icon" aria-hidden="true">🗑</span>{t('Kaldır')}
+                              <span className="trash-icon" aria-hidden="true"><Glyph name="Trash2" size={14} /></span>{t('Kaldır')}
                             </button>
                           </div>
                         </td>
@@ -2334,7 +2334,7 @@ export default function App() {
               </div>
               <div className="filter-row">
                 {([['all', 'Tümü'], ['critical', 'Kritik'], ['medium', 'Orta']] as const).map(([value, label]) => (
-                  <button key={value} className={`chip ${firewallFilter === value ? 'chip-active' : ''}`} onClick={() => setFirewallFilter(value)}><UiIcon icon={value === 'all' ? '☑️' : value === 'critical' ? '⛔' : '⚠️'} />{t(label)}</button>
+                  <button key={value} className={`chip ${firewallFilter === value ? 'chip-active' : ''}`} onClick={() => setFirewallFilter(value)}><UiIcon icon={value === 'all' ? 'SquareCheck' : value === 'critical' ? 'OctagonX' : 'TriangleAlert'} />{t(label)}</button>
                 ))}
               </div>
               <div className="table-wrap">
@@ -2409,7 +2409,7 @@ export default function App() {
                     className={`chip ${malwareEngines.includes(engine.id) ? 'chip-active' : ''}`}
                     onClick={() => setMalwareEngines((prev) => prev.includes(engine.id) ? prev.filter((id) => id !== engine.id) : [...prev, engine.id])}
                   >
-                    <UiIcon icon="🛡️" />{t(engine.label)}
+                    <UiIcon icon="Shield" />{t(engine.label)}
                   </button>
                 ))}
               </div>
@@ -2493,7 +2493,7 @@ export default function App() {
                       className={`chip ${recycleDrives.has(drive) ? 'active' : ''}`}
                       onClick={() => toggle(setRecycleDrives, drive)}
                     >
-                      <UiIcon icon="💽" />{drive}
+                      <UiIcon icon="HardDrive" />{drive}
                     </button>
                   ))}
                 </div>
@@ -2657,7 +2657,7 @@ export default function App() {
               </div>
               <SourceDock
                 value={recSource} onChange={setRecSource} statuses={managerStatus} t={t}
-                title={t('Paket yöneticisi')} titleIcon="⚙"
+                title={t('Paket yöneticisi')} titleIcon="Settings"
               />
               <CategoryDock
                 value={recCategory} onChange={setRecCategory}
@@ -2884,9 +2884,9 @@ export default function App() {
                 {schedules.map((task) => (
                   <div className="card schedule-card" key={task.id}>
                     <div className="schedule-head">
-                      <span className="schedule-icon">{SCHEDULE_INFO[task.kind].icon}</span>
+                      <span className="schedule-icon"><Glyph name={SCHEDULE_INFO[task.kind].icon} size={18} /></span>
                       <div>
-                        <h3><UiIcon icon="◷" />{t(task.name)}</h3>
+                        <h3><UiIcon icon="CalendarClock" />{t(task.name)}</h3>
                         <p className="muted small">{t(SCHEDULE_INFO[task.kind].description)}</p>
                       </div>
                     </div>
@@ -3326,7 +3326,7 @@ export default function App() {
                       title={t('Kaldır')}
                       onClick={() => patchSettings({ excludedExtensions: settings.excludedExtensions.filter((item) => item !== extension) })}
                     >
-                      <UiIcon icon="🧩" />{extension} ×
+                      <UiIcon icon="Puzzle" />{extension} ×
                     </button>
                   ))}
                   {!settings.excludedExtensions.length && <p className="muted small">{t('Hariç tutulan uzantı yok.')}</p>}
@@ -3700,7 +3700,7 @@ export default function App() {
                       <div className="mini-list">
                         {analysisResult.topFiles.slice(0, 12).map((file) => (
                           <button key={file.path} className="mini-row link-row" onClick={() => void api.openPath(file.path)} title={file.path}>
-                            <UiIcon icon="📄" /><span className="line">{file.path.split('\\').pop()}</span><span className="mono small">{sizeText(file.size)}</span>
+                            <UiIcon icon="FileText" /><span className="line">{file.path.split('\\').pop()}</span><span className="mono small">{sizeText(file.size)}</span>
                           </button>
                         ))}
                         {!analysisResult.topFiles.length && <p className="empty">{t('20 MB üzeri dosya yok.')}</p>}
@@ -3735,13 +3735,13 @@ export default function App() {
               </div>
               {REPAIR_GROUPS.map((group) => (
                 <div className="repair-group" key={group.title}>
-                  <h3><UiIcon icon="✚️" />{t(group.title)}</h3>
+                  <h3><UiIcon icon="Wrench" />{t(group.title)}</h3>
                   <p className="muted">{t(group.description)}</p>
                   <div className="feature-grid">
                     {group.actions.map((action) => (
                       <div className="card" key={action.id}>
                         <div className="card-top">
-                          <div className="feature-icon">{action.icon}</div>
+                          <div className="feature-icon"><Glyph name={action.icon} size={20} /></div>
                           {action.readOnly
                             ? <span className="badge badge-green">{t('salt okunur')}</span>
                             : action.backup
@@ -3763,7 +3763,7 @@ export default function App() {
                 </div>
               ))}
               <div className="repair-group">
-                <h3><UiIcon icon="🛟" />{t('WinRE komut rehberi')}</h3>
+                <h3><UiIcon icon="LifeBuoy" />{t('WinRE komut rehberi')}</h3>
                 <p className="muted">{t('Aşağıdaki komutlar yalnızca Windows Kurtarma Ortamı’nda (Gelişmiş başlatma → Komut İstemi) çalıştırılmalıdır. Açık sistemde chkdsk /f, bootrec veya bcdboot kullanmayın.')}</p>
                 <div className="card">
                   <div className="card-top">
@@ -3777,7 +3777,7 @@ export default function App() {
                 <div className="feature-grid">
                   {[BCD_ACTION, RESTART_ACTION].map((action) => (
                     <div className="card" key={action.id}>
-                      <div className="feature-icon">{action.icon}</div>
+                      <div className="feature-icon"><Glyph name={action.icon} size={20} /></div>
                       <h3><UiIcon label={action.title} />{t(action.title)}</h3>
                       <p className="muted">{t(action.detail)}</p>
                       <button className={`btn ${action.danger ? 'btn-danger' : 'btn-primary'}`} onClick={() => startRepair(action)}>
@@ -3864,7 +3864,7 @@ export default function App() {
                 if (!rows.length) return null;
                 return (
                   <div className="card" key={category}>
-                    <h3><UiIcon icon={category === 'telemetry' ? '📡' : category === 'privacy' ? '🔒' : '🎨'} />{t(category === 'telemetry' ? 'Telemetri' : category === 'privacy' ? 'Gizlilik' : 'Arayüz')}</h3>
+                    <h3><UiIcon icon={category === 'telemetry' ? 'Radio' : category === 'privacy' ? 'Lock' : 'Palette'} />{t(category === 'telemetry' ? 'Telemetri' : category === 'privacy' ? 'Gizlilik' : 'Arayüz')}</h3>
                     <div className="mini-list privacy-list">
                       {rows.map((tweak) => (
                         <div className="setting-row" key={tweak.id}>
@@ -3975,7 +3975,7 @@ export default function App() {
                 {profiles.map((profile) => (
                   <div className="card" key={profile.id}>
                     <div className="card-top">
-                      <div className="feature-icon">{profile.icon}</div>
+                      <div className="feature-icon"><Glyph name={profile.icon} size={20} /></div>
                       <span className="badge">{tf('{count} ayar', { count: profile.tweakIds.length })}</span>
                     </div>
                     <h3><UiIcon label={profile.title} />{t(profile.title)}</h3>
@@ -4103,7 +4103,7 @@ export default function App() {
       {closePrompt && (
         <div className="modal-backdrop modal-front" role="presentation">
           <div className="modal" role="dialog" aria-modal="true" aria-label={t('Uygulamayı kapat')}>
-            <div className="modal-icon">?</div>
+            <div className="modal-icon"><Glyph name="CircleHelp" size={14} /></div>
             <h2><UiIcon label="Uygulamayı kapat" />{t('Uygulamayı kapat')}</h2>
             <p>{t('Sistem tepsisine küçültülsün mü?')}</p>
             <label className="modal-check">
