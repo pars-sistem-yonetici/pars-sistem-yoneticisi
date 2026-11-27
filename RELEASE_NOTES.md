@@ -23,11 +23,11 @@ Görseller 1.2.0 arayüzünden alınmıştır; kütüphane ekranı yeni ikonlar�
 
 ## İndirme
 
-- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.2.0.exe` (NSIS, başlat menüsü + masaüstü kısayolu) — 85.424.621 bayt
-  - SHA-256: `0fb6ff678a8181e1946ca046039e0f43fe020cc514529215a19b48cf9b69f923`
-  - SHA-512: `c9850ad2b91439a40caa74c7189e0e7ccf56e9fadff90bc46aa4c9f2c82f513cdd8a3719356c4b0ee092a0366f7421c65332add054781a78abcfe7b7b2b72f39`
-- **Portable:** `ParsSistemYoneticisi-Portable.exe` — 85.210.533 bayt
-  - SHA-256: `94fc1f28790bac793f0c7524c9f387bc1bf91729015955ed86895451e1c5d5d1`
+- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.2.0.exe` (NSIS, başlat menüsü + masaüstü kısayolu) — 85.424.937 bayt
+  - SHA-256: `1f6a56de4aaa0f99960f476a53ff896f0df870c36c9b44e5a87bc59c04534d3b`
+  - SHA-512: `375eaac44cabb053e20c94db3c1740c0ea9e4daf3f1734294484833929524b079a5628a27960d7fbbcf3b80aaf07cb272633ea77b814384795591ed12ae684a2`
+- **Portable:** `ParsSistemYoneticisi-Portable.exe` — 85.210.851 bayt
+  - SHA-256: `e2479641d8d7dca1d0b54a27ee6c457c5336aaf88216c3a0008aa3278c618ee7`
 
 Windows 10 (1809+) / Windows 11 x64 gereklidir. Kurulum exe’si winget eksikse resmi kaynaktan kurar; portable sürümde winget “Gerekli bileşenler” panelinden kurulabilir. Chocolatey, npm ve Scoop taramaları yalnızca ilgili araç kuruluysa seçilebilir.
 Uygulama yönetici izinleriyle çalışır; açılışta UAC onayı görünür.
