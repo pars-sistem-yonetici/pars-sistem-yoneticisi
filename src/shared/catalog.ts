@@ -7,9 +7,14 @@ export interface RecommendedSoftware {
   description: string;
   essential?: boolean;
   homepage?: string;
+  /** Vektör marka ikonu; boşsa homepage favicon'una düşülür. */
+  icon?: string;
   /** Boşsa winget kullanılır. */
   source?: PackageSource;
 }
+
+/** Simple Icons vektör logosu (sürüm sabitlenmiştir; kartlarda keskin görünür). */
+const brandIcon = (slug: string): string => `https://cdn.jsdelivr.net/npm/simple-icons@16.38.1/icons/${slug}.svg`;
 
 // Tüm kimlikler winget 1.29 ile `winget show --id ... --exact` kullanılarak doğrulanmıştır.
 export const CATALOG: RecommendedSoftware[] = [
@@ -50,6 +55,13 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'Speccy', ident: 'Piriform.Speccy', category: 'Sistem & Çalışma Zamanı', description: 'Sistem donanım özeti', homepage: 'https://www.ccleaner.com' },
   { name: 'Defraggler', ident: 'Piriform.Defraggler', category: 'Sistem & Çalışma Zamanı', description: 'Disk birleştirme aracı', homepage: 'https://www.ccleaner.com' },
   { name: 'Everything', ident: 'voidtools.Everything', category: 'Sistem & Çalışma Zamanı', description: 'Anında dosya arama', homepage: 'https://www.voidtools.com' },
+  { name: 'WinRAR', ident: 'RARLab.WinRAR', category: 'Sistem & Çalışma Zamanı', description: 'RAR/ZIP arşivleme', homepage: 'https://www.rarlab.com' },
+  { name: 'Bandizip', ident: 'Bandisoft.Bandizip', category: 'Sistem & Çalışma Zamanı', description: 'Hızlı arşiv yöneticisi', homepage: 'https://www.bandisoft.com/bandizip' },
+  { name: 'TreeSize Free', ident: 'JAMSoftware.TreeSize', category: 'Sistem & Çalışma Zamanı', description: 'Klasör boyutu analizi', homepage: 'https://www.jam-software.com/treesize_free' },
+  { name: 'WinDirStat', ident: 'WinDirStat.WinDirStat', category: 'Sistem & Çalışma Zamanı', description: 'Disk kullanım haritası', homepage: 'https://windirstat.net' },
+  { name: 'HWiNFO', ident: 'REALiX.HWiNFO', category: 'Sistem & Çalışma Zamanı', description: 'Donanım tanılama ve izleme', homepage: 'https://www.hwinfo.com' },
+  { name: 'Autoruns', ident: 'Microsoft.Sysinternals.Autoruns', category: 'Sistem & Çalışma Zamanı', description: 'Otomatik başlangıç girdileri', homepage: 'https://learn.microsoft.com' },
+  { name: 'Process Monitor', ident: 'Microsoft.Sysinternals.ProcessMonitor', category: 'Sistem & Çalışma Zamanı', description: 'Süreç, dosya ve kayıt izleme', homepage: 'https://learn.microsoft.com' },
 
   // Güvenlik
   { name: 'Malwarebytes', ident: 'Malwarebytes.Malwarebytes', category: 'Güvenlik', description: 'Kötü amaçlı yazılım tarayıcısı', homepage: 'https://www.malwarebytes.com' },
@@ -65,6 +77,13 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'OpenVPN Connect', ident: 'OpenVPNTechnologies.OpenVPNConnect', category: 'Güvenlik', description: 'VPN istemcisi', homepage: 'https://openvpn.net' },
   { name: 'Wireshark', ident: 'WiresharkFoundation.Wireshark', category: 'Güvenlik', description: 'Ağ trafiği analizi', homepage: 'https://www.wireshark.org' },
   { name: 'TCPView', ident: 'Microsoft.Sysinternals.TCPView', category: 'Güvenlik', description: 'Ağ bağlantılarını izleme', homepage: 'https://learn.microsoft.com' },
+  { name: 'KeePassXC', ident: 'KeePassXCTeam.KeePassXC', category: 'Güvenlik', description: 'Açık kaynak şifre kasası', icon: brandIcon('keepassxc'), homepage: 'https://keepassxc.org' },
+  { name: 'Bitwarden CLI', ident: 'Bitwarden.CLI', category: 'Güvenlik', description: 'Bitwarden komut satırı aracı', icon: brandIcon('bitwarden'), homepage: 'https://bitwarden.com' },
+  { name: 'Proton VPN', ident: 'Proton.ProtonVPN', category: 'Güvenlik', description: 'Gizlilik odaklı VPN', icon: brandIcon('protonvpn'), homepage: 'https://protonvpn.com' },
+  { name: 'Tailscale', ident: 'Tailscale.Tailscale', category: 'Güvenlik', description: 'Mesh VPN ağı', icon: brandIcon('tailscale'), homepage: 'https://tailscale.com' },
+  { name: 'Nmap', ident: 'Insecure.Nmap', category: 'Güvenlik', description: 'Ağ keşfi ve port taraması', homepage: 'https://nmap.org' },
+  { name: 'Gpg4win', ident: 'GnuPG.Gpg4win', category: 'Güvenlik', description: 'Windows için GnuPG şifreleme', homepage: 'https://www.gpg4win.org' },
+  { name: 'ESET NOD32 Antivirus', ident: 'ESET.Nod32', category: 'Güvenlik', description: 'Antivirüs koruması', homepage: 'https://www.eset.com' },
 
   // Tarayıcı
   { name: 'Google Chrome', ident: 'Google.Chrome', category: 'Tarayıcı', description: 'Web tarayıcısı', homepage: 'https://www.google.com' },
@@ -76,6 +95,13 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'Vivaldi', ident: 'Vivaldi.Vivaldi', category: 'Tarayıcı', description: 'Özelleştirilebilir tarayıcı', homepage: 'https://vivaldi.com' },
   { name: 'Tor Browser', ident: 'TorProject.TorBrowser', category: 'Tarayıcı', description: 'Anonim web tarayıcısı', homepage: 'https://www.torproject.org' },
   { name: 'Waterfox', ident: 'Waterfox.Waterfox', category: 'Tarayıcı', description: 'Gizlilik odaklı Firefox türevi', homepage: 'https://www.waterfox.net' },
+  { name: 'Google Chrome Beta', ident: 'Google.Chrome.Beta', category: 'Tarayıcı', description: 'Chrome test sürümü', icon: brandIcon('googlechrome'), homepage: 'https://www.google.com/chrome' },
+  { name: 'Google Chrome Canary', ident: 'Google.Chrome.Canary', category: 'Tarayıcı', description: 'Chrome günlük sürümü', icon: brandIcon('googlechrome'), homepage: 'https://www.google.com/chrome' },
+  { name: 'Microsoft Edge Beta', ident: 'Microsoft.Edge.Beta', category: 'Tarayıcı', description: 'Edge test sürümü', homepage: 'https://www.microsoft.com/edge' },
+  { name: 'Brave Beta', ident: 'Brave.Brave.Beta', category: 'Tarayıcı', description: 'Brave test sürümü', icon: brandIcon('brave'), homepage: 'https://brave.com' },
+  { name: 'LibreWolf', ident: 'LibreWolf.LibreWolf', category: 'Tarayıcı', description: 'Gizlilik odaklı Firefox', icon: brandIcon('librewolf'), homepage: 'https://librewolf.net' },
+  { name: 'DuckDuckGo Browser', ident: 'DuckDuckGo.DesktopBrowser', category: 'Tarayıcı', description: 'Gizlilik odaklı tarayıcı', icon: brandIcon('duckduckgo'), homepage: 'https://duckduckgo.com' },
+
   // İletişim
   { name: 'Telegram Desktop', ident: 'Telegram.TelegramDesktop', category: 'İletişim', description: 'Mesajlaşma', homepage: 'https://telegram.org' },
   { name: 'Discord', ident: 'Discord.Discord', category: 'İletişim', description: 'Topluluk ve sesli sohbet', homepage: 'https://discord.com' },
@@ -86,6 +112,11 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'Zoom Workplace', ident: 'Zoom.Zoom', category: 'İletişim', description: 'Görüntülü toplantı', homepage: 'https://zoom.us' },
   { name: 'TeamViewer', ident: 'TeamViewer.TeamViewer', category: 'İletişim', description: 'Uzaktan erişim', homepage: 'https://www.teamviewer.com' },
   { name: 'AnyDesk', ident: 'AnyDesk.AnyDesk', category: 'İletişim', description: 'Hızlı uzaktan erişim', homepage: 'https://anydesk.com' },
+  { name: 'Signal', ident: 'OpenWhisperSystems.Signal', category: 'İletişim', description: 'Uçtan uca şifreli mesajlaşma', icon: brandIcon('signal'), homepage: 'https://signal.org' },
+  { name: 'Element', ident: 'Element.Element', category: 'İletişim', description: 'Matrix mesajlaşma istemcisi', icon: brandIcon('element'), homepage: 'https://element.io' },
+  { name: 'Viber', ident: 'Rakuten.Viber', category: 'İletişim', description: 'Mesajlaşma ve sesli arama', icon: brandIcon('viber'), homepage: 'https://www.viber.com' },
+  { name: 'Wire', ident: 'wire.wire', category: 'İletişim', description: 'Güvenli ekip iletişimi', icon: brandIcon('wire'), homepage: 'https://wire.com' },
+  { name: 'Zulip', ident: 'Zulip.Zulip', category: 'İletişim', description: 'Konu bazlı ekip sohbeti', icon: brandIcon('zulip'), homepage: 'https://zulip.com' },
 
   // Verimlilik
   { name: 'LibreOffice', ident: 'TheDocumentFoundation.LibreOffice', category: 'Verimlilik', description: 'Ücretsiz ofis paketi', homepage: 'https://www.libreoffice.org' },
@@ -104,6 +135,14 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'Notion', ident: 'Notion.Notion', category: 'Verimlilik', description: 'Not, proje ve wiki', homepage: 'https://www.notion.so' },
   { name: 'Microsoft Power BI Desktop', ident: 'Microsoft.PowerBI', category: 'Verimlilik', description: 'Veri görselleştirme', homepage: 'https://powerbi.microsoft.com' },
   { name: 'Toggl Track', ident: 'Toggl.TogglTrack', category: 'Verimlilik', description: 'Zaman takibi', homepage: 'https://toggl.com' },
+  { name: 'Dropbox', ident: 'Dropbox.Dropbox', category: 'Verimlilik', description: 'Bulut dosya senkronizasyonu', icon: brandIcon('dropbox'), homepage: 'https://www.dropbox.com' },
+  { name: 'Anki', ident: 'Anki.Anki', category: 'Verimlilik', description: 'Aralıklı tekrarla öğrenme', icon: brandIcon('anki'), homepage: 'https://apps.ankiweb.net' },
+  { name: 'Todoist', ident: 'Doist.Todoist', category: 'Verimlilik', description: 'Görev ve proje takibi', icon: brandIcon('todoist'), homepage: 'https://todoist.com' },
+  { name: 'Zotero', ident: 'DigitalScholar.Zotero', category: 'Verimlilik', description: 'Araştırma ve kaynak yönetimi', icon: brandIcon('zotero'), homepage: 'https://www.zotero.org' },
+  { name: 'AutoHotkey', ident: 'AutoHotkey.AutoHotkey', category: 'Verimlilik', description: 'Windows otomasyon betikleri', icon: brandIcon('autohotkey'), homepage: 'https://www.autohotkey.com' },
+  { name: 'Greenshot', ident: 'Greenshot.Greenshot', category: 'Verimlilik', description: 'Ekran görüntüsü aracı', homepage: 'https://getgreenshot.org' },
+  { name: 'draw.io', ident: 'JGraph.Draw', category: 'Verimlilik', description: 'Diyagram ve akış şeması', homepage: 'https://app.diagrams.net' },
+  { name: 'Miro', ident: 'Miro.Miro', category: 'Verimlilik', description: 'Çevrimiçi beyin fırtınası', icon: brandIcon('miro'), homepage: 'https://miro.com' },
 
   // Medya & Tasarım
   { name: 'VLC media player', ident: 'VideoLAN.VLC', category: 'Medya & Tasarım', description: 'Video ve ses oynatıcı', homepage: 'https://www.videolan.org' },
@@ -130,6 +169,15 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'qBittorrent', ident: 'qBittorrent.qBittorrent', category: 'Medya & Tasarım', description: 'Torrent istemcisi', homepage: 'https://www.qbittorrent.org' },
   { name: 'Transmission', ident: 'Transmission.Transmission', category: 'Medya & Tasarım', description: 'Hafif torrent istemcisi', homepage: 'https://transmissionbt.com' },
   { name: 'WinSCP', ident: 'WinSCP.WinSCP', category: 'Medya & Tasarım', description: 'SFTP / FTP istemcisi', homepage: 'https://winscp.net' },
+  { name: 'Canva', ident: 'Canva.Canva', category: 'Medya & Tasarım', description: 'Çevrimiçi tasarım aracı', homepage: 'https://www.canva.com' },
+  { name: 'foobar2000', ident: 'PeterPawlowski.foobar2000', category: 'Medya & Tasarım', description: 'Hafif ses oynatıcı', icon: brandIcon('foobar2000'), homepage: 'https://www.foobar2000.org' },
+  { name: 'AIMP', ident: 'AIMP.AIMP', category: 'Medya & Tasarım', description: 'Zengin özellikli ses oynatıcı', homepage: 'https://www.aimp.ru' },
+  { name: 'SMPlayer', ident: 'SMPlayer.SMPlayer', category: 'Medya & Tasarım', description: 'Altyazılı video oynatıcı', homepage: 'https://www.smplayer.info' },
+  { name: 'mpv', ident: 'shinchiro.mpv', category: 'Medya & Tasarım', description: 'Hafif video oynatıcı', icon: brandIcon('mpv'), homepage: 'https://mpv.io' },
+  { name: 'MPC-HC', ident: 'clsid2.mpc-hc', category: 'Medya & Tasarım', description: 'Klasik HD video oynatıcı', homepage: 'https://github.com/clsid2/mpc-hc' },
+  { name: 'Kdenlive', ident: 'KDE.Kdenlive', category: 'Medya & Tasarım', description: 'Video düzenleme stüdyosu', icon: brandIcon('kdenlive'), homepage: 'https://kdenlive.org' },
+  { name: 'OpenShot', ident: 'OpenShot.OpenShot', category: 'Medya & Tasarım', description: 'Açık kaynak video editörü', homepage: 'https://www.openshot.org' },
+  { name: 'Deluge', ident: 'DelugeTeam.Deluge', category: 'Medya & Tasarım', description: 'Hafif torrent istemcisi', icon: brandIcon('deluge'), homepage: 'https://deluge-torrent.org' },
 
   // Geliştirme
   { name: 'Git', ident: 'Git.Git', category: 'Geliştirme', description: 'Sürüm kontrol sistemi', homepage: 'https://git-scm.com' },
@@ -160,6 +208,17 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'PostgreSQL 16', ident: 'PostgreSQL.PostgreSQL.16', category: 'Geliştirme', description: 'İlişkisel veritabanı', homepage: 'https://www.postgresql.org' },
   { name: 'HeidiSQL', ident: 'HeidiSQL.HeidiSQL', category: 'Geliştirme', description: 'Veritabanı yönetim aracı', homepage: 'https://www.heidisql.com' },
   { name: 'DBeaver Community', ident: 'DBeaver.DBeaver.Community', category: 'Geliştirme', description: 'Evrensel veritabanı aracı', homepage: 'https://dbeaver.io' },
+  { name: 'VSCodium', ident: 'VSCodium.VSCodium', category: 'Geliştirme', description: 'Telemetrisiz VS Code', icon: brandIcon('vscodium'), homepage: 'https://vscodium.com' },
+  { name: 'Visual Studio Code Insiders', ident: 'Microsoft.VisualStudioCode.Insiders', category: 'Geliştirme', description: 'VS Code günlük sürümü', homepage: 'https://code.visualstudio.com/insiders' },
+  { name: 'Sublime Text 4', ident: 'SublimeHQ.SublimeText.4', category: 'Geliştirme', description: 'Hızlı kod düzenleyici', icon: brandIcon('sublimetext'), homepage: 'https://www.sublimetext.com' },
+  { name: 'Sourcetree', ident: 'Atlassian.Sourcetree', category: 'Geliştirme', description: 'Görsel Git istemcisi', icon: brandIcon('sourcetree'), homepage: 'https://www.sourcetreeapp.com' },
+  { name: 'GitKraken', ident: 'Axosoft.GitKraken', category: 'Geliştirme', description: 'Görsel Git istemcisi', icon: brandIcon('gitkraken'), homepage: 'https://www.gitkraken.com' },
+  { name: 'Postman', ident: 'Postman.Postman', category: 'Geliştirme', description: 'API geliştirme ve test', icon: brandIcon('postman'), homepage: 'https://www.postman.com' },
+  { name: 'Insomnia', ident: 'Insomnia.Insomnia', category: 'Geliştirme', description: 'API istemcisi', icon: brandIcon('insomnia'), homepage: 'https://insomnia.rest' },
+  { name: 'DB Browser for SQLite', ident: 'DBBrowserForSQLite.DBBrowserForSQLite', category: 'Geliştirme', description: 'SQLite veritabanı aracı', icon: brandIcon('sqlite'), homepage: 'https://sqlitebrowser.org' },
+  { name: 'Eclipse Temurin JDK 21', ident: 'EclipseAdoptium.Temurin.21.JDK', category: 'Geliştirme', description: 'Açık kaynak Java 21', icon: brandIcon('eclipseadoptium'), homepage: 'https://adoptium.net' },
+  { name: 'MongoDB Compass', ident: 'MongoDB.Compass.Full', category: 'Geliştirme', description: 'MongoDB veritabanı aracı', icon: brandIcon('mongodb'), homepage: 'https://www.mongodb.com/products/compass' },
+  { name: 'Terraform', ident: 'Hashicorp.Terraform', category: 'Geliştirme', description: 'Altyapı kodlama aracı', icon: brandIcon('terraform'), homepage: 'https://www.terraform.io' },
 
   // Oyun
   { name: 'Steam', ident: 'Valve.Steam', category: 'Oyun', description: 'Oyun platformu', homepage: 'https://store.steampowered.com' },
@@ -169,6 +228,8 @@ export const CATALOG: RecommendedSoftware[] = [
   { name: 'Battle.net', ident: 'Blizzard.BattleNet', category: 'Oyun', description: 'Blizzard oyun platformu', homepage: 'https://www.blizzard.com' },
   { name: 'EA Desktop', ident: 'ElectronicArts.EADesktop', category: 'Oyun', description: 'EA oyun platformu', homepage: 'https://www.ea.com' },
   { name: 'Logitech G HUB', ident: 'Logitech.GHUB', category: 'Oyun', description: 'Oyun çevre birimi yazılımı', homepage: 'https://www.logitechg.com' },
+  { name: 'Minecraft Launcher', ident: 'Mojang.MinecraftLauncher', category: 'Oyun', description: 'Minecraft oyun başlatıcısı', homepage: 'https://www.minecraft.net' },
+  { name: 'itch', ident: 'ItchIo.Itch', category: 'Oyun', description: 'Bağımsız oyun platformu', icon: brandIcon('itchdotio'), homepage: 'https://itch.io' },
 
   // Chocolatey paketleri (kimlikler choco community repository biçimindedir).
   { name: 'Chocolatey', ident: 'chocolatey', category: 'Paket Yöneticileri', description: 'Windows paket yöneticisinin kendisi', source: 'choco', homepage: 'https://chocolatey.org' },
@@ -248,6 +309,7 @@ export function recKey(item: RecommendedSoftware): string {
 }
 
 export function favicon(item: RecommendedSoftware): string | undefined {
+  if (item.icon) return item.icon;
   if (!item.homepage) return undefined;
   try {
     const host = new URL(item.homepage).hostname;
