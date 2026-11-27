@@ -220,22 +220,22 @@ const DEFINITIONS: Definition[] = [...NETWORK, ...PERFORMANCE, ...INTERFACE, ...
 
 const PROFILES: OptimizationProfile[] = [
   {
-    id: 'competitive-gamer', title: 'Rekabetçi Oyuncu', icon: '🎮',
+    id: 'competitive-gamer', title: 'Rekabetçi Oyuncu', icon: 'Gamepad2',
     description: 'Ağ gecikmesini azaltan ve oyun önceliğini artıran ayarlar; görsel efektler sadeleştirilir.',
     tweakIds: ['tcp-ack-frequency', 'tcp-no-delay', 'network-throttling-index', 'ecn', 'rsc', 'dca', 'dns-cache-ttl', 'tcp-timestamps', 'game-dvr', 'hags', 'mmcss', 'power-plan', 'visual-effects', 'min-animate'],
   },
   {
-    id: 'low-latency-network', title: 'Düşük Gecikme Ağ', icon: '🌐',
+    id: 'low-latency-network', title: 'Düşük Gecikme Ağ', icon: 'Globe',
     description: 'NIC güç yönetimi, SMB/NetBIOS, DNS önbelleği ve TCP ayarları üzerinde odaklanır.',
     tweakIds: ['tcp-ack-frequency', 'tcp-no-delay', 'network-throttling-index', 'ecn', 'rsc', 'dns-cache-ttl', 'nic-power-saving', 'smb1', 'netbios', 'dca', 'tcp-timestamps'],
   },
   {
-    id: 'balanced', title: 'Dengeli Optimizasyon', icon: '⚖️',
+    id: 'balanced', title: 'Dengeli Optimizasyon', icon: 'Scale',
     description: 'Güvenlik ve kullanılabilirliği koruyan orta düzey performans ayarları.',
     tweakIds: ['game-dvr', 'mmcss', 'storage-sense', 'visual-effects', 'fast-startup', 'taskbar-search', 'snap-assist', 'recent-files', 'feedback-frequency', 'sysmain'],
   },
   {
-    id: 'safe-privacy', title: 'Güvenli Gizlilik', icon: '🔒',
+    id: 'safe-privacy', title: 'Güvenli Gizlilik', icon: 'Lock',
     description: 'Telemetri, reklam kimliği, konum, Copilot/Recall ve gereksiz hizmetleri kapatır.',
     tweakIds: ['diagtrack', 'advertising-id', 'tailored-experiences', 'activity-history', 'web-search', 'cortana', 'copilot', 'recall', 'location', 'feedback-frequency', 'instrumentation', 'remote-registry', 'xbl-auth', 'dmwappush'],
   },
