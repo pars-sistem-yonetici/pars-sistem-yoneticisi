@@ -20,6 +20,16 @@ durum ikonları bulunur. Aynı anda yalnızca bir uygulama örneği çalışır;
 geri yükleyip öne getirir. Sistem tepsisindeki simge ve “Pencereyi göster” kısayolu da küçültülmüş veya
 gizlenmiş pencereyi açar.
 
+## 🆕 1.2.0 yenilikleri
+
+- **Vektör ikonlar:** Arayüzdeki Unicode/emoji simgelerinin yerini tutarlı bir Lucide React ikon seti aldı; 203 etiket ve 115 ikon merkezi bir sözlükten yönetiliyor. Tema rengi `currentColor` ile otomatik izleniyor, `prefers-reduced-motion` korundu.
+- **Genişletilmiş uygulama kütüphanesi:** Katalog 194’ten **249** uygulamaya çıktı. Eklenen 55 uygulamanın winget kimliği yerel `winget show --id ... --exact` ile doğrulandı; 34 uygulamaya sabit sürümlü Simple Icons vektör logosu eklendi, diğerlerinde favicon yedeği korundu.
+- **Yenilenen ekran görüntüleri:** Tanıtım sitesi, README, Wiki ve GitHub Releases aynı yeni görselleri kullanıyor; kütüphane ekranı yeni ikon ve kategori dağılımını gösteriyor.
+- **1.1.0 ve öncesi korundu:** winget eksikse resmi Microsoft kaynağından otomatik kurulum, alt bilgi dağıtımı, kategori başlıkları, doğru NSIS anahtarları ve çok kaynaklı salt-okunur tarama sürüyor.
+- **Güvenlik modeli değişmedi:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama varsayılanı, `deleteAppDataOnUninstall: false` ve korumalı kayıt kuralları aynı.
+
+Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
+
 ## 🆕 1.1.0 yenilikleri
 
 - **Kurucuya winget kurulumu:** NSIS kurulumu `winget.exe` denetler; eksikse gömülü `install-winget.ps1` betiğiyle Microsoft.WinGet.Client üzerinden resmi kaynaktan sessizce kurar ve doğrular. `/S --updated` ile yapılan sessiz güncellemelerde de aynı akış çalışır; ek onay penceresi çıkmaz.
@@ -76,24 +86,23 @@ Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 
 Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 
-## 🖼️ Ekran görüntüleri (1.0.6)
+## 🖼️ Ekran görüntüleri (1.2.0)
 
-Aşağıdaki görüntüler 1.0.6 arayüzünden alınmıştır; 1.0.7 yalnızca güncelleyici düzeltmesi içerdiğinden
-arayüz aynı kalmıştı. 1.0.8’de Uygulama Kütüphanesi’ne eklenen kategori başlıkları nedeniyle
-`screen-library.png` eski görünümü gösterir; diğer ekranlar güncel görünümü yansıtır. Tanıtım sitesi
-ve GitHub Releases sayfası da aynı dosyaları kullanır.
+Aşağıdaki görüntüler 1.2.0 arayüzünden alınmıştır: vektör ikonlar, güncel alt bilgi ve genişletilmiş
+Uygulama Kütüphanesi dahil tüm ekranlar yenilendi. Tanıtım sitesi, Wiki ve GitHub Releases sayfası
+aynı dosyaları kullanır.
 
 | Anasayfa | Kurulu Uygulamalar |
 | --- | --- |
 | ![Pars Sistem Yöneticisi anasayfa ekranı](website/assets/screen-home.png) | ![Kurulu uygulamalar listesi](website/assets/screen-apps.png) |
-| ![Güncellemeler ekranı](website/assets/screen-updates.png) | ![Uygulama Kütüphanesi dock filtreleri](website/assets/screen-library.png) |
+| ![Güncellemeler ekranı](website/assets/screen-updates.png) | ![Uygulama Kütüphanesi ve vektör ikonlar](website/assets/screen-library.png) |
 | ![Sağ tık menüsü eklentileri](website/assets/screen-context.png) | |
 
 ## ⬇️ Hızlı kurulum
 
 - **Son sürüm:** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/latest)
-- **Kurulum dosyası (1.1.0):** [`Pars.Sistem.Yoneticisi.Setup.1.1.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/Pars.Sistem.Yoneticisi.Setup.1.1.0.exe)
-- **Portable (1.1.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/ParsSistemYoneticisi-Portable.exe)
+- **Kurulum dosyası (1.2.0):** [`Pars.Sistem.Yoneticisi.Setup.1.2.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.2.0/Pars.Sistem.Yoneticisi.Setup.1.2.0.exe)
+- **Portable (1.2.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.2.0/ParsSistemYoneticisi-Portable.exe)
 - **Doğrulama:** [İndirme sayfasındaki SHA-256 özetleri](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
 
 winget kataloğuna alındığında tek satır kurulum:
@@ -108,12 +117,12 @@ Kurulum UAC onayı ister; `winget.exe` eksikse kurucu Microsoft.WinGet.Client ü
 
 `release/` klasöründe:
 
-- `Pars Sistem Yoneticisi Setup 1.1.0.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur ve winget eksikse resmi kaynaktan otomatik kurar
+- `Pars Sistem Yoneticisi Setup 1.2.0.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur ve winget eksikse resmi kaynaktan otomatik kurar
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
 
 GitHub Releases’taki kurulum dosyasının adı noktalıdır:
-`Pars.Sistem.Yoneticisi.Setup.1.1.0.exe`. Yerel kopyalar
+`Pars.Sistem.Yoneticisi.Setup.1.2.0.exe`. Yerel kopyalar
 `YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`
 klasörlerinde tutulur; depoya eklenmez.
 
@@ -196,19 +205,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.1.0.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.2.0.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83631421,
-  "url": "Pars Sistem Yoneticisi Setup 1.1.0.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.2.0.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.1.0.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.2.0.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
@@ -359,6 +368,16 @@ icons. Only one application instance runs at a time; a second launch restores an
 existing window to the front. The tray icon and the “Show window” shortcut also restore a minimized
 or hidden window.
 
+## 🆕 1.2.0 highlights
+
+- **Vector icons:** Unicode/emoji glyphs were replaced by a consistent Lucide React icon set; 203 labels and 115 icons are managed from one central dictionary. Icons follow the theme via `currentColor`, and `prefers-reduced-motion` is preserved.
+- **Larger app library:** The catalog grew from 194 to **249** applications. Every new entry's winget ID was verified locally with `winget show --id ... --exact`; 34 apps received pinned Simple Icons vector logos, while the favicon fallback remains for the rest.
+- **Refreshed screenshots:** The promotional site, README, Wiki and GitHub Releases use the same new images; the library screen shows the new icons and category spread.
+- **Earlier features preserved:** Automatic winget installation from the official Microsoft source when missing, distributed footer, category headings, correct NSIS switches and multi-source read-only scanning all remain.
+- **Security model unchanged:** Administrator permission, explicit confirmation, mandatory backups, read-only scanning by default, `deleteAppDataOnUninstall: false` and protected registry rules are unchanged.
+
+See [RELEASE_NOTES.md](RELEASE_NOTES.md) for details.
+
 ## 🆕 1.1.0 highlights
 
 - **winget setup for the installer:** The NSIS installer checks for `winget.exe`. If it is missing,
@@ -447,24 +466,23 @@ See [RELEASE_NOTES.md](RELEASE_NOTES.md) for details.
 - A new **Optimization & Network** group was added to the left navigation, with category filtering,
   setting search and result cards.
 
-## 🖼️ Screenshots (1.0.6)
+## 🖼️ Screenshots (1.2.0)
 
-The images below were taken from the 1.0.6 interface; 1.0.7 only fixed the updater, so the UI stayed
-the same. Because 1.0.8 added category headings to the Application Library, `screen-library.png`
-still shows the older view; the other screens reflect the current UI. The promotional site and the
-GitHub Releases page use the same files.
+The images below were taken from the 1.2.0 interface: vector icons, the updated footer and the
+expanded Application Library are all reflected. The promotional site, Wiki and GitHub Releases page
+use the same files.
 
 | Home | Installed Applications |
 | --- | --- |
 | ![Pars Sistem Yöneticisi home screen](website/assets/screen-home.png) | ![Installed applications list](website/assets/screen-apps.png) |
-| ![Updates screen](website/assets/screen-updates.png) | ![Application Library dock filters](website/assets/screen-library.png) |
+| ![Updates screen](website/assets/screen-updates.png) | ![Application Library with vector icons](website/assets/screen-library.png) |
 | ![Context-menu extensions](website/assets/screen-context.png) | |
 
 ## ⬇️ Quick install
 
 - **Latest release:** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/latest)
-- **Installer (1.1.0):** [`Pars.Sistem.Yoneticisi.Setup.1.1.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/Pars.Sistem.Yoneticisi.Setup.1.1.0.exe)
-- **Portable (1.1.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.1.0/ParsSistemYoneticisi-Portable.exe)
+- **Installer (1.2.0):** [`Pars.Sistem.Yoneticisi.Setup.1.2.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.2.0/Pars.Sistem.Yoneticisi.Setup.1.2.0.exe)
+- **Portable (1.2.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.2.0/ParsSistemYoneticisi-Portable.exe)
 - **Verification:** [SHA-256 checksums on the download page](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
 
 Once the package is accepted into the winget catalog, installation is a single command:
@@ -480,14 +498,14 @@ from the official Microsoft.WinGet.Client source. The manifest draft is in the `
 
 In `release/`:
 
-- `Pars Sistem Yoneticisi Setup 1.1.0.exe` — NSIS installer (Start menu + desktop shortcut); detects
+- `Pars Sistem Yoneticisi Setup 1.2.0.exe` — NSIS installer (Start menu + desktop shortcut); detects
   older versions, removes and reinstalls them during an upgrade, preserves application data and
   installs winget from the official source when it is missing.
 - `ParsSistemYoneticisi-Portable.exe` — single-file build that needs no installation.
 - `win-unpacked/` — temporary build folder; not distributed and cleaned up.
 
 The installer file name on GitHub Releases uses dots:
-`Pars.Sistem.Yoneticisi.Setup.1.1.0.exe`. Local copies are kept under
+`Pars.Sistem.Yoneticisi.Setup.1.2.0.exe`. Local copies are kept under
 `YazilimYoneticisiTS\release\` and `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`; they are not committed.
 
 ## 🌐 Website and download portal
@@ -576,12 +594,12 @@ address or local folder in **Settings → Update source**. Notification format:
 
 ```json
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "notes": "New features and fixes",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.1.0.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.2.0.exe",
   "sha512": "<base64 or hex SHA-512 checksum of the exe>",
   "size": 83632376,
-  "url": "Pars Sistem Yoneticisi Setup 1.1.0.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.2.0.exe"
 }
 ```
 
@@ -589,7 +607,7 @@ address or local folder in **Settings → Update source**. Notification format:
 checksum:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.1.0.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.2.0.exe" SHA512
 ```
 
 `npm run publish` automates these steps. It reads the version from `package.json`, finds the setup exe
