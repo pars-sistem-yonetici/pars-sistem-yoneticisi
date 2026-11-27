@@ -20,12 +20,13 @@ durum ikonları bulunur. Aynı anda yalnızca bir uygulama örneği çalışır;
 geri yükleyip öne getirir. Sistem tepsisindeki simge ve “Pencereyi göster” kısayolu da küçültülmüş veya
 gizlenmiş pencereyi açar.
 
-## 🆕 1.2.0 yenilikleri
+## 🆕 1.3.0 yenilikleri
 
-- **Vektör ikonlar:** Arayüzdeki Unicode/emoji simgelerinin yerini tutarlı bir Lucide React ikon seti aldı; 203 etiket ve 115 ikon merkezi bir sözlükten yönetiliyor. Tema rengi `currentColor` ile otomatik izleniyor, `prefers-reduced-motion` korundu.
-- **Genişletilmiş uygulama kütüphanesi:** Katalog 194’ten **249** uygulamaya çıktı. Eklenen 55 uygulamanın winget kimliği yerel `winget show --id ... --exact` ile doğrulandı; 34 uygulamaya sabit sürümlü Simple Icons vektör logosu eklendi, diğerlerinde favicon yedeği korundu.
-- **Yenilenen ekran görüntüleri:** Tanıtım sitesi, README, Wiki ve GitHub Releases aynı yeni görselleri kullanıyor; kütüphane ekranı yeni ikon ve kategori dağılımını gösteriyor.
-- **1.1.0 ve öncesi korundu:** winget eksikse resmi Microsoft kaynağından otomatik kurulum, alt bilgi dağıtımı, kategori başlıkları, doğru NSIS anahtarları ve çok kaynaklı salt-okunur tarama sürüyor.
+- **Uygulama ikonları tamamlandı:** 249 uygulamanın 35 mevcut ikonu denetlendi; 127 uygulamaya yeni ikon eklendi, 7 bozuk favicon düzeltildi. Kütüphane kartlarında eksik veya hatalı logo kalmadı.
+- **Doğrulanmış ikon kaynakları:** 155 uygulama Simple Icons vektör logosu (`16.38.1` sabit sürüm), 6 uygulama doğrulanmış doğrudan URL, 1 uygulama yerel SVG kullanıyor. Toplam 162 açık ikon ve 87 çalışan favicon yedeği var; tüm adresler HTTP 200 doğrulandı.
+- **Kapsamlı tarama:** Geçersiz marka slug’ı 0, bozuk doğrudan ikon 0, bozuk favicon 0. PotPlayer’ın bağlantı sıfırlayan favicon adresi çalışan bir servisle değiştirildi.
+- **Yenilenen ekran görüntüleri:** Tanıtım sitesi, README, Wiki ve GitHub Releases aynı 1.3.0 görsellerini kullanıyor; kütüphane ekranı yenilenen ikonları gösteriyor.
+- **1.2.0 ve öncesi korundu:** Vektör arayüz ikonları, 249 uygulamalık katalog, winget eksikse resmi Microsoft kaynağından otomatik kurulum, alt bilgi dağıtımı ve çok kaynaklı salt-okunur tarama sürüyor.
 - **Güvenlik modeli değişmedi:** Yönetici izni, açık onay, zorunlu yedek, salt-okunur tarama varsayılanı, `deleteAppDataOnUninstall: false` ve korumalı kayıt kuralları aynı.
 
 Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
@@ -86,11 +87,11 @@ Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 
 Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 
-## 🖼️ Ekran görüntüleri (1.2.0)
+## 🖼️ Ekran görüntüleri (1.3.0)
 
-Aşağıdaki görüntüler 1.2.0 arayüzünden alınmıştır: vektör ikonlar, güncel alt bilgi ve genişletilmiş
-Uygulama Kütüphanesi dahil tüm ekranlar yenilendi. Tanıtım sitesi, Wiki ve GitHub Releases sayfası
-aynı dosyaları kullanır.
+Aşağıdaki görüntüler 1.3.0 arayüzünden alınmıştır: yenilenen uygulama ikonları, vektör arayüz
+ikonları ve genişletilmiş Uygulama Kütüphanesi dahil tüm ekranlar yenilendi. Tanıtım sitesi, Wiki
+ve GitHub Releases sayfası aynı dosyaları kullanır.
 
 | Anasayfa | Kurulu Uygulamalar |
 | --- | --- |
@@ -101,8 +102,8 @@ aynı dosyaları kullanır.
 ## ⬇️ Hızlı kurulum
 
 - **Son sürüm:** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/latest)
-- **Kurulum dosyası (1.2.0):** [`Pars.Sistem.Yoneticisi.Setup.1.2.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.2.0/Pars.Sistem.Yoneticisi.Setup.1.2.0.exe)
-- **Portable (1.2.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.2.0/ParsSistemYoneticisi-Portable.exe)
+- **Kurulum dosyası (1.3.0):** [`Pars.Sistem.Yoneticisi.Setup.1.3.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/Pars.Sistem.Yoneticisi.Setup.1.3.0.exe)
+- **Portable (1.3.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/ParsSistemYoneticisi-Portable.exe)
 - **Doğrulama:** [İndirme sayfasındaki SHA-256 özetleri](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
 
 winget kataloğuna alındığında tek satır kurulum:
@@ -117,12 +118,12 @@ Kurulum UAC onayı ister; `winget.exe` eksikse kurucu Microsoft.WinGet.Client ü
 
 `release/` klasöründe:
 
-- `Pars Sistem Yoneticisi Setup 1.2.0.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur ve winget eksikse resmi kaynaktan otomatik kurar
+- `Pars Sistem Yoneticisi Setup 1.3.0.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur ve winget eksikse resmi kaynaktan otomatik kurar
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
 
 GitHub Releases’taki kurulum dosyasının adı noktalıdır:
-`Pars.Sistem.Yoneticisi.Setup.1.2.0.exe`. Yerel kopyalar
+`Pars.Sistem.Yoneticisi.Setup.1.3.0.exe`. Yerel kopyalar
 `YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`
 klasörlerinde tutulur; depoya eklenmez.
 
@@ -205,19 +206,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.2.0.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.3.0.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83631421,
-  "url": "Pars Sistem Yoneticisi Setup 1.2.0.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.3.0.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.2.0.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.3.0.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
@@ -244,10 +245,10 @@ yükleyeceğiniz klasörü doğrudan hedefleyebilirsiniz. `--embed`
 yalnızca bir sonraki paketlemede gömülü manifest’i günceller; mevcut kurulu sürümlere ulaşmak için
 güncelleme kaynağının sabit bir URL veya klasör olarak ayarlanması gerekir.
 
-Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.2.0):
+Yeni sürüm yayınlarken sürüm numarasını tek komutla güncelleyin (örnek: bir sonraki sürüm 1.4.0):
 
 ```powershell
-npm run bump -- 1.2.0
+npm run bump -- 1.4.0
 ```
 
 Bu komut `package.json`, `package-lock.json` (ilk iki alan), `i18n.ts` başlığı, `README.md`,
@@ -257,7 +258,7 @@ GitHub → Actions → **Sürüm yayınla** → **Run workflow** ile sürümü y
 `%APPDATA%\pars-sistem-yoneticisi-ts\updates` altında tutulur.
 
 > `npm run publish` yalnızca el ile yayın yapıldığında gerekir; GitHub Actions akışı manifest’i
-> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.2.0 --check` değişiklikleri
+> kendisi üretir. `--check` ile `node scripts/bump-version.js 1.4.0 --check` değişiklikleri
 > yazmadan görebilirsiniz.
 
 ## 🔐 Güvenlik
@@ -368,12 +369,13 @@ icons. Only one application instance runs at a time; a second launch restores an
 existing window to the front. The tray icon and the “Show window” shortcut also restore a minimized
 or hidden window.
 
-## 🆕 1.2.0 highlights
+## 🆕 1.3.0 highlights
 
-- **Vector icons:** Unicode/emoji glyphs were replaced by a consistent Lucide React icon set; 203 labels and 115 icons are managed from one central dictionary. Icons follow the theme via `currentColor`, and `prefers-reduced-motion` is preserved.
-- **Larger app library:** The catalog grew from 194 to **249** applications. Every new entry's winget ID was verified locally with `winget show --id ... --exact`; 34 apps received pinned Simple Icons vector logos, while the favicon fallback remains for the rest.
-- **Refreshed screenshots:** The promotional site, README, Wiki and GitHub Releases use the same new images; the library screen shows the new icons and category spread.
-- **Earlier features preserved:** Automatic winget installation from the official Microsoft source when missing, distributed footer, category headings, correct NSIS switches and multi-source read-only scanning all remain.
+- **App icons completed:** All 35 existing icons were audited across 249 applications; 127 new icons were added and 7 broken favicon links were fixed. No missing or incorrect logos remain in the library.
+- **Verified icon sources:** 155 apps use Simple Icons vector logos (pinned `16.38.1`), 6 use verified direct URLs and 1 uses a local SVG. There are 162 open icons and 87 working favicon fallbacks; every URL returned HTTP 200.
+- **Full verification:** 0 invalid brand slugs, 0 broken direct icons and 0 broken favicons. PotPlayer's resetting favicon URL was replaced with a working service.
+- **Refreshed screenshots:** The promotional site, README, Wiki and GitHub Releases use the same 1.3.0 images; the library screen shows the updated icons.
+- **Earlier features preserved:** Vector UI icons, the 249-app catalog, automatic winget installation from the official Microsoft source when missing, distributed footer and multi-source read-only scanning all remain.
 - **Security model unchanged:** Administrator permission, explicit confirmation, mandatory backups, read-only scanning by default, `deleteAppDataOnUninstall: false` and protected registry rules are unchanged.
 
 See [RELEASE_NOTES.md](RELEASE_NOTES.md) for details.
@@ -466,9 +468,9 @@ See [RELEASE_NOTES.md](RELEASE_NOTES.md) for details.
 - A new **Optimization & Network** group was added to the left navigation, with category filtering,
   setting search and result cards.
 
-## 🖼️ Screenshots (1.2.0)
+## 🖼️ Screenshots (1.3.0)
 
-The images below were taken from the 1.2.0 interface: vector icons, the updated footer and the
+The images below were taken from the 1.3.0 interface: updated app icons, vector UI icons and the
 expanded Application Library are all reflected. The promotional site, Wiki and GitHub Releases page
 use the same files.
 
@@ -481,8 +483,8 @@ use the same files.
 ## ⬇️ Quick install
 
 - **Latest release:** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/latest)
-- **Installer (1.2.0):** [`Pars.Sistem.Yoneticisi.Setup.1.2.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.2.0/Pars.Sistem.Yoneticisi.Setup.1.2.0.exe)
-- **Portable (1.2.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.2.0/ParsSistemYoneticisi-Portable.exe)
+- **Installer (1.3.0):** [`Pars.Sistem.Yoneticisi.Setup.1.3.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/Pars.Sistem.Yoneticisi.Setup.1.3.0.exe)
+- **Portable (1.3.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/ParsSistemYoneticisi-Portable.exe)
 - **Verification:** [SHA-256 checksums on the download page](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
 
 Once the package is accepted into the winget catalog, installation is a single command:
@@ -498,14 +500,14 @@ from the official Microsoft.WinGet.Client source. The manifest draft is in the `
 
 In `release/`:
 
-- `Pars Sistem Yoneticisi Setup 1.2.0.exe` — NSIS installer (Start menu + desktop shortcut); detects
+- `Pars Sistem Yoneticisi Setup 1.3.0.exe` — NSIS installer (Start menu + desktop shortcut); detects
   older versions, removes and reinstalls them during an upgrade, preserves application data and
   installs winget from the official source when it is missing.
 - `ParsSistemYoneticisi-Portable.exe` — single-file build that needs no installation.
 - `win-unpacked/` — temporary build folder; not distributed and cleaned up.
 
 The installer file name on GitHub Releases uses dots:
-`Pars.Sistem.Yoneticisi.Setup.1.2.0.exe`. Local copies are kept under
+`Pars.Sistem.Yoneticisi.Setup.1.3.0.exe`. Local copies are kept under
 `YazilimYoneticisiTS\release\` and `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`; they are not committed.
 
 ## 🌐 Website and download portal
@@ -594,12 +596,12 @@ address or local folder in **Settings → Update source**. Notification format:
 
 ```json
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "notes": "New features and fixes",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.2.0.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.3.0.exe",
   "sha512": "<base64 or hex SHA-512 checksum of the exe>",
   "size": 83632376,
-  "url": "Pars Sistem Yoneticisi Setup 1.2.0.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.3.0.exe"
 }
 ```
 
@@ -607,7 +609,7 @@ address or local folder in **Settings → Update source**. Notification format:
 checksum:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.2.0.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.3.0.exe" SHA512
 ```
 
 `npm run publish` automates these steps. It reads the version from `package.json`, finds the setup exe
@@ -633,10 +635,10 @@ upload directly. `--embed` only updates the embedded manifest for the next packa
 already-installed users requires the update source to be set to a fixed URL or folder.
 
 When publishing a new version, update the version number with one command (example: next version
-1.2.0):
+1.4.0):
 
 ```powershell
-npm run bump -- 1.2.0
+npm run bump -- 1.4.0
 ```
 
 This writes the version into `package.json`, `package-lock.json` (first two fields), the `i18n.ts`
@@ -646,7 +648,7 @@ Actions → **Release** → **Run workflow**. Downloaded setup files are kept un
 `%APPDATA%\pars-sistem-yoneticisi-ts\updates`.
 
 > `npm run publish` is only needed for manual publishing; the GitHub Actions flow generates the
-> manifest itself. With `--check`, `node scripts/bump-version.js 1.2.0 --check` shows the changes
+> manifest itself. With `--check`, `node scripts/bump-version.js 1.4.0 --check` shows the changes
 > without writing them.
 
 ## 🔐 Security
