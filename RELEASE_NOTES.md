@@ -24,11 +24,11 @@ Görseller 1.3.0 arayüzünden alınmıştır; 1.4.0 arayüzü aynı düzeni kor
 
 ## İndirme
 
-- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.4.0.exe` (NSIS, başlat menüsü + masaüstü kısayolu) — 85.463.266 bayt
-  - SHA-256: `0ae405e012dc4ea790b24ff8d2ad5f0c2d4bb71e55f5ecee7b229e874cf1c378`
-  - SHA-512: `f9abf7e3b51d2323a6c52dd4b855aa3541fa4ebe2406cf7332f6c28651c56ca372b4229832034f05b5a0ff8a8f08a26d8dc19b80817fd2cef5817fe7b591798b`
-- **Portable:** `ParsSistemYoneticisi-Portable.exe` — 85.249.083 bayt
-  - SHA-256: `b8b4e9f0cc00f6278d66be4cca0c9f4eed82db380e32bcc27dbc0419ab3a048a`
+- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.4.0.exe` (NSIS, başlat menüsü + masaüstü kısayolu) — 85.463.607 bayt
+  - SHA-256: `59981085f2d3ad08b1ab516004300a27108a668073470b43ad5c1fd3c9ab445a`
+  - SHA-512: `6d889c00495e1dd8a74070b6f9ac0cca2d11516366198908a3731601c8b6e0f83b4b5ca0eaa55ce3802c6318b5c11fd65e09ff42b1b8406484a0487a49b96b62`
+- **Portable:** `ParsSistemYoneticisi-Portable.exe` — 85.249.524 bayt
+  - SHA-256: `b8a30016cccd35a68929493ea68a5354c75fb309804fb5d92929c1feeeef4cc7`
 
 Windows 10 (1809+) / Windows 11 x64 gereklidir. Kurulum exe’si winget eksikse resmi kaynaktan kurar; portable sürümde winget “Gerekli bileşenler” panelinden kurulabilir. Chocolatey, npm ve Scoop taramaları yalnızca ilgili araç kuruluysa seçilebilir.
 Uygulama yönetici izinleriyle çalışır; açılışta UAC onayı görünür.
