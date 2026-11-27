@@ -7,13 +7,20 @@ button, label, .nav-item span, .chip, .badge, .stat > span,
 }
 .mono, code, pre, input, select, textarea { text-transform: none !important; }
 
-/* Buton ve başlıklardaki uygun ikonlar: girişte belirip sonra hafifçe nefes alır. */
+/* Buton ve başlıklardaki uygun ikonlar: girişte belirip sonra hafifçe nefes alır.
+   Lucide SVG'leri currentColor ile temaya uyar; boyut wrapper font-size üzerinden yönetilir. */
 .ui-icon {
-  display: inline-block; flex: 0 0 auto; margin-right: 7px;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 auto; margin-right: 7px;
   font-size: .92em; line-height: 1; vertical-align: -1px;
   text-transform: none; white-space: nowrap; transform-origin: 50% 60%;
   animation: ui-icon-in .46s cubic-bezier(.34, 1.56, .64, 1) both,
              ui-icon-breathe 4s ease-in-out .46s infinite;
+}
+.ui-icon > svg { width: 1em; height: 1em; display: block; }
+.theme-icon svg, .nav-icon svg, .nav-group-icon svg,
+.schedule-icon svg, .feature-icon svg, .trash-icon svg, .window-btn svg {
+  width: 1em; height: 1em; display: block;
 }
 h1 > .ui-icon, h2 > .ui-icon, h3 > .ui-icon {
   font-size: 1.02em;
@@ -298,7 +305,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   font-size: 11px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
   transition: background .16s ease, color .16s ease;
 }
-.nav-group-icon { width: 20px; flex: 0 0 20px; text-align: center; font-size: 13px; text-transform: none; }
+.nav-group-icon { width: 20px; height: 20px; flex: 0 0 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; text-transform: none; }
 .nav-group-label { flex: 1; }
 .nav-group-header:hover { background: var(--soft); color: var(--text); }
 .nav-group.has-active .nav-group-header,
