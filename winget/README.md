@@ -15,7 +15,7 @@ winget/manifests/p/ParsSistemYonetici/ParsSistemYoneticisi/1.2.0/
   ParsSistemYonetici.ParsSistemYoneticisi.installer.yaml
 ```
 
-Kurulum dosyası: `Pars.Sistem.Yoneticisi.Setup.1.2.0.exe` — 85.424.621 bayt, SHA-256 `0FB6FF678A8181E1946CA046039E0F43FE020CC514529215A19B48CF9B69F923`.
+Kurulum dosyası: `Pars.Sistem.Yoneticisi.Setup.1.2.0.exe` — 85.424.937 bayt, SHA-256 `1F6A56DE4AAA0F99960F476A53FF896F0DF870C36C9B44E5A87BC59C04534D3B`.
 
 ## Yerel doğrulama
 
