@@ -1,1 +1,302 @@
-LyoqCiAqIFJlbmRlcmVyIC0+IGFuYSBzdXJlYyBzaW5pcmluZGEgY2FsaXNhbiBoYWZpZiBJUEMgZG9ncnVsYXlpY2lsYXJpLgogKgogKiBBbWFjOiBoYXJpY2kgYmFnaW1saWxpayAoem9kIHZiLikgZWtsZW1lZGVuIGdlbGVuIGFyZ3VtYW5sYXJpbiB0dXJ1bnUgdmUKICogc2luaXJsYXJpbmkga29udHJvbCBldG1lazsgaGF0YWxpL3N0cmxlbm1pcyBhcmd1bWFuaW4gc2VydmlzbGVyZSB1bGFzbWFzaW5pCiAqIGVuZ2VsbGVtZWsuIEhlciBkb2dydWxheWljaSBkZWdlcmkgb2xkdWd1IGdpYmkgdmV5YSAoc3RyaXAgbW9kdW5kYSkgc2FkZWNlCiAqIGJpbGluZW4gYWxhbmxhcmkgZG9uZHVydXIuCiAqLwoKaW1wb3J0IHBhdGggZnJvbSAncGF0aCc7CmltcG9ydCB7IG0sIG1mIH0gZnJvbSAnLi9pMThuLW1haW4nOwppbXBvcnQgeyBkZXRlY3RQbGF0Zm9ybSB9IGZyb20gJy4uL3NoYXJlZC9wbGF0Zm9ybSc7Cgpjb25zdCBwbGF0Zm9ybSA9IGRldGVjdFBsYXRmb3JtKHByb2Nlc3MucGxhdGZvcm0pOwoKZXhwb3J0IHR5cGUgVmFsaWRhdG9yID0gKHZhbHVlOiB1bmtub3duLCBmaWVsZDogc3RyaW5nKSA9PiB1bmtub3duOwoKZXhwb3J0IGNsYXNzIElwY1ZhbGlkYXRpb25FcnJvciBleHRlbmRzIEVycm9yIHsKICBjb25zdHJ1Y3RvcihtZXNzYWdlOiBzdHJpbmcpIHsKICAgIHN1cGVyKG1lc3NhZ2UpOwogICAgdGhpcy5uYW1lID0gJ0lwY1ZhbGlkYXRpb25FcnJvcic7CiAgfQp9CgpmdW5jdGlvbiBmYWlsKGZpZWxkOiBzdHJpbmcsIGRldGFpbDogc3RyaW5nKTogbmV2ZXIgewogIHRocm93IG5ldyBJcGNWYWxpZGF0aW9uRXJyb3IoYCR7ZmllbGR9OiAke2RldGFpbH1gKTsKfQoKZnVuY3Rpb24gcmVjb3JkKHZhbHVlOiB1bmtub3duKTogUmVjb3JkPHN0cmluZywgdW5rbm93bj4gewogIGlmICghdmFsdWUgfHwgdHlwZW9mIHZhbHVlICE9PSAnb2JqZWN0JyB8fCBBcnJheS5pc0FycmF5KHZhbHVlKSkgewogICAgZmFpbChtKCdkZcSfZXInLCAndmFsdWUnKSwgbSgnbmVzbmUgYmVrbGVuaXlvcicsICdvYmplY3QgZXhwZWN0ZWQnKSk7CiAgfQogIHJldHVybiB2YWx1ZSBhcyBSZWNvcmQ8c3RyaW5nLCB1bmtub3duPjsKfQoKaW50ZXJmYWNlIFN0cmluZ09wdGlvbnMgewogIG1pbj86IG51bWJlcjsKICBtYXg/OiBudW1iZXI7CiAgcGF0dGVybj86IFJlZ0V4cDsKICBhbGxvd0VtcHR5PzogYm9vbGVhbjsKfQoKZXhwb3J0IGZ1bmN0aW9uIHN0cihvcHRpb25zOiBTdHJpbmdPcHRpb25zID0ge30pOiBWYWxpZGF0b3IgewogIHJldHVybiAodmFsdWUsIGZpZWxkKSA9PiB7CiAgICBpZiAodHlwZW9mIHZhbHVlICE9PSAnc3RyaW5nJykgZmFpbChmaWVsZCwgbSgnbWV0aW4gYmVrbGVuaXlvcicsICdzdHJpbmcgZXhwZWN0ZWQnKSk7CiAgICBjb25zdCB0ZXh0ID0gdmFsdWUgYXMgc3RyaW5nOwogICAgaWYgKCFvcHRpb25zLmFsbG93RW1wdHkgJiYgIXRleHQudHJpbSgpKSBmYWlsKGZpZWxkLCBtKCdib8WfIG9sYW1heicsICdjYW5ub3QgYmUgZW1wdHknKSk7CiAgICBpZiAob3B0aW9ucy5taW4gIT09IHVuZGVmaW5lZCAmJiB0ZXh0Lmxlbmd0aCA8IG9wdGlvbnMubWluKSB7CiAgICAgIGZhaWwoZmllbGQsIG1mKCdlbiBheiB7bWlufSBrYXJha3RlciBvbG1hbMSxJywgJ211c3QgYmUgYXQgbGVhc3Qge21pbn0gY2hhcmFjdGVycycsIHsgbWluOiBvcHRpb25zLm1pbiB9KSk7CiAgICB9CiAgICBpZiAob3B0aW9ucy5tYXggIT09IHVuZGVmaW5lZCAmJiB0ZXh0Lmxlbmd0aCA+IG9wdGlvbnMubWF4KSB7CiAgICAgIGZhaWwoZmllbGQsIG1mKCdlbiBmYXpsYSB7bWF4fSBrYXJha3RlciBvbGFiaWxpcicsICdjYW4gYmUgYXQgbW9zdCB7bWF4fSBjaGFyYWN0ZXJzJywgeyBtYXg6IG9wdGlvbnMubWF4IH0pKTsKICAgIH0KICAgIGlmIChvcHRpb25zLnBhdHRlcm4gJiYgIW9wdGlvbnMucGF0dGVybi50ZXN0KHRleHQpKSBmYWlsKGZpZWxkLCBtKCdnZcOnZXJzaXogYmnDp2ltJywgJ2ludmFsaWQgZm9ybWF0JykpOwogICAgcmV0dXJuIHRleHQ7CiAgfTsKfQoKZXhwb3J0IGNvbnN0IGJvb2w6IFZhbGlkYXRvciA9ICh2YWx1ZSwgZmllbGQpID0+IHsKICBpZiAodHlwZW9mIHZhbHVlICE9PSAnYm9vbGVhbicpIGZhaWwoZmllbGQsIG0oJ2RvxJ9ydS95YW5sxLHFnyBiZWtsZW5peW9yJywgJ3RydWUvZmFsc2UgZXhwZWN0ZWQnKSk7CiAgcmV0dXJuIHZhbHVlOwp9OwoKZXhwb3J0IGNvbnN0IG51bTogVmFsaWRhdG9yID0gKHZhbHVlLCBmaWVsZCkgPT4gewogIGlmICh0eXBlb2YgdmFsdWUgIT09ICdudW1iZXInIHx8ICFOdW1iZXIuaXNGaW5pdGUodmFsdWUpKSBmYWlsKGZpZWxkLCBtKCdzYXnEsSBiZWtsZW5peW9yJywgJ251bWJlciBleHBlY3RlZCcpKTsKICByZXR1cm4gdmFsdWU7Cn07CgpleHBvcnQgZnVuY3Rpb24gb25lT2Y8VCBleHRlbmRzIHN0cmluZyB8IG51bWJlcj4odmFsdWVzOiByZWFkb25seSBUW10pOiBWYWxpZGF0b3IgewogIHJldHVybiAodmFsdWUsIGZpZWxkKSA9PiB7CiAgICBpZiAoIXZhbHVlcy5pbmNsdWRlcyh2YWx1ZSBhcyBUKSkgewogICAgICBmYWlsKGZpZWxkLCBtZignaXppbiB2ZXJpbGVubGVyOiB7dmFsdWVzfScsICdhbGxvd2VkIHZhbHVlczoge3ZhbHVlc30nLCB7IHZhbHVlczogdmFsdWVzLmpvaW4oJywgJykgfSkpOwogICAgfQogICAgcmV0dXJuIHZhbHVlOwogIH07Cn0KCmV4cG9ydCBmdW5jdGlvbiBhcnIoaXRlbTogVmFsaWRhdG9yLCBtYXggPSAxMDAwKTogVmFsaWRhdG9yIHsKICByZXR1cm4gKHZhbHVlLCBmaWVsZCkgPT4gewogICAgaWYgKCFBcnJheS5pc0FycmF5KHZhbHVlKSkgZmFpbChmaWVsZCwgbSgnZGl6aSBiZWtsZW5peW9yJywgJ2FycmF5IGV4cGVjdGVkJykpOwogICAgaWYgKHZhbHVlLmxlbmd0aCA+IG1heCkgZmFpbChmaWVsZCwgbWYoJ2VuIGZhemxhIHttYXh9IMO2xJ9lIG9sYWJpbGlyJywgJ2NhbiBjb250YWluIGF0IG1vc3Qge21heH0gaXRlbXMnLCB7IG1heCB9KSk7CiAgICByZXR1cm4gdmFsdWUubWFwKChlbnRyeSwgaW5kZXgpID0+IGl0ZW0oZW50cnksIGAke2ZpZWxkfVske2luZGV4fV1gKSk7CiAgfTsKfQoKaW50ZXJmYWNlIEZpZWxkU3BlYyB7CiAgdmFsaWRhdGU6IFZhbGlkYXRvcjsKICBvcHRpb25hbD86IGJvb2xlYW47Cn0KCi8qKiBOZXNuZWRla2kgYmlsaW5lbiBhbGFubGFyxLEgZG/En3J1bGFyLiBzdHJpcD10cnVlIGlzZSBiaWxpbm1leWVuIGFsYW5sYXLEsSBhdGFyLiAqLwpleHBvcnQgZnVuY3Rpb24gc2hhcGUoZmllbGRzOiBSZWNvcmQ8c3RyaW5nLCBGaWVsZFNwZWM+LCBzdHJpcCA9IGZhbHNlKTogVmFsaWRhdG9yIHsKICByZXR1cm4gKHZhbHVlLCBmaWVsZCkgPT4gewogICAgY29uc3Qgc291cmNlID0gcmVjb3JkKHZhbHVlKTsKICAgIGNvbnN0IG91dHB1dDogUmVjb3JkPHN0cmluZywgdW5rbm93bj4gPSB7fTsKICAgIGZvciAoY29uc3QgW2tleSwgc3BlY10gb2YgT2JqZWN0LmVudHJpZXMoZmllbGRzKSkgewogICAgICBpZiAoIShrZXkgaW4gc291cmNlKSkgewogICAgICAgIGlmICghc3BlYy5vcHRpb25hbCkgZmFpbChgJHtmaWVsZH0uJHtrZXl9YCwgbSgnZWtzaWsnLCAnbWlzc2luZycpKTsKICAgICAgICBjb250aW51ZTsKICAgICAgfQogICAgICBvdXRwdXRba2V5XSA9IHNwZWMudmFsaWRhdGUoc291cmNlW2tleV0sIGAke2ZpZWxkfS4ke2tleX1gKTsKICAgIH0KICAgIHJldHVybiBzdHJpcCA/IG91dHB1dCA6IHNvdXJjZTsKICB9Owp9CgovKiogd2luZ2V0IHBha2V0IGtpbWxpxJ9pOiBlbiBheiBiaXIgbm9rdGEgacOnZXJtZWxpLCBrYWJ1ay9hcmfDvG1hbiDDtnplbCBrYXJha3RlcmkgdGHFn8SxbWFtYWzEsS4gKi8KZXhwb3J0IGNvbnN0IGlkZW50OiBWYWxpZGF0b3IgPSBzdHIoewogIG1pbjogMywKICBtYXg6IDEyOCwKICBwYXR0ZXJuOiAvXltBLVphLXowLTldW0EtWmEtejAtOS5fKy1dKlwuW0EtWmEtejAtOV1bQS1aYS16MC05Ll8rLV0qJC8sCn0pOwoKLyoqIHdpbmdldCBzZWFyY2ggc29yZ3VzdTogc2XDp2VuZWsgZ2liaSB5b3J1bWxhbm1hbWFzxLEgacOnaW4gJy0nIGlsZSBiYcWfbGF5YW1hei4gKi8KZXhwb3J0IGNvbnN0IHNlYXJjaFF1ZXJ5OiBWYWxpZGF0b3IgPSBzdHIoewogIG1pbjogMSwKICBtYXg6IDEyMCwKICBwYXR0ZXJuOiAvXlteXHMtXVteXHJcbl0qJC8sCn0pOwoKZXhwb3J0IGNvbnN0IHdpbmdldFBrZzogVmFsaWRhdG9yID0gc2hhcGUoewogIG5hbWU6IHsgdmFsaWRhdGU6IHN0cih7IG1heDogNTEyLCBwYXR0ZXJuOiAvXlteXHMtL11bXlxyXG5dKiQvIH0pIH0sCiAgaWRlbnQ6IHsgdmFsaWRhdGU6IHN0cih7IG1heDogMTI4IH0pIH0sCiAgdmVyc2lvbjogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAxMjggfSkgfSwKICBhdmFpbGFibGU6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogMTI4IH0pIH0sCiAgc291cmNlOiB7IHZhbGlkYXRlOiBzdHIoeyBhbGxvd0VtcHR5OiB0cnVlLCBtYXg6IDEyOCB9KSB9LAp9KTsKCmV4cG9ydCBjb25zdCByZWdJc3N1ZTogVmFsaWRhdG9yID0gc2hhcGUoewogIGhpdmU6IHsgdmFsaWRhdGU6IG9uZU9mKFsnSEtMTScsICdIS0NVJ10gYXMgY29uc3QpIH0sCiAgcm9vdFBhdGg6IHsgdmFsaWRhdGU6IHN0cih7IG1heDogNTEyIH0pIH0sCiAgbGFiZWw6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogNTEyIH0pIH0sCiAga2V5OiB7IHZhbGlkYXRlOiBzdHIoeyBtYXg6IDIwNDggfSkgfSwKICBuYW1lOiB7IHZhbGlkYXRlOiBzdHIoeyBhbGxvd0VtcHR5OiB0cnVlLCBtYXg6IDUxMiB9KSB9LAogIHB1Ymxpc2hlcjogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiA1MTIgfSkgfSwKICByZWFzb246IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogNTEyIH0pIH0sCiAgZGV0YWlsOiB7IHZhbGlkYXRlOiBzdHIoeyBhbGxvd0VtcHR5OiB0cnVlLCBtYXg6IDIwNDggfSkgfSwKICB2aWV3OiB7IHZhbGlkYXRlOiBvbmVPZihbNjQsIDMyXSBhcyBjb25zdCkgfSwKICBzeXN0ZW06IHsgdmFsaWRhdGU6IGJvb2wsIG9wdGlvbmFsOiB0cnVlIH0sCiAgY2F0ZWdvcnk6IHsKICAgIHZhbGlkYXRlOiBvbmVPZihbJ3VuaW5zdGFsbCcsICdhcHAtcGF0aHMnLCAnY29tLXNoZWxsJywgJ2NvbS1oaWphY2snLCAnZmlsZS1hc3NvYycsICdzZXJ2aWNlJywgJ3NoYXJlZC1kbGwnLCAnZm9udCcsICdvZGJjJ10gYXMgY29uc3QpLAogICAgb3B0aW9uYWw6IHRydWUsCiAgfSwKICByaXNrOiB7IHZhbGlkYXRlOiBvbmVPZihbJ2luZm8nLCAnd2FybmluZycsICdjcml0aWNhbCddIGFzIGNvbnN0KSwgb3B0aW9uYWw6IHRydWUgfSwKICBmaXhhYmxlOiB7IHZhbGlkYXRlOiBib29sLCBvcHRpb25hbDogdHJ1ZSB9LAogIHJlY29tbWVuZGF0aW9uOiB7IHZhbGlkYXRlOiBzdHIoeyBhbGxvd0VtcHR5OiB0cnVlLCBtYXg6IDUxMiB9KSwgb3B0aW9uYWw6IHRydWUgfSwKICBzaWduYXR1cmU6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogNjQgfSksIG9wdGlvbmFsOiB0cnVlIH0sCiAgdmFsdWVOYW1lOiB7IHZhbGlkYXRlOiBzdHIoeyBhbGxvd0VtcHR5OiB0cnVlLCBtYXg6IDIwNDggfSksIG9wdGlvbmFsOiB0cnVlIH0sCn0pOwoKZXhwb3J0IGNvbnN0IHNjaGVkdWxlVGFzazogVmFsaWRhdG9yID0gc2hhcGUoewogIGlkOiB7IHZhbGlkYXRlOiBzdHIoeyBtYXg6IDEyOCB9KSB9LAogIGtpbmQ6IHsgdmFsaWRhdGU6IG9uZU9mKFsnd2Vla2x5LWZ1bGwnLCAnZGFpbHktbGlnaHQnLCAnbW9udGhseS1kZWVwJywgJ2N1c3RvbSddIGFzIGNvbnN0KSB9LAogIG5hbWU6IHsgdmFsaWRhdGU6IHN0cih7IG1heDogMjU2IH0pIH0sCiAgZW5hYmxlZDogeyB2YWxpZGF0ZTogYm9vbCB9LAogIHRpbWU6IHsgdmFsaWRhdGU6IHN0cih7IHBhdHRlcm46IC9eKFswMV1cZHwyWzAtM10pOlswLTVdXGQkLywgbWF4OiA1IH0pIH0sCiAgZGF5T2ZXZWVrOiB7IHZhbGlkYXRlOiBudW0sIG9wdGlvbmFsOiB0cnVlIH0sCiAgZGF5T2ZNb250aDogeyB2YWxpZGF0ZTogbnVtLCBvcHRpb25hbDogdHJ1ZSB9LAogIGludGVydmFsRGF5czogeyB2YWxpZGF0ZTogbnVtLCBvcHRpb25hbDogdHJ1ZSB9LAogIGxhc3RSdW46IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogNjQgfSksIG9wdGlvbmFsOiB0cnVlIH0sCiAgbmV4dFJ1bjogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiA2NCB9KSwgb3B0aW9uYWw6IHRydWUgfSwKfSk7CgpleHBvcnQgY29uc3Qgc3RhcnR1cEl0ZW06IFZhbGlkYXRvciA9IHNoYXBlKHsKICBpZDogeyB2YWxpZGF0ZTogc3RyKHsgbWF4OiA1MTIgfSkgfSwKICBuYW1lOiB7IHZhbGlkYXRlOiBzdHIoeyBtYXg6IDUxMiB9KSB9LAogIGNvbW1hbmQ6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogNDA5NiB9KSB9LAogIGxvY2F0aW9uOiB7IHZhbGlkYXRlOiBzdHIoeyBhbGxvd0VtcHR5OiB0cnVlLCBtYXg6IDUxMiB9KSB9LAogIGVuYWJsZWQ6IHsgdmFsaWRhdGU6IGJvb2wgfSwKICBraW5kOiB7IHZhbGlkYXRlOiBvbmVPZihbJ3JlZ2lzdHJ5JywgJ2ZvbGRlciddIGFzIGNvbnN0KSB9LAogIHNjb3BlOiB7IHZhbGlkYXRlOiBvbmVPZihbJ3VzZXInLCAnbWFjaGluZSddIGFzIGNvbnN0KSB9LAogIHNvdXJjZVBhdGg6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogMjA0OCB9KSB9LAogIHZhbHVlTmFtZTogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAyNTYgfSkgfSwKICB2YWx1ZVR5cGU6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogNjQgfSkgfSwKfSk7CgpleHBvcnQgY29uc3QgbGVmdG92ZXI6IFZhbGlkYXRvciA9IHNoYXBlKHsKICBwYXRoOiB7IHZhbGlkYXRlOiBzdHIoeyBtYXg6IDQwOTYgfSkgfSwKICBraW5kOiB7IHZhbGlkYXRlOiBvbmVPZihbJ2ZpbGUnLCAnZm9sZGVyJywgJ3JlZ2lzdHJ5J10gYXMgY29uc3QpIH0sCiAgc2l6ZTogeyB2YWxpZGF0ZTogbnVtIH0sCiAgcmVhc29uOiB7IHZhbGlkYXRlOiBzdHIoeyBhbGxvd0VtcHR5OiB0cnVlLCBtYXg6IDUxMiB9KSB9LAp9KTsKCmV4cG9ydCBjb25zdCBsZWZ0b3ZlclNjYW5UYXJnZXQ6IFZhbGlkYXRvciA9IHNoYXBlKHsKICBuYW1lOiB7IHZhbGlkYXRlOiBzdHIoeyBtYXg6IDUxMiB9KSB9LAogIGlkZW50OiB7IHZhbGlkYXRlOiBzdHIoeyBhbGxvd0VtcHR5OiB0cnVlLCBtYXg6IDI1NiB9KSB9LAp9LCB0cnVlKTsKCmV4cG9ydCBjb25zdCBpbnN0YWxsSXRlbTogVmFsaWRhdG9yID0gc2hhcGUoewogIG5hbWU6IHsgdmFsaWRhdGU6IHN0cih7IG1heDogMjU2IH0pIH0sCiAgaWRlbnQ6IHsgdmFsaWRhdGU6IHN0cih7IG1heDogMTI4IH0pIH0sCiAgc291cmNlOiB7IHZhbGlkYXRlOiBvbmVPZihbJ3dpbmdldCcsICdjaG9jbycsICducG0nLCAnc2Nvb3AnLCAnYnJldyddIGFzIGNvbnN0KSB9LAp9LCB0cnVlKTsKCmV4cG9ydCBjb25zdCBibG9hdHdhcmVJdGVtOiBWYWxpZGF0b3IgPSBzaGFwZSh7CiAgaWQ6IHsgdmFsaWRhdGU6IHN0cih7IG1heDogNTEyIH0pIH0sCiAgbmFtZTogeyB2YWxpZGF0ZTogc3RyKHsgbWF4OiA1MTIgfSkgfSwKICBwdWJsaXNoZXI6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogNTEyIH0pIH0sCiAgdmVyc2lvbjogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAxMjggfSkgfSwKICBraW5kOiB7IHZhbGlkYXRlOiBvbmVPZihbJ3dpbmRvd3MtYXBwJywgJ29lbS1hcHAnXSBhcyBjb25zdCkgfSwKICBpZGVudDogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAyNTYgfSkgfSwKICBwYWNrYWdlTmFtZTogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAyNTYgfSkgfSwKICBwYWNrYWdlRnVsbE5hbWU6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogNTEyIH0pIH0sCiAgcHJvdmlzaW9uZWQ6IHsgdmFsaWRhdGU6IGJvb2wgfSwKICBkZXRhaWw6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogMjA0OCB9KSB9LAogIHJlYXNvbjogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiA1MTIgfSkgfSwKfSwgdHJ1ZSk7CgpleHBvcnQgY29uc3QgdXBkYXRlSW5mbzogVmFsaWRhdG9yID0gc2hhcGUoewogIGF2YWlsYWJsZTogeyB2YWxpZGF0ZTogYm9vbCB9LAogIGN1cnJlbnRWZXJzaW9uOiB7IHZhbGlkYXRlOiBzdHIoeyBtYXg6IDMyIH0pIH0sCiAgbGF0ZXN0VmVyc2lvbjogeyB2YWxpZGF0ZTogc3RyKHsgbWF4OiAzMiB9KSB9LAogIG5vdGVzOiB7IHZhbGlkYXRlOiBzdHIoeyBhbGxvd0VtcHR5OiB0cnVlLCBtYXg6IDIwMDAwIH0pIH0sCiAgZmlsZU5hbWU6IHsgdmFsaWRhdGU6IHN0cih7IG1heDogNTEyIH0pIH0sCiAgc2hhNTEyOiB7IHZhbGlkYXRlOiBzdHIoeyBtaW46IDE2LCBtYXg6IDUxMiB9KSB9LAogIHNpemU6IHsgdmFsaWRhdGU6IG51bSB9LAogIHNvdXJjZTogeyB2YWxpZGF0ZTogc3RyKHsgbWF4OiAyMDQ4IH0pIH0sCiAgcG9ydGFibGU6IHsgdmFsaWRhdGU6IGJvb2wgfSwKICBtZXNzYWdlOiB7IHZhbGlkYXRlOiBzdHIoeyBhbGxvd0VtcHR5OiB0cnVlLCBtYXg6IDIwMDAgfSkgfSwKfSk7CgpleHBvcnQgY29uc3Qgc2V0dGluZ3NQYXRjaDogVmFsaWRhdG9yID0gc2hhcGUoewogIGxhbmd1YWdlOiB7IHZhbGlkYXRlOiBzdHIoeyBtYXg6IDY0IH0pLCBvcHRpb25hbDogdHJ1ZSB9LAogIHRoZW1lOiB7IHZhbGlkYXRlOiBvbmVPZihbJ2RlZmF1bHQnLCAnd2luZG93czExJywgJ2F1dG8nXSBhcyBjb25zdCksIG9wdGlvbmFsOiB0cnVlIH0sCiAgd2luZ2V0VmVyc2lvbjogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAxMjggfSksIG9wdGlvbmFsOiB0cnVlIH0sCiAgd2luZ2V0QXZhaWxhYmxlOiB7IHZhbGlkYXRlOiBib29sLCBvcHRpb25hbDogdHJ1ZSB9LAogIGF1dG9VcGRhdGVTY2FuOiB7IHZhbGlkYXRlOiBib29sLCBvcHRpb25hbDogdHJ1ZSB9LAogIGF1dG9MZWZ0b3ZlclNjYW46IHsgdmFsaWRhdGU6IGJvb2wsIG9wdGlvbmFsOiB0cnVlIH0sCiAgc2lsZW50SW5zdGFsbDogeyB2YWxpZGF0ZTogYm9vbCwgb3B0aW9uYWw6IHRydWUgfSwKICBlbnRlcnByaXNlU2lsZW50UHJlcmVxczogeyB2YWxpZGF0ZTogYm9vbCwgb3B0aW9uYWw6IHRydWUgfSwKICBkcml2ZTogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiA0MDk2IH0pLCBvcHRpb25hbDogdHJ1ZSB9LAogIHN0YXJ0V2l0aFdpbmRvd3M6IHsgdmFsaWRhdGU6IGJvb2wsIG9wdGlvbmFsOiB0cnVlIH0sCiAgc3RhcnRNaW5pbWl6ZWRUb1RyYXk6IHsgdmFsaWRhdGU6IGJvb2wsIG9wdGlvbmFsOiB0cnVlIH0sCiAgY2xvc2VCZWhhdmlvcjogeyB2YWxpZGF0ZTogb25lT2YoWydhc2snLCAndHJheScsICdxdWl0J10gYXMgY29uc3QpLCBvcHRpb25hbDogdHJ1ZSB9LAogIHVwZGF0ZVNvdXJjZTogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAyMDQ4IH0pLCBvcHRpb25hbDogdHJ1ZSB9LAogIHVwZGF0ZUNoZWNrT25TdGFydHVwOiB7IHZhbGlkYXRlOiBib29sLCBvcHRpb25hbDogdHJ1ZSB9LAogIGV4Y2x1ZGVkRm9sZGVyczogeyB2YWxpZGF0ZTogYXJyKHN0cih7IG1heDogNDA5NiB9KSwgNTAwKSwgb3B0aW9uYWw6IHRydWUgfSwKICBleGNsdWRlZEV4dGVuc2lvbnM6IHsgdmFsaWRhdGU6IGFycihzdHIoeyBtaW46IDEsIG1heDogMzIgfSksIDUwMCksIG9wdGlvbmFsOiB0cnVlIH0sCn0sIHRydWUpOwoKZXhwb3J0IGNvbnN0IGZpbGVQYXRoOiBWYWxpZGF0b3IgPSBzdHIoeyBtaW46IDIsIG1heDogNDA5NiB9KTsKZXhwb3J0IGNvbnN0IHBhdGhMaXN0OiBWYWxpZGF0b3IgPSBhcnIoZmlsZVBhdGgsIDIwMDApOwoKZXhwb3J0IGNvbnN0IGZpbGVTY2FuT3B0aW9uczogVmFsaWRhdG9yID0gc2hhcGUoewogIHJvb3RzOiB7IHZhbGlkYXRlOiBwYXRoTGlzdCB9LAogIHJlZmVyZW5jZVJvb3RzOiB7IHZhbGlkYXRlOiBwYXRoTGlzdCB9LAogIG1pblNpemU6IHsgdmFsaWRhdGU6IG51bSB9LAogIG1heFJlc3VsdHM6IHsgdmFsaWRhdGU6IG51bSB9LAp9LCB0cnVlKTsKCmV4cG9ydCBjb25zdCBhdXRvcnVuSXRlbTogVmFsaWRhdG9yID0gc2hhcGUoewogIGlkOiB7IHZhbGlkYXRlOiBzdHIoeyBtYXg6IDEwMjQgfSkgfSwKICBjYXRlZ29yeTogeyB2YWxpZGF0ZTogb25lT2YoWyd0YXNrJywgJ3NlcnZpY2UnLCAnd2lubG9nb24nLCAnYXBwaW5pdCcsICdpZmVvJywgJ3dtaSddIGFzIGNvbnN0KSB9LAogIG5hbWU6IHsgdmFsaWRhdGU6IHN0cih7IG1heDogNTEyIH0pIH0sCiAgbG9jYXRpb246IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogMTAyNCB9KSB9LAogIGNvbW1hbmQ6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogNDA5NiB9KSB9LAogIGVuYWJsZWQ6IHsgdmFsaWRhdGU6IGJvb2wgfSwKICBwdWJsaXNoZXI6IHsgdmFsaWRhdGU6IHN0cih7IGFsbG93RW1wdHk6IHRydWUsIG1heDogNTEyIH0pIH0sCiAgc291cmNlUGF0aDogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAyMDQ4IH0pIH0sCiAgcmlzazogeyB2YWxpZGF0ZTogb25lT2YoWydub3JtYWwnLCAnZWxldmF0ZWQnXSBhcyBjb25zdCkgfSwKICBzdGF0ZTogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAxMjggfSkgfSwKfSwgdHJ1ZSk7CgpleHBvcnQgY29uc3QgcHJpdmFjeVR3ZWFrOiBWYWxpZGF0b3IgPSBzaGFwZSh7CiAgaWQ6IHsgdmFsaWRhdGU6IHN0cih7IG1heDogNjQgfSkgfSwKICB0aXRsZTogeyB2YWxpZGF0ZTogc3RyKHsgbWF4OiAyNTYgfSkgfSwKICBkZXNjcmlwdGlvbjogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAxMDI0IH0pIH0sCiAgY2F0ZWdvcnk6IHsgdmFsaWRhdGU6IG9uZU9mKFsndGVsZW1ldHJ5JywgJ3ByaXZhY3knLCAnaW50ZXJmYWNlJ10gYXMgY29uc3QpIH0sCiAgaGl2ZTogeyB2YWxpZGF0ZTogb25lT2YoWydIS0NVJywgJ0hLTE0nXSBhcyBjb25zdCkgfSwKICBsb2NhdGlvbjogeyB2YWxpZGF0ZTogc3RyKHsgbWF4OiAxMDI0IH0pIH0sCiAgbmFtZTogeyB2YWxpZGF0ZTogc3RyKHsgbWF4OiAyNTYgfSkgfSwKICB2YWx1ZTogeyB2YWxpZGF0ZTogc3RyKHsgbWF4OiAyNTYgfSkgfSwKICBhcHBsaWVkOiB7IHZhbGlkYXRlOiBib29sIH0sCiAgY3VycmVudDogeyB2YWxpZGF0ZTogc3RyKHsgYWxsb3dFbXB0eTogdHJ1ZSwgbWF4OiAyNTYgfSkgfSwKICBhZG1pbjogeyB2YWxpZGF0ZTogYm9vbCB9LAp9LCB0cnVlKTsKCi8qKiBjaGlsZCwgcGFyZW50IGtsYXPDtnLDvG7DvG4gacOnaW5kZSBtaT8gKHNlbWJvbGlrIGJhxJ9sYW50xLFsYXIgw6fDtnrDvGxtw7zFnyB5b2xsYXJsYSBrYXLFn8SxbGHFn3TEsXLEsWzEsXIpICovCmV4cG9ydCBmdW5jdGlvbiBpc0luc2lkZShjaGlsZDogc3RyaW5nLCBwYXJlbnQ6IHN0cmluZyk6IGJvb2xlYW4gewogIGlmIChwbGF0Zm9ybSA9PT0gJ3dpbmRvd3MnKSB7CiAgICBjb25zdCByZWxhdGl2ZSA9IHBhdGhSZWxhdGl2ZShub3JtYWxpemUocGFyZW50KSwgbm9ybWFsaXplKGNoaWxkKSk7CiAgICByZXR1cm4gcmVsYXRpdmUgPT09ICcnIHx8ICghcmVsYXRpdmUuc3RhcnRzV2l0aCgnLi4nKSAmJiAhYWJzb2x1dGUocmVsYXRpdmUpKTsKICB9CiAgLy8gUE9TSVgndGUgdGVycyBlxJ9payDDp2l6Z2kgZ2XDp2VybGkgYmlyIGRvc3lhIGFkxLEga2FyYWt0ZXJpZGlyOyBXaW5kb3dzCiAgLy8gbm9ybWFsaXphc3lvbnUga3VsbGFuxLFsYW1hei4gw4fDtnrDvGxtw7zFnyB5b2xsYXLEsSBOb2RlIGlsZSBrYXLFn8SxbGHFn3TEsXLEsXLEsXouCiAgY29uc3QgcmVsYXRpdmUgPSBwYXRoLnJlbGF0aXZlKHBhdGgucmVzb2x2ZShwYXJlbnQpLCBwYXRoLnJlc29sdmUoY2hpbGQpKTsKICByZXR1cm4gcmVsYXRpdmUgPT09ICcnIHx8ICghcmVsYXRpdmUuc3RhcnRzV2l0aCgnLi4nKSAmJiAhcGF0aC5pc0Fic29sdXRlKHJlbGF0aXZlKSk7Cn0KCmZ1bmN0aW9uIG5vcm1hbGl6ZSh2YWx1ZTogc3RyaW5nKTogc3RyaW5nIHsKICByZXR1cm4gdmFsdWUucmVwbGFjZSgvXC8vZywgJ1xcJykucmVwbGFjZSgvXFwrJC8sICcnKS50b0xvd2VyQ2FzZSgpOwp9CgpmdW5jdGlvbiBwYXRoUmVsYXRpdmUocGFyZW50OiBzdHJpbmcsIGNoaWxkOiBzdHJpbmcpOiBzdHJpbmcgewogIGlmIChjaGlsZCA9PT0gcGFyZW50KSByZXR1cm4gJyc7CiAgaWYgKGNoaWxkLnN0YXJ0c1dpdGgoYCR7cGFyZW50fVxcYCkpIHJldHVybiBjaGlsZC5zbGljZShwYXJlbnQubGVuZ3RoICsgMSk7CiAgcmV0dXJuIGAuLiR7Y2hpbGR9YDsKfQoKZnVuY3Rpb24gYWJzb2x1dGUodmFsdWU6IHN0cmluZyk6IGJvb2xlYW4gewogIHJldHVybiAvXlthLXpdOi9pLnRlc3QodmFsdWUpIHx8IHZhbHVlLnN0YXJ0c1dpdGgoJ1xcXFwnKTsKfQo=
+/**
+ * Renderer -> ana surec sinirinda calisan hafif IPC dogrulayicilari.
+ *
+ * Amac: harici bagimlilik (zod vb.) eklemeden gelen argumanlarin turunu ve
+ * sinirlarini kontrol etmek; hatali/strlenmis argumanin servislere ulasmasini
+ * engellemek. Her dogrulayici degeri oldugu gibi veya (strip modunda) sadece
+ * bilinen alanlari dondurur.
+ */
+
+import path from 'path';
+import { m, mf } from './i18n-main';
+import { detectPlatform } from '../shared/platform';
+
+const platform = detectPlatform(process.platform);
+
+export type Validator = (value: unknown, field: string) => unknown;
+
+export class IpcValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'IpcValidationError';
+  }
+}
+
+function fail(field: string, detail: string): never {
+  throw new IpcValidationError(`${field}: ${detail}`);
+}
+
+function record(value: unknown): Record<string, unknown> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    fail(m('değer', 'value'), m('nesne bekleniyor', 'object expected'));
+  }
+  return value as Record<string, unknown>;
+}
+
+interface StringOptions {
+  min?: number;
+  max?: number;
+  pattern?: RegExp;
+  allowEmpty?: boolean;
+}
+
+export function str(options: StringOptions = {}): Validator {
+  return (value, field) => {
+    if (typeof value !== 'string') fail(field, m('metin bekleniyor', 'string expected'));
+    const text = value as string;
+    if (!options.allowEmpty && !text.trim()) fail(field, m('boş olamaz', 'cannot be empty'));
+    if (options.min !== undefined && text.length < options.min) {
+      fail(field, mf('en az {min} karakter olmalı', 'must be at least {min} characters', { min: options.min }));
+    }
+    if (options.max !== undefined && text.length > options.max) {
+      fail(field, mf('en fazla {max} karakter olabilir', 'can be at most {max} characters', { max: options.max }));
+    }
+    if (options.pattern && !options.pattern.test(text)) fail(field, m('geçersiz biçim', 'invalid format'));
+    return text;
+  };
+}
+
+export const bool: Validator = (value, field) => {
+  if (typeof value !== 'boolean') fail(field, m('doğru/yanlış bekleniyor', 'true/false expected'));
+  return value;
+};
+
+export const num: Validator = (value, field) => {
+  if (typeof value !== 'number' || !Number.isFinite(value)) fail(field, m('sayı bekleniyor', 'number expected'));
+  return value;
+};
+
+export function oneOf<T extends string | number>(values: readonly T[]): Validator {
+  return (value, field) => {
+    if (!values.includes(value as T)) {
+      fail(field, mf('izin verilenler: {values}', 'allowed values: {values}', { values: values.join(', ') }));
+    }
+    return value;
+  };
+}
+
+export function arr(item: Validator, max = 1000): Validator {
+  return (value, field) => {
+    if (!Array.isArray(value)) fail(field, m('dizi bekleniyor', 'array expected'));
+    if (value.length > max) fail(field, mf('en fazla {max} öğe olabilir', 'can contain at most {max} items', { max }));
+    return value.map((entry, index) => item(entry, `${field}[${index}]`));
+  };
+}
+
+interface FieldSpec {
+  validate: Validator;
+  optional?: boolean;
+}
+
+/** Nesnedeki bilinen alanları doğrular. strip=true ise bilinmeyen alanları atar. */
+export function shape(fields: Record<string, FieldSpec>, strip = false): Validator {
+  return (value, field) => {
+    const source = record(value);
+    const output: Record<string, unknown> = {};
+    for (const [key, spec] of Object.entries(fields)) {
+      if (!(key in source)) {
+        if (!spec.optional) fail(`${field}.${key}`, m('eksik', 'missing'));
+        continue;
+      }
+      output[key] = spec.validate(source[key], `${field}.${key}`);
+    }
+    return strip ? output : source;
+  };
+}
+
+/** winget paket kimliği: en az bir nokta içermeli, kabuk/argüman özel karakteri taşımamalı. */
+export const ident: Validator = str({
+  min: 3,
+  max: 128,
+  pattern: /^[A-Za-z0-9][A-Za-z0-9._+-]*\.[A-Za-z0-9][A-Za-z0-9._+-]*$/,
+});
+
+/** winget search sorgusu: seçenek gibi yorumlanmaması için '-' ile başlayamaz. */
+export const searchQuery: Validator = str({
+  min: 1,
+  max: 120,
+  pattern: /^[^\s-][^\r\n]*$/,
+});
+
+export const wingetPkg: Validator = shape({
+  name: { validate: str({ max: 512, pattern: /^[^\s-/][^\r\n]*$/ }) },
+  ident: { validate: str({ max: 128 }) },
+  version: { validate: str({ allowEmpty: true, max: 128 }) },
+  available: { validate: str({ allowEmpty: true, max: 128 }) },
+  source: { validate: str({ allowEmpty: true, max: 128 }) },
+});
+
+export const regIssue: Validator = shape({
+  hive: { validate: oneOf(['HKLM', 'HKCU'] as const) },
+  rootPath: { validate: str({ max: 512 }) },
+  label: { validate: str({ allowEmpty: true, max: 512 }) },
+  key: { validate: str({ max: 2048 }) },
+  name: { validate: str({ allowEmpty: true, max: 512 }) },
+  publisher: { validate: str({ allowEmpty: true, max: 512 }) },
+  reason: { validate: str({ allowEmpty: true, max: 512 }) },
+  detail: { validate: str({ allowEmpty: true, max: 2048 }) },
+  view: { validate: oneOf([64, 32] as const) },
+  system: { validate: bool, optional: true },
+  category: {
+    validate: oneOf(['uninstall', 'app-paths', 'com-shell', 'com-hijack', 'file-assoc', 'service', 'shared-dll', 'font', 'odbc'] as const),
+    optional: true,
+  },
+  risk: { validate: oneOf(['info', 'warning', 'critical'] as const), optional: true },
+  fixable: { validate: bool, optional: true },
+  recommendation: { validate: str({ allowEmpty: true, max: 512 }), optional: true },
+  signature: { validate: str({ allowEmpty: true, max: 64 }), optional: true },
+  valueName: { validate: str({ allowEmpty: true, max: 2048 }), optional: true },
+});
+
+export const scheduleTask: Validator = shape({
+  id: { validate: str({ max: 128 }) },
+  kind: { validate: oneOf(['weekly-full', 'daily-light', 'monthly-deep', 'custom'] as const) },
+  name: { validate: str({ max: 256 }) },
+  enabled: { validate: bool },
+  time: { validate: str({ pattern: /^([01]\d|2[0-3]):[0-5]\d$/, max: 5 }) },
+  dayOfWeek: { validate: num, optional: true },
+  dayOfMonth: { validate: num, optional: true },
+  intervalDays: { validate: num, optional: true },
+  lastRun: { validate: str({ allowEmpty: true, max: 64 }), optional: true },
+  nextRun: { validate: str({ allowEmpty: true, max: 64 }), optional: true },
+});
+
+export const startupItem: Validator = shape({
+  id: { validate: str({ max: 512 }) },
+  name: { validate: str({ max: 512 }) },
+  command: { validate: str({ allowEmpty: true, max: 4096 }) },
+  location: { validate: str({ allowEmpty: true, max: 512 }) },
+  enabled: { validate: bool },
+  kind: { validate: oneOf(['registry', 'folder'] as const) },
+  scope: { validate: oneOf(['user', 'machine'] as const) },
+  sourcePath: { validate: str({ allowEmpty: true, max: 2048 }) },
+  valueName: { validate: str({ allowEmpty: true, max: 256 }) },
+  valueType: { validate: str({ allowEmpty: true, max: 64 }) },
+});
+
+export const leftover: Validator = shape({
+  path: { validate: str({ max: 4096 }) },
+  kind: { validate: oneOf(['file', 'folder', 'registry'] as const) },
+  size: { validate: num },
+  reason: { validate: str({ allowEmpty: true, max: 512 }) },
+});
+
+export const leftoverScanTarget: Validator = shape({
+  name: { validate: str({ max: 512 }) },
+  ident: { validate: str({ allowEmpty: true, max: 256 }) },
+}, true);
+
+export const installItem: Validator = shape({
+  name: { validate: str({ max: 256 }) },
+  ident: { validate: str({ max: 128 }) },
+  source: { validate: oneOf(['winget', 'choco', 'npm', 'scoop', 'brew'] as const) },
+}, true);
+
+export const bloatwareItem: Validator = shape({
+  id: { validate: str({ max: 512 }) },
+  name: { validate: str({ max: 512 }) },
+  publisher: { validate: str({ allowEmpty: true, max: 512 }) },
+  version: { validate: str({ allowEmpty: true, max: 128 }) },
+  kind: { validate: oneOf(['windows-app', 'oem-app'] as const) },
+  ident: { validate: str({ allowEmpty: true, max: 256 }) },
+  packageName: { validate: str({ allowEmpty: true, max: 256 }) },
+  packageFullName: { validate: str({ allowEmpty: true, max: 512 }) },
+  provisioned: { validate: bool },
+  detail: { validate: str({ allowEmpty: true, max: 2048 }) },
+  reason: { validate: str({ allowEmpty: true, max: 512 }) },
+}, true);
+
+export const updateInfo: Validator = shape({
+  available: { validate: bool },
+  currentVersion: { validate: str({ max: 32 }) },
+  latestVersion: { validate: str({ max: 32 }) },
+  notes: { validate: str({ allowEmpty: true, max: 20000 }) },
+  fileName: { validate: str({ max: 512 }) },
+  sha512: { validate: str({ min: 16, max: 512 }) },
+  size: { validate: num },
+  source: { validate: str({ max: 2048 }) },
+  portable: { validate: bool },
+  message: { validate: str({ allowEmpty: true, max: 2000 }) },
+});
+
+export const settingsPatch: Validator = shape({
+  language: { validate: str({ max: 64 }), optional: true },
+  theme: { validate: oneOf(['default', 'windows11', 'auto'] as const), optional: true },
+  wingetVersion: { validate: str({ allowEmpty: true, max: 128 }), optional: true },
+  wingetAvailable: { validate: bool, optional: true },
+  autoUpdateScan: { validate: bool, optional: true },
+  autoLeftoverScan: { validate: bool, optional: true },
+  silentInstall: { validate: bool, optional: true },
+  enterpriseSilentPrereqs: { validate: bool, optional: true },
+  drive: { validate: str({ allowEmpty: true, max: 4096 }), optional: true },
+  startWithWindows: { validate: bool, optional: true },
+  startMinimizedToTray: { validate: bool, optional: true },
+  closeBehavior: { validate: oneOf(['ask', 'tray', 'quit'] as const), optional: true },
+  updateSource: { validate: str({ allowEmpty: true, max: 2048 }), optional: true },
+  updateCheckOnStartup: { validate: bool, optional: true },
+  excludedFolders: { validate: arr(str({ max: 4096 }), 500), optional: true },
+  excludedExtensions: { validate: arr(str({ min: 1, max: 32 }), 500), optional: true },
+}, true);
+
+export const filePath: Validator = str({ min: 2, max: 4096 });
+export const pathList: Validator = arr(filePath, 2000);
+
+export const fileScanOptions: Validator = shape({
+  roots: { validate: pathList },
+  referenceRoots: { validate: pathList },
+  minSize: { validate: num },
+  maxResults: { validate: num },
+}, true);
+
+export const autorunItem: Validator = shape({
+  id: { validate: str({ max: 1024 }) },
+  category: { validate: oneOf(['task', 'service', 'winlogon', 'appinit', 'ifeo', 'wmi'] as const) },
+  name: { validate: str({ max: 512 }) },
+  location: { validate: str({ allowEmpty: true, max: 1024 }) },
+  command: { validate: str({ allowEmpty: true, max: 4096 }) },
+  enabled: { validate: bool },
+  publisher: { validate: str({ allowEmpty: true, max: 512 }) },
+  sourcePath: { validate: str({ allowEmpty: true, max: 2048 }) },
+  risk: { validate: oneOf(['normal', 'elevated'] as const) },
+  state: { validate: str({ allowEmpty: true, max: 128 }) },
+}, true);
+
+export const privacyTweak: Validator = shape({
+  id: { validate: str({ max: 64 }) },
+  title: { validate: str({ max: 256 }) },
+  description: { validate: str({ allowEmpty: true, max: 1024 }) },
+  category: { validate: oneOf(['telemetry', 'privacy', 'interface'] as const) },
+  hive: { validate: oneOf(['HKCU', 'HKLM'] as const) },
+  location: { validate: str({ max: 1024 }) },
+  name: { validate: str({ max: 256 }) },
+  value: { validate: str({ max: 256 }) },
+  applied: { validate: bool },
+  current: { validate: str({ allowEmpty: true, max: 256 }) },
+  admin: { validate: bool },
+}, true);
+
+/** child, parent klasörünün içinde mi? (sembolik bağlantılar çözülmüş yollarla karşılaştırılır) */
+export function isInside(child: string, parent: string): boolean {
+  if (platform === 'windows') {
+    const relative = pathRelative(normalize(parent), normalize(child));
+    return relative === '' || (!relative.startsWith('..') && !absolute(relative));
+  }
+  // POSIX'te ters eğik çizgi geçerli bir dosya adı karakteridir; Windows
+  // normalizasyonu kullanılamaz. Çözülmüş yolları Node ile karşılaştırırız.
+  const relative = path.relative(path.resolve(parent), path.resolve(child));
+  return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
+}
+
+function normalize(value: string): string {
+  return value.replace(/\//g, '\\').replace(/\\+$/, '').toLowerCase();
+}
+
+function pathRelative(parent: string, child: string): string {
+  if (child === parent) return '';
+  if (child.startsWith(`${parent}\\`)) return child.slice(parent.length + 1);
+  return `..${child}`;
+}
+
+function absolute(value: string): boolean {
+  return /^[a-z]:/i.test(value) || value.startsWith('\\\\');
+}

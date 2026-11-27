@@ -1,1 +1,104 @@
-aW1wb3J0IHsgZ2V0Q2FwYWJpbGl0aWVzIH0gZnJvbSAnLi4vLi4vc2hhcmVkL3BsYXRmb3JtJzsKaW1wb3J0IHR5cGUgeyBQYWNrYWdlLCBQYWNrYWdlU291cmNlIH0gZnJvbSAnLi4vLi4vc2hhcmVkL3R5cGVzJzsKaW1wb3J0IHsgTG9nRm4sIHJ1bkNvbW1hbmQgfSBmcm9tICcuLi91dGlsJzsKaW1wb3J0ICogYXMgYnJldyBmcm9tICcuL2JyZXcnOwppbXBvcnQgKiBhcyB3aW5nZXQgZnJvbSAnLi93aW5nZXQnOwoKLyoqIFTDvG0gZ8O8bmNlbGxlbWUgdGFyYW1hbGFyxLEgc2FsdCBva3VudXI7IGhpw6diaXJpIGtlbmRpbGnEn2luZGVuIGt1cnVsdW0geWFwbWF6LiAqLwpjb25zdCBUSU1FT1VUID0gNCAqIDYwICogMTAwMDsKCi8qKgogKiBDaG9jb2xhdGV5OiBgaWR8a3VydWx1fHNvbnxzYWJpdGxlbm1pxZ9gIGJpw6dpbWluZGUgc2F0xLFyIGTDtm5kw7xyw7xyLgogKiDDlnJuZWs6IGA3emlwfDE5LjAwfDI0LjA5fGZhbHNlYAogKi8KZXhwb3J0IGZ1bmN0aW9uIHBhcnNlQ2hvY29VcGRhdGVzKHRleHQ6IHN0cmluZyk6IFBhY2thZ2VbXSB7CiAgY29uc3Qgcm93czogUGFja2FnZVtdID0gW107CiAgZm9yIChjb25zdCBsaW5lIG9mIHRleHQuc3BsaXQoL1xyP1xuLykpIHsKICAgIGNvbnN0IGNlbGxzID0gbGluZS50cmltKCkuc3BsaXQoJ3wnKS5tYXAoKGNlbGwpID0+IGNlbGwudHJpbSgpKTsKICAgIGlmIChjZWxscy5sZW5ndGggPCAzKSBjb250aW51ZTsKICAgIGNvbnN0IFtpZGVudCwgY3VycmVudCwgYXZhaWxhYmxlLCBwaW5uZWRdID0gY2VsbHM7CiAgICBpZiAoIWlkZW50IHx8ICFjdXJyZW50IHx8ICFhdmFpbGFibGUgfHwgY3VycmVudCA9PT0gYXZhaWxhYmxlKSBjb250aW51ZTsKICAgIGlmIChwaW5uZWQgJiYgL150cnVlJC9pLnRlc3QocGlubmVkKSkgY29udGludWU7CiAgICBpZiAoIS9eW0EtWmEtejAtOV1bQS1aYS16MC05Ll8tXSokLy50ZXN0KGlkZW50KSkgY29udGludWU7CiAgICByb3dzLnB1c2goeyBuYW1lOiBpZGVudCwgaWRlbnQsIHZlcnNpb246IGN1cnJlbnQsIGF2YWlsYWJsZSwgc291cmNlOiAnY2hvY28nIH0pOwogIH0KICByZXR1cm4gcm93czsKfQoKLyoqCiAqIG5wbTogYG5wbSBvdXRkYXRlZCAtZyAtLWpzb25gIG5lc25lIGTDtm5kw7xyw7xyOyDDp8Sxa8SxxZ8ga29kdSAxIG9sc2EgYmlsZQogKiBnw7Z2ZGUgZ2XDp2VybGkgSlNPTiBvbGFiaWxpci4gYGVycm9yYCBhbmFodGFyxLEgdmFyc2Ega2F5xLF0IHlvayBzYXnEsWzEsXIuCiAqLwpleHBvcnQgZnVuY3Rpb24gcGFyc2VOcG1VcGRhdGVzKHRleHQ6IHN0cmluZyk6IFBhY2thZ2VbXSB7CiAgY29uc3Qgc3RhcnQgPSB0ZXh0LmluZGV4T2YoJ3snKTsKICBjb25zdCBlbmQgPSB0ZXh0Lmxhc3RJbmRleE9mKCd9Jyk7CiAgaWYgKHN0YXJ0IDwgMCB8fCBlbmQgPCBzdGFydCkgcmV0dXJuIFtdOwogIGxldCBkYXRhOiBSZWNvcmQ8c3RyaW5nLCB7IGN1cnJlbnQ/OiBzdHJpbmc7IHdhbnRlZD86IHN0cmluZzsgbGF0ZXN0Pzogc3RyaW5nIH0+OwogIHRyeSB7CiAgICBkYXRhID0gSlNPTi5wYXJzZSh0ZXh0LnNsaWNlKHN0YXJ0LCBlbmQgKyAxKSk7CiAgfSBjYXRjaCB7CiAgICByZXR1cm4gW107CiAgfQogIGlmICghZGF0YSB8fCB0eXBlb2YgZGF0YSAhPT0gJ29iamVjdCcgfHwgKGRhdGEgYXMgUmVjb3JkPHN0cmluZywgdW5rbm93bj4pLmVycm9yKSByZXR1cm4gW107CiAgY29uc3Qgcm93czogUGFja2FnZVtdID0gW107CiAgZm9yIChjb25zdCBbaWRlbnQsIGluZm9dIG9mIE9iamVjdC5lbnRyaWVzKGRhdGEpKSB7CiAgICBpZiAoIWlkZW50IHx8ICFpbmZvIHx8IHR5cGVvZiBpbmZvICE9PSAnb2JqZWN0JykgY29udGludWU7CiAgICBjb25zdCBjdXJyZW50ID0gU3RyaW5nKGluZm8uY3VycmVudCB8fCAnJykudHJpbSgpOwogICAgY29uc3QgYXZhaWxhYmxlID0gU3RyaW5nKGluZm8ubGF0ZXN0IHx8IGluZm8ud2FudGVkIHx8ICcnKS50cmltKCk7CiAgICBpZiAoIWN1cnJlbnQgfHwgIWF2YWlsYWJsZSB8fCBjdXJyZW50ID09PSBhdmFpbGFibGUpIGNvbnRpbnVlOwogICAgaWYgKCEvXig/OkBbQS1aYS16MC05XVtBLVphLXowLTkuXy1dKlwvKT9bQS1aYS16MC05XVtBLVphLXowLTkuXy1dKiQvLnRlc3QoaWRlbnQpKSBjb250aW51ZTsKICAgIHJvd3MucHVzaCh7IG5hbWU6IGlkZW50LCBpZGVudCwgdmVyc2lvbjogY3VycmVudCwgYXZhaWxhYmxlLCBzb3VyY2U6ICducG0nIH0pOwogIH0KICByZXR1cm4gcm93czsKfQoKLyoqCiAqIFNjb29wOiBgc2Nvb3Agc3RhdHVzYCB0YWJsb3N1bmRha2kgYEFkIEt1cnVsdSBTb25gIHPDvHR1bmxhcsSxbsSxIG9rdXIuCiAqIFRlayBib8WfbHVrbGEgaGl6YWxhbm3EscWfIMOnxLFrdMSxeWEgZGEgZGF5YW7EsWtsxLFkxLFyLgogKi8KZXhwb3J0IGZ1bmN0aW9uIHBhcnNlU2Nvb3BVcGRhdGVzKHRleHQ6IHN0cmluZyk6IFBhY2thZ2VbXSB7CiAgY29uc3Qgcm93czogUGFja2FnZVtdID0gW107CiAgZm9yIChjb25zdCBsaW5lIG9mIHRleHQuc3BsaXQoL1xyP1xuLykpIHsKICAgIGNvbnN0IHRyaW1tZWQgPSBsaW5lLnRyaW0oKTsKICAgIGlmICghdHJpbW1lZCB8fCAvXihuYW1lfC17Myx9fHNjb29wfGV2ZXJ5dGhpbmd8bm8gYXBwc3xnw7xuY2VsKS9pLnRlc3QodHJpbW1lZCkpIGNvbnRpbnVlOwogICAgbGV0IGNlbGxzID0gdHJpbW1lZC5zcGxpdCgvXHN7Mix9LykubWFwKChjZWxsKSA9PiBjZWxsLnRyaW0oKSk7CiAgICBpZiAoY2VsbHMubGVuZ3RoIDwgMykgY2VsbHMgPSB0cmltbWVkLnNwbGl0KC9ccysvKS5tYXAoKGNlbGwpID0+IGNlbGwudHJpbSgpKTsKICAgIGlmIChjZWxscy5sZW5ndGggPCAzKSBjb250aW51ZTsKICAgIGNvbnN0IFtpZGVudCwgY3VycmVudCwgYXZhaWxhYmxlXSA9IGNlbGxzOwogICAgaWYgKCFpZGVudCB8fCAhY3VycmVudCB8fCAhYXZhaWxhYmxlIHx8IGN1cnJlbnQgPT09IGF2YWlsYWJsZSkgY29udGludWU7CiAgICBpZiAoIS9eW0EtWmEtejAtOV1bQS1aYS16MC05Ll9ALy1dKiQvLnRlc3QoaWRlbnQpKSBjb250aW51ZTsKICAgIGlmICghL1tBLVphLXowLTldLy50ZXN0KGN1cnJlbnQpIHx8ICEvW0EtWmEtejAtOV0vLnRlc3QoYXZhaWxhYmxlKSkgY29udGludWU7CiAgICByb3dzLnB1c2goeyBuYW1lOiBpZGVudCwgaWRlbnQsIHZlcnNpb246IGN1cnJlbnQsIGF2YWlsYWJsZSwgc291cmNlOiAnc2Nvb3AnIH0pOwogIH0KICByZXR1cm4gcm93czsKfQoKLyoqIEJlbGlydGlsZW4ga2F5bmFrdGFuIGfDvG5jZWxsZW1lIGxpc3Rlc2k7IGhhdGEgeWFsbsSxemNhIG8ga2F5bmHEn8SxIGV0a2lsZXIuICovCmV4cG9ydCBhc3luYyBmdW5jdGlvbiBsaXN0VXBkYXRlcyhzb3VyY2U6IFBhY2thZ2VTb3VyY2UsIG9uTGluZT86IExvZ0ZuKTogUHJvbWlzZTxQYWNrYWdlW10+IHsKICBzd2l0Y2ggKHNvdXJjZSkgewogICAgY2FzZSAnd2luZ2V0JzoKICAgICAgcmV0dXJuIHdpbmdldC5saXN0VXBkYXRlcyhvbkxpbmUpOwogICAgY2FzZSAnY2hvY28nOiB7CiAgICAgIGNvbnN0IHJlc3VsdCA9IGF3YWl0IHJ1bkNvbW1hbmQoJ2Nob2NvJywgWydvdXRkYXRlZCcsICctLWxpbWl0LW91dHB1dCcsICctLW5vLWNvbG9yJ10sIG9uTGluZSwgVElNRU9VVCk7CiAgICAgIHJldHVybiBwYXJzZUNob2NvVXBkYXRlcyhyZXN1bHQudGV4dCk7CiAgICB9CiAgICBjYXNlICducG0nOiB7CiAgICAgIGNvbnN0IGNvbW1hbmQgPSBnZXRDYXBhYmlsaXRpZXMoKS5raW5kID09PSAnd2luZG93cycgPyAnbnBtLmNtZCcgOiAnbnBtJzsKICAgICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgcnVuQ29tbWFuZChjb21tYW5kLCBbJ291dGRhdGVkJywgJy1nJywgJy0tanNvbicsICctLW5vLWF1ZGl0JywgJy0tbm8tZnVuZCddLCBvbkxpbmUsIFRJTUVPVVQpOwogICAgICByZXR1cm4gcGFyc2VOcG1VcGRhdGVzKHJlc3VsdC50ZXh0KTsKICAgIH0KICAgIGNhc2UgJ3Njb29wJzogewogICAgICBjb25zdCByZXN1bHQgPSBhd2FpdCBydW5Db21tYW5kKCdzY29vcC5jbWQnLCBbJ3N0YXR1cyddLCBvbkxpbmUsIFRJTUVPVVQpOwogICAgICByZXR1cm4gcGFyc2VTY29vcFVwZGF0ZXMocmVzdWx0LnRleHQpOwogICAgfQogICAgY2FzZSAnYnJldyc6CiAgICAgIHJldHVybiBicmV3Lmxpc3RVcGRhdGVzKG9uTGluZSk7CiAgfQp9CgovKiogVMO8bSBrYXluYWtsYXIgcGFyYWxlbCB0YXJhbsSxcjsgYmHFn2FyxLFzxLF6IGtheW5ha2xhciBsaXN0ZXlpIGJvem1hei4gKi8KZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIGxpc3RBbGxVcGRhdGVzKG9uTGluZT86IExvZ0ZuKTogUHJvbWlzZTxQYWNrYWdlW10+IHsKICBjb25zdCBzb3VyY2VzOiByZWFkb25seSBQYWNrYWdlU291cmNlW10gPSBnZXRDYXBhYmlsaXRpZXMoKS5wYWNrYWdlU291cmNlczsKICBjb25zdCBzZXR0bGVkID0gYXdhaXQgUHJvbWlzZS5hbGxTZXR0bGVkKHNvdXJjZXMubWFwKChzb3VyY2UpID0+IGxpc3RVcGRhdGVzKHNvdXJjZSwgb25MaW5lKSkpOwogIHJldHVybiBzZXR0bGVkLmZsYXRNYXAoKHJlc3VsdCkgPT4gKHJlc3VsdC5zdGF0dXMgPT09ICdmdWxmaWxsZWQnID8gcmVzdWx0LnZhbHVlIDogW10pKTsKfQo=
+import { getCapabilities } from '../../shared/platform';
+import type { Package, PackageSource } from '../../shared/types';
+import { LogFn, runCommand } from '../util';
+import * as brew from './brew';
+import * as winget from './winget';
+
+/** Tüm güncelleme taramaları salt okunur; hiçbiri kendiliğinden kurulum yapmaz. */
+const TIMEOUT = 4 * 60 * 1000;
+
+/**
+ * Chocolatey: `id|kurulu|son|sabitlenmiş` biçiminde satır döndürür.
+ * Örnek: `7zip|19.00|24.09|false`
+ */
+export function parseChocoUpdates(text: string): Package[] {
+  const rows: Package[] = [];
+  for (const line of text.split(/\r?\n/)) {
+    const cells = line.trim().split('|').map((cell) => cell.trim());
+    if (cells.length < 3) continue;
+    const [ident, current, available, pinned] = cells;
+    if (!ident || !current || !available || current === available) continue;
+    if (pinned && /^true$/i.test(pinned)) continue;
+    if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(ident)) continue;
+    rows.push({ name: ident, ident, version: current, available, source: 'choco' });
+  }
+  return rows;
+}
+
+/**
+ * npm: `npm outdated -g --json` nesne döndürür; çıkış kodu 1 olsa bile
+ * gövde geçerli JSON olabilir. `error` anahtarı varsa kayıt yok sayılır.
+ */
+export function parseNpmUpdates(text: string): Package[] {
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start < 0 || end < start) return [];
+  let data: Record<string, { current?: string; wanted?: string; latest?: string }>;
+  try {
+    data = JSON.parse(text.slice(start, end + 1));
+  } catch {
+    return [];
+  }
+  if (!data || typeof data !== 'object' || (data as Record<string, unknown>).error) return [];
+  const rows: Package[] = [];
+  for (const [ident, info] of Object.entries(data)) {
+    if (!ident || !info || typeof info !== 'object') continue;
+    const current = String(info.current || '').trim();
+    const available = String(info.latest || info.wanted || '').trim();
+    if (!current || !available || current === available) continue;
+    if (!/^(?:@[A-Za-z0-9][A-Za-z0-9._-]*\/)?[A-Za-z0-9][A-Za-z0-9._-]*$/.test(ident)) continue;
+    rows.push({ name: ident, ident, version: current, available, source: 'npm' });
+  }
+  return rows;
+}
+
+/**
+ * Scoop: `scoop status` tablosundaki `Ad Kurulu Son` sütunlarını okur.
+ * Tek boşlukla hizalanmış çıktıya da dayanıklıdır.
+ */
+export function parseScoopUpdates(text: string): Package[] {
+  const rows: Package[] = [];
+  for (const line of text.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || /^(name|-{3,}|scoop|everything|no apps|güncel)/i.test(trimmed)) continue;
+    let cells = trimmed.split(/\s{2,}/).map((cell) => cell.trim());
+    if (cells.length < 3) cells = trimmed.split(/\s+/).map((cell) => cell.trim());
+    if (cells.length < 3) continue;
+    const [ident, current, available] = cells;
+    if (!ident || !current || !available || current === available) continue;
+    if (!/^[A-Za-z0-9][A-Za-z0-9._@/-]*$/.test(ident)) continue;
+    if (!/[A-Za-z0-9]/.test(current) || !/[A-Za-z0-9]/.test(available)) continue;
+    rows.push({ name: ident, ident, version: current, available, source: 'scoop' });
+  }
+  return rows;
+}
+
+/** Belirtilen kaynaktan güncelleme listesi; hata yalnızca o kaynağı etkiler. */
+export async function listUpdates(source: PackageSource, onLine?: LogFn): Promise<Package[]> {
+  switch (source) {
+    case 'winget':
+      return winget.listUpdates(onLine);
+    case 'choco': {
+      const result = await runCommand('choco', ['outdated', '--limit-output', '--no-color'], onLine, TIMEOUT);
+      return parseChocoUpdates(result.text);
+    }
+    case 'npm': {
+      const command = getCapabilities().kind === 'windows' ? 'npm.cmd' : 'npm';
+      const result = await runCommand(command, ['outdated', '-g', '--json', '--no-audit', '--no-fund'], onLine, TIMEOUT);
+      return parseNpmUpdates(result.text);
+    }
+    case 'scoop': {
+      const result = await runCommand('scoop.cmd', ['status'], onLine, TIMEOUT);
+      return parseScoopUpdates(result.text);
+    }
+    case 'brew':
+      return brew.listUpdates(onLine);
+  }
+}
+
+/** Tüm kaynaklar paralel taranır; başarısız kaynaklar listeyi bozmaz. */
+export async function listAllUpdates(onLine?: LogFn): Promise<Package[]> {
+  const sources: readonly PackageSource[] = getCapabilities().packageSources;
+  const settled = await Promise.allSettled(sources.map((source) => listUpdates(source, onLine)));
+  return settled.flatMap((result) => (result.status === 'fulfilled' ? result.value : []));
+}

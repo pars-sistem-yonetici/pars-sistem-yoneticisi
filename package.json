@@ -1,1 +1,134 @@
-ewogICJuYW1lIjogInBhcnMtc2lzdGVtLXlvbmV0aWNpc2ktdHMiLAogICJ2ZXJzaW9uIjogIjEuNS4wIiwKICAicHJpdmF0ZSI6IHRydWUsCiAgImRlc2NyaXB0aW9uIjogIldpbmRvd3Mgc2lzdGVtIGJha8SxbSB2ZSB3aW5nZXQgdGFiYW5sxLEgeWF6xLFsxLFtIHnDtm5ldGljaXNpIChUeXBlU2NyaXB0IC8gRWxlY3Ryb24pIiwKICAibGljZW5zZSI6ICJNSVQiLAogICJtYWluIjogImRpc3QtZWxlY3Ryb24vbWFpbi9tYWluLmpzIiwKICAic2NyaXB0cyI6IHsKICAgICJkZXYiOiAidml0ZSIsCiAgICAiYnVpbGQiOiAidHNjIC1wIHRzY29uZmlnLmpzb24gJiYgdHNjIC1wIHRzY29uZmlnLm5vZGUuanNvbiAmJiB2aXRlIGJ1aWxkIiwKICAgICJkaXN0IjogIm5wbSBydW4gYnVpbGQgJiYgZWxlY3Ryb24tYnVpbGRlciIsCiAgICAiZGlzdDpwb3J0YWJsZSI6ICJucG0gcnVuIGJ1aWxkICYmIGVsZWN0cm9uLWJ1aWxkZXIgLS1kaXIiLAogICAgInNtb2tlOnBvc2l4IjogImVsZWN0cm9uIGRpc3QtZWxlY3Ryb24vbWFpbi9wb3NpeC1zbW9rZS5qcyIsCiAgICAicHVibGlzaCI6ICJub2RlIHNjcmlwdHMvcHVibGlzaC11cGRhdGUuanMiLAogICAgImJ1aWxkOmJsb2dnZXIiOiAibm9kZSBzY3JpcHRzL2J1aWxkLWJsb2dnZXIuanMiLAogICAgImJ1bXAiOiAibm9kZSBzY3JpcHRzL2J1bXAtdmVyc2lvbi5qcyIKICB9LAogICJkZXBlbmRlbmNpZXMiOiB7CiAgICAibHVjaWRlLXJlYWN0IjogIl4xLjgxLjAiLAogICAgInJlYWN0IjogIl4xOS4wLjAiLAogICAgInJlYWN0LWRvbSI6ICJeMTkuMC4wIgogIH0sCiAgImRldkRlcGVuZGVuY2llcyI6IHsKICAgICJAdHlwZXMvbm9kZSI6ICJeMjIuMTAuMCIsCiAgICAiQHR5cGVzL3JlYWN0IjogIl4xOS4wLjAiLAogICAgIkB0eXBlcy9yZWFjdC1kb20iOiAiXjE5LjAuMCIsCiAgICAiQHZpdGVqcy9wbHVnaW4tcmVhY3QiOiAiXjQuMy40IiwKICAgICJlbGVjdHJvbiI6ICJeMzQuMC4wIiwKICAgICJlbGVjdHJvbi1idWlsZGVyIjogIl4yNS4xLjgiLAogICAgInR5cGVzY3JpcHQiOiAiXjUuNy4yIiwKICAgICJ2aXRlIjogIl42LjAuNSIKICB9LAogICJidWlsZCI6IHsKICAgICJhcHBJZCI6ICJjb20ubG9jYWwucGFyc3Npc3RlbXlvbmV0aWNpc2kiLAogICAgInByb2R1Y3ROYW1lIjogIlBhcnMgU2lzdGVtIFlvbmV0aWNpc2kiLAogICAgImRpcmVjdG9yaWVzIjogewogICAgICAib3V0cHV0IjogInJlbGVhc2UiCiAgICB9LAogICAgImZpbGVzIjogWwogICAgICAiZGlzdC1lbGVjdHJvbi8qKi8qIiwKICAgICAgImRpc3QvKiovKiIsCiAgICAgICJwYWNrYWdlLmpzb24iLAogICAgICAiTElDRU5TRSIKICAgIF0sCiAgICAiZXh0cmFSZXNvdXJjZXMiOiBbCiAgICAgIHsKICAgICAgICAiZnJvbSI6ICJidWlsZC9wcmVyZXFzIiwKICAgICAgICAidG8iOiAicHJlcmVxcyIsCiAgICAgICAgImZpbHRlciI6ICIqKi8qIgogICAgICB9LAogICAgICB7CiAgICAgICAgImZyb20iOiAiYnVpbGQvdXBkYXRlcyIsCiAgICAgICAgInRvIjogInVwZGF0ZXMiLAogICAgICAgICJmaWx0ZXIiOiAiKiovKiIKICAgICAgfSwKICAgICAgewogICAgICAgICJmcm9tIjogImJ1aWxkL3JlZ2ZpeCIsCiAgICAgICAgInRvIjogInJlZ2ZpeCIsCiAgICAgICAgImZpbHRlciI6ICIqKi8qIgogICAgICB9LAogICAgICB7CiAgICAgICAgImZyb20iOiAiYnVpbGQvaWNvbi5pY28iLAogICAgICAgICJ0byI6ICJpY29ucy90cmF5LmljbyIKICAgICAgfSwKICAgICAgewogICAgICAgICJmcm9tIjogImJ1aWxkL2ljb24ucG5nIiwKICAgICAgICAidG8iOiAiaWNvbnMvdHJheS5wbmciCiAgICAgIH0KICAgIF0sCiAgICAibWFjIjogewogICAgICAidGFyZ2V0IjogWwogICAgICAgIHsKICAgICAgICAgICJ0YXJnZXQiOiAiZG1nIiwKICAgICAgICAgICJhcmNoIjogWwogICAgICAgICAgICAieDY0IiwKICAgICAgICAgICAgImFybTY0IgogICAgICAgICAgXQogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgInRhcmdldCI6ICJ6aXAiLAogICAgICAgICAgImFyY2giOiBbCiAgICAgICAgICAgICJ4NjQiLAogICAgICAgICAgICAiYXJtNjQiCiAgICAgICAgICBdCiAgICAgICAgfQogICAgICBdLAogICAgICAiaWNvbiI6ICJidWlsZC9pY29uLTUxMi5wbmciLAogICAgICAiYXJ0aWZhY3ROYW1lIjogIlBhcnMuU2lzdGVtLllvbmV0aWNpc2ktJHt2ZXJzaW9ufS0ke2FyY2h9LiR7ZXh0fSIsCiAgICAgICJpZGVudGl0eSI6IG51bGwsCiAgICAgICJoYXJkZW5lZFJ1bnRpbWUiOiBmYWxzZSwKICAgICAgImdhdGVrZWVwZXJBc3Nlc3MiOiBmYWxzZSwKICAgICAgImNhdGVnb3J5IjogInB1YmxpYy5hcHAtY2F0ZWdvcnkudXRpbGl0aWVzIgogICAgfSwKICAgICJkbWciOiB7CiAgICAgICJ0aXRsZSI6ICJQYXJzIFNpc3RlbSBZb25ldGljaXNpICR7dmVyc2lvbn0iCiAgICB9LAogICAgIndpbiI6IHsKICAgICAgInRhcmdldCI6IFsKICAgICAgICB7CiAgICAgICAgICAidGFyZ2V0IjogIm5zaXMiLAogICAgICAgICAgImFyY2giOiBbCiAgICAgICAgICAgICJ4NjQiCiAgICAgICAgICBdCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAidGFyZ2V0IjogInBvcnRhYmxlIiwKICAgICAgICAgICJhcmNoIjogWwogICAgICAgICAgICAieDY0IgogICAgICAgICAgXQogICAgICAgIH0KICAgICAgXSwKICAgICAgImljb24iOiAiYnVpbGQvaWNvbi5pY28iLAogICAgICAicmVxdWVzdGVkRXhlY3V0aW9uTGV2ZWwiOiAicmVxdWlyZUFkbWluaXN0cmF0b3IiCiAgICB9LAogICAgIm5zaXMiOiB7CiAgICAgICJvbmVDbGljayI6IGZhbHNlLAogICAgICAicGVyTWFjaGluZSI6IHRydWUsCiAgICAgICJhbGxvd1RvQ2hhbmdlSW5zdGFsbGF0aW9uRGlyZWN0b3J5IjogdHJ1ZSwKICAgICAgImNyZWF0ZURlc2t0b3BTaG9ydGN1dCI6IHRydWUsCiAgICAgICJjcmVhdGVTdGFydE1lbnVTaG9ydGN1dCI6IHRydWUsCiAgICAgICJzaG9ydGN1dE5hbWUiOiAiUGFycyBTaXN0ZW0gWW9uZXRpY2lzaSIsCiAgICAgICJpbmNsdWRlIjogImJ1aWxkL25zaXMvb2xkLXZlcnNpb24tY2hlY2subnNoIiwKICAgICAgImRlbGV0ZUFwcERhdGFPblVuaW5zdGFsbCI6IGZhbHNlCiAgICB9LAogICAgInBvcnRhYmxlIjogewogICAgICAiYXJ0aWZhY3ROYW1lIjogIlBhcnNTaXN0ZW1Zb25ldGljaXNpLVBvcnRhYmxlLmV4ZSIsCiAgICAgICJyZXF1ZXN0RXhlY3V0aW9uTGV2ZWwiOiAiYWRtaW4iCiAgICB9CiAgfSwKICAiYWxsb3dTY3JpcHRzIjogewogICAgImVsZWN0cm9uQDM0LjUuOCI6IHRydWUsCiAgICAiZXNidWlsZEAwLjI1LjEyIjogdHJ1ZQogIH0KfQo=
+{
+  "name": "pars-sistem-yoneticisi-ts",
+  "version": "1.5.0",
+  "private": true,
+  "description": "Windows sistem bakım ve winget tabanlı yazılım yöneticisi (TypeScript / Electron)",
+  "license": "MIT",
+  "main": "dist-electron/main/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.node.json && vite build",
+    "dist": "npm run build && electron-builder",
+    "dist:portable": "npm run build && electron-builder --dir",
+    "smoke:posix": "electron dist-electron/main/posix-smoke.js",
+    "publish": "node scripts/publish-update.js",
+    "build:blogger": "node scripts/build-blogger.js",
+    "bump": "node scripts/bump-version.js"
+  },
+  "dependencies": {
+    "lucide-react": "^1.81.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^34.0.0",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  },
+  "build": {
+    "appId": "com.local.parssistemyoneticisi",
+    "productName": "Pars Sistem Yoneticisi",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist-electron/**/*",
+      "dist/**/*",
+      "package.json",
+      "LICENSE"
+    ],
+    "extraResources": [
+      {
+        "from": "build/prereqs",
+        "to": "prereqs",
+        "filter": "**/*"
+      },
+      {
+        "from": "build/updates",
+        "to": "updates",
+        "filter": "**/*"
+      },
+      {
+        "from": "build/regfix",
+        "to": "regfix",
+        "filter": "**/*"
+      },
+      {
+        "from": "build/icon.ico",
+        "to": "icons/tray.ico"
+      },
+      {
+        "from": "build/icon.png",
+        "to": "icons/tray.png"
+      }
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "build/icon-512.png",
+      "artifactName": "Pars.Sistem.Yoneticisi-${version}-${arch}.${ext}",
+      "identity": null,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "category": "public.app-category.utilities"
+    },
+    "dmg": {
+      "title": "Pars Sistem Yoneticisi ${version}"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Pars Sistem Yoneticisi",
+      "include": "build/nsis/old-version-check.nsh",
+      "deleteAppDataOnUninstall": false
+    },
+    "portable": {
+      "artifactName": "ParsSistemYoneticisi-Portable.exe",
+      "requestExecutionLevel": "admin"
+    }
+  },
+  "allowScripts": {
+    "electron@34.5.8": true,
+    "esbuild@0.25.12": true
+  }
+}

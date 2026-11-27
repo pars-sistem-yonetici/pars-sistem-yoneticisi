@@ -1,1 +1,135 @@
-aW1wb3J0IGZzIGZyb20gJ2ZzJzsKaW1wb3J0IG9zIGZyb20gJ29zJzsKaW1wb3J0IHBhdGggZnJvbSAncGF0aCc7CmltcG9ydCB0eXBlIHsgU3lzdGVtU25hcHNob3QgfSBmcm9tICcuLi8uLi9zaGFyZWQvdHlwZXMnOwppbXBvcnQgeyBnZXRDYXBhYmlsaXRpZXMgfSBmcm9tICcuLi8uLi9zaGFyZWQvcGxhdGZvcm0nOwoKLyoqCiAqIG1hY09TL0xpbnV4IGnDp2luIHNhbHQtb2t1bnVyIHNpc3RlbSDDtnpldGkuIEtvbXV0IMOnYWzEscWfdMSxcm1hejsgeWFsbsSxemNhIE5vZGUKICogw6dhbMSxxZ9tYSB6YW1hbsSxbsSxbiB2ZXJkacSfaSBiZWxsZWsgYmlsZ2lsZXJpbmkgdmUgZG9zeWEgc2lzdGVtaSBpc3RhdGlzdGlrbGVyaW5pIG9rdXIuCiAqLwoKZnVuY3Rpb24gc2FmZVN0YXRmcyh0YXJnZXQ6IHN0cmluZyk6IGZzLlN0YXRzRnMgfCBudWxsIHsKICB0cnkgewogICAgY29uc3QgY2FuZGlkYXRlID0gcGF0aC5yZXNvbHZlKHRhcmdldCB8fCAnLycpOwogICAgcmV0dXJuIGZzLnN0YXRmc1N5bmMoY2FuZGlkYXRlKTsKICB9IGNhdGNoIHsKICAgIHJldHVybiBudWxsOwogIH0KfQoKZnVuY3Rpb24gZGlza1VzYWdlKHRhcmdldDogc3RyaW5nKTogeyB0b3RhbDogbnVtYmVyOyBmcmVlOiBudW1iZXIgfSB7CiAgY29uc3QgaW5mbyA9IHNhZmVTdGF0ZnModGFyZ2V0KTsKICBpZiAoIWluZm8pIHJldHVybiB7IHRvdGFsOiAwLCBmcmVlOiAwIH07CiAgY29uc3QgYmxvY2sgPSBNYXRoLm1heCgxLCBpbmZvLmJzaXplIHx8IDQwOTYpOwogIGNvbnN0IHRvdGFsID0gaW5mby5ibG9ja3MgKiBibG9jazsKICBjb25zdCBmcmVlID0gaW5mby5iYXZhaWwgKiBibG9jazsKICByZXR1cm4geyB0b3RhbCwgZnJlZSB9Owp9CgpmdW5jdGlvbiBwZXJjZW50KHZhbHVlOiBudW1iZXIpOiBudW1iZXIgewogIHJldHVybiBOdW1iZXIuaXNGaW5pdGUodmFsdWUpID8gTWF0aC5tYXgoMCwgTWF0aC5taW4oMTAwLCBNYXRoLnJvdW5kKHZhbHVlICogMTApIC8gMTApKSA6IDA7Cn0KCi8qKiBBbmzEsWsgQ1BVIHnDvGvDvDsgV2luZG93cyB5w7x6ZGVzaXlsZSBiaXJlYmlyIGF5bsSxIGRlxJ9pbGRpciwgZGVuZXlzZWwgZ8O2c3RlcmltIGnDp2luZGlyLiAqLwpmdW5jdGlvbiBjcHVQZXJjZW50KCk6IG51bWJlciB7CiAgY29uc3QgY29yZXMgPSBNYXRoLm1heCgxLCBvcy5jcHVzKCkubGVuZ3RoKTsKICBjb25zdCBbb25lTWludXRlXSA9IG9zLmxvYWRhdmcoKTsKICByZXR1cm4gcGVyY2VudCgob25lTWludXRlIC8gY29yZXMpICogMTAwKTsKfQoKZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIHNuYXBzaG90KHJlcXVlc3RlZERyaXZlPzogc3RyaW5nKTogUHJvbWlzZTxTeXN0ZW1TbmFwc2hvdD4gewogIGNvbnN0IGlucHV0ID0gU3RyaW5nKHJlcXVlc3RlZERyaXZlIHx8ICcnKS50cmltKCk7CiAgY29uc3QgdGFyZ2V0ID0gaW5wdXQgJiYgcGF0aC5pc0Fic29sdXRlKGlucHV0KSA/IHBhdGgucmVzb2x2ZShpbnB1dCkgOiBvcy5ob21lZGlyKCk7CiAgY29uc3QgZGlzayA9IGRpc2tVc2FnZSh0YXJnZXQpOwogIGNvbnN0IG1lbW9yeVRvdGFsID0gb3MudG90YWxtZW0oKTsKICBjb25zdCBtZW1vcnlBdmFpbGFibGUgPSBvcy5mcmVlbWVtKCk7CiAgcmV0dXJuIHsKICAgIGNwdVBlcmNlbnQ6IGNwdVBlcmNlbnQoKSwKICAgIG1lbW9yeVRvdGFsLAogICAgbWVtb3J5QXZhaWxhYmxlLAogICAgbWVtb3J5UGVyY2VudDogbWVtb3J5VG90YWwgPiAwID8gcGVyY2VudCgoKG1lbW9yeVRvdGFsIC0gbWVtb3J5QXZhaWxhYmxlKSAqIDEwMCkgLyBtZW1vcnlUb3RhbCkgOiAwLAogICAgZGlza1RvdGFsOiBkaXNrLnRvdGFsLAogICAgZGlza0ZyZWU6IGRpc2suZnJlZSwKICAgIGRpc2tQZXJjZW50OiBkaXNrLnRvdGFsID4gMCA/IHBlcmNlbnQoKChkaXNrLnRvdGFsIC0gZGlzay5mcmVlKSAqIDEwMCkgLyBkaXNrLnRvdGFsKSA6IDAsCiAgICBkaXNrUGF0aDogdGFyZ2V0LAogIH07Cn0KCmZ1bmN0aW9uIG1vdW50cygpOiBzdHJpbmdbXSB7CiAgY29uc3Qgcm93czogc3RyaW5nW10gPSBbXTsKICB0cnkgewogICAgZm9yIChjb25zdCBsaW5lIG9mIGZzLnJlYWRGaWxlU3luYygnL3Byb2MvbW91bnRzJywgJ3V0ZjgnKS5zcGxpdCgvXHI/XG4vKSkgewogICAgICBjb25zdCBwYXJ0cyA9IGxpbmUudHJpbSgpLnNwbGl0KC9ccysvKTsKICAgICAgY29uc3QgbW91bnQgPSBwYXJ0c1sxXTsKICAgICAgY29uc3QgdHlwZSA9IHBhcnRzWzJdIHx8ICcnOwogICAgICBpZiAoIW1vdW50IHx8ICFtb3VudC5zdGFydHNXaXRoKCcvJykpIGNvbnRpbnVlOwogICAgICBpZiAoL14ocHJvY3xzeXNmc3xkZXZ0bXBmc3x0bXBmc3xkZXZwdHN8Y2dyb3VwfGNncm91cDJ8c2VjdXJpdHlmc3xkZWJ1Z2ZzfHRyYWNlZnN8YnBmfG92ZXJsYXl8c3F1YXNoZnN8YXV0b2ZzfGZ1c2VjdGx8aHVnZXRsYmZzfHBzdG9yZXxlZml2YXJmc3xtcXVldWV8Y29uZmlnZnMpJC8udGVzdCh0eXBlKSkgY29udGludWU7CiAgICAgIGlmIChtb3VudC5zdGFydHNXaXRoKCcvc3lzJykgfHwgbW91bnQuc3RhcnRzV2l0aCgnL3Byb2MnKSB8fCBtb3VudC5zdGFydHNXaXRoKCcvZGV2JykpIGNvbnRpbnVlOwogICAgICBpZiAobW91bnQuaW5jbHVkZXMoJy9zbmFwLycpIHx8IG1vdW50LmluY2x1ZGVzKCcvY29udGFpbmVyZC8nKSkgY29udGludWU7CiAgICAgIHRyeSB7CiAgICAgICAgaWYgKCFmcy5zdGF0U3luYyhtb3VudCkuaXNEaXJlY3RvcnkoKSkgY29udGludWU7CiAgICAgIH0gY2F0Y2ggewogICAgICAgIGNvbnRpbnVlOwogICAgICB9CiAgICAgIGlmICghcm93cy5pbmNsdWRlcyhtb3VudCkpIHJvd3MucHVzaChtb3VudCk7CiAgICB9CiAgfSBjYXRjaCB7CiAgICAvLyAvcHJvYy9tb3VudHMgeW9rc2EgYcWfYcSfxLFkYWtpIHZhcnNhecSxbGFubGFyIGt1bGxhbsSxbMSxci4KICB9CiAgcmV0dXJuIHJvd3Muc2xpY2UoMCwgMjYpOwp9CgpleHBvcnQgYXN5bmMgZnVuY3Rpb24gZHJpdmVzKCk6IFByb21pc2U8c3RyaW5nW10+IHsKICBjb25zdCBraW5kID0gZ2V0Q2FwYWJpbGl0aWVzKCkua2luZDsKICBjb25zdCByb3dzID0gWycvJ107CiAgaWYgKGtpbmQgPT09ICdtYWNvcycpIHsKICAgIHRyeSB7CiAgICAgIGZvciAoY29uc3QgZW50cnkgb2YgZnMucmVhZGRpclN5bmMoJy9Wb2x1bWVzJywgeyB3aXRoRmlsZVR5cGVzOiB0cnVlIH0pKSB7CiAgICAgICAgaWYgKCFlbnRyeS5pc0RpcmVjdG9yeSgpICYmICFlbnRyeS5pc1N5bWJvbGljTGluaygpKSBjb250aW51ZTsKICAgICAgICBjb25zdCB0YXJnZXQgPSBwYXRoLmpvaW4oJy9Wb2x1bWVzJywgZW50cnkubmFtZSk7CiAgICAgICAgaWYgKCFmcy5leGlzdHNTeW5jKHRhcmdldCkpIGNvbnRpbnVlOwogICAgICAgIGlmICghcm93cy5pbmNsdWRlcyh0YXJnZXQpKSByb3dzLnB1c2godGFyZ2V0KTsKICAgICAgfQogICAgfSBjYXRjaCB7CiAgICAgIC8vIC9Wb2x1bWVzIG9rdW5hbcSxeW9yc2Ega8O2ayBzw7xyw7xjw7wgeWV0ZXJsaWRpci4KICAgIH0KICB9IGVsc2UgewogICAgcm93cy5wdXNoKC4uLm1vdW50cygpKTsKICAgIGZvciAoY29uc3QgY2FuZGlkYXRlIG9mIFsnL2hvbWUnLCAnL21udCcsICcvbWVkaWEnXSkgewogICAgICB0cnkgewogICAgICAgIGlmIChmcy5zdGF0U3luYyhjYW5kaWRhdGUpLmlzRGlyZWN0b3J5KCkgJiYgIXJvd3MuaW5jbHVkZXMoY2FuZGlkYXRlKSkgcm93cy5wdXNoKGNhbmRpZGF0ZSk7CiAgICAgIH0gY2F0Y2ggewogICAgICAgIC8vIEJhesSxIGRhxJ/EsXTEsW1sYXJkYSBidSBrbGFzw7ZybGVyIGJ1bHVubWF6LgogICAgICB9CiAgICB9CiAgfQogIHJldHVybiByb3dzLnNsaWNlKDAsIDI3KTsKfQoKLyoqIFPDvHLDvGPDvCB5b2xsYXLEsW7EsSBrdWxsYW7EsWPEsXlhIGFubGFtbMSxIGdlbGVuIGFkbGFybGEgZcWfbGVyLiAqLwpleHBvcnQgYXN5bmMgZnVuY3Rpb24gZHJpdmVMYWJlbHMoKTogUHJvbWlzZTxSZWNvcmQ8c3RyaW5nLCBzdHJpbmc+PiB7CiAgY29uc3QgbGFiZWxzOiBSZWNvcmQ8c3RyaW5nLCBzdHJpbmc+ID0gewogICAgJy8nOiBnZXRDYXBhYmlsaXRpZXMoKS5raW5kID09PSAnbWFjb3MnID8gJ01hY2ludG9zaCBIRCcgOiAnTGludXgnLAogIH07CiAgdHJ5IHsKICAgIGZvciAoY29uc3QgZW50cnkgb2YgZnMucmVhZGRpclN5bmMoJy9Wb2x1bWVzJywgeyB3aXRoRmlsZVR5cGVzOiB0cnVlIH0pKSB7CiAgICAgIGlmICghZW50cnkuaXNTeW1ib2xpY0xpbmsoKSAmJiAhZW50cnkuaXNEaXJlY3RvcnkoKSkgY29udGludWU7CiAgICAgIGNvbnN0IHRhcmdldCA9IHBhdGguam9pbignL1ZvbHVtZXMnLCBlbnRyeS5uYW1lKTsKICAgICAgaWYgKGZzLmV4aXN0c1N5bmModGFyZ2V0KSkgbGFiZWxzW3RhcmdldF0gPSBlbnRyeS5uYW1lOwogICAgfQogIH0gY2F0Y2ggewogICAgLy8gbWFjT1MgZMSxxZ/EsW5kYSAvVm9sdW1lcyBidWx1bm1hei4KICB9CiAgZm9yIChjb25zdCBtb3VudCBvZiBtb3VudHMoKSkgewogICAgbGV0IGxhYmVsID0gcGF0aC5iYXNlbmFtZShtb3VudCk7CiAgICB0cnkgewogICAgICBjb25zdCBpbmZvID0gZnMuc3RhdGZzU3luYyhtb3VudCk7CiAgICAgIGlmIChpbmZvICYmIGluZm8uYmF2YWlsID09PSAwICYmIGluZm8uYmxvY2tzID4gMCkgbGFiZWwgPSAnU2FsdCBva3VudXInOwogICAgfSBjYXRjaCB7CiAgICAgIC8vIEV0aWtldCBpw6dpbiBzYWx0IG9rdW51ciBiaWxnaSDFn2FydCBkZcSfaWwuCiAgICB9CiAgICBpZiAoIWxhYmVsc1ttb3VudF0pIGxhYmVsc1ttb3VudF0gPSBsYWJlbCB8fCBtb3VudDsKICB9CiAgcmV0dXJuIGxhYmVsczsKfQo=
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import type { SystemSnapshot } from '../../shared/types';
+import { getCapabilities } from '../../shared/platform';
+
+/**
+ * macOS/Linux için salt-okunur sistem özeti. Komut çalıştırmaz; yalnızca Node
+ * çalışma zamanının verdiği bellek bilgilerini ve dosya sistemi istatistiklerini okur.
+ */
+
+function safeStatfs(target: string): fs.StatsFs | null {
+  try {
+    const candidate = path.resolve(target || '/');
+    return fs.statfsSync(candidate);
+  } catch {
+    return null;
+  }
+}
+
+function diskUsage(target: string): { total: number; free: number } {
+  const info = safeStatfs(target);
+  if (!info) return { total: 0, free: 0 };
+  const block = Math.max(1, info.bsize || 4096);
+  const total = info.blocks * block;
+  const free = info.bavail * block;
+  return { total, free };
+}
+
+function percent(value: number): number {
+  return Number.isFinite(value) ? Math.max(0, Math.min(100, Math.round(value * 10) / 10)) : 0;
+}
+
+/** Anlık CPU yükü; Windows yüzdesiyle birebir aynı değildir, deneysel gösterim içindir. */
+function cpuPercent(): number {
+  const cores = Math.max(1, os.cpus().length);
+  const [oneMinute] = os.loadavg();
+  return percent((oneMinute / cores) * 100);
+}
+
+export async function snapshot(requestedDrive?: string): Promise<SystemSnapshot> {
+  const input = String(requestedDrive || '').trim();
+  const target = input && path.isAbsolute(input) ? path.resolve(input) : os.homedir();
+  const disk = diskUsage(target);
+  const memoryTotal = os.totalmem();
+  const memoryAvailable = os.freemem();
+  return {
+    cpuPercent: cpuPercent(),
+    memoryTotal,
+    memoryAvailable,
+    memoryPercent: memoryTotal > 0 ? percent(((memoryTotal - memoryAvailable) * 100) / memoryTotal) : 0,
+    diskTotal: disk.total,
+    diskFree: disk.free,
+    diskPercent: disk.total > 0 ? percent(((disk.total - disk.free) * 100) / disk.total) : 0,
+    diskPath: target,
+  };
+}
+
+function mounts(): string[] {
+  const rows: string[] = [];
+  try {
+    for (const line of fs.readFileSync('/proc/mounts', 'utf8').split(/\r?\n/)) {
+      const parts = line.trim().split(/\s+/);
+      const mount = parts[1];
+      const type = parts[2] || '';
+      if (!mount || !mount.startsWith('/')) continue;
+      if (/^(proc|sysfs|devtmpfs|tmpfs|devpts|cgroup|cgroup2|securityfs|debugfs|tracefs|bpf|overlay|squashfs|autofs|fusectl|hugetlbfs|pstore|efivarfs|mqueue|configfs)$/.test(type)) continue;
+      if (mount.startsWith('/sys') || mount.startsWith('/proc') || mount.startsWith('/dev')) continue;
+      if (mount.includes('/snap/') || mount.includes('/containerd/')) continue;
+      try {
+        if (!fs.statSync(mount).isDirectory()) continue;
+      } catch {
+        continue;
+      }
+      if (!rows.includes(mount)) rows.push(mount);
+    }
+  } catch {
+    // /proc/mounts yoksa aşağıdaki varsayılanlar kullanılır.
+  }
+  return rows.slice(0, 26);
+}
+
+export async function drives(): Promise<string[]> {
+  const kind = getCapabilities().kind;
+  const rows = ['/'];
+  if (kind === 'macos') {
+    try {
+      for (const entry of fs.readdirSync('/Volumes', { withFileTypes: true })) {
+        if (!entry.isDirectory() && !entry.isSymbolicLink()) continue;
+        const target = path.join('/Volumes', entry.name);
+        if (!fs.existsSync(target)) continue;
+        if (!rows.includes(target)) rows.push(target);
+      }
+    } catch {
+      // /Volumes okunamıyorsa kök sürücü yeterlidir.
+    }
+  } else {
+    rows.push(...mounts());
+    for (const candidate of ['/home', '/mnt', '/media']) {
+      try {
+        if (fs.statSync(candidate).isDirectory() && !rows.includes(candidate)) rows.push(candidate);
+      } catch {
+        // Bazı dağıtımlarda bu klasörler bulunmaz.
+      }
+    }
+  }
+  return rows.slice(0, 27);
+}
+
+/** Sürücü yollarını kullanıcıya anlamlı gelen adlarla eşler. */
+export async function driveLabels(): Promise<Record<string, string>> {
+  const labels: Record<string, string> = {
+    '/': getCapabilities().kind === 'macos' ? 'Macintosh HD' : 'Linux',
+  };
+  try {
+    for (const entry of fs.readdirSync('/Volumes', { withFileTypes: true })) {
+      if (!entry.isSymbolicLink() && !entry.isDirectory()) continue;
+      const target = path.join('/Volumes', entry.name);
+      if (fs.existsSync(target)) labels[target] = entry.name;
+    }
+  } catch {
+    // macOS dışında /Volumes bulunmaz.
+  }
+  for (const mount of mounts()) {
+    let label = path.basename(mount);
+    try {
+      const info = fs.statfsSync(mount);
+      if (info && info.bavail === 0 && info.blocks > 0) label = 'Salt okunur';
+    } catch {
+      // Etiket için salt okunur bilgi şart değil.
+    }
+    if (!labels[mount]) labels[mount] = label || mount;
+  }
+  return labels;
+}

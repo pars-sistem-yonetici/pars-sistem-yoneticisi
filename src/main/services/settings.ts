@@ -1,1 +1,80 @@
-aW1wb3J0IGZzIGZyb20gJ2ZzJzsKaW1wb3J0IG9zIGZyb20gJ29zJzsKaW1wb3J0IHBhdGggZnJvbSAncGF0aCc7CmltcG9ydCB7IGFwcCB9IGZyb20gJ2VsZWN0cm9uJzsKaW1wb3J0IHsgREVGQVVMVF9VUERBVEVfU09VUkNFIH0gZnJvbSAnLi4vLi4vc2hhcmVkL2NvbnN0YW50cyc7CmltcG9ydCB7IGRldGVjdFBsYXRmb3JtLCBnZXRDYXBhYmlsaXRpZXMgfSBmcm9tICcuLi8uLi9zaGFyZWQvcGxhdGZvcm0nOwppbXBvcnQgdHlwZSB7IFNldHRpbmdzIH0gZnJvbSAnLi4vLi4vc2hhcmVkL3R5cGVzJzsKCmNvbnN0IGNhcGFiaWxpdGllcyA9IGdldENhcGFiaWxpdGllcyhkZXRlY3RQbGF0Zm9ybShwcm9jZXNzLnBsYXRmb3JtKSk7Cgpjb25zdCBERUZBVUxUUzogU2V0dGluZ3MgPSB7CiAgbGFuZ3VhZ2U6ICd0cicsCiAgdGhlbWU6ICdkZWZhdWx0JywKICB3aW5nZXRWZXJzaW9uOiAnJywKICB3aW5nZXRBdmFpbGFibGU6IGZhbHNlLAogIGF1dG9VcGRhdGVTY2FuOiB0cnVlLAogIGF1dG9MZWZ0b3ZlclNjYW46IHRydWUsCiAgc2lsZW50SW5zdGFsbDogdHJ1ZSwKICBlbnRlcnByaXNlU2lsZW50UHJlcmVxczogZmFsc2UsCiAgZHJpdmU6IGNhcGFiaWxpdGllcy5raW5kID09PSAnd2luZG93cycgPyAnQzpcXCcgOiBvcy5ob21lZGlyKCksCiAgc3RhcnRXaXRoV2luZG93czogY2FwYWJpbGl0aWVzLmtpbmQgPT09ICd3aW5kb3dzJywKICBzdGFydE1pbmltaXplZFRvVHJheTogY2FwYWJpbGl0aWVzLmtpbmQgPT09ICd3aW5kb3dzJywKICBjbG9zZUJlaGF2aW9yOiAnYXNrJywKICB1cGRhdGVTb3VyY2U6IERFRkFVTFRfVVBEQVRFX1NPVVJDRSwKICB1cGRhdGVDaGVja09uU3RhcnR1cDogdHJ1ZSwKICBleGNsdWRlZEZvbGRlcnM6IFtdLAogIGV4Y2x1ZGVkRXh0ZW5zaW9uczogW10sCn07CgpsZXQgY2FjaGU6IFNldHRpbmdzIHwgbnVsbCA9IG51bGw7CgpmdW5jdGlvbiBmaWxlKCk6IHN0cmluZyB7CiAgcmV0dXJuIHBhdGguam9pbihhcHAuZ2V0UGF0aCgndXNlckRhdGEnKSwgJ3NldHRpbmdzLmpzb24nKTsKfQoKZXhwb3J0IGZ1bmN0aW9uIGdldFNldHRpbmdzKCk6IFNldHRpbmdzIHsKICBpZiAoY2FjaGUpIHJldHVybiBjYWNoZTsKICB0cnkgewogICAgY29uc3QgcGFyc2VkID0gSlNPTi5wYXJzZShmcy5yZWFkRmlsZVN5bmMoZmlsZSgpLCAndXRmOCcpKSBhcyBQYXJ0aWFsPFNldHRpbmdzPjsKICAgIGNhY2hlID0geyAuLi5ERUZBVUxUUywgLi4ucGFyc2VkIH07CiAgICBjYWNoZS51cGRhdGVTb3VyY2UgPSB0eXBlb2YgcGFyc2VkLnVwZGF0ZVNvdXJjZSA9PT0gJ3N0cmluZycgJiYgcGFyc2VkLnVwZGF0ZVNvdXJjZS50cmltKCkKICAgICAgPyBwYXJzZWQudXBkYXRlU291cmNlLnRyaW0oKQogICAgICA6IERFRkFVTFRfVVBEQVRFX1NPVVJDRTsKICAgIGNhY2hlLmNsb3NlQmVoYXZpb3IgPSBbJ2FzaycsICd0cmF5JywgJ3F1aXQnXS5pbmNsdWRlcyhTdHJpbmcocGFyc2VkLmNsb3NlQmVoYXZpb3IpKQogICAgICA/IHBhcnNlZC5jbG9zZUJlaGF2aW9yIGFzIFNldHRpbmdzWydjbG9zZUJlaGF2aW9yJ10KICAgICAgOiAnYXNrJzsKICAgIGNhY2hlLnVwZGF0ZUNoZWNrT25TdGFydHVwID0gcGFyc2VkLnVwZGF0ZUNoZWNrT25TdGFydHVwICE9PSBmYWxzZTsKICAgIGNhY2hlLmVudGVycHJpc2VTaWxlbnRQcmVyZXFzID0gcGFyc2VkLmVudGVycHJpc2VTaWxlbnRQcmVyZXFzID09PSB0cnVlOwogICAgY2FjaGUuZXhjbHVkZWRGb2xkZXJzID0gQXJyYXkuaXNBcnJheShwYXJzZWQuZXhjbHVkZWRGb2xkZXJzKSA/IHBhcnNlZC5leGNsdWRlZEZvbGRlcnMuZmlsdGVyKChpdGVtKSA9PiB0eXBlb2YgaXRlbSA9PT0gJ3N0cmluZycpIDogW107CiAgICBjYWNoZS5leGNsdWRlZEV4dGVuc2lvbnMgPSBBcnJheS5pc0FycmF5KHBhcnNlZC5leGNsdWRlZEV4dGVuc2lvbnMpID8gcGFyc2VkLmV4Y2x1ZGVkRXh0ZW5zaW9ucy5maWx0ZXIoKGl0ZW0pID0+IHR5cGVvZiBpdGVtID09PSAnc3RyaW5nJykgOiBbXTsKICB9IGNhdGNoIHsKICAgIGNhY2hlID0geyAuLi5ERUZBVUxUUyB9OwogIH0KICByZXR1cm4gY2FjaGU7Cn0KCmV4cG9ydCBmdW5jdGlvbiBzZXRTZXR0aW5ncyhwYXRjaDogUGFydGlhbDxTZXR0aW5ncz4pOiBTZXR0aW5ncyB7CiAgY2FjaGUgPSB7IC4uLmdldFNldHRpbmdzKCksIC4uLnBhdGNoIH07CiAgaWYgKHBhdGNoLnVwZGF0ZVNvdXJjZSAhPT0gdW5kZWZpbmVkKSB7CiAgICBjYWNoZS51cGRhdGVTb3VyY2UgPSB0eXBlb2YgcGF0Y2gudXBkYXRlU291cmNlID09PSAnc3RyaW5nJyAmJiBwYXRjaC51cGRhdGVTb3VyY2UudHJpbSgpCiAgICAgID8gcGF0Y2gudXBkYXRlU291cmNlLnRyaW0oKQogICAgICA6IERFRkFVTFRfVVBEQVRFX1NPVVJDRTsKICB9CiAgaWYgKHBhdGNoLmNsb3NlQmVoYXZpb3IgIT09IHVuZGVmaW5lZCkgewogICAgY2FjaGUuY2xvc2VCZWhhdmlvciA9IFsnYXNrJywgJ3RyYXknLCAncXVpdCddLmluY2x1ZGVzKFN0cmluZyhwYXRjaC5jbG9zZUJlaGF2aW9yKSkKICAgICAgPyBwYXRjaC5jbG9zZUJlaGF2aW9yIGFzIFNldHRpbmdzWydjbG9zZUJlaGF2aW9yJ10KICAgICAgOiAnYXNrJzsKICB9CiAgaWYgKHBhdGNoLnVwZGF0ZUNoZWNrT25TdGFydHVwICE9PSB1bmRlZmluZWQpIGNhY2hlLnVwZGF0ZUNoZWNrT25TdGFydHVwID0gcGF0Y2gudXBkYXRlQ2hlY2tPblN0YXJ0dXAgIT09IGZhbHNlOwogIGlmIChwYXRjaC5lbnRlcnByaXNlU2lsZW50UHJlcmVxcyAhPT0gdW5kZWZpbmVkKSBjYWNoZS5lbnRlcnByaXNlU2lsZW50UHJlcmVxcyA9IHBhdGNoLmVudGVycHJpc2VTaWxlbnRQcmVyZXFzID09PSB0cnVlOwogIGlmIChwYXRjaC5leGNsdWRlZEZvbGRlcnMgIT09IHVuZGVmaW5lZCkgY2FjaGUuZXhjbHVkZWRGb2xkZXJzID0gQXJyYXkuaXNBcnJheShwYXRjaC5leGNsdWRlZEZvbGRlcnMpID8gcGF0Y2guZXhjbHVkZWRGb2xkZXJzLmZpbHRlcigoaXRlbSkgPT4gdHlwZW9mIGl0ZW0gPT09ICdzdHJpbmcnKSA6IFtdOwogIGlmIChwYXRjaC5leGNsdWRlZEV4dGVuc2lvbnMgIT09IHVuZGVmaW5lZCkgY2FjaGUuZXhjbHVkZWRFeHRlbnNpb25zID0gQXJyYXkuaXNBcnJheShwYXRjaC5leGNsdWRlZEV4dGVuc2lvbnMpID8gcGF0Y2guZXhjbHVkZWRFeHRlbnNpb25zLmZpbHRlcigoaXRlbSkgPT4gdHlwZW9mIGl0ZW0gPT09ICdzdHJpbmcnKSA6IFtdOwogIHRyeSB7CiAgICBmcy5ta2RpclN5bmMocGF0aC5kaXJuYW1lKGZpbGUoKSksIHsgcmVjdXJzaXZlOiB0cnVlIH0pOwogICAgZnMud3JpdGVGaWxlU3luYyhmaWxlKCksIEpTT04uc3RyaW5naWZ5KGNhY2hlLCBudWxsLCAyKSwgJ3V0ZjgnKTsKICB9IGNhdGNoIHsKICAgIC8vIEF5YXJsYXIgYmVsbGVrdGUgdHV0dWxtYXlhIGRldmFtIGVkZXIuCiAgfQogIHJldHVybiBjYWNoZTsKfQo=
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import { app } from 'electron';
+import { DEFAULT_UPDATE_SOURCE } from '../../shared/constants';
+import { detectPlatform, getCapabilities } from '../../shared/platform';
+import type { Settings } from '../../shared/types';
+
+const capabilities = getCapabilities(detectPlatform(process.platform));
+
+const DEFAULTS: Settings = {
+  language: 'tr',
+  theme: 'default',
+  wingetVersion: '',
+  wingetAvailable: false,
+  autoUpdateScan: true,
+  autoLeftoverScan: true,
+  silentInstall: true,
+  enterpriseSilentPrereqs: false,
+  drive: capabilities.kind === 'windows' ? 'C:\\' : os.homedir(),
+  startWithWindows: capabilities.kind === 'windows',
+  startMinimizedToTray: capabilities.kind === 'windows',
+  closeBehavior: 'ask',
+  updateSource: DEFAULT_UPDATE_SOURCE,
+  updateCheckOnStartup: true,
+  excludedFolders: [],
+  excludedExtensions: [],
+};
+
+let cache: Settings | null = null;
+
+function file(): string {
+  return path.join(app.getPath('userData'), 'settings.json');
+}
+
+export function getSettings(): Settings {
+  if (cache) return cache;
+  try {
+    const parsed = JSON.parse(fs.readFileSync(file(), 'utf8')) as Partial<Settings>;
+    cache = { ...DEFAULTS, ...parsed };
+    cache.updateSource = typeof parsed.updateSource === 'string' && parsed.updateSource.trim()
+      ? parsed.updateSource.trim()
+      : DEFAULT_UPDATE_SOURCE;
+    cache.closeBehavior = ['ask', 'tray', 'quit'].includes(String(parsed.closeBehavior))
+      ? parsed.closeBehavior as Settings['closeBehavior']
+      : 'ask';
+    cache.updateCheckOnStartup = parsed.updateCheckOnStartup !== false;
+    cache.enterpriseSilentPrereqs = parsed.enterpriseSilentPrereqs === true;
+    cache.excludedFolders = Array.isArray(parsed.excludedFolders) ? parsed.excludedFolders.filter((item) => typeof item === 'string') : [];
+    cache.excludedExtensions = Array.isArray(parsed.excludedExtensions) ? parsed.excludedExtensions.filter((item) => typeof item === 'string') : [];
+  } catch {
+    cache = { ...DEFAULTS };
+  }
+  return cache;
+}
+
+export function setSettings(patch: Partial<Settings>): Settings {
+  cache = { ...getSettings(), ...patch };
+  if (patch.updateSource !== undefined) {
+    cache.updateSource = typeof patch.updateSource === 'string' && patch.updateSource.trim()
+      ? patch.updateSource.trim()
+      : DEFAULT_UPDATE_SOURCE;
+  }
+  if (patch.closeBehavior !== undefined) {
+    cache.closeBehavior = ['ask', 'tray', 'quit'].includes(String(patch.closeBehavior))
+      ? patch.closeBehavior as Settings['closeBehavior']
+      : 'ask';
+  }
+  if (patch.updateCheckOnStartup !== undefined) cache.updateCheckOnStartup = patch.updateCheckOnStartup !== false;
+  if (patch.enterpriseSilentPrereqs !== undefined) cache.enterpriseSilentPrereqs = patch.enterpriseSilentPrereqs === true;
+  if (patch.excludedFolders !== undefined) cache.excludedFolders = Array.isArray(patch.excludedFolders) ? patch.excludedFolders.filter((item) => typeof item === 'string') : [];
+  if (patch.excludedExtensions !== undefined) cache.excludedExtensions = Array.isArray(patch.excludedExtensions) ? patch.excludedExtensions.filter((item) => typeof item === 'string') : [];
+  try {
+    fs.mkdirSync(path.dirname(file()), { recursive: true });
+    fs.writeFileSync(file(), JSON.stringify(cache, null, 2), 'utf8');
+  } catch {
+    // Ayarlar bellekte tutulmaya devam eder.
+  }
+  return cache;
+}

@@ -1,1 +1,171 @@
-IyEvdXNyL2Jpbi9lbnYgbm9kZQondXNlIHN0cmljdCc7CgovKioKICogU3VydW0gbnVtYXJhc2luaSB0ZWsga29tdXRsYSB0dW0ga2F5bmFrIGRvc3lhbGFyZGEgZ3VuY2VsbGVyLgogKgogKiBLdWxsYW5pbToKICogICBub2RlIHNjcmlwdHMvYnVtcC12ZXJzaW9uLmpzIDEuMC4zCiAqICAgbm9kZSBzY3JpcHRzL2J1bXAtdmVyc2lvbi5qcyAxLjAuMyAtLWNoZWNrICAgIChzYWRlY2Uga29udHJvbCwgeWF6bWF6KQogKiAgIG5wbSBydW4gYnVtcCAtLSAxLjAuMwogKgogKiBHdW5jZWxsZW5lbiBkb3N5YWxhcjoKICogICBwYWNrYWdlLmpzb24sIHBhY2thZ2UtbG9jay5qc29uIChpbGsgaWtpICJ2ZXJzaW9uIiksCiAqICAgc3JjL3NoYXJlZC9pMThuLnRzIHZlIHNyYy9yZW5kZXJlci9BcHAudHN4IChiYXNsaWsvYWx0YmlsZ2kgc3VydW11KSwKICogICBSRUFETUUubWQsIFJFTEVBU0VfTk9URVMubWQsCiAqICAgYnVpbGQvdXBkYXRlcy9sYXRlc3QuanNvbiAoZ09tdWx1IG1hbmlmZXN0IHNhYmxvbnUpLgogKgogKiB3ZWJzaXRlLyB2ZSBkb2NzLyBkb3N5YWxhcmkgQ0kgKGNpLXJlbGVhc2UuanMpIHRhcmFmaW5kYW4gdXJldGlsaXI7CiAqIGJ1IHNjcmlwdCBvbmxhcmEgZG9rdW5tYXouCiAqLwoKY29uc3QgZnMgPSByZXF1aXJlKCdmcycpOwpjb25zdCBwYXRoID0gcmVxdWlyZSgncGF0aCcpOwoKY29uc3Qgcm9vdCA9IHBhdGgucmVzb2x2ZShfX2Rpcm5hbWUsICcuLicpOwpjb25zdCBhcmdzID0gcHJvY2Vzcy5hcmd2LnNsaWNlKDIpOwpjb25zdCBjaGVja09ubHkgPSBhcmdzLmluY2x1ZGVzKCctLWNoZWNrJykgfHwgYXJncy5pbmNsdWRlcygnLW4nKTsKY29uc3QgdmVyc2lvbkFyZyA9IGFyZ3MuZmluZCgoYXJnKSA9PiAhYXJnLnN0YXJ0c1dpdGgoJy0nKSk7CgppZiAoIXZlcnNpb25BcmcpIHsKICBjb25zb2xlLmVycm9yKCdLdWxsYW5pbTogbm9kZSBzY3JpcHRzL2J1bXAtdmVyc2lvbi5qcyA8eC55Lno+IFstLWNoZWNrXScpOwogIHByb2Nlc3MuZXhpdCgxKTsKfQppZiAoIS9eXGQrXC5cZCtcLlxkKyQvLnRlc3QodmVyc2lvbkFyZykpIHsKICBjb25zb2xlLmVycm9yKGBHZWNlcnNpeiBzdXJ1bTogJHt2ZXJzaW9uQXJnfS4gT3JuZWs6IDEuMC4zYCk7CiAgcHJvY2Vzcy5leGl0KDEpOwp9Cgpjb25zdCB2ZXJzaW9uID0gdmVyc2lvbkFyZzsKY29uc3QgY2hhbmdlcyA9IFtdOwoKZnVuY3Rpb24gcmVwbGFjZSh0ZXh0LCBwYXR0ZXJuLCB2YWx1ZSwgbWluQ291bnQsIGxhYmVsKSB7CiAgbGV0IGNvdW50ID0gMDsKICBjb25zdCBuZXh0ID0gdGV4dC5yZXBsYWNlKHBhdHRlcm4sICguLi5tYXRjaGVkKSA9PiB7CiAgICBjb3VudCArPSAxOwogICAgcmV0dXJuIHR5cGVvZiB2YWx1ZSA9PT0gJ2Z1bmN0aW9uJyA/IHZhbHVlKC4uLm1hdGNoZWQpIDogdmFsdWU7CiAgfSk7CiAgaWYgKGNvdW50IDwgbWluQ291bnQpIHsKICAgIHRocm93IG5ldyBFcnJvcihgJHtsYWJlbH06IGJla2xlbmVuIGFsYW4gYnVsdW5hbWFkaSAoJHtjb3VudH0vJHttaW5Db3VudH0pLmApOwogIH0KICByZXR1cm4geyB0ZXh0OiBuZXh0LCBjb3VudCB9Owp9CgpmdW5jdGlvbiB1cGRhdGUocmVsYXRpdmVQYXRoLCB0cmFuc2Zvcm0pIHsKICBjb25zdCBmaWxlID0gcGF0aC5qb2luKHJvb3QsIHJlbGF0aXZlUGF0aCk7CiAgaWYgKCFmcy5leGlzdHNTeW5jKGZpbGUpKSB0aHJvdyBuZXcgRXJyb3IoYERvc3lhIGJ1bHVuYW1hZGk6ICR7cmVsYXRpdmVQYXRofWApOwogIGNvbnN0IGJlZm9yZSA9IGZzLnJlYWRGaWxlU3luYyhmaWxlLCAndXRmOCcpOwogIGNvbnN0IHJlc3VsdCA9IHRyYW5zZm9ybShiZWZvcmUpOwogIGlmICghcmVzdWx0IHx8IHR5cGVvZiByZXN1bHQudGV4dCAhPT0gJ3N0cmluZycpIHsKICAgIHRocm93IG5ldyBFcnJvcihgJHtyZWxhdGl2ZVBhdGh9OiBnZWNlcnNpeiBkb251c3VtLmApOwogIH0KICBpZiAocmVzdWx0LnRleHQgPT09IGJlZm9yZSkgewogICAgY2hhbmdlcy5wdXNoKHsgZmlsZTogcmVsYXRpdmVQYXRoLCBjb3VudDogMCB9KTsKICAgIHJldHVybjsKICB9CiAgaWYgKCFjaGVja09ubHkpIGZzLndyaXRlRmlsZVN5bmMoZmlsZSwgcmVzdWx0LnRleHQsICd1dGY4Jyk7CiAgY2hhbmdlcy5wdXNoKHsgZmlsZTogcmVsYXRpdmVQYXRoLCBjb3VudDogcmVzdWx0LmNvdW50IHx8IDAgfSk7Cn0KCnVwZGF0ZSgncGFja2FnZS5qc29uJywgKHRleHQpID0+IHsKICBjb25zdCByID0gcmVwbGFjZSgKICAgIHRleHQsCiAgICAvXihccyoidmVyc2lvbiI6XHMqKSJbXiJdKyIvbSwKICAgIChfZnVsbCwgcHJlZml4KSA9PiBgJHtwcmVmaXh9IiR7dmVyc2lvbn0iYCwKICAgIDEsCiAgICAncGFja2FnZS5qc29uJywKICApOwogIHJldHVybiByOwp9KTsKCnVwZGF0ZSgncGFja2FnZS1sb2NrLmpzb24nLCAodGV4dCkgPT4gewogIGxldCBjb3VudCA9IDA7CiAgY29uc3QgbmV4dCA9IHRleHQucmVwbGFjZSgvXihccyoidmVyc2lvbiI6XHMqKSJcZCtcLlxkK1wuXGQrIi9nbSwgKGZ1bGwsIHByZWZpeCkgPT4gewogICAgY291bnQgKz0gMTsKICAgIHJldHVybiBjb3VudCA8PSAyID8gYCR7cHJlZml4fSIke3ZlcnNpb259ImAgOiBmdWxsOwogIH0pOwogIGlmIChjb3VudCA8IDIpIHRocm93IG5ldyBFcnJvcihgcGFja2FnZS1sb2NrLmpzb246IGlsayBpa2kgc3VydW0gYWxhbmkgYnVsdW5hbWFkaSAoJHtjb3VudH0pLmApOwogIHJldHVybiB7IHRleHQ6IG5leHQsIGNvdW50OiAyIH07Cn0pOwoKdXBkYXRlKCdzcmMvc2hhcmVkL2kxOG4udHMnLCAodGV4dCkgPT4gewogIGxldCBjb3VudCA9IDA7CiAgbGV0IG5leHQgPSB0ZXh0LnJlcGxhY2UoLygnU2lzdGVtIEJha8SxbSBNZXJrZXppIMK3IHYpXGQrXC5cZCtcLlxkKygnKS9nLCAoX2Z1bGwsIHByZWZpeCwgc3VmZml4KSA9PiB7CiAgICBjb3VudCArPSAxOwogICAgcmV0dXJuIGAke3ByZWZpeH0ke3ZlcnNpb259JHtzdWZmaXh9YDsKICB9KTsKICBuZXh0ID0gbmV4dC5yZXBsYWNlKC8oJ1N5c3RlbSBNYWludGVuYW5jZSBDZW50ZXIgwrcgdilcZCtcLlxkK1wuXGQrKCcpL2csIChfZnVsbCwgcHJlZml4LCBzdWZmaXgpID0+IHsKICAgIGNvdW50ICs9IDE7CiAgICByZXR1cm4gYCR7cHJlZml4fSR7dmVyc2lvbn0ke3N1ZmZpeH1gOwogIH0pOwogIGlmIChjb3VudCA8IDEpIHRocm93IG5ldyBFcnJvcignaTE4bi50czogYmFzbGlrIHN1cnVtdSBidWx1bmFtYWRpLicpOwogIHJldHVybiB7IHRleHQ6IG5leHQsIGNvdW50IH07Cn0pOwoKdXBkYXRlKCdzcmMvcmVuZGVyZXIvQXBwLnRzeCcsICh0ZXh0KSA9PiB7CiAgbGV0IGNvdW50ID0gMDsKICBsZXQgbmV4dCA9IHRleHQucmVwbGFjZSgvKFNpc3RlbSBCYWvEsW0gTWVya2V6aSDCtyB2KVxkK1wuXGQrXC5cZCsvZywgKF9mdWxsLCBwcmVmaXgpID0+IHsKICAgIGNvdW50ICs9IDE7CiAgICByZXR1cm4gYCR7cHJlZml4fSR7dmVyc2lvbn1gOwogIH0pOwogIG5leHQgPSBuZXh0LnJlcGxhY2UoLyh2ZXJzaW9uOiAnKVxkK1wuXGQrXC5cZCsoJykvZywgKF9mdWxsLCBwcmVmaXgsIHN1ZmZpeCkgPT4gewogICAgY291bnQgKz0gMTsKICAgIHJldHVybiBgJHtwcmVmaXh9JHt2ZXJzaW9ufSR7c3VmZml4fWA7CiAgfSk7CiAgaWYgKGNvdW50IDwgMikgdGhyb3cgbmV3IEVycm9yKGBBcHAudHN4OiBhbHRiaWxnaS9yYXBvciBzdXJ1bXUgYnVsdW5hbWFkaSAoJHtjb3VudH0vMikuYCk7CiAgcmV0dXJuIHsgdGV4dDogbmV4dCwgY291bnQgfTsKfSk7Cgp1cGRhdGUoJ1JFQURNRS5tZCcsICh0ZXh0KSA9PiB7CiAgbGV0IGNvdW50ID0gMDsKICBsZXQgbmV4dCA9IHRleHQucmVwbGFjZSgvU2V0dXAgXGQrXC5cZCtcLlxkK1wuZXhlL2csICgpID0+IHsKICAgIGNvdW50ICs9IDE7CiAgICByZXR1cm4gYFNldHVwICR7dmVyc2lvbn0uZXhlYDsKICB9KTsKICBuZXh0ID0gbmV4dC5yZXBsYWNlKC8oInZlcnNpb24iOlxzKiIpW14iXSsoIikvLCAoX2Z1bGwsIHByZWZpeCwgc3VmZml4KSA9PiB7CiAgICBjb3VudCArPSAxOwogICAgcmV0dXJuIGAke3ByZWZpeH0ke3ZlcnNpb259JHtzdWZmaXh9YDsKICB9KTsKICBpZiAoY291bnQgPCAxKSB0aHJvdyBuZXcgRXJyb3IoJ1JFQURNRS5tZDogc3VydW0gb3JuZWtsZXJpIGJ1bHVuYW1hZGkuJyk7CiAgcmV0dXJuIHsgdGV4dDogbmV4dCwgY291bnQgfTsKfSk7Cgp1cGRhdGUoJ1JFTEVBU0VfTk9URVMubWQnLCAodGV4dCkgPT4gewogIGxldCBjb3VudCA9IDA7CiAgbGV0IG5leHQgPSB0ZXh0LnJlcGxhY2UoL14jIFBhcnMgU2lzdGVtIFnDtm5ldGljaXNpIFxkK1wuXGQrXC5cZCsvbSwgKCkgPT4gewogICAgY291bnQgKz0gMTsKICAgIHJldHVybiBgIyBQYXJzIFNpc3RlbSBZw7ZuZXRpY2lzaSAke3ZlcnNpb259YDsKICB9KTsKICBuZXh0ID0gbmV4dC5yZXBsYWNlKC9TZXR1cCBcZCtcLlxkK1wuXGQrXC5leGUvZywgKCkgPT4gewogICAgY291bnQgKz0gMTsKICAgIHJldHVybiBgU2V0dXAgJHt2ZXJzaW9ufS5leGVgOwogIH0pOwogIGlmIChjb3VudCA8IDEpIHRocm93IG5ldyBFcnJvcignUkVMRUFTRV9OT1RFUy5tZDogc3VydW0gYmFzbGlnaSBidWx1bmFtYWRpLicpOwogIHJldHVybiB7IHRleHQ6IG5leHQsIGNvdW50IH07Cn0pOwoKdXBkYXRlKCdidWlsZC91cGRhdGVzL2xhdGVzdC5qc29uJywgKHRleHQpID0+IHsKICBsZXQgY291bnQgPSAwOwogIGxldCBuZXh0ID0gdGV4dC5yZXBsYWNlKC9eKFxzKiJ2ZXJzaW9uIjpccyopIlteIl0rIi9tLCAoX2Z1bGwsIHByZWZpeCkgPT4gewogICAgY291bnQgKz0gMTsKICAgIHJldHVybiBgJHtwcmVmaXh9IiR7dmVyc2lvbn0iYDsKICB9KTsKICBuZXh0ID0gbmV4dC5yZXBsYWNlKC9eKFxzKiJmaWxlTmFtZSI6XHMqIlBhcnMgU2lzdGVtIFlvbmV0aWNpc2kgU2V0dXAgKVteIl0rKFwuZXhlIikvbSwgKF9mdWxsLCBwcmVmaXgsIHN1ZmZpeCkgPT4gewogICAgY291bnQgKz0gMTsKICAgIHJldHVybiBgJHtwcmVmaXh9JHt2ZXJzaW9ufSR7c3VmZml4fWA7CiAgfSk7CiAgbmV4dCA9IG5leHQucmVwbGFjZSgvXihccyoidXJsIjpccyoiW14iXSpTZXR1cFsgLl0pW14iL10rKFwuZXhlIikvbSwgKF9mdWxsLCBwcmVmaXgsIHN1ZmZpeCkgPT4gewogICAgY291bnQgKz0gMTsKICAgIHJldHVybiBgJHtwcmVmaXh9JHt2ZXJzaW9ufSR7c3VmZml4fWA7CiAgfSk7CiAgaWYgKGNvdW50IDwgMykgdGhyb3cgbmV3IEVycm9yKGBidWlsZC91cGRhdGVzL2xhdGVzdC5qc29uOiBhbGFuIHNheWlzaSAke2NvdW50fS8zLmApOwogIHJldHVybiB7IHRleHQ6IG5leHQsIGNvdW50IH07Cn0pOwoKY29uc29sZS5sb2coYCR7Y2hlY2tPbmx5ID8gJ0tPTlRST0wnIDogJ0dVTkNFTExFTkRJJ306ICR7dmVyc2lvbn1gKTsKZm9yIChjb25zdCBpdGVtIG9mIGNoYW5nZXMpIHsKICBjb25zb2xlLmxvZyhgICAke2l0ZW0uY291bnQgPyAn4pyTJyA6ICfigJMnfSAke2l0ZW0uZmlsZX0ke2l0ZW0uY291bnQgPyBgICgke2l0ZW0uY291bnR9IGFsYW4pYCA6ICcgKGRlZ2lzaWtsaWsgeW9rKSd9YCk7Cn0KaWYgKCFjaGVja09ubHkpIHsKICBjb25zb2xlLmxvZygnXG5TaXJhZGFraSBhZGltOiBSRUxFQVNFX05PVEVTLm1kIGljZXJpZ2luaSBnb3pkZW4gZ2VjaXJpcCB3b3JrZmxvd3UgY2FsaXN0aXJpbi4nKTsKfQo=
+#!/usr/bin/env node
+'use strict';
+
+/**
+ * Surum numarasini tek komutla tum kaynak dosyalarda gunceller.
+ *
+ * Kullanim:
+ *   node scripts/bump-version.js 1.0.3
+ *   node scripts/bump-version.js 1.0.3 --check    (sadece kontrol, yazmaz)
+ *   npm run bump -- 1.0.3
+ *
+ * Guncellenen dosyalar:
+ *   package.json, package-lock.json (ilk iki "version"),
+ *   src/shared/i18n.ts ve src/renderer/App.tsx (baslik/altbilgi surumu),
+ *   README.md, RELEASE_NOTES.md,
+ *   build/updates/latest.json (gOmulu manifest sablonu).
+ *
+ * website/ ve docs/ dosyalari CI (ci-release.js) tarafindan uretilir;
+ * bu script onlara dokunmaz.
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+const root = path.resolve(__dirname, '..');
+const args = process.argv.slice(2);
+const checkOnly = args.includes('--check') || args.includes('-n');
+const versionArg = args.find((arg) => !arg.startsWith('-'));
+
+if (!versionArg) {
+  console.error('Kullanim: node scripts/bump-version.js <x.y.z> [--check]');
+  process.exit(1);
+}
+if (!/^\d+\.\d+\.\d+$/.test(versionArg)) {
+  console.error(`Gecersiz surum: ${versionArg}. Ornek: 1.0.3`);
+  process.exit(1);
+}
+
+const version = versionArg;
+const changes = [];
+
+function replace(text, pattern, value, minCount, label) {
+  let count = 0;
+  const next = text.replace(pattern, (...matched) => {
+    count += 1;
+    return typeof value === 'function' ? value(...matched) : value;
+  });
+  if (count < minCount) {
+    throw new Error(`${label}: beklenen alan bulunamadi (${count}/${minCount}).`);
+  }
+  return { text: next, count };
+}
+
+function update(relativePath, transform) {
+  const file = path.join(root, relativePath);
+  if (!fs.existsSync(file)) throw new Error(`Dosya bulunamadi: ${relativePath}`);
+  const before = fs.readFileSync(file, 'utf8');
+  const result = transform(before);
+  if (!result || typeof result.text !== 'string') {
+    throw new Error(`${relativePath}: gecersiz donusum.`);
+  }
+  if (result.text === before) {
+    changes.push({ file: relativePath, count: 0 });
+    return;
+  }
+  if (!checkOnly) fs.writeFileSync(file, result.text, 'utf8');
+  changes.push({ file: relativePath, count: result.count || 0 });
+}
+
+update('package.json', (text) => {
+  const r = replace(
+    text,
+    /^(\s*"version":\s*)"[^"]+"/m,
+    (_full, prefix) => `${prefix}"${version}"`,
+    1,
+    'package.json',
+  );
+  return r;
+});
+
+update('package-lock.json', (text) => {
+  let count = 0;
+  const next = text.replace(/^(\s*"version":\s*)"\d+\.\d+\.\d+"/gm, (full, prefix) => {
+    count += 1;
+    return count <= 2 ? `${prefix}"${version}"` : full;
+  });
+  if (count < 2) throw new Error(`package-lock.json: ilk iki surum alani bulunamadi (${count}).`);
+  return { text: next, count: 2 };
+});
+
+update('src/shared/i18n.ts', (text) => {
+  let count = 0;
+  let next = text.replace(/('Sistem Bakım Merkezi · v)\d+\.\d+\.\d+(')/g, (_full, prefix, suffix) => {
+    count += 1;
+    return `${prefix}${version}${suffix}`;
+  });
+  next = next.replace(/('System Maintenance Center · v)\d+\.\d+\.\d+(')/g, (_full, prefix, suffix) => {
+    count += 1;
+    return `${prefix}${version}${suffix}`;
+  });
+  if (count < 1) throw new Error('i18n.ts: baslik surumu bulunamadi.');
+  return { text: next, count };
+});
+
+update('src/renderer/App.tsx', (text) => {
+  let count = 0;
+  let next = text.replace(/(Sistem Bakım Merkezi · v)\d+\.\d+\.\d+/g, (_full, prefix) => {
+    count += 1;
+    return `${prefix}${version}`;
+  });
+  next = next.replace(/(version: ')\d+\.\d+\.\d+(')/g, (_full, prefix, suffix) => {
+    count += 1;
+    return `${prefix}${version}${suffix}`;
+  });
+  if (count < 2) throw new Error(`App.tsx: altbilgi/rapor surumu bulunamadi (${count}/2).`);
+  return { text: next, count };
+});
+
+update('README.md', (text) => {
+  let count = 0;
+  let next = text.replace(/Setup \d+\.\d+\.\d+\.exe/g, () => {
+    count += 1;
+    return `Setup ${version}.exe`;
+  });
+  next = next.replace(/("version":\s*")[^"]+(")/, (_full, prefix, suffix) => {
+    count += 1;
+    return `${prefix}${version}${suffix}`;
+  });
+  if (count < 1) throw new Error('README.md: surum ornekleri bulunamadi.');
+  return { text: next, count };
+});
+
+update('RELEASE_NOTES.md', (text) => {
+  let count = 0;
+  let next = text.replace(/^# Pars Sistem Yöneticisi \d+\.\d+\.\d+/m, () => {
+    count += 1;
+    return `# Pars Sistem Yöneticisi ${version}`;
+  });
+  next = next.replace(/Setup \d+\.\d+\.\d+\.exe/g, () => {
+    count += 1;
+    return `Setup ${version}.exe`;
+  });
+  if (count < 1) throw new Error('RELEASE_NOTES.md: surum basligi bulunamadi.');
+  return { text: next, count };
+});
+
+update('build/updates/latest.json', (text) => {
+  let count = 0;
+  let next = text.replace(/^(\s*"version":\s*)"[^"]+"/m, (_full, prefix) => {
+    count += 1;
+    return `${prefix}"${version}"`;
+  });
+  next = next.replace(/^(\s*"fileName":\s*"Pars Sistem Yoneticisi Setup )[^"]+(\.exe")/m, (_full, prefix, suffix) => {
+    count += 1;
+    return `${prefix}${version}${suffix}`;
+  });
+  next = next.replace(/^(\s*"url":\s*"[^"]*Setup[ .])[^"/]+(\.exe")/m, (_full, prefix, suffix) => {
+    count += 1;
+    return `${prefix}${version}${suffix}`;
+  });
+  if (count < 3) throw new Error(`build/updates/latest.json: alan sayisi ${count}/3.`);
+  return { text: next, count };
+});
+
+console.log(`${checkOnly ? 'KONTROL' : 'GUNCELLENDI'}: ${version}`);
+for (const item of changes) {
+  console.log(`  ${item.count ? '✓' : '–'} ${item.file}${item.count ? ` (${item.count} alan)` : ' (degisiklik yok)'}`);
+}
+if (!checkOnly) {
+  console.log('\nSiradaki adim: RELEASE_NOTES.md icerigini gozden gecirip workflowu calistirin.');
+}

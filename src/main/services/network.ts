@@ -1,1 +1,56 @@
-aW1wb3J0IGZzIGZyb20gJ2ZzJzsKaW1wb3J0IHsgZ2V0Q2FwYWJpbGl0aWVzIH0gZnJvbSAnLi4vLi4vc2hhcmVkL3BsYXRmb3JtJzsKaW1wb3J0IHsgcG93ZXJzaGVsbEpzb24gfSBmcm9tICcuLi91dGlsJzsKCi8qKgogKiBXaW5kb3dzIHBlcmZvcm1hbnMgc2F5YcOnbGFyxLFuZGFuIGFubMSxayBhxJ8gYWzEscWfIGjEsXrEsW7EsSAoYmF5dC9zYW5peWUpIG9rdXIuCiAqIHdpbmdldC9jaG9jby9ucG0gw6fEsWt0xLFzxLFuZGEgaMSxeiBiaWxkaXJpbG1lZGnEn2luZGUgYXJhecO8emRlIGfDtnN0ZXJpbGlyLgogKi8KY29uc3QgU1BFRURfU0NSSVBUID0gU3RyaW5nLnJhd2AKJEVycm9yQWN0aW9uUHJlZmVyZW5jZSA9ICdTaWxlbnRseUNvbnRpbnVlJwpmdW5jdGlvbiBHZXQtVG90YWwgewogICRzdGF0cyA9IEdldC1OZXRBZGFwdGVyU3RhdGlzdGljcwogIGlmICgtbm90ICRzdGF0cykgeyByZXR1cm4gMCB9CiAgcmV0dXJuIFtkb3VibGVdKCgkc3RhdHMgfCBNZWFzdXJlLU9iamVjdCAtUHJvcGVydHkgUmVjZWl2ZWRCeXRlcyAtU3VtKS5TdW0pCn0KJGJlZm9yZSA9IEdldC1Ub3RhbApTdGFydC1TbGVlcCAtU2Vjb25kcyAxCiRhZnRlciA9IEdldC1Ub3RhbAokZGVsdGEgPSAkYWZ0ZXIgLSAkYmVmb3JlCmlmICgkZGVsdGEgLWx0IDApIHsgJGRlbHRhID0gMCB9CkB7IGJ5dGVzUGVyU2VjID0gW21hdGhdOjpSb3VuZCgkZGVsdGEpIH0gfCBDb252ZXJ0VG8tSnNvbiAtQ29tcHJlc3MKYDsKCi8qKiBMaW51eCd0YSAvcHJvYy9uZXQvZGV2IHNhbHQgb2t1bnVyOyBtYWNPUyd0YSBrYXLFn8SxbMSxxJ/EsSBvbG1hZMSxxJ/EsW5kYW4gMCBkw7ZuZXIuICovCmZ1bmN0aW9uIHBvc2l4UnhCeXRlcygpOiBudW1iZXIgewogIHRyeSB7CiAgICBsZXQgdG90YWwgPSAwOwogICAgZm9yIChjb25zdCBsaW5lIG9mIGZzLnJlYWRGaWxlU3luYygnL3Byb2MvbmV0L2RldicsICd1dGY4Jykuc3BsaXQoL1xyP1xuLykuc2xpY2UoMikpIHsKICAgICAgY29uc3QgY29sdW1ucyA9IGxpbmUuc3BsaXQoJzonKTsKICAgICAgaWYgKGNvbHVtbnMubGVuZ3RoIDwgMikgY29udGludWU7CiAgICAgIGNvbnN0IHJlY2VpdmUgPSBOdW1iZXIoY29sdW1uc1sxXS50cmltKCkuc3BsaXQoL1xzKy8pWzBdKTsKICAgICAgaWYgKE51bWJlci5pc0Zpbml0ZShyZWNlaXZlKSAmJiByZWNlaXZlID4gMCkgdG90YWwgKz0gcmVjZWl2ZTsKICAgIH0KICAgIHJldHVybiB0b3RhbDsKICB9IGNhdGNoIHsKICAgIHJldHVybiAwOwogIH0KfQoKZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIG5ldHdvcmtTcGVlZCgpOiBQcm9taXNlPG51bWJlcj4gewogIGlmIChnZXRDYXBhYmlsaXRpZXMoKS5raW5kICE9PSAnd2luZG93cycpIHsKICAgIGlmIChnZXRDYXBhYmlsaXRpZXMoKS5raW5kICE9PSAnbGludXgnKSByZXR1cm4gMDsKICAgIGNvbnN0IGJlZm9yZSA9IHBvc2l4UnhCeXRlcygpOwogICAgYXdhaXQgbmV3IFByb21pc2UoKHJlc29sdmUpID0+IHsgc2V0VGltZW91dChyZXNvbHZlLCAxMDAwKTsgfSk7CiAgICBjb25zdCBhZnRlciA9IHBvc2l4UnhCeXRlcygpOwogICAgY29uc3QgZGVsdGEgPSBhZnRlciAtIGJlZm9yZTsKICAgIHJldHVybiBOdW1iZXIuaXNGaW5pdGUoZGVsdGEpICYmIGRlbHRhID4gMCA/IGRlbHRhIDogMDsKICB9CiAgdHJ5IHsKICAgIGNvbnN0IHJlc3VsdCA9IGF3YWl0IHBvd2Vyc2hlbGxKc29uPHsgYnl0ZXNQZXJTZWM/OiBudW1iZXIgfT4oU1BFRURfU0NSSVBULCB1bmRlZmluZWQsIDEwXzAwMCk7CiAgICBjb25zdCB2YWx1ZSA9IE51bWJlcihyZXN1bHQ/LmJ5dGVzUGVyU2VjKTsKICAgIHJldHVybiBOdW1iZXIuaXNGaW5pdGUodmFsdWUpICYmIHZhbHVlID4gMCA/IHZhbHVlIDogMDsKICB9IGNhdGNoIHsKICAgIHJldHVybiAwOwogIH0KfQo=
+import fs from 'fs';
+import { getCapabilities } from '../../shared/platform';
+import { powershellJson } from '../util';
+
+/**
+ * Windows performans sayaçlarından anlık ağ alış hızını (bayt/saniye) okur.
+ * winget/choco/npm çıktısında hız bildirilmediğinde arayüzde gösterilir.
+ */
+const SPEED_SCRIPT = String.raw`
+$ErrorActionPreference = 'SilentlyContinue'
+function Get-Total {
+  $stats = Get-NetAdapterStatistics
+  if (-not $stats) { return 0 }
+  return [double](($stats | Measure-Object -Property ReceivedBytes -Sum).Sum)
+}
+$before = Get-Total
+Start-Sleep -Seconds 1
+$after = Get-Total
+$delta = $after - $before
+if ($delta -lt 0) { $delta = 0 }
+@{ bytesPerSec = [math]::Round($delta) } | ConvertTo-Json -Compress
+`;
+
+/** Linux'ta /proc/net/dev salt okunur; macOS'ta karşılığı olmadığından 0 döner. */
+function posixRxBytes(): number {
+  try {
+    let total = 0;
+    for (const line of fs.readFileSync('/proc/net/dev', 'utf8').split(/\r?\n/).slice(2)) {
+      const columns = line.split(':');
+      if (columns.length < 2) continue;
+      const receive = Number(columns[1].trim().split(/\s+/)[0]);
+      if (Number.isFinite(receive) && receive > 0) total += receive;
+    }
+    return total;
+  } catch {
+    return 0;
+  }
+}
+
+export async function networkSpeed(): Promise<number> {
+  if (getCapabilities().kind !== 'windows') {
+    if (getCapabilities().kind !== 'linux') return 0;
+    const before = posixRxBytes();
+    await new Promise((resolve) => { setTimeout(resolve, 1000); });
+    const after = posixRxBytes();
+    const delta = after - before;
+    return Number.isFinite(delta) && delta > 0 ? delta : 0;
+  }
+  try {
+    const result = await powershellJson<{ bytesPerSec?: number }>(SPEED_SCRIPT, undefined, 10_000);
+    const value = Number(result?.bytesPerSec);
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  } catch {
+    return 0;
+  }
+}

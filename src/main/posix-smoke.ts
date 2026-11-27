@@ -1,1 +1,95 @@
-aW1wb3J0IHsgYXBwIH0gZnJvbSAnZWxlY3Ryb24nOwppbXBvcnQgb3MgZnJvbSAnb3MnOwppbXBvcnQgeyBkZXRlY3RQbGF0Zm9ybSwgZ2V0Q2FwYWJpbGl0aWVzIH0gZnJvbSAnLi4vc2hhcmVkL3BsYXRmb3JtJzsKaW1wb3J0IHsgaXNJbnNpZGUgfSBmcm9tICcuL2lwYy1ndWFyZCc7CmltcG9ydCB7IGludm9rZUZvclNtb2tlLCByZWdpc3RlcklwYyB9IGZyb20gJy4vbWFpbic7CmltcG9ydCB7IHBhcnNlT3V0ZGF0ZWQgfSBmcm9tICcuL3NlcnZpY2VzL2JyZXcnOwoKLyoqCiAqIG1hY09TL0xpbnV4IHJ1bm5lcidsYXJkYSDDp2FsxLHFn2FuIElQQyBzbW9rZSB0ZXN0aS4gR2Vyw6dlayBwZW5jZXJlIGHDp21hZGFuCiAqIGhhbmRsZXInbGFyxLEga2F5ZGVkZXI7IHNhbHQtb2t1bnVyIGthbmFsbGFyxLFuIMOnYWzEscWfdMSxxJ/EsW7EsSB2ZSB5YXptYSBrYW5hbGxhcsSxbsSxbgogKiByZW5kZXJlcidkYW4gZ2Vsc2UgYmlsZSByZWRkZWRpbGRpxJ9pbmkgZG/En3J1bGFyLgogKi8KCmNvbnN0IGZhaWx1cmVzOiBzdHJpbmdbXSA9IFtdOwoKZnVuY3Rpb24gY2hlY2sobmFtZTogc3RyaW5nLCBvazogYm9vbGVhbiwgZGV0YWlsID0gJycpOiB2b2lkIHsKICBjb25zdCBzdGF0dXMgPSBvayA/ICdPSyAgJyA6ICdGQUlMJzsKICBjb25zb2xlLmxvZyhgW3Ntb2tlXSAke3N0YXR1c30gJHtuYW1lfSR7ZGV0YWlsID8gYCDigJQgJHtkZXRhaWx9YCA6ICcnfWApOwogIGlmICghb2spIGZhaWx1cmVzLnB1c2gobmFtZSk7Cn0KCmFzeW5jIGZ1bmN0aW9uIG11c3RSZWplY3QobmFtZTogc3RyaW5nLCBjaGFubmVsOiBzdHJpbmcsIC4uLmFyZ3M6IHVua25vd25bXSk6IFByb21pc2U8dm9pZD4gewogIHRyeSB7CiAgICBhd2FpdCBpbnZva2VGb3JTbW9rZShjaGFubmVsLCAuLi5hcmdzKTsKICAgIGNoZWNrKG5hbWUsIGZhbHNlLCAna2FuYWwgYmVrbGVubWVkaWsgxZ9la2lsZGUga2FidWwgZWRpbGRpJyk7CiAgfSBjYXRjaCAoZXJyb3IpIHsKICAgIGNoZWNrKG5hbWUsIHRydWUsIChlcnJvciBhcyBFcnJvcikubWVzc2FnZS5zbGljZSgwLCAxMjApKTsKICB9Cn0KCmZ1bmN0aW9uIGNhcENoZWNrKCk6IHZvaWQgewogIGNvbnN0IGtpbmQgPSBkZXRlY3RQbGF0Zm9ybShwcm9jZXNzLnBsYXRmb3JtKTsKICBjb25zdCBjYXBhYmlsaXRpZXMgPSBnZXRDYXBhYmlsaXRpZXMoa2luZCk7CiAgY2hlY2soJ3BsYXRmb3JtIG1hY09TL0xpbnV4Jywga2luZCA9PT0gJ21hY29zJyB8fCBraW5kID09PSAnbGludXgnLCBTdHJpbmcocHJvY2Vzcy5wbGF0Zm9ybSkpOwogIGNoZWNrKCd5YXptYSBpxZ9sZW1sZXJpIGthcGFsxLEnLCBjYXBhYmlsaXRpZXMuYWxsb3dXcml0ZUFjdGlvbnMgPT09IGZhbHNlKTsKICBjaGVjaygna2VuZGluaSBnw7xuY2VsbGVtZSBrYXBhbMSxJywgY2FwYWJpbGl0aWVzLmFsbG93U2VsZlVwZGF0ZSA9PT0gZmFsc2UpOwogIGNoZWNrKCdyZWdpc3RyeSBzZWttZXNpIGdpemxpJywgIWNhcGFiaWxpdGllcy50YWJzLmluY2x1ZGVzKCdyZWdpc3RyeScpKTsKICBjaGVjaygnRGVmZW5kZXIgbW90b3J1IHlvaycsICFjYXBhYmlsaXRpZXMubWFsd2FyZUVuZ2luZXMuaW5jbHVkZXMoJ2RlZmVuZGVyJykpOwogIGNoZWNrKCdIb21lYnJldyBQT1NJWCBrYXluYcSfxLEnLCBjYXBhYmlsaXRpZXMucGFja2FnZVNvdXJjZXMuaW5jbHVkZXMoJ2JyZXcnKSk7Cn0KCmZ1bmN0aW9uIGd1YXJkQ2hlY2soKTogdm9pZCB7CiAgY2hlY2soJ2lzSW5zaWRlIHBveml0aWYnLCBpc0luc2lkZSgnL1VzZXJzL3Rlc3QvRG93bmxvYWRzL2EudHh0JywgJy9Vc2Vycy90ZXN0L0Rvd25sb2FkcycpKTsKICBjaGVjaygnaXNJbnNpZGUgbmVnYXRpZicsICFpc0luc2lkZSgnL2V0Yy9wYXNzd2QnLCAnL1VzZXJzL3Rlc3QvRG93bmxvYWRzJykpOwogIGNoZWNrKCdpc0luc2lkZSBwYXRoIHRyYXZlcnNhbCcsICFpc0luc2lkZSgnL1VzZXJzL3Rlc3QvRG93bmxvYWRzLy4uL2V0Yy9wYXNzd2QnLCAnL1VzZXJzL3Rlc3QvRG93bmxvYWRzJykpOwogIGNvbnN0IHJvd3MgPSBwYXJzZU91dGRhdGVkKEpTT04uc3RyaW5naWZ5KHsKICAgIGZvcm11bGFlOiBbeyBuYW1lOiAnY3VybCcsIGluc3RhbGxlZF92ZXJzaW9uczogWyc4LjAnXSwgY3VycmVudF92ZXJzaW9uOiAnOC4xJyB9XSwKICAgIGNhc2tzOiBbXSwKICB9KSk7CiAgY2hlY2soJ2JyZXcgSlNPTiBheXLEscWfdMSxcm1hJywgcm93cy5sZW5ndGggPT09IDEgJiYgcm93c1swXS5pZGVudCA9PT0gJ2N1cmwnICYmIHJvd3NbMF0uYXZhaWxhYmxlID09PSAnOC4xJyk7Cn0KCmFzeW5jIGZ1bmN0aW9uIGlwY0NoZWNrKCk6IFByb21pc2U8dm9pZD4gewogIHJlZ2lzdGVySXBjKCk7CgogIGNvbnN0IHNuYXBzaG90ID0gYXdhaXQgaW52b2tlRm9yU21va2UoJ3N5c3RlbTpzbmFwc2hvdCcsIG9zLmhvbWVkaXIoKSkgYXMgeyBkaXNrUGF0aD86IHN0cmluZyB9OwogIGNoZWNrKCdzeXN0ZW06c25hcHNob3Qgc2FsdCBva3VudXInLCB0eXBlb2Ygc25hcHNob3Q/LmRpc2tQYXRoID09PSAnc3RyaW5nJywgc25hcHNob3Q/LmRpc2tQYXRoIHx8ICdib8WfJyk7CgogIGNvbnN0IGRyaXZlcyA9IGF3YWl0IGludm9rZUZvclNtb2tlKCdzeXN0ZW06ZHJpdmVzJykgYXMgc3RyaW5nW107CiAgY2hlY2soJ3N5c3RlbTpkcml2ZXMga8O2ayBzw7xyw7xjw7wnLCBBcnJheS5pc0FycmF5KGRyaXZlcykgJiYgZHJpdmVzLmluY2x1ZGVzKCcvJyksIGRyaXZlcy5qb2luKCcsICcpKTsKCiAgY29uc3QgbGFiZWxzID0gYXdhaXQgaW52b2tlRm9yU21va2UoJ3N5c3RlbTpkcml2ZS1sYWJlbHMnKSBhcyBSZWNvcmQ8c3RyaW5nLCBzdHJpbmc+OwogIGNoZWNrKCdzeXN0ZW06ZHJpdmUtbGFiZWxzJywgQm9vbGVhbihsYWJlbHMgJiYgbGFiZWxzWycvJ10pLCBsYWJlbHM/LlsnLyddIHx8ICdib8WfJyk7CgogIGNvbnN0IHNjYW4gPSBhd2FpdCBpbnZva2VGb3JTbW9rZSgnbWFsd2FyZTpzY2FuJywgWydob3N0cycsICdzaWduYXR1cmVzJ10sIGBzbW9rZS0ke0RhdGUubm93KCl9YCkgYXMgewogICAgZmluZGluZ3M/OiB1bmtub3duW107CiAgICBzY2FubmVkPzogUmVjb3JkPHN0cmluZywgbnVtYmVyPjsKICB9OwogIGNoZWNrKCdtYWx3YXJlOnNjYW4gUE9TSVgnLCBBcnJheS5pc0FycmF5KHNjYW4/LmZpbmRpbmdzKSAmJiBCb29sZWFuKHNjYW4/LnNjYW5uZWQ/Lmhvc3RzICE9PSB1bmRlZmluZWQpLAogICAgYGJ1bGd1PSR7c2Nhbj8uZmluZGluZ3M/Lmxlbmd0aCA/PyAnPyd9YCk7CgogIGF3YWl0IG11c3RSZWplY3QoJ21hbHdhcmU6c2NhbiBkZWZlbmRlciByZWRkaScsICdtYWx3YXJlOnNjYW4nLCBbJ2RlZmVuZGVyJ10sICdzbW9rZS1kZWZlbmRlcicpOwogIGF3YWl0IG11c3RSZWplY3QoJ3VwZGF0ZXM6bGlzdCB3aW5nZXQgcmVkZGknLCAndXBkYXRlczpsaXN0JywgJ3dpbmdldCcpOwogIGF3YWl0IG11c3RSZWplY3QoJ3dpbmdldDppbnN0YWxsIHlhem1hIHJlZGRpJywgJ3dpbmdldDppbnN0YWxsJywgJ2N1cmwnLCB0cnVlKTsKICBhd2FpdCBtdXN0UmVqZWN0KCdyZWdpc3RyeTpzY2FuIHlhem1hIHJlZGRpJywgJ3JlZ2lzdHJ5OnNjYW4nKTsKICBhd2FpdCBtdXN0UmVqZWN0KCdmaWxlczpkZWxldGUgeWF6bWEgcmVkZGknLCAnZmlsZXM6ZGVsZXRlJywgW10sIFtdLCAncGVybWFuZW50Jyk7CiAgYXdhaXQgbXVzdFJlamVjdCgndXBkYXRlOmNoZWNrIHlhem1hIHJlZGRpJywgJ3VwZGF0ZTpjaGVjaycpOwogIGF3YWl0IG11c3RSZWplY3QoJ3NjaGVkdWxlOnNhdmUgeWF6bWEgcmVkZGknLCAnc2NoZWR1bGU6c2F2ZScsIFtdKTsKICBhd2FpdCBtdXN0UmVqZWN0KCdwcmVyZXE6c2NhbiB5YXptYSByZWRkaScsICdwcmVyZXE6c2NhbicpOwp9CgphcHAud2hlblJlYWR5KCkudGhlbihhc3luYyAoKSA9PiB7CiAgY2FwQ2hlY2soKTsKICBndWFyZENoZWNrKCk7CiAgdHJ5IHsKICAgIGF3YWl0IGlwY0NoZWNrKCk7CiAgfSBjYXRjaCAoZXJyb3IpIHsKICAgIGNoZWNrKCdJUEMgw6dhxJ9yxLFsYXLEsScsIGZhbHNlLCAoZXJyb3IgYXMgRXJyb3IpLm1lc3NhZ2UpOwogIH0KICBjb25zb2xlLmxvZyhgW3Ntb2tlXSAke2ZhaWx1cmVzLmxlbmd0aCA/IGBGQUlMRUQgKCR7ZmFpbHVyZXMubGVuZ3RofSlgIDogJ1BBU1NFRCd9YCk7CiAgYXBwLmV4aXQoZmFpbHVyZXMubGVuZ3RoID8gMSA6IDApOwp9KS5jYXRjaCgoZXJyb3I6IEVycm9yKSA9PiB7CiAgY29uc29sZS5lcnJvcignW3Ntb2tlXSBiYcWfbGF0bWEgaGF0YXPEsTonLCBlcnJvcik7CiAgYXBwLmV4aXQoMSk7Cn0pOwo=
+import { app } from 'electron';
+import os from 'os';
+import { detectPlatform, getCapabilities } from '../shared/platform';
+import { isInside } from './ipc-guard';
+import { invokeForSmoke, registerIpc } from './main';
+import { parseOutdated } from './services/brew';
+
+/**
+ * macOS/Linux runner'larda çalışan IPC smoke testi. Gerçek pencere açmadan
+ * handler'ları kaydeder; salt-okunur kanalların çalıştığını ve yazma kanallarının
+ * renderer'dan gelse bile reddedildiğini doğrular.
+ */
+
+const failures: string[] = [];
+
+function check(name: string, ok: boolean, detail = ''): void {
+  const status = ok ? 'OK  ' : 'FAIL';
+  console.log(`[smoke] ${status} ${name}${detail ? ` — ${detail}` : ''}`);
+  if (!ok) failures.push(name);
+}
+
+async function mustReject(name: string, channel: string, ...args: unknown[]): Promise<void> {
+  try {
+    await invokeForSmoke(channel, ...args);
+    check(name, false, 'kanal beklenmedik şekilde kabul edildi');
+  } catch (error) {
+    check(name, true, (error as Error).message.slice(0, 120));
+  }
+}
+
+function capCheck(): void {
+  const kind = detectPlatform(process.platform);
+  const capabilities = getCapabilities(kind);
+  check('platform macOS/Linux', kind === 'macos' || kind === 'linux', String(process.platform));
+  check('yazma işlemleri kapalı', capabilities.allowWriteActions === false);
+  check('kendini güncelleme kapalı', capabilities.allowSelfUpdate === false);
+  check('registry sekmesi gizli', !capabilities.tabs.includes('registry'));
+  check('Defender motoru yok', !capabilities.malwareEngines.includes('defender'));
+  check('Homebrew POSIX kaynağı', capabilities.packageSources.includes('brew'));
+}
+
+function guardCheck(): void {
+  check('isInside pozitif', isInside('/Users/test/Downloads/a.txt', '/Users/test/Downloads'));
+  check('isInside negatif', !isInside('/etc/passwd', '/Users/test/Downloads'));
+  check('isInside path traversal', !isInside('/Users/test/Downloads/../etc/passwd', '/Users/test/Downloads'));
+  const rows = parseOutdated(JSON.stringify({
+    formulae: [{ name: 'curl', installed_versions: ['8.0'], current_version: '8.1' }],
+    casks: [],
+  }));
+  check('brew JSON ayrıştırma', rows.length === 1 && rows[0].ident === 'curl' && rows[0].available === '8.1');
+}
+
+async function ipcCheck(): Promise<void> {
+  registerIpc();
+
+  const snapshot = await invokeForSmoke('system:snapshot', os.homedir()) as { diskPath?: string };
+  check('system:snapshot salt okunur', typeof snapshot?.diskPath === 'string', snapshot?.diskPath || 'boş');
+
+  const drives = await invokeForSmoke('system:drives') as string[];
+  check('system:drives kök sürücü', Array.isArray(drives) && drives.includes('/'), drives.join(', '));
+
+  const labels = await invokeForSmoke('system:drive-labels') as Record<string, string>;
+  check('system:drive-labels', Boolean(labels && labels['/']), labels?.['/'] || 'boş');
+
+  const scan = await invokeForSmoke('malware:scan', ['hosts', 'signatures'], `smoke-${Date.now()}`) as {
+    findings?: unknown[];
+    scanned?: Record<string, number>;
+  };
+  check('malware:scan POSIX', Array.isArray(scan?.findings) && Boolean(scan?.scanned?.hosts !== undefined),
+    `bulgu=${scan?.findings?.length ?? '?'}`);
+
+  await mustReject('malware:scan defender reddi', 'malware:scan', ['defender'], 'smoke-defender');
+  await mustReject('updates:list winget reddi', 'updates:list', 'winget');
+  await mustReject('winget:install yazma reddi', 'winget:install', 'curl', true);
+  await mustReject('registry:scan yazma reddi', 'registry:scan');
+  await mustReject('files:delete yazma reddi', 'files:delete', [], [], 'permanent');
+  await mustReject('update:check yazma reddi', 'update:check');
+  await mustReject('schedule:save yazma reddi', 'schedule:save', []);
+  await mustReject('prereq:scan yazma reddi', 'prereq:scan');
+}
+
+app.whenReady().then(async () => {
+  capCheck();
+  guardCheck();
+  try {
+    await ipcCheck();
+  } catch (error) {
+    check('IPC çağrıları', false, (error as Error).message);
+  }
+  console.log(`[smoke] ${failures.length ? `FAILED (${failures.length})` : 'PASSED'}`);
+  app.exit(failures.length ? 1 : 0);
+}).catch((error: Error) => {
+  console.error('[smoke] başlatma hatası:', error);
+  app.exit(1);
+});

@@ -1,1 +1,100 @@
-aW1wb3J0IHsgTUFMV0FSRV9FTkdJTkVfSURTLCBUQUJfSURTIH0gZnJvbSAnLi90eXBlcyc7CmltcG9ydCB0eXBlIHsgTWFsd2FyZUVuZ2luZSwgUGFja2FnZVNvdXJjZSwgUGxhdGZvcm1DYXBhYmlsaXRpZXMsIFBsYXRmb3JtS2luZCwgVGFiSWQgfSBmcm9tICcuL3R5cGVzJzsKCi8qKgogKiBQbGF0Zm9ybSBhbGfEsWxhbWEgdGVrIG1lcmtlemRlIHR1dHVsdXIuIEFuYSBzw7xyZcOndGUgYHByb2Nlc3MucGxhdGZvcm1gLAogKiByZW5kZXJlcidkYSBFbGVjdHJvbiBrdWxsYW7EsWPEsSBhcmFjxLFzxLEga3VsbGFuxLFsxLFyOyBpa2lzaSBkZSB5b2tzYSBXaW5kb3dzCiAqIHZhcnNhecSxbMSxciB2ZSBtZXZjdXQgZGF2cmFuxLHFnyBrb3J1bnVyLgogKi8KdHlwZSBHbG9iYWxIaW50cyA9IHsKICBwcm9jZXNzPzogeyBwbGF0Zm9ybT86IHN0cmluZyB9OwogIG5hdmlnYXRvcj86IHsgcGxhdGZvcm0/OiBzdHJpbmc7IHVzZXJBZ2VudD86IHN0cmluZzsgdXNlckFnZW50RGF0YT86IHsgcGxhdGZvcm0/OiBzdHJpbmcgfSB9Owp9OwoKY29uc3QgV0lORE9XU19UQUJTOiByZWFkb25seSBUYWJJZFtdID0gVEFCX0lEUzsKCi8qKgogKiAxLjUgbWFjT1Mga2Fwc2FtxLE6IHNhbHQtb2t1bnVyIMOnZWtpcmRlay4gS2F5xLF0IGRlZnRlcmksIFVBQywga2FidWssIGhpem1ldCwKICogZ8O8dmVubGlrIGR1dmFyxLEsIHPDvHLDvGPDvCB2ZSBwbGFubGFubcSxxZ8gZ8O2cmV2IHNla21lbGVyaSBQT1NJWCd0ZSBhw6fEsWxtYXouCiAqLwpjb25zdCBQT1NJWF9UQUJTOiByZWFkb25seSBUYWJJZFtdID0gWwogICdob21lJywgJ3VwZGF0ZXMnLCAnbWFsd2FyZScsICdkdXBsaWNhdGVzJywgJ2FuYWx5c2lzJywgJ3JlY29tbWVuZGVkJywgJ3NlYXJjaCcsICdzZXR0aW5ncycsICdkZWJ1Z2dpbmcnLApdOwoKY29uc3QgV0lORE9XU19TT1VSQ0VTOiByZWFkb25seSBQYWNrYWdlU291cmNlW10gPSBbJ3dpbmdldCcsICdjaG9jbycsICducG0nLCAnc2Nvb3AnXTsKY29uc3QgTUFDT1NfU09VUkNFUzogcmVhZG9ubHkgUGFja2FnZVNvdXJjZVtdID0gWydicmV3JywgJ25wbSddOwpjb25zdCBMSU5VWF9TT1VSQ0VTOiByZWFkb25seSBQYWNrYWdlU291cmNlW10gPSBbJ25wbSddOwoKY29uc3QgUE9TSVhfRU5HSU5FUzogcmVhZG9ubHkgTWFsd2FyZUVuZ2luZVtdID0gTUFMV0FSRV9FTkdJTkVfSURTLmZpbHRlcigKICAoaWQpOiBpZCBpcyBNYWx3YXJlRW5naW5lID0+IGlkICE9PSAnZGVmZW5kZXInLAopOwoKZXhwb3J0IGZ1bmN0aW9uIGRldGVjdFBsYXRmb3JtKG92ZXJyaWRlPzogc3RyaW5nKTogUGxhdGZvcm1LaW5kIHsKICBjb25zdCBoaW50cyA9IGdsb2JhbFRoaXMgYXMgdW5rbm93biBhcyBHbG9iYWxIaW50czsKICBjb25zdCB2YWx1ZSA9IFtvdmVycmlkZSwgaGludHMucHJvY2Vzcz8ucGxhdGZvcm0sIGhpbnRzLm5hdmlnYXRvcj8udXNlckFnZW50RGF0YT8ucGxhdGZvcm0sCiAgICBoaW50cy5uYXZpZ2F0b3I/LnBsYXRmb3JtLCBoaW50cy5uYXZpZ2F0b3I/LnVzZXJBZ2VudF0KICAgIC5maWx0ZXIoKGl0ZW0pOiBpdGVtIGlzIHN0cmluZyA9PiB0eXBlb2YgaXRlbSA9PT0gJ3N0cmluZycgJiYgaXRlbS5sZW5ndGggPiAwKQogICAgLmpvaW4oJyAnKQogICAgLnRvTG93ZXJDYXNlKCk7CgogIGlmICgvXGJkYXJ3aW5cYnxcYm1hY29zXGJ8XGJtYWMgb3NcYnxcYm1hY2ludGVsXGJ8XGJtYWNpbnRvc2hcYi8udGVzdCh2YWx1ZSkpIHJldHVybiAnbWFjb3MnOwogIGlmICgvXGJsaW51eFxifFxieDExXGJ8XGJ1bml4XGIvLnRlc3QodmFsdWUpKSByZXR1cm4gJ2xpbnV4JzsKICBpZiAoL1xid2luMzJcYnxcYndpbmRvd3NcYnxcYndpbjY0XGIvLnRlc3QodmFsdWUpKSByZXR1cm4gJ3dpbmRvd3MnOwogIC8vIEJpbGlubWV5ZW4gb3J0YW1kYSBtZXZjdXQgV2luZG93cyBkYXZyYW7EscWfxLFuxLEgYm96bWF5YWNhayDFn2VraWxkZSBnw7x2ZW5saSB2YXJzYXnEsW0uCiAgcmV0dXJuICd3aW5kb3dzJzsKfQoKZXhwb3J0IGNvbnN0IFBMQVRGT1JNOiBQbGF0Zm9ybUtpbmQgPSBkZXRlY3RQbGF0Zm9ybSgpOwoKZXhwb3J0IGZ1bmN0aW9uIGlzV2luZG93cyhwbGF0Zm9ybTogUGxhdGZvcm1LaW5kID0gUExBVEZPUk0pOiBib29sZWFuIHsKICByZXR1cm4gcGxhdGZvcm0gPT09ICd3aW5kb3dzJzsKfQoKZXhwb3J0IGZ1bmN0aW9uIGdldENhcGFiaWxpdGllcyhwbGF0Zm9ybTogUGxhdGZvcm1LaW5kID0gUExBVEZPUk0pOiBQbGF0Zm9ybUNhcGFiaWxpdGllcyB7CiAgc3dpdGNoIChwbGF0Zm9ybSkgewogICAgY2FzZSAnbWFjb3MnOgogICAgICByZXR1cm4gewogICAgICAgIGtpbmQ6ICdtYWNvcycsCiAgICAgICAgbGFiZWw6ICdtYWNPUycsCiAgICAgICAgZXhwZXJpbWVudGFsOiB0cnVlLAogICAgICAgIHRhYnM6IFBPU0lYX1RBQlMsCiAgICAgICAgcGFja2FnZVNvdXJjZXM6IE1BQ09TX1NPVVJDRVMsCiAgICAgICAgbWFsd2FyZUVuZ2luZXM6IFBPU0lYX0VOR0lORVMsCiAgICAgICAgYWxsb3dXcml0ZUFjdGlvbnM6IGZhbHNlLAogICAgICAgIGFsbG93U2VsZlVwZGF0ZTogZmFsc2UsCiAgICAgIH07CiAgICBjYXNlICdsaW51eCc6CiAgICAgIHJldHVybiB7CiAgICAgICAga2luZDogJ2xpbnV4JywKICAgICAgICBsYWJlbDogJ0xpbnV4JywKICAgICAgICBleHBlcmltZW50YWw6IHRydWUsCiAgICAgICAgdGFiczogUE9TSVhfVEFCUywKICAgICAgICBwYWNrYWdlU291cmNlczogTElOVVhfU09VUkNFUywKICAgICAgICBtYWx3YXJlRW5naW5lczogUE9TSVhfRU5HSU5FUywKICAgICAgICBhbGxvd1dyaXRlQWN0aW9uczogZmFsc2UsCiAgICAgICAgYWxsb3dTZWxmVXBkYXRlOiBmYWxzZSwKICAgICAgfTsKICAgIGNhc2UgJ3dpbmRvd3MnOgogICAgZGVmYXVsdDoKICAgICAgcmV0dXJuIHsKICAgICAgICBraW5kOiAnd2luZG93cycsCiAgICAgICAgbGFiZWw6ICdXaW5kb3dzJywKICAgICAgICBleHBlcmltZW50YWw6IGZhbHNlLAogICAgICAgIHRhYnM6IFdJTkRPV1NfVEFCUywKICAgICAgICBwYWNrYWdlU291cmNlczogV0lORE9XU19TT1VSQ0VTLAogICAgICAgIG1hbHdhcmVFbmdpbmVzOiBNQUxXQVJFX0VOR0lORV9JRFMsCiAgICAgICAgYWxsb3dXcml0ZUFjdGlvbnM6IHRydWUsCiAgICAgICAgYWxsb3dTZWxmVXBkYXRlOiB0cnVlLAogICAgICB9OwogIH0KfQoKZXhwb3J0IGNvbnN0IENBUEFCSUxJVElFUzogUGxhdGZvcm1DYXBhYmlsaXRpZXMgPSBnZXRDYXBhYmlsaXRpZXMoKTsKCmV4cG9ydCBmdW5jdGlvbiBzdXBwb3J0c1RhYihpZDogVGFiSWQsIHBsYXRmb3JtOiBQbGF0Zm9ybUtpbmQgPSBQTEFURk9STSk6IGJvb2xlYW4gewogIHJldHVybiBnZXRDYXBhYmlsaXRpZXMocGxhdGZvcm0pLnRhYnMuaW5jbHVkZXMoaWQpOwp9CgpleHBvcnQgZnVuY3Rpb24gZGVmYXVsdERyaXZlKHBsYXRmb3JtOiBQbGF0Zm9ybUtpbmQgPSBQTEFURk9STSk6IHN0cmluZyB7CiAgcmV0dXJuIHBsYXRmb3JtID09PSAnd2luZG93cycgPyAnQzpcXCcgOiAnLyc7Cn0K
+import { MALWARE_ENGINE_IDS, TAB_IDS } from './types';
+import type { MalwareEngine, PackageSource, PlatformCapabilities, PlatformKind, TabId } from './types';
+
+/**
+ * Platform algılama tek merkezde tutulur. Ana süreçte `process.platform`,
+ * renderer'da Electron kullanıcı aracısı kullanılır; ikisi de yoksa Windows
+ * varsayılır ve mevcut davranış korunur.
+ */
+type GlobalHints = {
+  process?: { platform?: string };
+  navigator?: { platform?: string; userAgent?: string; userAgentData?: { platform?: string } };
+};
+
+const WINDOWS_TABS: readonly TabId[] = TAB_IDS;
+
+/**
+ * 1.5 macOS kapsamı: salt-okunur çekirdek. Kayıt defteri, UAC, kabuk, hizmet,
+ * güvenlik duvarı, sürücü ve planlanmış görev sekmeleri POSIX'te açılmaz.
+ */
+const POSIX_TABS: readonly TabId[] = [
+  'home', 'updates', 'malware', 'duplicates', 'analysis', 'recommended', 'search', 'settings', 'debugging',
+];
+
+const WINDOWS_SOURCES: readonly PackageSource[] = ['winget', 'choco', 'npm', 'scoop'];
+const MACOS_SOURCES: readonly PackageSource[] = ['brew', 'npm'];
+const LINUX_SOURCES: readonly PackageSource[] = ['npm'];
+
+const POSIX_ENGINES: readonly MalwareEngine[] = MALWARE_ENGINE_IDS.filter(
+  (id): id is MalwareEngine => id !== 'defender',
+);
+
+export function detectPlatform(override?: string): PlatformKind {
+  const hints = globalThis as unknown as GlobalHints;
+  const value = [override, hints.process?.platform, hints.navigator?.userAgentData?.platform,
+    hints.navigator?.platform, hints.navigator?.userAgent]
+    .filter((item): item is string => typeof item === 'string' && item.length > 0)
+    .join(' ')
+    .toLowerCase();
+
+  if (/\bdarwin\b|\bmacos\b|\bmac os\b|\bmacintel\b|\bmacintosh\b/.test(value)) return 'macos';
+  if (/\blinux\b|\bx11\b|\bunix\b/.test(value)) return 'linux';
+  if (/\bwin32\b|\bwindows\b|\bwin64\b/.test(value)) return 'windows';
+  // Bilinmeyen ortamda mevcut Windows davranışını bozmayacak şekilde güvenli varsayım.
+  return 'windows';
+}
+
+export const PLATFORM: PlatformKind = detectPlatform();
+
+export function isWindows(platform: PlatformKind = PLATFORM): boolean {
+  return platform === 'windows';
+}
+
+export function getCapabilities(platform: PlatformKind = PLATFORM): PlatformCapabilities {
+  switch (platform) {
+    case 'macos':
+      return {
+        kind: 'macos',
+        label: 'macOS',
+        experimental: true,
+        tabs: POSIX_TABS,
+        packageSources: MACOS_SOURCES,
+        malwareEngines: POSIX_ENGINES,
+        allowWriteActions: false,
+        allowSelfUpdate: false,
+      };
+    case 'linux':
+      return {
+        kind: 'linux',
+        label: 'Linux',
+        experimental: true,
+        tabs: POSIX_TABS,
+        packageSources: LINUX_SOURCES,
+        malwareEngines: POSIX_ENGINES,
+        allowWriteActions: false,
+        allowSelfUpdate: false,
+      };
+    case 'windows':
+    default:
+      return {
+        kind: 'windows',
+        label: 'Windows',
+        experimental: false,
+        tabs: WINDOWS_TABS,
+        packageSources: WINDOWS_SOURCES,
+        malwareEngines: MALWARE_ENGINE_IDS,
+        allowWriteActions: true,
+        allowSelfUpdate: true,
+      };
+  }
+}
+
+export const CAPABILITIES: PlatformCapabilities = getCapabilities();
+
+export function supportsTab(id: TabId, platform: PlatformKind = PLATFORM): boolean {
+  return getCapabilities(platform).tabs.includes(id);
+}
+
+export function defaultDrive(platform: PlatformKind = PLATFORM): string {
+  return platform === 'windows' ? 'C:\\' : '/';
+}

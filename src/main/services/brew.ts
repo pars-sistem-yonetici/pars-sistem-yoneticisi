@@ -1,1 +1,115 @@
-aW1wb3J0IHR5cGUgeyBQYWNrYWdlIH0gZnJvbSAnLi4vLi4vc2hhcmVkL3R5cGVzJzsKaW1wb3J0IHsgbSB9IGZyb20gJy4uL2kxOG4tbWFpbic7CmltcG9ydCB7IExvZ0ZuLCBydW5Db21tYW5kIH0gZnJvbSAnLi4vdXRpbCc7CgovKiogSG9tZWJyZXcgw6dhxJ9yxLFsYXLEsSBzYWx0LW9rdW51cjsga3VydWx1bS9nw7xuY2VsbGVtZSBrb211dGxhcsSxIGJ1cmFkYSB5b2suICovCmNvbnN0IFRJTUVPVVQgPSA0ICogNjAgKiAxMDAwOwpjb25zdCBDQU5ESURBVEVTID0gWydicmV3JywgJy9vcHQvaG9tZWJyZXcvYmluL2JyZXcnLCAnL3Vzci9sb2NhbC9iaW4vYnJldyddOwoKYXN5bmMgZnVuY3Rpb24gaW52b2tlKGFyZ3M6IHN0cmluZ1tdLCBvbkxpbmU/OiBMb2dGbiwgdGltZW91dCA9IFRJTUVPVVQpIHsKICBsZXQgbGFzdEVycm9yOiBFcnJvciB8IG51bGwgPSBudWxsOwogIGZvciAoY29uc3QgY29tbWFuZCBvZiBDQU5ESURBVEVTKSB7CiAgICB0cnkgewogICAgICBjb25zdCByZXN1bHQgPSBhd2FpdCBydW5Db21tYW5kKGNvbW1hbmQsIGFyZ3MsIG9uTGluZSwgdGltZW91dCk7CiAgICAgIGlmIChyZXN1bHQuY29kZSA9PT0gMCkgcmV0dXJuIHJlc3VsdDsKICAgICAgbGFzdEVycm9yID0gbmV3IEVycm9yKHJlc3VsdC5zdGRlcnIgfHwgcmVzdWx0LnRleHQgfHwgYGV4aXQgJHtyZXN1bHQuY29kZX1gKTsKICAgIH0gY2F0Y2ggKGVycm9yKSB7CiAgICAgIGxhc3RFcnJvciA9IGVycm9yIGFzIEVycm9yOwogICAgfQogIH0KICB0aHJvdyBsYXN0RXJyb3IgPz8gbmV3IEVycm9yKCdicmV3IHVuYXZhaWxhYmxlJyk7Cn0KCmV4cG9ydCBhc3luYyBmdW5jdGlvbiBzdGF0dXMoKTogUHJvbWlzZTx7IGF2YWlsYWJsZTogYm9vbGVhbjsgdmVyc2lvbjogc3RyaW5nIH0+IHsKICB0cnkgewogICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgaW52b2tlKFsnLS12ZXJzaW9uJ10sIHVuZGVmaW5lZCwgMjBfMDAwKTsKICAgIGNvbnN0IHZlcnNpb24gPSByZXN1bHQubGluZXMuZmluZCgobGluZSkgPT4gL15ob21lYnJldy9pLnRlc3QobGluZS50cmltKCkpKT8udHJpbSgpCiAgICAgIHx8IHJlc3VsdC5saW5lcy5maW5kKChsaW5lKSA9PiBsaW5lLnRyaW0oKSk/LnRyaW0oKQogICAgICB8fCAnJzsKICAgIHJldHVybiB7IGF2YWlsYWJsZTogdHJ1ZSwgdmVyc2lvbjogdmVyc2lvbi5zbGljZSgwLCA4MCkgfTsKICB9IGNhdGNoIHsKICAgIHJldHVybiB7IGF2YWlsYWJsZTogZmFsc2UsIHZlcnNpb246ICcnIH07CiAgfQp9CgppbnRlcmZhY2UgQnJld091dGRhdGVkUm93IHsKICBuYW1lPzogdW5rbm93bjsKICBpbnN0YWxsZWRfdmVyc2lvbnM/OiB1bmtub3duOwogIGN1cnJlbnRfdmVyc2lvbj86IHVua25vd247CiAgaW5zdGFsbGVkPzogdW5rbm93bjsKICBsYXRlc3Q/OiB1bmtub3duOwp9CgpmdW5jdGlvbiBub3JtYWxpemVUb2tlbih2YWx1ZTogdW5rbm93bik6IHN0cmluZyB7CiAgcmV0dXJuIHR5cGVvZiB2YWx1ZSA9PT0gJ3N0cmluZycgPyB2YWx1ZS50cmltKCkgOiAnJzsKfQoKZnVuY3Rpb24gcm93c0Zyb20odmFsdWU6IHVua25vd24pOiBCcmV3T3V0ZGF0ZWRSb3dbXSB7CiAgaWYgKEFycmF5LmlzQXJyYXkodmFsdWUpKSByZXR1cm4gdmFsdWUgYXMgQnJld091dGRhdGVkUm93W107CiAgaWYgKCF2YWx1ZSB8fCB0eXBlb2YgdmFsdWUgIT09ICdvYmplY3QnKSByZXR1cm4gW107CiAgY29uc3QgcmVjb3JkID0gdmFsdWUgYXMgUmVjb3JkPHN0cmluZywgdW5rbm93bj47CiAgcmV0dXJuIFsKICAgIC4uLihBcnJheS5pc0FycmF5KHJlY29yZC5mb3JtdWxhZSkgPyByZWNvcmQuZm9ybXVsYWUgOiBbXSksCiAgICAuLi4oQXJyYXkuaXNBcnJheShyZWNvcmQuY2Fza3MpID8gcmVjb3JkLmNhc2tzIDogW10pLAogIF0gYXMgQnJld091dGRhdGVkUm93W107Cn0KCi8qKiBgYnJldyBvdXRkYXRlZCAtLWpzb249djJgIMOnxLFrdMSxc8SxbmRhbiBrdXJ1bHUvc29uIHPDvHLDvG1sZXJpIMOnxLFrYXLEsXIuICovCmV4cG9ydCBmdW5jdGlvbiBwYXJzZU91dGRhdGVkKHRleHQ6IHN0cmluZyk6IFBhY2thZ2VbXSB7CiAgY29uc3Qgc3RhcnQgPSB0ZXh0LnNlYXJjaCgvW3tbXS8pOwogIGNvbnN0IGVuZCA9IE1hdGgubWF4KHRleHQubGFzdEluZGV4T2YoJ30nKSwgdGV4dC5sYXN0SW5kZXhPZignXScpKTsKICBpZiAoc3RhcnQgPCAwIHx8IGVuZCA8IHN0YXJ0KSByZXR1cm4gW107CiAgbGV0IGRhdGE6IHVua25vd247CiAgdHJ5IHsKICAgIGRhdGEgPSBKU09OLnBhcnNlKHRleHQuc2xpY2Uoc3RhcnQsIGVuZCArIDEpKTsKICB9IGNhdGNoIHsKICAgIHJldHVybiBbXTsKICB9CiAgY29uc3Qgcm93czogUGFja2FnZVtdID0gW107CiAgZm9yIChjb25zdCBpdGVtIG9mIHJvd3NGcm9tKGRhdGEpKSB7CiAgICBjb25zdCBpZGVudCA9IG5vcm1hbGl6ZVRva2VuKGl0ZW0ubmFtZSk7CiAgICBjb25zdCBpbnN0YWxsZWQgPSBBcnJheS5pc0FycmF5KGl0ZW0uaW5zdGFsbGVkX3ZlcnNpb25zKQogICAgICA/IG5vcm1hbGl6ZVRva2VuKGl0ZW0uaW5zdGFsbGVkX3ZlcnNpb25zW2l0ZW0uaW5zdGFsbGVkX3ZlcnNpb25zLmxlbmd0aCAtIDFdKQogICAgICA6IG5vcm1hbGl6ZVRva2VuKGl0ZW0uaW5zdGFsbGVkKTsKICAgIGNvbnN0IGF2YWlsYWJsZSA9IG5vcm1hbGl6ZVRva2VuKGl0ZW0uY3VycmVudF92ZXJzaW9uKSB8fCBub3JtYWxpemVUb2tlbihpdGVtLmxhdGVzdCk7CiAgICBpZiAoIWlkZW50IHx8ICFpbnN0YWxsZWQgfHwgIWF2YWlsYWJsZSB8fCBpbnN0YWxsZWQgPT09IGF2YWlsYWJsZSkgY29udGludWU7CiAgICBpZiAoIS9eW0EtWmEtejAtOV1bQS1aYS16MC05QCsuXy8tXSokLy50ZXN0KGlkZW50KSkgY29udGludWU7CiAgICBpZiAoaWRlbnQubGVuZ3RoID4gMTI4KSBjb250aW51ZTsKICAgIHJvd3MucHVzaCh7IG5hbWU6IGlkZW50LCBpZGVudCwgdmVyc2lvbjogaW5zdGFsbGVkLCBhdmFpbGFibGUsIHNvdXJjZTogJ2JyZXcnIH0pOwogIH0KICByZXR1cm4gcm93czsKfQoKZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIGxpc3RVcGRhdGVzKG9uTGluZT86IExvZ0ZuKTogUHJvbWlzZTxQYWNrYWdlW10+IHsKICBjb25zdCByZXN1bHQgPSBhd2FpdCBpbnZva2UoWydvdXRkYXRlZCcsICctLWpzb249djInXSwgb25MaW5lKTsKICByZXR1cm4gcGFyc2VPdXRkYXRlZChyZXN1bHQudGV4dCk7Cn0KCmV4cG9ydCBmdW5jdGlvbiBwYXJzZVNlYXJjaCh0ZXh0OiBzdHJpbmcpOiBQYWNrYWdlW10gewogIGNvbnN0IHJvd3M6IFBhY2thZ2VbXSA9IFtdOwogIGNvbnN0IHNlZW4gPSBuZXcgU2V0PHN0cmluZz4oKTsKICBmb3IgKGNvbnN0IHJhdyBvZiB0ZXh0LnNwbGl0KC9ccj9cbi8pKSB7CiAgICBjb25zdCBpZGVudCA9IHJhdy50cmltKCk7CiAgICBpZiAoIWlkZW50IHx8IGlkZW50LnN0YXJ0c1dpdGgoJz09PicpIHx8IGlkZW50LmluY2x1ZGVzKCcgJykpIGNvbnRpbnVlOwogICAgaWYgKCEvXltBLVphLXowLTldW0EtWmEtejAtOUArLl8vLV0qJC8udGVzdChpZGVudCkgfHwgaWRlbnQubGVuZ3RoID4gMTI4KSBjb250aW51ZTsKICAgIGlmIChzZWVuLmhhcyhpZGVudCkpIGNvbnRpbnVlOwogICAgc2Vlbi5hZGQoaWRlbnQpOwogICAgcm93cy5wdXNoKHsgbmFtZTogaWRlbnQsIGlkZW50LCB2ZXJzaW9uOiAnJywgYXZhaWxhYmxlOiAnJywgc291cmNlOiAnYnJldycgfSk7CiAgfQogIHJldHVybiByb3dzLnNsaWNlKDAsIDIwMCk7Cn0KCi8qKiBTYWx0LW9rdW51ciBwYWtldCBhcmFtYXPEsTsgc29yZ3UgemF0ZW4gSVBDIGthdG1hbsSxbmRhIGRvxJ9ydWxhbsSxci4gKi8KZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIHNlYXJjaChxdWVyeTogc3RyaW5nLCBvbkxpbmU/OiBMb2dGbik6IFByb21pc2U8UGFja2FnZVtdPiB7CiAgY29uc3QgcmVzdWx0ID0gYXdhaXQgaW52b2tlKFsnc2VhcmNoJywgcXVlcnldLCBvbkxpbmUsIDYwXzAwMCk7CiAgcmV0dXJuIHBhcnNlU2VhcmNoKHJlc3VsdC50ZXh0KTsKfQoKLyoqIEt1cnVsdW0vZ8O8bmNlbGxlbWUgacOnaW4gZ8O8dmVubGkga2ltbGlrIGRvxJ9ydWxhbWFzxLEgKCBQT1NJWCB5YXptYSBrYXBhbMSxeWtlbiBkZSBrdWxsYW7EsWzEsXIpLiAqLwpleHBvcnQgZnVuY3Rpb24gcmVxdWlyZUlkZW50KGlkZW50OiBzdHJpbmcpOiBzdHJpbmcgewogIGNvbnN0IHZhbHVlID0gU3RyaW5nKGlkZW50IHx8ICcnKS50cmltKCk7CiAgaWYgKCF2YWx1ZSB8fCB2YWx1ZS5sZW5ndGggPiAxMjggfHwgIS9eW0EtWmEtejAtOV1bQS1aYS16MC05QCsuXy8tXSokLy50ZXN0KHZhbHVlKSkgewogICAgdGhyb3cgbmV3IEVycm9yKG0oJ0hvbWVicmV3OiBnZcOnZXJzaXogcGFrZXQga2ltbGnEn2kuJywgJ0hvbWVicmV3OiBpbnZhbGlkIHBhY2thZ2UgaWRlbnRpZmllci4nKSk7CiAgfQogIHJldHVybiB2YWx1ZTsKfQo=
+import type { Package } from '../../shared/types';
+import { m } from '../i18n-main';
+import { LogFn, runCommand } from '../util';
+
+/** Homebrew çağrıları salt-okunur; kurulum/güncelleme komutları burada yok. */
+const TIMEOUT = 4 * 60 * 1000;
+const CANDIDATES = ['brew', '/opt/homebrew/bin/brew', '/usr/local/bin/brew'];
+
+async function invoke(args: string[], onLine?: LogFn, timeout = TIMEOUT) {
+  let lastError: Error | null = null;
+  for (const command of CANDIDATES) {
+    try {
+      const result = await runCommand(command, args, onLine, timeout);
+      if (result.code === 0) return result;
+      lastError = new Error(result.stderr || result.text || `exit ${result.code}`);
+    } catch (error) {
+      lastError = error as Error;
+    }
+  }
+  throw lastError ?? new Error('brew unavailable');
+}
+
+export async function status(): Promise<{ available: boolean; version: string }> {
+  try {
+    const result = await invoke(['--version'], undefined, 20_000);
+    const version = result.lines.find((line) => /^homebrew/i.test(line.trim()))?.trim()
+      || result.lines.find((line) => line.trim())?.trim()
+      || '';
+    return { available: true, version: version.slice(0, 80) };
+  } catch {
+    return { available: false, version: '' };
+  }
+}
+
+interface BrewOutdatedRow {
+  name?: unknown;
+  installed_versions?: unknown;
+  current_version?: unknown;
+  installed?: unknown;
+  latest?: unknown;
+}
+
+function normalizeToken(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function rowsFrom(value: unknown): BrewOutdatedRow[] {
+  if (Array.isArray(value)) return value as BrewOutdatedRow[];
+  if (!value || typeof value !== 'object') return [];
+  const record = value as Record<string, unknown>;
+  return [
+    ...(Array.isArray(record.formulae) ? record.formulae : []),
+    ...(Array.isArray(record.casks) ? record.casks : []),
+  ] as BrewOutdatedRow[];
+}
+
+/** `brew outdated --json=v2` çıktısından kurulu/son sürümleri çıkarır. */
+export function parseOutdated(text: string): Package[] {
+  const start = text.search(/[{[]/);
+  const end = Math.max(text.lastIndexOf('}'), text.lastIndexOf(']'));
+  if (start < 0 || end < start) return [];
+  let data: unknown;
+  try {
+    data = JSON.parse(text.slice(start, end + 1));
+  } catch {
+    return [];
+  }
+  const rows: Package[] = [];
+  for (const item of rowsFrom(data)) {
+    const ident = normalizeToken(item.name);
+    const installed = Array.isArray(item.installed_versions)
+      ? normalizeToken(item.installed_versions[item.installed_versions.length - 1])
+      : normalizeToken(item.installed);
+    const available = normalizeToken(item.current_version) || normalizeToken(item.latest);
+    if (!ident || !installed || !available || installed === available) continue;
+    if (!/^[A-Za-z0-9][A-Za-z0-9@+._/-]*$/.test(ident)) continue;
+    if (ident.length > 128) continue;
+    rows.push({ name: ident, ident, version: installed, available, source: 'brew' });
+  }
+  return rows;
+}
+
+export async function listUpdates(onLine?: LogFn): Promise<Package[]> {
+  const result = await invoke(['outdated', '--json=v2'], onLine);
+  return parseOutdated(result.text);
+}
+
+export function parseSearch(text: string): Package[] {
+  const rows: Package[] = [];
+  const seen = new Set<string>();
+  for (const raw of text.split(/\r?\n/)) {
+    const ident = raw.trim();
+    if (!ident || ident.startsWith('==>') || ident.includes(' ')) continue;
+    if (!/^[A-Za-z0-9][A-Za-z0-9@+._/-]*$/.test(ident) || ident.length > 128) continue;
+    if (seen.has(ident)) continue;
+    seen.add(ident);
+    rows.push({ name: ident, ident, version: '', available: '', source: 'brew' });
+  }
+  return rows.slice(0, 200);
+}
+
+/** Salt-okunur paket araması; sorgu zaten IPC katmanında doğrulanır. */
+export async function search(query: string, onLine?: LogFn): Promise<Package[]> {
+  const result = await invoke(['search', query], onLine, 60_000);
+  return parseSearch(result.text);
+}
+
+/** Kurulum/güncelleme için güvenli kimlik doğrulaması ( POSIX yazma kapalıyken de kullanılır). */
+export function requireIdent(ident: string): string {
+  const value = String(ident || '').trim();
+  if (!value || value.length > 128 || !/^[A-Za-z0-9][A-Za-z0-9@+._/-]*$/.test(value)) {
+    throw new Error(m('Homebrew: geçersiz paket kimliği.', 'Homebrew: invalid package identifier.'));
+  }
+  return value;
+}
