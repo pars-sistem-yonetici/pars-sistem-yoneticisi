@@ -4,6 +4,7 @@ import type { CleanResult, CleanTarget } from '../../shared/types';
 import { LogFn, directorySize, humanSize, isProtectedPath, isRuntimePath, isSafeEntry, removeTree, runCommand, runPowerShell } from '../util';
 import { appendCleanupLog, type CleanupLogEntry } from './cleanupLog';
 import { exclusionReason, isExcludedPath } from './exclusions';
+import { m, mf } from '../i18n-main';
 
 function env(name: string, fallback: string): string {
   return process.env[name] || fallback;
@@ -25,7 +26,7 @@ export function targetsWithDrives(drives: string[] = []): CleanTarget[] {
     items.push({
       key: `drive_temp_${letter}`,
       name: `${letter}: Temp`,
-      description: `${drive} sürücüsündeki kök Temp klasörü.`,
+      description: mf('{drive} sürücüsündeki kök Temp klasörü.', 'Root Temp folder on drive {drive}.', { drive }),
       dirs: [tempRoot], files: [], action: '', needsAdmin: true,
       size: 0, count: 0, available: true,
     });
@@ -88,35 +89,35 @@ export function targets(): CleanTarget[] {
   const explorer = path.join(local, 'Microsoft', 'Windows', 'Explorer');
 
   const items: CleanTarget[] = [
-    { key: 'user_temp', name: 'Kullanıcı Geçici Dosyaları', description: 'Uygulamaların oluşturduğu geçici dosyalar (%TEMP%).', dirs: [temp], files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false },
-    { key: 'windows_temp', name: 'Windows Geçici Dosyaları', description: 'Sistem genelindeki geçici dosyalar; bazıları açık uygulamalarca kullanılabilir.', dirs: [path.join(windows, 'Temp')], files: [], action: '', needsAdmin: true, size: 0, count: 0, available: false },
-    { key: 'thumbnails', name: 'Küçük Resim Önbelleği', description: 'Gezginin küçük resim/simge veritabanları; gerektiğinde yeniden oluşturulur.', dirs: [], files: [path.join(explorer, 'thumbcache_*.db'), path.join(explorer, 'iconcache_*.db')], action: '', needsAdmin: false, size: 0, count: 0, available: false },
-    { key: 'windows_update', name: 'Windows Update İndirmeleri', description: 'İndirilen güncelleme kurulum dosyaları; gerekirse yeniden indirilir.', dirs: [path.join(windows, 'SoftwareDistribution', 'Download')], files: [], action: '', needsAdmin: true, size: 0, count: 0, available: false },
-    { key: 'error_reports', name: 'Hata Raporları', description: 'Windows Error Reporting kuyruğu ve arşivi.', dirs: [
+    { key: 'user_temp', name: m('Kullanıcı Geçici Dosyaları', 'User Temporary Files'), description: m('Uygulamaların oluşturduğu geçici dosyalar (%TEMP%).', 'Temporary files created by applications (%TEMP%).'), dirs: [temp], files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false },
+    { key: 'windows_temp', name: m('Windows Geçici Dosyaları', 'Windows Temporary Files'), description: m('Sistem genelindeki geçici dosyalar; bazıları açık uygulamalarca kullanılabilir.', 'System-wide temporary files; some may be in use by open applications.'), dirs: [path.join(windows, 'Temp')], files: [], action: '', needsAdmin: true, size: 0, count: 0, available: false },
+    { key: 'thumbnails', name: m('Küçük Resim Önbelleği', 'Thumbnail Cache'), description: m('Gezginin küçük resim/simge veritabanları; gerektiğinde yeniden oluşturulur.', 'Explorer thumbnail/icon databases; recreated as needed.'), dirs: [], files: [path.join(explorer, 'thumbcache_*.db'), path.join(explorer, 'iconcache_*.db')], action: '', needsAdmin: false, size: 0, count: 0, available: false },
+    { key: 'windows_update', name: m('Windows Update İndirmeleri', 'Windows Update Downloads'), description: m('İndirilen güncelleme kurulum dosyaları; gerekirse yeniden indirilir.', 'Downloaded update installation files; can be downloaded again if needed.'), dirs: [path.join(windows, 'SoftwareDistribution', 'Download')], files: [], action: '', needsAdmin: true, size: 0, count: 0, available: false },
+    { key: 'error_reports', name: m('Hata Raporları', 'Error Reports'), description: m('Windows Error Reporting kuyruğu ve arşivi.', 'Windows Error Reporting queue and archive.'), dirs: [
       path.join(local, 'Microsoft', 'Windows', 'WER', 'ReportQueue'),
       path.join(local, 'Microsoft', 'Windows', 'WER', 'ReportArchive'),
       path.join(programData, 'Microsoft', 'Windows', 'WER', 'ReportQueue'),
       path.join(programData, 'Microsoft', 'Windows', 'WER', 'ReportArchive'),
     ], files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false },
-    { key: 'internet_cache', name: 'İnternet Önbelleği', description: 'WinINet geçici internet dosyaları.', dirs: [path.join(local, 'Microsoft', 'Windows', 'INetCache')], files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false },
+    { key: 'internet_cache', name: m('İnternet Önbelleği', 'Internet Cache'), description: m('WinINet geçici internet dosyaları.', 'WinINet temporary internet files.'), dirs: [path.join(local, 'Microsoft', 'Windows', 'INetCache')], files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false },
     {
-      key: 'delivery_optimization', name: 'Delivery Optimization Önbelleği',
-      description: 'Windows Update eşler arası indirme önbelleği; gerektiğinde yeniden indirilir.',
+      key: 'delivery_optimization', name: m('Delivery Optimization Önbelleği', 'Delivery Optimization Cache'),
+      description: m('Windows Update eşler arası indirme önbelleği; gerektiğinde yeniden indirilir.', 'Windows Update peer-to-peer download cache; can be downloaded again if needed.'),
       dirs: [path.join(local, 'Microsoft', 'Windows', 'DeliveryOptimization'), path.join(windows, 'SoftwareDistribution', 'DeliveryOptimization')],
       files: [], action: '', needsAdmin: true, size: 0, count: 0, available: false,
     },
     {
-      key: 'browser_cache', name: 'Tarayıcı Önbellekleri',
-      description: 'Yalnızca Edge/Chrome Cache, Code Cache, GPUCache ve Firefox cache2 klasörleri. Çerez, geçmiş ve parolalara dokunulmaz.',
+      key: 'browser_cache', name: m('Tarayıcı Önbellekleri', 'Browser Caches'),
+      description: m('Yalnızca Edge/Chrome Cache, Code Cache, GPUCache ve Firefox cache2 klasörleri. Çerez, geçmiş ve parolalara dokunulmaz.', 'Only Edge/Chrome Cache, Code Cache, GPUCache and Firefox cache2 folders. Cookies, history and passwords are untouched.'),
       dirs: browserCacheDirs(local), files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false,
     },
     {
-      key: 'developer_cache', name: 'Geliştirici Paket Önbellekleri',
-      description: 'npm, NuGet ve pip önbellekleri. Paketler gerektiğinde yeniden indirilir; proje klasörleri dahil edilmez.',
+      key: 'developer_cache', name: m('Geliştirici Paket Önbellekleri', 'Developer Package Caches'),
+      description: m('npm, NuGet ve pip önbellekleri. Paketler gerektiğinde yeniden indirilir; proje klasörleri dahil edilmez.', 'npm, NuGet and pip caches. Packages can be downloaded again if needed; project folders are not included.'),
       dirs: developerCacheDirs(local, home), files: [], action: '', needsAdmin: false, size: 0, count: 0, available: false,
     },
-    { key: 'dns', name: 'DNS Önbelleği', description: 'Çözülmüş alan adı kayıtlarını temizler (ipconfig /flushdns).', dirs: [], files: [], action: 'flushdns', needsAdmin: false, size: 0, count: 0, available: true },
-    { key: 'recycle', name: 'Geri Dönüşüm Kutusu', description: 'Silinmiş dosyaları kalıcı olarak kaldırır. GERİ ALINAMAZ!', dirs: [], files: [], action: 'recycle', needsAdmin: false, size: 0, count: 0, available: true },
+    { key: 'dns', name: m('DNS Önbelleği', 'DNS Cache'), description: m('Çözülmüş alan adı kayıtlarını temizler (ipconfig /flushdns).', 'Clears resolved domain name records (ipconfig /flushdns).'), dirs: [], files: [], action: 'flushdns', needsAdmin: false, size: 0, count: 0, available: true },
+    { key: 'recycle', name: m('Geri Dönüşüm Kutusu', 'Recycle Bin'), description: m('Silinmiş dosyaları kalıcı olarak kaldırır. GERİ ALINAMAZ!', 'Permanently removes deleted files. CANNOT BE UNDONE!'), dirs: [], files: [], action: 'recycle', needsAdmin: false, size: 0, count: 0, available: true },
   ];
 
   for (const item of items) {
@@ -179,7 +180,7 @@ export function scan(items: CleanTarget[], onLine?: LogFn): CleanTarget[] {
     target.size = total;
     target.count = count;
     target.available = count > 0;
-    onLine?.(`Taranıyor: ${target.name} — ${count} öğe, ${humanSize(total)}`);
+    onLine?.(mf('Taranıyor: {name} — {count} öğe, {size}', 'Scanning: {name} — {count} items, {size}', { name: target.name, count, size: humanSize(total) }));
   }
   return items;
 }
@@ -201,7 +202,7 @@ export async function clean(items: CleanTarget[], onLine?: LogFn, recycleDrives:
     if (target.action === 'flushdns') {
       const result = await runCommand('ipconfig', ['/flushdns'], onLine, 60_000);
       ok = result.code === 0;
-      message = ok ? 'DNS önbelleği temizlendi' : (result.text.trim().slice(0, 200) || 'ipconfig hatası');
+      message = ok ? m('DNS önbelleği temizlendi', 'DNS cache flushed') : (result.text.trim().slice(0, 200) || m('ipconfig hatası', 'ipconfig error'));
     } else if (target.action === 'recycle') {
       const list = letters.length ? letters : [(env('SystemDrive', 'C:').replace(/[:\\/]/g, '') || 'C').toUpperCase()];
       const driveList = list.map((letter) => `'${letter}'`).join(', ');
@@ -215,12 +216,12 @@ if ($hepsiBasarili) { 'OK' } else { 'HATA' }
 `;
       const result = await runPowerShell(script, onLine, 120_000);
       ok = /OK/.test(result.text);
-      message = ok ? `${list.join(', ')}: Geri Dönüşüm Kutusu boşaltıldı` : 'Geri Dönüşüm Kutusu boşaltılamadı';
+      message = ok ? mf('{drives}: Geri Dönüşüm Kutusu boşaltıldı', '{drives}: Recycle Bin emptied', { drives: list.join(', ') }) : m('Geri Dönüşüm Kutusu boşaltılamadı', 'Could not empty the Recycle Bin');
     } else {
       for (const entry of entries(target)) {
         try {
           if (isExcludedPath(entry.filePath)) {
-            onLine?.(`ATLANDI: ${entry.filePath} — ${exclusionReason(entry.filePath)}`);
+            onLine?.(mf('ATLANDI: {path} — {reason}', 'SKIPPED: {path} — {reason}', { path: entry.filePath, reason: exclusionReason(entry.filePath) }));
             continue;
           }
           if (isProtectedPath(entry.filePath) || isRuntimePath(entry.filePath)) continue;
@@ -233,12 +234,12 @@ if ($hepsiBasarili) { 'OK' } else { 'HATA' }
           }
         } catch (error) {
           failures += 1;
-          if (failures <= 5) onLine?.(`ATLANDI: ${entry.filePath} — ${(error as Error).message.slice(0, 120)}`);
+          if (failures <= 5) onLine?.(mf('ATLANDI: {path} — {reason}', 'SKIPPED: {path} — {reason}', { path: entry.filePath, reason: (error as Error).message.slice(0, 120) }));
         }
       }
       ok = failures === 0;
-      message = `${humanSize(freed)} alan açıldı`;
-      if (failures) message += `, ${failures} öğe atlandı`;
+      message = mf('{size} alan açıldı', '{size} of disk space freed', { size: humanSize(freed) });
+      if (failures) message += mf(', {count} öğe atlandı', ', {count} items skipped', { count: failures });
     }
 
     results.push({ key: target.key, name: target.name, ok, freed, message });
@@ -255,7 +256,7 @@ if ($hepsiBasarili) { 'OK' } else { 'HATA' }
       files: target.files,
       ...(target.action === 'recycle' ? { recycleDrives: letters } : {}),
     });
-    onLine?.(`${ok ? 'TAMAM' : 'UYARI'}: ${target.name} — ${message}`);
+    onLine?.(mf('{status}: {name} — {message}', '{status}: {name} — {message}', { status: ok ? m('TAMAM', 'OK') : m('UYARI', 'WARNING'), name: target.name, message }));
   }
   appendCleanupLog(logEntries);
   return results;

@@ -1,6 +1,7 @@
 import path from 'path';
 import os from 'os';
 import { powershellJson, psLiteral } from '../util';
+import { m, mf } from '../i18n-main';
 import { isExcludedPath } from './exclusions';
 
 export interface FirewallRule {
@@ -72,7 +73,8 @@ function isUnsignedSignature(signature: string): boolean {
   return value === 'notsigned' || value === 'hashmismatch' || value === 'unknown';
 }
 
-const SCAN_SCRIPT = String.raw`
+function scanScript(): string {
+  return String.raw`
 $ErrorActionPreference = 'SilentlyContinue'
 $findings = [System.Collections.Generic.List[object]]::new()
 $rules = @()
@@ -130,7 +132,7 @@ foreach ($rule in $rules) {
     try { $ruleProfile = [string]$rule.Profile } catch { $ruleProfile = '' }
 
     $fileExists = $false
-    $signature = 'Yok'
+    $signature = ${psLiteral(m('Yok', 'None'))}
     if (-not $programMissing) {
       $expanded = $programTrimmed.Trim([char]34)
       try { $expanded = [Environment]::ExpandEnvironmentVariables($expanded).Trim() } catch { $expanded = $expanded.Trim() }
@@ -153,7 +155,7 @@ foreach ($rule in $rules) {
           $sigCache[$cacheKey] = $signature
         }
       } else {
-        $signature = 'Dosya eksik'
+        $signature = ${psLiteral(m('Dosya eksik', 'File missing'))}
       }
     }
 
@@ -187,9 +189,10 @@ try {
 }
 $json
 `;
+}
 
 export async function scanFirewall(): Promise<FirewallRule[]> {
-  const raw = await powershellJson<unknown>(SCAN_SCRIPT, undefined, 180_000);
+  const raw = await powershellJson<unknown>(scanScript(), undefined, 180_000);
   const rows: FirewallScanRow[] = Array.isArray(raw)
     ? (raw as FirewallScanRow[])
     : typeof raw === 'object' && raw !== null
@@ -219,10 +222,10 @@ export async function scanFirewall(): Promise<FirewallRule[]> {
     const hashMismatch = lower(signature) === 'hashmismatch';
 
     const reasons: string[] = [];
-    if (broad) reasons.push('Kapsam çok geniş');
-    if (missingProgram) reasons.push('Program belirtilmemiş');
-    if (unsigned) reasons.push('İmzasız ikili');
-    if (missingFile) reasons.push('Dosya yolu eksik');
+    if (broad) reasons.push(m('Kapsam çok geniş', 'Scope too broad'));
+    if (missingProgram) reasons.push(m('Program belirtilmemiş', 'No program specified'));
+    if (unsigned) reasons.push(m('İmzasız ikili', 'Unsigned binary'));
+    if (missingFile) reasons.push(m('Dosya yolu eksik', 'File path missing'));
     if (reasons.length === 0) continue;
     if (program && !isMissingProgram(program) && isExcludedPath(program)) continue;
 
@@ -263,21 +266,21 @@ function New-CommandJson([bool]$ok, [string]$message) {
   try {
     ConvertTo-Json -InputObject ([pscustomobject]@{ ok = $ok; message = $message }) -Depth 3 -Compress
   } catch {
-    '{"ok":false,"message":"JSON çıktısı oluşturulamadı."}'
+    '{"ok":false,"message":"${m('JSON çıktısı oluşturulamadı.', 'Could not create JSON output.')}"}'
   }
 }
 try {
   # Bu cmdlet Enabled değerini(System.Boolean yerine) NetSecurity.Enabled enum'u olarak bekliyor.
   Set-NetFirewallRule -Name ${psLiteral(id)} -Enabled ${enabled ? 'True' : 'False'} -ErrorAction Stop
-  New-CommandJson $true 'Kural güncellendi.'
+  New-CommandJson $true ${psLiteral(m('Kural güncellendi.', 'Rule updated.'))}
 } catch {
-  New-CommandJson $false ('Kural güncellenemedi: ' + $_.Exception.Message)
+  New-CommandJson $false (${psLiteral(m('Kural güncellenemedi: ', 'Could not update rule: '))} + $_.Exception.Message)
 }
 `;
 
   const result = await powershellJson<FirewallCommandResult>(script, undefined, 30_000);
-  if (result.ok !== true) throw new Error(result.message || 'Kural güncellenemedi.');
-  return enabled ? 'Kural etkinleştirildi.' : 'Kural devre dışı bırakıldı.';
+  if (result.ok !== true) throw new Error(result.message || m('Kural güncellenemedi.', 'Could not update rule.'));
+  return enabled ? m('Kural etkinleştirildi.', 'Rule enabled.') : m('Kural devre dışı bırakıldı.', 'Rule disabled.');
 }
 
 /** Kural yedeklerinin yazıldığı uygulama klasörü. */
@@ -302,7 +305,7 @@ function New-CommandJson([bool]$ok, [string]$message) {
   try {
     ConvertTo-Json -InputObject ([pscustomobject]@{ ok = $ok; message = $message }) -Depth 3 -Compress
   } catch {
-    '{"ok":false,"message":"JSON çıktısı oluşturulamadı."}'
+    '{"ok":false,"message":"${m('JSON çıktısı oluşturulamadı.', 'Could not create JSON output.')}"}'
   }
 }
 $ruleName = ${psLiteral(id)}
@@ -323,20 +326,20 @@ try {
   }
   $json = ConvertTo-Json -InputObject $backupObject -Depth 10
   [System.IO.File]::WriteAllText($backupFile, $json)
-  if (-not [System.IO.File]::Exists($backupFile)) { throw 'Yedek dosyası doğrulanamadı.' }
+  if (-not [System.IO.File]::Exists($backupFile)) { throw ${psLiteral(m('Yedek dosyası doğrulanamadı.', 'Backup file could not be verified.'))} }
 } catch {
-  New-CommandJson $false ('Yedek alınamadı; kural silinmedi: ' + $_.Exception.Message)
+  New-CommandJson $false (${psLiteral(m('Yedek alınamadı; kural silinmedi: ', 'Backup could not be created; rule was not deleted: '))} + $_.Exception.Message)
   exit
 }
 try {
   Remove-NetFirewallRule -Name $ruleName -ErrorAction Stop
-  New-CommandJson $true 'Kural silindi.'
+  New-CommandJson $true ${psLiteral(m('Kural silindi.', 'Rule deleted.'))}
 } catch {
-  New-CommandJson $false ('Kural silinemedi: ' + $_.Exception.Message)
+  New-CommandJson $false (${psLiteral(m('Kural silinemedi: ', 'Could not delete rule: '))} + $_.Exception.Message)
 }
 `;
 
   const result = await powershellJson<FirewallCommandResult>(script, undefined, 60_000);
-  if (result.ok !== true) throw new Error(result.message || 'Kural silinemedi.');
-  return `Kural silindi. Yedek: ${backupName}`;
+  if (result.ok !== true) throw new Error(result.message || m('Kural silinemedi.', 'Could not delete rule.'));
+  return mf('Kural silindi. Yedek: {backupName}', 'Rule deleted. Backup: {backupName}', { backupName });
 }

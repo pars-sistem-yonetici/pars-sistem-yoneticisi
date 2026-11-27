@@ -2,6 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import type { PrereqActionResult, Prerequisite, PrerequisiteId } from '../../shared/types';
+import { m, mf } from '../i18n-main';
 import { LogFn, commandCandidates, parsePowerShellJson, runCommand, runPowerShell } from '../util';
 import * as winget from './winget';
 
@@ -30,13 +31,80 @@ async function runPsFile(script: string, onLine?: LogFn, timeout = 10 * 60 * 100
   }
 }
 
+/** PowerShell betiklerinin Türkçe satırlarını yalnızca gösterimde çevirir. */
+function translatedPrereqDetail(detail: string): string {
+  const text = detail || '';
+  switch (text) {
+    case 'Visual C++ 2015-2022 yeniden dağıtılabilir paketi indiriliyor...':
+      return m('Visual C++ 2015-2022 yeniden dağıtılabilir paketi indiriliyor...', 'Downloading the Visual C++ 2015-2022 redistributable package...');
+    case 'İndirilen dosyanın Microsoft imzası doğrulanamadı; kurulum yapılmadı.':
+      return m('İndirilen dosyanın Microsoft imzası doğrulanamadı; kurulum yapılmadı.', 'The downloaded file could not be verified as signed by Microsoft; installation was skipped.');
+    case 'İmza doğrulandı, sessiz kurulum başlatılıyor...':
+      return m('İmza doğrulandı, sessiz kurulum başlatılıyor...', 'Signature verified, starting silent installation...');
+    case 'Chocolatey kurulum betiği indiriliyor...':
+      return m('Chocolatey kurulum betiği indiriliyor...', 'Downloading the Chocolatey installation script...');
+    case 'choco.exe kurulum sonrası doğrulanamadı.':
+      return m('choco.exe kurulum sonrası doğrulanamadı.', 'choco.exe could not be verified after installation.');
+    case 'Scoop kurulum betiği indiriliyor...':
+      return m('Scoop kurulum betiği indiriliyor...', 'Downloading the Scoop installation script...');
+    case 'scoop.cmd kurulum sonrası doğrulanamadı.':
+      return m('scoop.cmd kurulum sonrası doğrulanamadı.', 'scoop.cmd could not be verified after installation.');
+    case 'Node.js sürüm listesi alınıyor...':
+      return m('Node.js sürüm listesi alınıyor...', 'Fetching the Node.js version list...');
+    case 'Node.js x64 MSI sürümü bulunamadı.':
+      return m('Node.js x64 MSI sürümü bulunamadı.', 'No Node.js x64 MSI version was found.');
+    case 'Node.js MSI SHA-256 doğrulaması başarısız; kurulum yapılmadı.':
+      return m('Node.js MSI SHA-256 doğrulaması başarısız; kurulum yapılmadı.', 'Node.js MSI SHA-256 verification failed; installation was skipped.');
+    case 'Node.js MSI imzası geçerli değil; kurulum yapılmadı.':
+      return m('Node.js MSI imzası geçerli değil; kurulum yapılmadı.', 'The Node.js MSI signature is invalid; installation was skipped.');
+    case 'npm kurulum sonrası doğrulanamadı.':
+      return m('npm kurulum sonrası doğrulanamadı.', 'npm could not be verified after installation.');
+    case 'winget için Microsoft.WinGet.Client modülü kontrol ediliyor...':
+      return m('winget için Microsoft.WinGet.Client modülü kontrol ediliyor...', 'Checking the Microsoft.WinGet.Client module for winget...');
+    case 'NuGet paket sağlayıcısı kuruluyor...':
+      return m('NuGet paket sağlayıcısı kuruluyor...', 'Installing the NuGet package provider...');
+    case 'Microsoft.WinGet.Client modülü indiriliyor...':
+      return m('Microsoft.WinGet.Client modülü indiriliyor...', 'Downloading the Microsoft.WinGet.Client module...');
+    case 'winget bileşenleri onarılıyor (Repair-WinGetPackageManager)...':
+      return m('winget bileşenleri onarılıyor (Repair-WinGetPackageManager)...', 'Repairing winget components (Repair-WinGetPackageManager)...');
+    case 'winget.exe hâlâ bulunamadı.':
+      return m('winget.exe hâlâ bulunamadı.', 'winget.exe still could not be found.');
+  }
+  const installCode = text.match(/^Kurulum kodu: (.+)$/);
+  if (installCode) return mf('Kurulum kodu: {code}', 'Installation exit code: {code}', { code: installCode[1] });
+  const nodeDownload = text.match(/^Node.js indiriliyor: (.+)$/);
+  if (nodeDownload) return mf('Node.js indiriliyor: {file}', 'Downloading Node.js: {file}', { file: nodeDownload[1] });
+  const nodeCode = text.match(/^Node.js kurulum kodu: (.+)$/);
+  if (nodeCode) return mf('Node.js kurulum kodu: {code}', 'Node.js installation exit code: {code}', { code: nodeCode[1] });
+  return detail;
+}
+
+/** OK/OK_REBOOT/HATA: protokolüne dokunmadan yalnızca görüntülenen satırları çevirir. */
+function translatedPrereqLog(onLine?: LogFn): LogFn | undefined {
+  if (!onLine) return undefined;
+  return (line) => {
+    const error = line.trim().match(/^HATA:\s*(.*)$/i);
+    if (error) {
+      onLine(mf('HATA: {detail}', 'ERROR: {detail}', { detail: translatedPrereqDetail(error[1]) }));
+      return;
+    }
+    onLine(translatedPrereqDetail(line));
+  };
+}
+
 function parseResult(code: number, lines: string[], fallback: string): PrereqActionResult {
   const last = [...lines].reverse().find((line) => line.trim())?.trim() || fallback;
   if (/^OK(?:_REBOOT)?$/i.test(last)) {
-    return { id: 'winget', ok: true, rebootRequired: /REBOOT/i.test(last), message: 'Bileşen kuruldu.' };
+    return { id: 'winget', ok: true, rebootRequired: /REBOOT/i.test(last), message: m('Bileşen kuruldu.', 'Component installed.') };
   }
-  if (/^HATA:/i.test(last)) return { id: 'winget', ok: false, message: last.replace(/^HATA:\s*/i, '') };
-  return { id: 'winget', ok: code === 0, message: last || fallback, rebootRequired: /3010/.test(last) };
+  if (/^HATA:/i.test(last)) {
+    return { id: 'winget', ok: false, message: translatedPrereqDetail(last.replace(/^HATA:\s*/i, '')) };
+  }
+  return {
+    id: 'winget', ok: code === 0,
+    message: last ? translatedPrereqDetail(last) : fallback,
+    rebootRequired: /3010/.test(last),
+  };
 }
 
 const VC_REDIST_SCRIPT = String.raw`
@@ -191,10 +259,10 @@ export async function probeManager(source: 'choco' | 'npm' | 'scoop'): Promise<{
 
 export async function scanPrerequisites(): Promise<Prerequisite[]> {
   const [wingetResult, powershellResult, vcResult, chocoResult, npmResult, scoopResult] = await Promise.all([
-    winget.version().catch(() => ({ available: false, version: 'denetlenemedi' })),
+    winget.version().catch(() => ({ available: false, version: m('denetlenemedi', 'not checked') })),
     runPowerShell('[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\n[System.Version]$v = $PSVersionTable.PSVersion; $v.ToString()', undefined, 30_000)
-      .then((result) => result.lines.find((line) => /^\d+\.\d+/.test(line.trim()))?.trim() || 'bilinmiyor')
-      .catch(() => 'bilinmiyor'),
+      .then((result) => result.lines.find((line) => /^\d+\.\d+/.test(line.trim()))?.trim() || m('bilinmiyor', 'unknown'))
+      .catch(() => m('bilinmiyor', 'unknown')),
     runPowerShell(String.raw`
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $paths = @(
@@ -221,19 +289,28 @@ foreach ($p in $paths) {
   const psMajor = Number(powershellResult.split('.')[0]) || 0;
   const managerRows: Prerequisite[] = [
     {
-      id: 'choco', name: 'Chocolatey', description: 'Toplu ve sessiz uygulama kurulumları için paket yöneticisi.',
+      id: 'choco', name: 'Chocolatey',
+      description: m('Toplu ve sessiz uygulama kurulumları için paket yöneticisi.', 'Package manager for bulk and silent application installations.'),
       required: false, installed: chocoResult.available, version: chocoResult.version, installable: true, bundled: false,
-      message: chocoResult.available ? 'Kurulu.' : 'Kurulu değil; resmi kurulum betiğiyle arka planda kurulabilir.',
+      message: chocoResult.available
+        ? m('Kurulu.', 'Installed.')
+        : m('Kurulu değil; resmi kurulum betiğiyle arka planda kurulabilir.', 'Not installed; it can be installed in the background with the official script.'),
     },
     {
-      id: 'npm', name: 'npm (Node.js)', description: 'Node.js tabanlı araçların kurulması için gerekir.',
+      id: 'npm', name: 'npm (Node.js)',
+      description: m('Node.js tabanlı araçların kurulması için gerekir.', 'Required for installing Node.js-based tools.'),
       required: false, installed: npmResult.available, version: npmResult.version, installable: true, bundled: false,
-      message: npmResult.available ? 'Kurulu.' : 'Kurulu değil; Node.js LTS MSI imza/SHA-256 doğrulamalı kurulabilir.',
+      message: npmResult.available
+        ? m('Kurulu.', 'Installed.')
+        : m('Kurulu değil; Node.js LTS MSI imza/SHA-256 doğrulamalı kurulabilir.', 'Not installed; it can be installed from a signature- and SHA-256-verified Node.js LTS MSI.'),
     },
     {
-      id: 'scoop', name: 'Scoop', description: 'Kullanıcı alanında taşınabilir uygulama kurulumları için paket yöneticisi.',
+      id: 'scoop', name: 'Scoop',
+      description: m('Kullanıcı alanında taşınabilir uygulama kurulumları için paket yöneticisi.', 'Package manager for portable per-user application installations.'),
       required: false, installed: scoopResult.available, version: scoopResult.version, installable: true, bundled: false,
-      message: scoopResult.available ? 'Kurulu.' : 'Kurulu değil; resmi kurulum betiğiyle arka planda kurulabilir.',
+      message: scoopResult.available
+        ? m('Kurulu.', 'Installed.')
+        : m('Kurulu değil; resmi kurulum betiğiyle arka planda kurulabilir.', 'Not installed; it can be installed in the background with the official script.'),
     },
   ];
 
@@ -241,67 +318,81 @@ foreach ($p in $paths) {
     {
       id: 'winget',
       name: 'winget (App Installer)',
-      description: 'Uygulama kurma, kaldırma ve güncelleme işlemleri için gerekir.',
+      description: m('Uygulama kurma, kaldırma ve güncelleme işlemleri için gerekir.', 'Required for installing, removing, and updating applications.'),
       required: true,
       installed: wingetResult.available,
       version: wingetResult.version,
       installable: true,
       bundled: true,
-      message: wingetResult.available ? 'Kullanılabilir.' : 'Eksik; gömülü onarım betiğiyle kurulabilir.',
+      message: wingetResult.available
+        ? m('Kullanılabilir.', 'Available.')
+        : m('Eksik; gömülü onarım betiğiyle kurulabilir.', 'Missing; it can be installed with the bundled repair script.'),
     },
     ...managerRows,
     {
       id: 'powershell',
       name: 'Windows PowerShell 5.1',
-      description: 'Sistem denetimleri ve yedekleme işlemleri için gerekir.',
+      description: m('Sistem denetimleri ve yedekleme işlemleri için gerekir.', 'Required for system checks and backup operations.'),
       required: true,
       installed: psMajor >= 5,
       version: powershellResult,
       installable: false,
       bundled: false,
-      message: psMajor >= 5 ? 'Kullanılabilir.' : 'Windows 10/11 ile birlikte gelir; elle güncellenmelidir.',
+      message: psMajor >= 5
+        ? m('Kullanılabilir.', 'Available.')
+        : m('Windows 10/11 ile birlikte gelir; elle güncellenmelidir.', 'Included with Windows 10/11; it must be updated manually.'),
     },
     {
       id: 'vcredist',
       name: 'Visual C++ 2015-2022 x64',
-      description: 'Bazı kurulum paketleri ve yerel bileşenler için çalışma zamanı sağlar.',
+      description: m('Bazı kurulum paketleri ve yerel bileşenler için çalışma zamanı sağlar.', 'Provides a runtime for some installers and native components.'),
       required: false,
       installed: Boolean(vcResult.installed),
       version: vcResult.version || '',
       installable: true,
       bundled: false,
-      message: vcResult.installed ? 'Kurulu.' : 'Kurulu değil; Microsoft sitesinden indirilip sessizce kurulabilir.',
+      message: vcResult.installed
+        ? m('Kurulu.', 'Installed.')
+        : m('Kurulu değil; Microsoft sitesinden indirilip sessizce kurulabilir.', 'Not installed; it can be downloaded from Microsoft and installed silently.'),
     },
   ];
 }
 
 export async function installPrerequisite(id: PrerequisiteId, onLine?: LogFn): Promise<PrereqActionResult> {
   if (id === 'powershell') {
-    return { id, ok: false, message: 'PowerShell 5.1 otomatik kurulamaz; Windows güncellemelerini kullanın.' };
+    return {
+      id, ok: false,
+      message: m('PowerShell 5.1 otomatik kurulamaz; Windows güncellemelerini kullanın.', 'PowerShell 5.1 cannot be installed automatically; use Windows updates.'),
+    };
   }
   if (id === 'winget') {
     try {
       const script = fs.readFileSync(bundledScript('install-winget.ps1'), 'utf8');
-      const result = await runPsFile(script, onLine);
-      const parsed = parseResult(result.code, result.lines, 'winget kurulumu tamamlanamadı.');
+      const result = await runPsFile(script, translatedPrereqLog(onLine));
+      const parsed = parseResult(result.code, result.lines, m('winget kurulumu tamamlanamadı.', 'winget installation could not be completed.'));
       parsed.id = id;
       if (!parsed.ok) return parsed;
       const check = await winget.version();
       return check.available
-        ? { id, ok: true, message: 'winget kuruldu ve doğrulandı.' }
-        : { id, ok: false, message: 'Kurulum tamamlandı ancak winget doğrulanamadı: ' + check.version };
+        ? { id, ok: true, message: m('winget kuruldu ve doğrulandı.', 'winget installed and verified.') }
+        : {
+          id, ok: false,
+          message: mf('Kurulum tamamlandı ancak winget doğrulanamadı: {version}', 'Installation completed but winget could not be verified: {version}', { version: check.version }),
+        };
     } catch (error) {
-      return { id, ok: false, message: (error as Error).message };
+      return { id, ok: false, message: translatedPrereqDetail((error as Error).message) };
     }
   }
   const script = MANAGER_SCRIPTS[id] || VC_REDIST_SCRIPT;
   try {
-    const result = await runPsFile(script, onLine, 15 * 60 * 1000);
-    const parsed = parseResult(result.code, result.lines, 'Bileşen kurulumu tamamlanamadı.');
-    const rebootMessage = parsed.rebootRequired ? 'Kuruldu; yeniden başlatma gerekiyor.' : 'Kuruldu ve doğrulandı.';
+    const result = await runPsFile(script, translatedPrereqLog(onLine), 15 * 60 * 1000);
+    const parsed = parseResult(result.code, result.lines, m('Bileşen kurulumu tamamlanamadı.', 'Component installation could not be completed.'));
+    const rebootMessage = parsed.rebootRequired
+      ? m('Kuruldu; yeniden başlatma gerekiyor.', 'Installed; a restart is required.')
+      : m('Kuruldu ve doğrulandı.', 'Installed and verified.');
     return { ...parsed, id, message: parsed.ok ? rebootMessage : parsed.message };
   } catch (error) {
-    return { id, ok: false, message: (error as Error).message };
+    return { id, ok: false, message: translatedPrereqDetail((error as Error).message) };
   }
 }
 
@@ -311,7 +402,7 @@ export async function installMissingManagers(onLine?: LogFn): Promise<PrereqActi
   const missing = list.filter((item) => MANAGER_IDS.includes(item.id) && item.installable && !item.installed);
   const results: PrereqActionResult[] = [];
   for (const item of missing) {
-    onLine?.(`Kurumsal sessiz kurulum: ${item.name}`);
+    onLine?.(mf('Kurumsal sessiz kurulum: {name}', 'Enterprise silent installation: {name}', { name: item.name }));
     results.push(await installPrerequisite(item.id, onLine));
   }
   return results;

@@ -314,13 +314,18 @@ export function recKey(item: RecommendedSoftware): string {
   return `${item.source || 'winget'}:${item.ident}`;
 }
 
+/**
+ * Katalog kartlarında tek renkli Simple Icons yerine sitenin gerçek, renkli
+ * favicon'unu kullanır. Doğrudan verilen renkli ikonlar (ör. Wikimedia) korunur.
+ */
 export function favicon(item: RecommendedSoftware): string | undefined {
-  if (item.icon) return item.icon;
-  if (!item.homepage) return undefined;
+  const monochrome = item.icon?.includes('cdn.jsdelivr.net/npm/simple-icons');
+  if (item.icon && !monochrome) return item.icon;
+  if (!item.homepage) return item.icon;
   try {
     const host = new URL(item.homepage).hostname;
-    return `https://www.google.com/s2/favicons?domain=${host}&sz=64`;
+    return `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
   } catch {
-    return undefined;
+    return item.icon;
   }
 }

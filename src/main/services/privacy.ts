@@ -4,6 +4,7 @@ import path from 'path';
 import { app } from 'electron';
 import type { PrivacyActionResult, PrivacyTweak } from '../../shared/types';
 import { LogFn, powershellJson, psLiteral, runPowerShell } from '../util';
+import { m } from '../i18n-main';
 
 interface TweakDefinition {
   id: string;
@@ -20,8 +21,8 @@ interface TweakDefinition {
 const DEFINITIONS: TweakDefinition[] = [
   {
     id: 'telemetry',
-    title: 'Telemetriyi en aza indir',
-    description: 'Windows tanılama verisi gönderimini temel düzeye çeker (HKLM ilke ayarı, yönetici gerektirir).',
+    title: m('Telemetriyi en aza indir', 'Minimize telemetry'),
+    description: m('Windows tanılama verisi gönderimini temel düzeye çeker (HKLM ilke ayarı, yönetici gerektirir).', 'Reduces Windows diagnostic data submission to the basic level (HKLM policy setting, requires administrator rights).'),
     category: 'telemetry',
     hive: 'HKLM',
     location: 'SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection',
@@ -30,8 +31,8 @@ const DEFINITIONS: TweakDefinition[] = [
   },
   {
     id: 'advertising',
-    title: 'Reklam kimliğini kapat',
-    description: 'Uygulamaların kişiselleştirilmiş reklam için reklam kimliğini kullanmasını engeller.',
+    title: m('Reklam kimliğini kapat', 'Turn off the advertising ID'),
+    description: m('Uygulamaların kişiselleştirilmiş reklam için reklam kimliğini kullanmasını engeller.', 'Prevents apps from using the advertising ID for personalized ads.'),
     category: 'privacy',
     hive: 'HKCU',
     location: 'Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo',
@@ -40,8 +41,8 @@ const DEFINITIONS: TweakDefinition[] = [
   },
   {
     id: 'web-search',
-    title: 'Arama önerilerini kapat',
-    description: 'Başlat menüsü aramasında web sonuçlarını ve Bing önerilerini gizler.',
+    title: m('Arama önerilerini kapat', 'Turn off search suggestions'),
+    description: m('Başlat menüsü aramasında web sonuçlarını ve Bing önerilerini gizler.', 'Hides web results and Bing suggestions from Start menu search.'),
     category: 'privacy',
     hive: 'HKCU',
     location: 'Software\\Microsoft\\Windows\\CurrentVersion\\Search',
@@ -50,8 +51,8 @@ const DEFINITIONS: TweakDefinition[] = [
   },
   {
     id: 'widgets',
-    title: 'Widget panelini kapat',
-    description: 'Windows 11 görev çubuğundaki Widgets/Haberler düğmesini gizler.',
+    title: m('Widget panelini kapat', 'Turn off the Widgets panel'),
+    description: m('Windows 11 görev çubuğundaki Widgets/Haberler düğmesini gizler.', 'Hides the Widgets/News button on the Windows 11 taskbar.'),
     category: 'interface',
     hive: 'HKCU',
     location: 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced',
@@ -60,8 +61,8 @@ const DEFINITIONS: TweakDefinition[] = [
   },
   {
     id: 'news',
-    title: 'Haber ve ilgi alanlarını kapat',
-    description: 'Görev çubuğundaki haber akışını devre dışı bırakır.',
+    title: m('Haber ve ilgi alanlarını kapat', 'Turn off News and Interests'),
+    description: m('Görev çubuğundaki haber akışını devre dışı bırakır.', 'Disables the news feed on the taskbar.'),
     category: 'interface',
     hive: 'HKCU',
     location: 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced',
@@ -70,8 +71,8 @@ const DEFINITIONS: TweakDefinition[] = [
   },
   {
     id: 'extensions',
-    title: 'Dosya uzantılarını göster',
-    description: 'Bilinen dosya türlerinin uzantılarını gizlemeyi kaldırır; zararlı çift uzantıları görünür kılar.',
+    title: m('Dosya uzantılarını göster', 'Show file extensions'),
+    description: m('Bilinen dosya türlerinin uzantılarını gizlemeyi kaldırır; zararlı çift uzantıları görünür kılar.', 'Stops hiding extensions for known file types, making malicious double extensions visible.'),
     category: 'interface',
     hive: 'HKCU',
     location: 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced',
@@ -80,8 +81,8 @@ const DEFINITIONS: TweakDefinition[] = [
   },
   {
     id: 'hidden',
-    title: 'Gizli dosyaları göster',
-    description: 'Gizli dosya ve klasörleri Gezgin’de görünür yapar.',
+    title: m('Gizli dosyaları göster', 'Show hidden files'),
+    description: m('Gizli dosya ve klasörleri Gezgin’de görünür yapar.', 'Makes hidden files and folders visible in File Explorer.'),
     category: 'interface',
     hive: 'HKCU',
     location: 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced',
@@ -92,7 +93,7 @@ const DEFINITIONS: TweakDefinition[] = [
 
 function definition(id: string): TweakDefinition {
   const found = DEFINITIONS.find((item) => item.id === id);
-  if (!found) throw new Error('Bilinmeyen gizlilik ayarı.');
+  if (!found) throw new Error(m('Bilinmeyen gizlilik ayarı.', 'Unknown privacy setting.'));
   return found;
 }
 
@@ -159,7 +160,7 @@ function backupRegistry(def: TweakDefinition, stamp: string): string {
   const target = `${def.hive}\\${def.location}`;
   const regFile = path.join(folder, `${def.id}_${stamp}.reg`);
   const exportResult = spawnSync('reg.exe', ['export', target, regFile, '/y'], { windowsHide: true });
-  if (exportResult.status !== 0 || !fs.existsSync(regFile)) throw new Error('Kayıt defteri yedeği alınamadı; değişiklik yapılmadı.');
+  if (exportResult.status !== 0 || !fs.existsSync(regFile)) throw new Error(m('Kayıt defteri yedeği alınamadı; değişiklik yapılmadı.', 'Registry backup failed; no changes were made.'));
   return regFile;
 }
 
@@ -196,7 +197,7 @@ export async function setPrivacy(tweak: PrivacyTweak, apply: boolean, onLine?: L
       : `Remove-ItemProperty -Path 'Registry::${hivePath.replace(/'/g, "''")}' -Name ${psLiteral(def.name)} -ErrorAction SilentlyContinue\n'PRIVACY_OK'`;
     const result = await runPowerShell(script, onLine, 60_000);
     if (result.code !== 0 || !result.text.includes('PRIVACY_OK')) {
-      throw new Error((result.stderr || result.text || 'Ayar yazılamadı.').slice(-300));
+      throw new Error((result.stderr || result.text || m('Ayar yazılamadı.', 'The setting could not be written.')).slice(-300));
     }
     if (!apply) {
       try { if (fs.existsSync(metaFile)) fs.unlinkSync(metaFile); } catch { /* ignore */ }
@@ -207,7 +208,7 @@ export async function setPrivacy(tweak: PrivacyTweak, apply: boolean, onLine?: L
       applied: apply,
       current: targetValue,
       backupPath,
-      message: apply ? 'Ayar uygulandı.' : 'Özgün ayar geri yüklendi.',
+      message: apply ? m('Ayar uygulandı.', 'Setting applied.') : m('Özgün ayar geri yüklendi.', 'Original setting restored.'),
     };
   } catch (error) {
     return {

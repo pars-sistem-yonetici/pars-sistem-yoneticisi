@@ -3,6 +3,7 @@ import path from 'path';
 import { app } from 'electron';
 import type { PackageBackupEntry, PackageBackupFile, PackageBackupOverview, PackageBackupResult, PackageImportResult } from '../../shared/types';
 import { LogFn, runCommand } from '../util';
+import { m, mf } from '../i18n-main';
 
 /** Yedeklerin uygulama veri klasöründe, exe yanında değil, tutulur. */
 export function backupFolder(): string {
@@ -80,7 +81,7 @@ export function listBackups(): PackageBackupOverview {
 export function readBackup(filePath: string): PackageBackupEntry[] {
   const folder = path.resolve(backupFolder());
   const target = path.resolve(filePath);
-  if (!target.startsWith(`${folder}${path.sep}`)) throw new Error('Yedek dosyası yalnızca uygulama yedek klasöründen okunabilir.');
+  if (!target.startsWith(`${folder}${path.sep}`)) throw new Error(m('Yedek dosyası yalnızca uygulama yedek klasöründen okunabilir.', 'Backup files can only be read from the application backup folder.'));
   return readExport(target);
 }
 
@@ -101,15 +102,29 @@ export async function exportPackages(onLine?: LogFn): Promise<PackageBackupResul
         ok: false,
         path: '',
         count: 0,
-        message: `winget dışa aktarma başarısız (kod ${result.code}). ${(result.stderr || result.text).slice(-300)}`.trim(),
+        message: mf(
+          'winget dışa aktarma başarısız (kod {code}). {detail}',
+          'winget export failed (code {code}). {detail}',
+          { code: result.code, detail: (result.stderr || result.text).slice(-300) },
+        ).trim(),
       };
     }
     const entries = readExport(target);
     if (!entries.length) {
       try { fs.unlinkSync(target); } catch { /* ignore */ }
-      return { ok: false, path: '', count: 0, message: 'winget boş bir liste döndürdü; yedek oluşturulmadı.' };
+      return {
+        ok: false,
+        path: '',
+        count: 0,
+        message: m('winget boş bir liste döndürdü; yedek oluşturulmadı.', 'winget returned an empty list; no backup was created.'),
+      };
     }
-    return { ok: true, path: target, count: entries.length, message: `${entries.length} paket yedeklendi.` };
+    return {
+      ok: true,
+      path: target,
+      count: entries.length,
+      message: mf('{count} paket yedeklendi.', '{count} package(s) backed up.', { count: entries.length }),
+    };
   } catch (error) {
     try { if (fs.existsSync(target)) fs.unlinkSync(target); } catch { /* ignore */ }
     return { ok: false, path: '', count: 0, message: (error as Error).message };
@@ -119,9 +134,9 @@ export async function exportPackages(onLine?: LogFn): Promise<PackageBackupResul
 export async function importPackages(filePath: string, idents: string[], onLine?: LogFn): Promise<PackageImportResult> {
   const folder = path.resolve(backupFolder());
   const source = path.resolve(filePath);
-  if (!source.startsWith(`${folder}${path.sep}`)) throw new Error('Yedek dosyası yalnızca uygulama yedek klasöründen okunabilir.');
+  if (!source.startsWith(`${folder}${path.sep}`)) throw new Error(m('Yedek dosyası yalnızca uygulama yedek klasöründen okunabilir.', 'Backup files can only be read from the application backup folder.'));
   const entries = readExport(source).filter((item) => idents.includes(item.id));
-  if (!entries.length) throw new Error('Geri yüklenecek paket seçilmedi.');
+  if (!entries.length) throw new Error(m('Geri yüklenecek paket seçilmedi.', 'No packages were selected for reinstallation.'));
 
   // seçili paketlerden geçici, winget şemasına uygun bir dosya üretilir.
   const data = JSON.parse(fs.readFileSync(source, 'utf8')) as WingetExport;
@@ -150,7 +165,9 @@ export async function importPackages(filePath: string, idents: string[], onLine?
     return {
       total: entries.length,
       ok: result.code === 0,
-      message: result.code === 0 ? `${entries.length} paket için içe aktarma tamamlandı.` : `winget içe aktarma kod ${result.code}.`,
+      message: result.code === 0
+        ? mf('{count} paket için içe aktarma tamamlandı.', 'Import completed for {count} package(s).', { count: entries.length })
+        : mf('winget içe aktarma kod {code}.', 'winget import exited with code {code}.', { code: result.code }),
       lines: [...result.lines, ...result.stderr.split(/\r?\n/).filter(Boolean)].slice(-200),
     };
   } finally {

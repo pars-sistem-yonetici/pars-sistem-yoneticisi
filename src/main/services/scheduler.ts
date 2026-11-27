@@ -3,6 +3,7 @@ import path from 'path';
 import { app } from 'electron';
 import * as diskService from './disk';
 import type { LogFn } from '../util';
+import { m, mf } from '../i18n-main';
 
 export type ScheduleKind = 'weekly-full' | 'daily-light' | 'monthly-deep' | 'custom';
 
@@ -27,10 +28,10 @@ export interface ScheduleRunResult {
 }
 
 const DEFAULTS: ScheduleTask[] = [
-  { id: 'weekly-full', kind: 'weekly-full', name: 'Haftalık tam temizlik', enabled: false, time: '03:00', dayOfWeek: 0 },
-  { id: 'daily-light', kind: 'daily-light', name: 'Günlük hafif temizlik', enabled: false, time: '03:30' },
-  { id: 'monthly-deep', kind: 'monthly-deep', name: 'Aylık derin temizlik', enabled: false, time: '04:00', dayOfMonth: 1 },
-  { id: 'custom', kind: 'custom', name: 'Özel temizlik', enabled: false, time: '04:30', intervalDays: 7 },
+  { id: 'weekly-full', kind: 'weekly-full', name: m('Haftalık tam temizlik', 'Weekly full cleanup'), enabled: false, time: '03:00', dayOfWeek: 0 },
+  { id: 'daily-light', kind: 'daily-light', name: m('Günlük hafif temizlik', 'Daily light cleanup'), enabled: false, time: '03:30' },
+  { id: 'monthly-deep', kind: 'monthly-deep', name: m('Aylık derin temizlik', 'Monthly deep cleanup'), enabled: false, time: '04:00', dayOfMonth: 1 },
+  { id: 'custom', kind: 'custom', name: m('Özel temizlik', 'Custom cleanup'), enabled: false, time: '04:30', intervalDays: 7 },
 ];
 
 const KEYS_BY_KIND: Record<ScheduleKind, readonly string[]> = {
@@ -84,7 +85,7 @@ function normalizeTime(value: string, fallback: string): string {
 function fallbackFor(raw: unknown, index: number): ScheduleTask {
   const record = asObject(raw);
   const id = typeof record.id === 'string' && record.id ? record.id : `custom-${index + 1}`;
-  return { id, kind: 'custom', name: 'Özel temizlik', enabled: false, time: '04:30', intervalDays: 7 };
+  return { id, kind: 'custom', name: m('Özel temizlik', 'Custom cleanup'), enabled: false, time: '04:30', intervalDays: 7 };
 }
 
 function normalizeTask(raw: unknown, fallback: ScheduleTask): ScheduleTask {
@@ -273,7 +274,7 @@ function markRun(task: ScheduleTask): void {
 }
 
 export async function runSchedule(task: ScheduleTask, onLine?: LogFn): Promise<ScheduleRunResult> {
-  onLine?.(`Zamanlı görev başlatıldı: ${task.name}`);
+  onLine?.(mf('Zamanlı görev başlatıldı: {name}', 'Scheduled task started: {name}', { name: task.name }));
   try {
     const wanted = KEYS_BY_KIND[task.kind] ?? KEYS_BY_KIND.custom;
     const available = diskService.targets();
@@ -285,13 +286,19 @@ export async function runSchedule(task: ScheduleTask, onLine?: LogFn): Promise<S
 
     const results = await diskService.clean(items, onLine);
     markRun(task);
-    const message = `${task.name} tamamlandı: ${results.length} temizlik hedefi işlendi.`;
+    const message = mf('{name} tamamlandı: {count} temizlik hedefi işlendi.', '{name} completed: {count} cleanup target(s) processed.', {
+      name: task.name,
+      count: results.length,
+    });
     onLine?.(message);
     return { taskId: task.id, ran: true, message, results };
   } catch (error) {
     markRun(task);
     const detail = error instanceof Error ? error.message : String(error);
-    const message = `${task.name} çalıştırılamadı: ${detail.slice(0, 200)}`;
+    const message = mf('{name} çalıştırılamadı: {detail}', '{name} could not be run: {detail}', {
+      name: task.name,
+      detail: detail.slice(0, 200),
+    });
     onLine?.(message);
     return { taskId: task.id, ran: false, message };
   }

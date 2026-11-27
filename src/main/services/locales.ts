@@ -10,31 +10,17 @@ export function localeFolder(): string {
   return path.join(app.getPath('userData'), 'translations');
 }
 
-function electronLocaleFolders(): string[] {
-  const folders: string[] = [];
-  if (process.resourcesPath) folders.push(path.join(process.resourcesPath, 'locales'));
-  folders.push(path.join(__dirname, '..', '..', '..', 'node_modules', 'electron', 'dist', 'locales'));
-  return folders;
-}
-
-/** Electron dil paketlerinde bulunan tüm diller + kullanıcı çevirileri. */
+/** Yerleşik diller + gerçek çeviri dosyası bulunan diller. */
 export function availableLocales(): string[] {
   const codes = new Set<string>(BUILT_IN);
-  for (const folder of electronLocaleFolders()) {
+  for (const folder of [localeFolder(), ...(process.resourcesPath ? [path.join(process.resourcesPath, 'translations')] : [])]) {
     try {
       for (const name of fs.readdirSync(folder)) {
-        if (name.endsWith('.pak')) codes.add(name.slice(0, -4));
+        if (name.endsWith('.json')) codes.add(name.slice(0, -5));
       }
     } catch {
-      // Geliştirme ortamında klasör olmayabilir.
+      // Klasör henüz oluşmamış olabilir.
     }
-  }
-  try {
-    for (const name of fs.readdirSync(localeFolder())) {
-      if (name.endsWith('.json')) codes.add(name.slice(0, -5));
-    }
-  } catch {
-    // Klasör henüz oluşmamış olabilir.
   }
   return [...codes].sort((a, b) => a.localeCompare(b, 'en'));
 }
@@ -45,6 +31,8 @@ export function availableLocales(): string[] {
  */
 export function localeDictionary(language: string): Record<string, string> {
   if (language === 'tr') return {};
+  // Yerleşik İngilizce sözlük, kullanıcı dosyasıyla geçersiz kılınamaz.
+  if (language === 'en') return { ...EN };
   const dictionary: Record<string, string> = { ...EN };
   const candidates = [
     localeFolder(),

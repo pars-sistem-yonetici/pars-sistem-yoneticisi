@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { expandVars } from '../util';
 import { getSettings } from './settings';
+import { m, mf } from '../i18n-main';
 
 /** Kullanıcının hariç tuttuğu uzantıyı güvenli, karşılaştırılabilir biçime çevirir. */
 export function normalizeExtension(value: string): string {
@@ -60,6 +61,8 @@ export function hasExcludedDescendant(target: string): boolean {
 
 export function exclusionReason(target: string): string {
   const ext = path.extname(target).toLowerCase();
-  if (ext && normalizedExtensions().includes(ext)) return `Hariç tutulan uzantı (${ext})`;
-  return 'Hariç tutulan klasör';
+  if (ext && normalizedExtensions().includes(ext)) {
+    return mf('Hariç tutulan uzantı ({ext})', 'Excluded extension ({ext})', { ext });
+  }
+  return m('Hariç tutulan klasör', 'Excluded folder');
 }

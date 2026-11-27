@@ -1,5 +1,6 @@
 import type { BloatwareItem, BloatwareRemoveResult } from '../../shared/types';
 import { normalizeName, powershellJson, psLiteral } from '../util';
+import { m } from '../i18n-main';
 import * as winget from './winget';
 
 /**
@@ -154,8 +155,10 @@ function toItem(raw: RawItem, ident: string): BloatwareItem {
     provisioned: !!raw.provisioned,
     detail: raw.detail,
     reason: windows
-      ? raw.provisioned ? 'Windows ile gelir; yeni kullanıcılar için de kaldırılır.' : 'Windows ile birlikte yüklenmiştir.'
-      : 'Üretici veya ön yüklü üçüncü taraf yazılımı.',
+      ? raw.provisioned
+        ? m('Windows ile gelir; yeni kullanıcılar için de kaldırılır.', 'Comes with Windows; also removed for new users.')
+        : m('Windows ile birlikte yüklenmiştir.', 'Installed with Windows.')
+      : m('Üretici veya ön yüklü üçüncü taraf yazılımı.', 'Manufacturer or preinstalled third-party software.'),
   };
 }
 
@@ -182,7 +185,7 @@ export async function removeBloatware(items: BloatwareItem[]): Promise<Bloatware
   const results: BloatwareRemoveResult[] = items.map((item) => ({
     id: item.id,
     ok: false,
-    message: safe.includes(item) ? 'İşlem bekleniyor.' : 'Güvenli liste dışında; kaldırılmadı.',
+    message: safe.includes(item) ? m('İşlem bekleniyor.', 'Operation pending.') : m('Güvenli liste dışında; kaldırılmadı.', 'Not on the safe list; not removed.'),
   }));
   if (!safe.length) return results;
 
@@ -217,20 +220,20 @@ foreach ($target in $targets) {
         Remove-AppxProvisionedPackage -Online -PackageName $target.pn -ErrorAction SilentlyContinue | Out-Null
       }
       $ok = $true
-      $msg = 'Kaldırıldı.'
+      $msg = ${psLiteral(m('Kaldırıldı.', 'Removed.'))}
     } else {
       if ($target.ident) {
         & winget uninstall --id $target.ident --exact --accept-source-agreements --disable-interactivity --nowarn --silent
       } elseif ($target.name) {
         & winget uninstall --name $target.name --exact --accept-source-agreements --disable-interactivity --nowarn --silent
       } else {
-        throw 'Geçersiz uygulama adı.'
+        throw ${psLiteral(m('Geçersiz uygulama adı.', 'Invalid application name.'))}
       }
       if ($LASTEXITCODE -eq 0) {
         $ok = $true
-        $msg = 'Kaldırıldı.'
+        $msg = ${psLiteral(m('Kaldırıldı.', 'Removed.'))}
       } else {
-        $msg = 'winget çıkış kodu ' + $LASTEXITCODE
+        $msg = ${psLiteral(m('winget çıkış kodu ', 'winget exit code '))} + $LASTEXITCODE
       }
     }
   } catch { $msg = $_.Exception.Message }
@@ -248,7 +251,7 @@ foreach ($target in $targets) {
       const target = results.find((entry) => entry.id === item.id);
       if (target) {
         target.ok = !!row?.ok;
-        target.message = String(row?.msg || 'PowerShell sonucu alınamadı.').slice(0, 200);
+        target.message = String(row?.msg || m('PowerShell sonucu alınamadı.', 'No PowerShell result received.')).slice(0, 200);
       }
     }
   } catch (error) {

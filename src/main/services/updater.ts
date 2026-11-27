@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import type { AppUpdateInfo, UpdateDownloadResult, UpdateInstallResult } from '../../shared/types';
 import type { LogFn } from '../util';
+import { m, mf } from '../i18n-main';
 import { getSettings } from './settings';
 
 interface Manifest {
@@ -57,11 +58,11 @@ function freeSpaceBytes(folder: string): number {
 function downloadErrorMessage(error: unknown): string {
   const raw = (error as Error)?.message || 'bilinmeyen hata';
   const code = (error as NodeJS.ErrnoException)?.code;
-  if (code === 'ENOSPC') return 'Diskte yeterli alan kalmadı; güncelleme indirilemedi. Lütfen alan açıp yeniden deneyin.';
+  if (code === 'ENOSPC') return m('Diskte yeterli alan kalmadı; güncelleme indirilemedi. Lütfen alan açıp yeniden deneyin.', 'Not enough free disk space; the update could not be downloaded. Please free space and try again.');
   if (/terminated|aborted|socket hang up|network/i.test(raw)) {
-    return `Bağlantı kesildi; güncelleme indirilemedi. Lütfen yeniden deneyin. (${raw})`;
+    return mf('Bağlantı kesildi; güncelleme indirilemedi. Lütfen yeniden deneyin. ({raw})', 'Connection lost; the update could not be downloaded. Please try again. ({raw})', { raw });
   }
-  return `Güncelleme indirilemedi: ${raw}`;
+  return mf('Güncelleme indirilemedi: {raw}', 'Update could not be downloaded: {raw}', { raw });
 }
 
 function normalizeHash(value: unknown): string {
@@ -110,7 +111,7 @@ async function readManifest(): Promise<ResolvedManifest> {
     ];
     const found = candidates.find((item) => fs.existsSync(item));
     if (!found) {
-      throw new Error('Güncelleme kaynağı tanımlı değil ve varsayılan latest.json bulunamadı.');
+      throw new Error(m('Güncelleme kaynağı tanımlı değil ve varsayılan latest.json bulunamadı.', 'No update source is configured and the default latest.json was not found.'));
     }
     manifestFile = found;
     source = found;
@@ -123,7 +124,7 @@ async function readManifest(): Promise<ResolvedManifest> {
     const resolved = path.resolve(configured);
     manifestFile = resolved.toLowerCase().endsWith('.json') ? resolved : path.join(resolved, 'latest.json');
     if (!fs.existsSync(manifestFile)) {
-      throw new Error(`Güncelleme bildirimi bulunamadı: ${manifestFile}`);
+      throw new Error(mf('Güncelleme bildirimi bulunamadı: {file}', 'Update manifest not found: {file}', { file: manifestFile }));
     }
     source = manifestFile;
   }
@@ -131,7 +132,7 @@ async function readManifest(): Promise<ResolvedManifest> {
   let raw: string;
   if (manifestUrl) {
     const response = await fetch(manifestUrl, { signal: AbortSignal.timeout(15_000) });
-    if (!response.ok) throw new Error(`Güncelleme bildirimi alınamadı (HTTP ${response.status}).`);
+    if (!response.ok) throw new Error(mf('Güncelleme bildirimi alınamadı (HTTP {status}).', 'Update manifest could not be fetched (HTTP {status}).', { status: response.status }));
     raw = await response.text();
   } else {
     raw = fs.readFileSync(manifestFile!, 'utf8');
@@ -141,7 +142,7 @@ async function readManifest(): Promise<ResolvedManifest> {
   try {
     manifest = JSON.parse(raw) as Manifest;
   } catch {
-    throw new Error('Güncelleme bildirimi geçerli JSON değil.');
+    throw new Error(m('Güncelleme bildirimi geçerli JSON değil.', 'The update manifest is not valid JSON.'));
   }
 
   const version = cleanVersion(manifest.version);
@@ -151,12 +152,12 @@ async function readManifest(): Promise<ResolvedManifest> {
     ? Math.floor(manifest.size)
     : 0;
 
-  if (!version) throw new Error('Güncelleme bildiriminde geçerli bir sürüm yok.');
+  if (!version) throw new Error(m('Güncelleme bildiriminde geçerli bir sürüm yok.', 'The update manifest has no valid version.'));
   if (!fileName || !/\.exe$/i.test(fileName) || /[\\/]/.test(manifest.fileName as string)) {
-    throw new Error('Güncelleme bildiriminde geçerli bir exe dosya adı yok.');
+    throw new Error(m('Güncelleme bildiriminde geçerli bir exe dosya adı yok.', 'The update manifest has no valid exe file name.'));
   }
-  if (!expectedHash) throw new Error('Güncelleme bildiriminde geçerli bir SHA-512 özeti yok; indirme engellendi.');
-  if (size > MAX_UPDATE_SIZE) throw new Error('Güncelleme dosyası izin verilen boyutu aşıyor.');
+  if (!expectedHash) throw new Error(m('Güncelleme bildiriminde geçerli bir SHA-512 özeti yok; indirme engellendi.', 'The update manifest has no valid SHA-512 hash; download blocked.'));
+  if (size > MAX_UPDATE_SIZE) throw new Error(m('Güncelleme dosyası izin verilen boyutu aşıyor.', 'The update file exceeds the allowed size.'));
 
   const rawTarget = typeof manifest.url === 'string' && manifest.url.trim() ? manifest.url.trim() : fileName;
   let target: string;
@@ -199,7 +200,7 @@ export async function checkForUpdate(_logger?: LogFn): Promise<AppUpdateInfo> {
     const available = compareVersions(resolved.version, current) > 0;
     if (!available) {
       return {
-        ...emptyInfo(`Güncel sürüm: ${current}`),
+        ...emptyInfo(mf('Güncel sürüm: {version}', 'Current version: {version}', { version: current })),
         latestVersion: current,
         source: resolved.source,
       };
@@ -223,7 +224,7 @@ export async function checkForUpdate(_logger?: LogFn): Promise<AppUpdateInfo> {
 
 async function* responseChunks(response: Response): AsyncGenerator<Buffer> {
   const reader = response.body?.getReader();
-  if (!reader) throw new Error('Güncelleme yanıtı okunamadı.');
+  if (!reader) throw new Error(m('Güncelleme yanıtı okunamadı.', 'The update response could not be read.'));
   try {
     while (true) {
       const { done, value } = await reader.read();
@@ -243,10 +244,10 @@ export async function downloadUpdate(info: AppUpdateInfo, onProgress: ProgressFn
     return { ok: false, message: (error as Error).message };
   }
   if (resolved.version !== info.latestVersion || resolved.fileName !== info.fileName) {
-    return { ok: false, message: 'Güncelleme bildirimi değişti. Lütfen yeniden kontrol edin.' };
+    return { ok: false, message: m('Güncelleme bildirimi değişti. Lütfen yeniden kontrol edin.', 'The update manifest changed. Please check again.') };
   }
   if (resolved.expectedHash !== info.sha512) {
-    return { ok: false, message: 'Güncelleme özeti değişti; indirme iptal edildi.' };
+    return { ok: false, message: m('Güncelleme özeti değişti; indirme iptal edildi.', 'The update hash changed; download cancelled.') };
   }
 
   const destination = path.join(updateFolder(), resolved.fileName);
@@ -260,18 +261,22 @@ export async function downloadUpdate(info: AppUpdateInfo, onProgress: ProgressFn
   if (free && free < needed) {
     return {
       ok: false,
-      message: `Güncelleme için yeterli disk alanı yok (${Math.round(free / 1024 / 1024)} MB boş, yaklaşık ${Math.round(needed / 1024 / 1024)} MB gerekli). Lütfen ${path.dirname(destination)} sürücüsünde alan açın.`,
+      message: mf('Güncelleme için yeterli disk alanı yok ({free} MB boş, yaklaşık {needed} MB gerekli). Lütfen {folder} sürücüsünde alan açın.', 'Not enough disk space for the update ({free} MB free, about {needed} MB required). Please free space on {folder}.', {
+        free: Math.round(free / 1024 / 1024),
+        needed: Math.round(needed / 1024 / 1024),
+        folder: path.dirname(destination),
+      }),
     };
   }
 
   try {
     if (isHttp(resolved.target)) {
-      logger?.(`Güncelleme indiriliyor: ${resolved.target}`);
+      logger?.(mf('Güncelleme indiriliyor: {url}', 'Downloading update: {url}', { url: resolved.target }));
       const response = await fetch(resolved.target);
-      if (!response.ok) throw new Error(`Güncelleme indirilemedi (HTTP ${response.status}).`);
+      if (!response.ok) throw new Error(mf('Güncelleme indirilemedi (HTTP {status}).', 'Update could not be downloaded (HTTP {status}).', { status: response.status }));
       source = responseChunks(response);
     } else {
-      logger?.(`Güncelleme kopyalanıyor: ${resolved.target}`);
+      logger?.(mf('Güncelleme kopyalanıyor: {url}', 'Writing update: {url}', { url: resolved.target }));
       source = fs.createReadStream(resolved.target);
     }
 
@@ -279,7 +284,7 @@ export async function downloadUpdate(info: AppUpdateInfo, onProgress: ProgressFn
     for await (const chunk of source) {
       hash.update(chunk);
       downloaded += chunk.length;
-      if (downloaded > MAX_UPDATE_SIZE) throw new Error('Güncelleme dosyası izin verilen boyutu aşıyor.');
+      if (downloaded > MAX_UPDATE_SIZE) throw new Error(m('Güncelleme dosyası izin verilen boyutu aşıyor.', 'The update file exceeds the allowed size.'));
       if (!out.write(chunk)) await once(out, 'drain');
       if (total) onProgress(Math.min(99, Math.round((downloaded / total) * 100)), downloaded, total);
       else onProgress(0, downloaded, 0);
@@ -290,15 +295,15 @@ export async function downloadUpdate(info: AppUpdateInfo, onProgress: ProgressFn
     const actual = hash.digest('hex');
     if (actual !== resolved.expectedHash) {
       fs.rmSync(destination, { force: true });
-      return { ok: false, message: 'SHA-512 doğrulaması başarısız; dosya silindi.' };
+      return { ok: false, message: m('SHA-512 doğrulaması başarısız; dosya silindi.', 'SHA-512 verification failed; the file was deleted.') };
     }
     if (total && downloaded !== total) {
       fs.rmSync(destination, { force: true });
-      return { ok: false, message: 'İndirilen dosya boyutu bildirimle uyuşmuyor.' };
+      return { ok: false, message: m('İndirilen dosya boyutu bildirimle uyuşmuyor.', 'The downloaded file size does not match the manifest.') };
     }
     onProgress(100, downloaded, total || downloaded);
-    logger?.(`Güncelleme doğrulandı: ${resolved.fileName}`);
-    return { ok: true, message: `${resolved.fileName} indirildi ve doğrulandı.`, path: destination };
+    logger?.(mf('Güncelleme doğrulandı: {file}', 'Update verified: {file}', { file: resolved.fileName }));
+    return { ok: true, message: mf('{file} indirildi ve doğrulandı.', '{file} downloaded and verified.', { file: resolved.fileName }), path: destination };
   } catch (error) {
     fs.rmSync(destination, { force: true });
     return { ok: false, message: downloadErrorMessage(error) };
@@ -309,21 +314,23 @@ export async function installUpdate(filePath: string, logger?: LogFn): Promise<U
   const target = path.resolve(filePath);
   const folder = path.resolve(updateFolder());
   if (path.dirname(target).toLowerCase() !== folder.toLowerCase() || !/\.exe$/i.test(target) || !fs.existsSync(target)) {
-    return { ok: false, message: 'Kurulum için doğrulanmış güncelleme dosyası bulunamadı.', restarting: false };
+    return { ok: false, message: m('Kurulum için doğrulanmış güncelleme dosyası bulunamadı.', 'No verified update file was found for installation.'), restarting: false };
   }
 
   if (isPortable()) {
     shell.showItemInFolder(target);
     return {
       ok: true,
-      message: 'Portable sürümde dosya değiştirilemez. İndirilen exe’nin üzerine kopyalayıp uygulamayı yeniden başlatın.',
+      message: m('Portable sürümde dosya değiştirilemez. İndirilen exe’nin üzerine kopyalayıp uygulamayı yeniden başlatın.', 'In portable mode the file cannot be replaced. Copy the downloaded exe over the old one and restart the app.'),
       restarting: false,
     };
   }
 
   try {
-    logger?.(`Güncelleme kurulumu başlatılıyor: ${target}`);
-    const child = spawn(target, ['/S', '--updated'], {
+    logger?.(mf('Güncelleme kurulumu başlatılıyor: {file}', 'Starting update installer: {file}', { file: target }));
+    // --force-run: NSIS, sessiz kurulum bitince uygulamayı kendisi yeniden başlatır.
+    // Uygulama 1,5 sn içinde kapanır; böylece kurucu dosyaları değiştirebilir.
+    const child = spawn(target, ['/S', '--updated', '--force-run'], {
       detached: true,
       stdio: 'ignore',
       windowsHide: true,
@@ -335,8 +342,8 @@ export async function installUpdate(filePath: string, logger?: LogFn): Promise<U
     child.unref();
     const timer = setTimeout(() => app.exit(0), 1500);
     timer.unref();
-    return { ok: true, message: 'Kurulum başlatıldı. Uygulama kapanıyor...', restarting: true };
+    return { ok: true, message: m('Kurulum başlatıldı. Uygulama güncellendikten sonra yeniden başlayacak...', 'Installation started. The app will restart after the update...'), restarting: true };
   } catch (error) {
-    return { ok: false, message: `Kurulum başlatılamadı: ${(error as Error).message}`, restarting: false };
+    return { ok: false, message: mf('Kurulum başlatılamadı: {message}', 'Installation could not be started: {message}', { message: (error as Error).message }), restarting: false };
   }
 }

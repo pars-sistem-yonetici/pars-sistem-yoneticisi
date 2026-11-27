@@ -2,6 +2,7 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { StringDecoder } from 'string_decoder';
+import { m, mf } from './i18n-main';
 
 export type LogFn = (line: string) => void;
 
@@ -23,8 +24,13 @@ export function runCommand(
   args: string[],
   onLine?: LogFn,
   timeout = 15 * 60 * 1000,
+  signal?: AbortSignal,
 ): Promise<CommandResult> {
   return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(new Error(mf('{command} iptal edildi', '{command} was canceled', { command })));
+      return;
+    }
     // Node, Windows'ta .cmd/.bat dosyalarını doğrudan spawn edemiyor (EINVAL).
     // Kabuk gerektiren bu komutlar cmd.exe /c ile, diğerleri doğrudan çalıştırılır.
     const isBatch = /\.(?:cmd|bat)$/i.test(command);
@@ -52,13 +58,26 @@ export function runCommand(
     const stdoutPending: string[] = [];
     const stderrPending: string[] = [];
     let settled = false;
+    const onAbort = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      child.kill();
+      reject(new Error(mf('{command} iptal edildi', '{command} was canceled', { command })));
+    };
+    const cleanup = () => signal?.removeEventListener('abort', onAbort);
     const timer = setTimeout(() => {
       if (!settled) {
         settled = true;
+        cleanup();
         child.kill();
-        reject(new Error(`${command} zaman aşımına uğradı: ${args.join(' ')}`));
+        reject(new Error(mf('{command} zaman aşımına uğradı: {args}', '{command} timed out: {args}', {
+          command,
+          args: args.join(' '),
+        })));
       }
     }, timeout);
+    if (signal) signal.addEventListener('abort', onAbort, { once: true });
 
     const flushLines = (text: string, pending: string[]) => {
       const parts = text.split(/\r\n|\n|\r/);
@@ -81,12 +100,17 @@ export function runCommand(
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      reject(new Error(`${command} başlatılamadı: ${error.message}`));
+      cleanup();
+      reject(new Error(mf('{command} başlatılamadı: {message}', '{command} could not be started: {message}', {
+        command,
+        message: error.message,
+      })));
     });
     child.on('close', (code) => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
+      cleanup();
       if (onLine) {
         flushLines(stdoutDecoder.end(), stdoutPending);
         flushLines(stderrDecoder.end(), stderrPending);
@@ -131,7 +155,7 @@ export function runPowerShell(script: string, onLine?: LogFn, timeout?: number):
 /** Metindeki ilk JSON nesnesini/dizisini dengeli olarak bulur (kuyruk CLIXML'ini yok sayar). */
 function extractJson(text: string): string {
   const start = text.search(/[[{]/);
-  if (start < 0) throw new Error(`PowerShell JSON döndürmedi: ${text.slice(0, 200)}`);
+  if (start < 0) throw new Error(mf('PowerShell JSON döndürmedi: {text}', 'PowerShell did not return JSON: {text}', { text: text.slice(0, 200) }));
 
   const stack: string[] = [];
   let inString = false;
@@ -151,7 +175,7 @@ function extractJson(text: string): string {
       if (stack.length === 0) return text.slice(start, index + 1);
     }
   }
-  throw new Error('PowerShell JSON çıktısı eksik veya bozuk.');
+  throw new Error(m('PowerShell JSON çıktısı eksik veya bozuk.', 'PowerShell JSON output is missing or malformed.'));
 }
 
 /** PowerShell çıktısındaki JSON nesnesini/dizisini ayrıştırır. */
@@ -282,7 +306,7 @@ export function removeTree(target: string, shouldSkip?: (target: string) => bool
     for (const entry of entries) {
       const full = path.join(dir, entry.name);
       if (blocked(full)) {
-        onLine?.(`ATLANDI: ${full}`);
+        onLine?.(mf('ATLANDI: {path}', 'SKIPPED: {path}', { path: full }));
         continue;
       }
       try {

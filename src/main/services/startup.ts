@@ -1,5 +1,6 @@
 import type { StartupItem, StartupTiming } from '../../shared/types';
 import { powershellJson, psLiteral as ps } from '../util';
+import { m } from '../i18n-main';
 import { isExcludedPath } from './exclusions';
 
 const BACKUP_KEY = 'HKCU:\\Software\\ParsSistemYoneticisi\\StartupDisabled';
@@ -97,7 +98,7 @@ foreach ($f in $startupFolders) {
     $id = 'folder|' + $f.Path + '|' + $file.Name
     [void]$items.Add([pscustomobject]@{
       id = $id; name = $display; command = $command
-      location = 'Başlangıç klasörü'
+      location = ${ps(m('Başlangıç klasörü', 'Startup folder'))}
       enabled = (-not $isDisabled); kind = 'folder'; scope = $f.Scope
       sourcePath = $f.Path; valueName = $file.Name; valueType = ''
     })
@@ -185,7 +186,7 @@ export async function startupTimings(): Promise<StartupTiming[]> {
 }
 
 export async function setStartupEnabled(item: StartupItem, enabled: boolean): Promise<string> {
-  if (isExcludedPath(item.sourcePath)) throw new Error('Bu öğe hariç tutulan bir klasörde; işlem yapılmadı.');
+  if (isExcludedPath(item.sourcePath)) throw new Error(m('Bu öğe hariç tutulan bir klasörde; işlem yapılmadı.', 'This item is in an excluded folder; no action was taken.'));
   const hashResult = await powershellJson<{ hash: string }>(
     `$sha = [System.Security.Cryptography.SHA256]::Create()\n` +
     `$bytes = $sha.ComputeHash([System.Text.Encoding]::UTF8.GetBytes(${ps(item.id)}))\n` +
@@ -203,11 +204,11 @@ export async function setStartupEnabled(item: StartupItem, enabled: boolean): Pr
       `$ErrorActionPreference = 'Stop'\n` +
       `$from = Join-Path ${ps(folder)} ${ps(current)}\n` +
       `$to = Join-Path ${ps(folder)} ${ps(target)}\n` +
-      `if (-not (Test-Path -LiteralPath $from)) { throw 'Dosya bulunamadı: ' + $from }\n` +
+      `if (-not (Test-Path -LiteralPath $from)) { throw ${ps(m('Dosya bulunamadı: ', 'File not found: '))} + $from }\n` +
       `Rename-Item -LiteralPath $from -NewName ([System.IO.Path]::GetFileName($to))\n` +
       `@{ ok = $true } | ConvertTo-Json -Compress`;
     await powershellJson<{ ok: boolean }>(script, undefined, 20_000);
-    return enabled ? 'Başlangıç öğesi etkinleştirildi.' : 'Başlangıç öğesi devre dışı bırakıldı.';
+    return enabled ? m('Başlangıç öğesi etkinleştirildi.', 'Startup item enabled.') : m('Başlangıç öğesi devre dışı bırakıldı.', 'Startup item disabled.');
   }
 
   const backup = BACKUP_KEY;
@@ -252,5 +253,5 @@ export async function setStartupEnabled(item: StartupItem, enabled: boolean): Pr
       `@{ ok = $true } | ConvertTo-Json -Compress`;
   }
   await powershellJson<{ ok: boolean }>(script, undefined, 20_000);
-  return enabled ? 'Başlangıç öğesi etkinleştirildi.' : 'Başlangıç öğesi devre dışı bırakıldı.';
+  return enabled ? m('Başlangıç öğesi etkinleştirildi.', 'Startup item enabled.') : m('Başlangıç öğesi devre dışı bırakıldı.', 'Startup item disabled.');
 }

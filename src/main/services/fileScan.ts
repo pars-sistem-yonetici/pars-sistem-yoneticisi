@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import type { DeleteResult, DuplicateGroup, EmptyItem, FileScanOptions, FileScanResult, LargeFile } from '../../shared/types';
 import { isProtectedPath, isRuntimePath } from '../util';
+import { m } from '../i18n-main';
 import { isExcludedPath } from './exclusions';
 import { deleteLeftovers } from './leftovers';
 
@@ -137,7 +138,7 @@ export function scanFiles(options: FileScanOptions): FileScanResult {
   empty.sort((a, b) => a.path.localeCompare(b.path));
 
   const wasted = duplicates.reduce((total, group) => total + group.size * (group.files.length - 1), 0);
-  if (!roots.length) errors.unshift('Taranacak geçerli klasör seçilmedi.');
+  if (!roots.length) errors.unshift(m('Taranacak geçerli klasör seçilmedi.', 'No valid folder to scan was selected.'));
   // Referans kökleri yalnızca silmede korunur; taramada görünür kalır.
   return {
     scanned,
@@ -167,11 +168,11 @@ export async function deleteScannedFiles(paths: string[], referenceRoots: string
       size = stat.isDirectory() ? 0 : stat.size;
       kind = stat.isDirectory() ? 'folder' : 'file';
     } catch { /* zaten silinmiş olabilir */ }
-    return { path: item, kind, size, reason: 'Dosya tarayıcı seçimi' };
+    return { path: item, kind, size, reason: m('Dosya tarayıcı seçimi', 'File scanner selection') };
   });
   const processed = await deleteLeftovers(items, mode);
   const byPath = new Map(processed.map((result) => [result.path, result]));
   return paths.map((item) => blocked.has(item)
-    ? { path: item, ok: false, message: 'Referans klasör; atlandı.' }
-    : byPath.get(item) || { path: item, ok: false, message: 'İşlem sonucu alınamadı.' });
+    ? { path: item, ok: false, message: m('Referans klasör; atlandı.', 'Reference folder; skipped.') }
+    : byPath.get(item) || { path: item, ok: false, message: m('İşlem sonucu alınamadı.', 'No operation result was received.') });
 }

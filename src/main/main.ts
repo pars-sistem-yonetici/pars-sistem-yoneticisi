@@ -2,7 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, shell, Tray } f
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { DNS_PROVIDER_IDS, PROFILE_IDS, REG_SCAN_SCOPES, REPAIR_KINDS } from '../shared/types';
+import { DNS_PROVIDER_IDS, MALWARE_ENGINE_IDS, PROFILE_IDS, REG_SCAN_SCOPES, REPAIR_KINDS } from '../shared/types';
 import type {
   CleanTarget, DownloadResult, InstallItem, LogEntry, MalwareEngine, Package, PackageSource, RegIssue, RegScanScope, ScheduleTask, Theme, WindowAction,
 } from '../shared/types';
@@ -44,6 +44,7 @@ import {
   scheduleTask, searchQuery, settingsPatch, startupItem, str, updateInfo,
   Validator, wingetPkg,
 } from './ipc-guard';
+import { m, mf } from './i18n-main';
 import { LogFn, nowTime } from './util';
 
 let mainWindow: BrowserWindow | null = null;
@@ -163,11 +164,11 @@ function setupTray(): void {
   }
   if (!tray) return;
   try {
-    tray.setToolTip('Pars Sistem Yöneticisi');
+    tray.setToolTip(m('Pars Sistem Yöneticisi', 'Pars System Manager'));
     tray.setContextMenu(Menu.buildFromTemplate([
-      { label: 'Pencereyi göster', click: () => showMainWindow() },
+      { label: m('Pencereyi göster', 'Show window'), click: () => showMainWindow() },
       { type: 'separator' },
-      { label: 'Çıkış', click: () => app.exit(0) },
+      { label: m('Çıkış', 'Quit'), click: () => app.exit(0) },
     ]));
     tray.on('click', () => showMainWindow());
     tray.on('double-click', () => showMainWindow());
@@ -195,7 +196,7 @@ function createWindow(): void {
     height: 820,
     minWidth: 1020,
     minHeight: 640,
-    title: 'Pars Sistem Yöneticisi',
+    title: m('Pars Sistem Yöneticisi', 'Pars System Manager'),
     frame: false,
     backgroundColor: themeBackground(settingsService.getSettings().theme),
     autoHideMenuBar: true,
@@ -276,10 +277,10 @@ const openPath: Validator = (value, field) => {
   // Sürücü kökünün kendisi açılamaz; ama C:\ altındaki izinli klasörler açılabilir.
   const driveRoot = path.win32.parse(resolved).root;
   if (driveRoot && path.win32.relative(driveRoot, resolved) === '') {
-    reject(field, 'sürücü kökü açılamaz');
+    reject(field, m('sürücü kökü açılamaz', 'drive root cannot be opened'));
   }
-  if (deniedRoots().some((root) => isInside(resolved, root))) reject(field, 'sistem klasörü açılamaz');
-  if (!allowedOpenRoots().some((root) => isInside(resolved, root))) reject(field, 'izin verilmeyen yol');
+  if (deniedRoots().some((root) => isInside(resolved, root))) reject(field, m('sistem klasörü açılamaz', 'system folder cannot be opened'));
+  if (!allowedOpenRoots().some((root) => isInside(resolved, root))) reject(field, m('izin verilmeyen yol', 'path not allowed'));
   return input;
 };
 
@@ -287,11 +288,11 @@ const openPath: Validator = (value, field) => {
 const externalUrl: Validator = (value, field) => {
   const input = str({ max: 2048 })(value, field) as string;
   let parsed: URL | null = null;
-  try { parsed = new URL(input); } catch { reject(field, 'geçerli bir adres değil'); }
-  if (!parsed || parsed.protocol !== 'https:') reject(field, 'yalnızca https bağlantıları açılabilir');
+  try { parsed = new URL(input); } catch { reject(field, m('geçerli bir adres değil', 'not a valid address')); }
+  if (!parsed || parsed.protocol !== 'https:') reject(field, m('yalnızca https bağlantıları açılabilir', 'only https links can be opened'));
   const host = parsed.hostname.toLowerCase();
   const allowed = ['github.com', 'www.github.com', 'buymeacoffee.com', 'www.buymeacoffee.com', 'pars-sistem-yonetici.github.io'];
-  if (!allowed.includes(host)) reject(field, 'izin verilmeyen adres');
+  if (!allowed.includes(host)) reject(field, m('izin verilmeyen adres', 'address not allowed'));
   return input;
 };
 
@@ -299,7 +300,7 @@ const externalUrl: Validator = (value, field) => {
 const updateInstallPath: Validator = (value, field) => {
   const input = str({ max: 4096 })(value, field) as string;
   if (!isInside(canonical(input), canonical(updaterService.updateFolder()))) {
-    reject(field, 'güncelleme klasörü dışındaki dosya kurulamaz');
+    reject(field, m('güncelleme klasörü dışındaki dosya kurulamaz', 'files outside the update folder cannot be installed'));
   }
   return input;
 };
@@ -322,6 +323,8 @@ const optionalDriveList: Validator = (value, field) =>
 const leftoverCancellations = new Map<string, () => void>();
 /** Aktif kurulum kuyrukları için iptal işlevleri (requestId → cancel). */
 const installCancellations = new Map<string, () => void>();
+/** Aktif kötü amaçlı yazılım taramaları için iptal denetleyicileri. */
+const malwareCancellations = new Map<string, AbortController>();
 
 /** Argüman alan kanallar için tek merkezde şema tanımı. */
 const IPC_SCHEMAS: Record<string, Validator[]> = {
@@ -350,7 +353,9 @@ const IPC_SCHEMAS: Record<string, Validator[]> = {
   'startup:set': [startupItem, bool],
   'firewall:set': [str({ max: 512 }), bool],
   'firewall:delete': [str({ max: 512 })],
-  'malware:scan': [arr(oneOf(['signatures', 'heuristics', 'scripts', 'integrity', 'persistence'] as const), 5)],
+  'malware:scan': [arr(oneOf(MALWARE_ENGINE_IDS), MALWARE_ENGINE_IDS.length), optionalRequestId],
+  'malware:cancel': [str({ max: 64 })],
+  'malware:export': [str({ max: 2_000_000 }), oneOf(['json', 'txt'] as const)],
   'schedule:save': [arr(scheduleTask, 100)],
   'schedule:run': [scheduleTask],
   'drivers:download': [arr(str({ max: 256 }), 500)],
@@ -392,7 +397,7 @@ function register(channel: string, handler: IpcHandler): void {
       const checked = validators.map((validate, index) => validate(args[index], `${channel}[${index}]`));
       return handler(event, ...checked);
     } catch (error) {
-      if (error instanceof IpcValidationError) emit('güvenlik', error.message);
+      if (error instanceof IpcValidationError) emit(m('güvenlik', 'security'), error.message);
       throw error;
     }
   });
@@ -431,13 +436,13 @@ function registerIpc(): void {
   register('winget:list', () => winget.listPackages(logger('winget')));
   register('winget:updates', () => winget.listUpdates(logger('winget')));
   register('updates:list', (_event, source: 'all' | PackageSource) =>
-    source === 'all' ? updatesService.listAllUpdates(logger('güncelleme')) : updatesService.listUpdates(source, logger('güncelleme')));
+    source === 'all' ? updatesService.listAllUpdates(logger(m('güncelleme', 'update'))) : updatesService.listUpdates(source, logger(m('güncelleme', 'update'))));
   register('winget:search', (_event, query: string) => winget.search(query, logger('winget')));
-  register('winget:install', (_event, ident: string, silent: boolean) => winget.install(ident, silent, logger('kurulum')));
-  register('winget:upgrade', (_event, pkg: Package, silent: boolean) => winget.upgrade(pkg, silent, logger('güncelleme')));
-  register('winget:upgrade-all', (_event, silent: boolean) => winget.upgradeAll(silent, logger('güncelleme')));
-  register('winget:uninstall', (_event, pkg: Package, silent: boolean) => winget.uninstall(pkg, silent, logger('kaldırma')));
-  register('winget:download', async (_event, ident: string): Promise<DownloadResult> => winget.download(ident, logger('indirme')));
+  register('winget:install', (_event, ident: string, silent: boolean) => winget.install(ident, silent, logger(m('kurulum', 'install'))));
+  register('winget:upgrade', (_event, pkg: Package, silent: boolean) => winget.upgrade(pkg, silent, logger(m('güncelleme', 'update'))));
+  register('winget:upgrade-all', (_event, silent: boolean) => winget.upgradeAll(silent, logger(m('güncelleme', 'update'))));
+  register('winget:uninstall', (_event, pkg: Package, silent: boolean) => winget.uninstall(pkg, silent, logger(m('kaldırma', 'uninstall'))));
+  register('winget:download', async (_event, ident: string): Promise<DownloadResult> => winget.download(ident, logger(m('indirme', 'download'))));
   register('package-manager:status', () => installersService.managerStatus());
   register('network:speed', () => networkService.networkSpeed());
   register('install:queue', async (
@@ -452,7 +457,7 @@ function registerIpc(): void {
     try {
       return await installersService.installQueue(items, silent, id, (progress) => {
         mainWindow?.webContents.send('install:progress', progress);
-        if (progress.line) emit('kurulum', progress.line);
+        if (progress.line) emit(m('kurulum', 'install'), progress.line);
       }, () => cancelled);
     } finally {
       installCancellations.delete(id);
@@ -473,7 +478,7 @@ function registerIpc(): void {
     try {
       return await installersService.upgradeQueue(items, silent, id, (progress) => {
         mainWindow?.webContents.send('update:queue-progress', progress);
-        if (progress.line) emit('güncelleme', progress.line);
+        if (progress.line) emit(m('güncelleme', 'update'), progress.line);
       }, () => cancelled);
     } finally {
       installCancellations.delete(id);
@@ -488,7 +493,11 @@ function registerIpc(): void {
     try {
       packages = await winget.listPackages();
     } catch (error) {
-      emit('uygulama', `winget listesi alınamadı: ${(error as Error).message}`);
+      emit(m('uygulama', 'application'), mf(
+        'winget listesi alınamadı: {message}',
+        'Could not get winget list: {message}',
+        { message: (error as Error).message },
+      ));
     }
     return appsService.installedApps(packages);
   });
@@ -558,59 +567,73 @@ function registerIpc(): void {
     return folder;
   });
 
-  register('malware:scan', (_event, engines: MalwareEngine[]) => malwareService.scanMalware(engines));
+  register('malware:scan', (_event, engines: MalwareEngine[], requestId?: string) => {
+    const id = requestId || `malware-${Date.now()}`;
+    const controller = new AbortController();
+    malwareCancellations.set(id, controller);
+    return malwareService.scanMalware(engines, {
+      requestId: id,
+      signal: controller.signal,
+      onProgress: (progress) => { mainWindow?.webContents.send('malware:progress', progress); },
+    }).finally(() => { malwareCancellations.delete(id); });
+  });
+  register('malware:cancel', (_event, requestId: string) => {
+    malwareCancellations.get(requestId)?.abort();
+  });
+  register('malware:export', (_event, content: string, format: 'json' | 'txt') =>
+    malwareService.exportReport(content, format));
 
   register('schedule:list', () => schedulerService.listSchedules());
   register('schedule:save', (_event, tasks: ScheduleTask[]) => schedulerService.saveSchedules(tasks));
-  register('schedule:run', (_event, task: ScheduleTask) => schedulerService.runSchedule(task, logger('zamanlama')));
+  register('schedule:run', (_event, task: ScheduleTask) => schedulerService.runSchedule(task, logger(m('zamanlama', 'scheduling'))));
 
-  register('drivers:scan', () => driversService.scanDrivers(logger('sürücü')));
-  register('drivers:download', (_event, ids: string[]) => driversService.downloadDrivers(ids, logger('sürücü')));
-  register('drivers:install', (_event, ids: string[], backup: boolean) => driversService.installDrivers(ids, backup, logger('sürücü')));
-  register('drivers:backup', () => driversService.backupDrivers(logger('sürücü')));
+  register('drivers:scan', () => driversService.scanDrivers(logger(m('sürücü', 'driver'))));
+  register('drivers:download', (_event, ids: string[]) => driversService.downloadDrivers(ids, logger(m('sürücü', 'driver'))));
+  register('drivers:install', (_event, ids: string[], backup: boolean) => driversService.installDrivers(ids, backup, logger(m('sürücü', 'driver'))));
+  register('drivers:backup', () => driversService.backupDrivers(logger(m('sürücü', 'driver'))));
 
   register('locale:list', () => localeService.availableLocales());
   register('locale:dictionary', (_event, language: string) => localeService.localeDictionary(language));
   register('locale:folder', () => localeService.ensureLocaleFolder());
   register('prereq:scan', () => prereqService.scanPrerequisites());
   register('prereq:install', (_event, id: Parameters<typeof prereqService.installPrerequisite>[0]) =>
-    prereqService.installPrerequisite(id, logger('gerekli bileşen')));
+    prereqService.installPrerequisite(id, logger(m('gerekli bileşen', 'required component'))));
   register('prereq:auto-install', async () => {
     if (!settingsService.getSettings().enterpriseSilentPrereqs) return [];
-    const results = await prereqService.installMissingManagers(logger('kurumsal kurulum'));
+    const results = await prereqService.installMissingManagers(logger(m('kurumsal kurulum', 'enterprise setup')));
     for (const result of results) {
-      emit('kurumsal kurulum', `${result.id}: ${result.ok ? result.message : `HATA: ${result.message}`}`);
+      emit(m('kurumsal kurulum', 'enterprise setup'), `${result.id}: ${result.ok ? result.message : `${m('HATA', 'ERROR')}: ${result.message}`}`);
     }
     return results;
   });
   register('contextMenu:status', () => contextMenuService.contextMenuStatus());
   register('contextMenu:set', (_event, style: Parameters<typeof contextMenuService.setContextMenuStyle>[0]) =>
-    contextMenuService.setContextMenuStyle(style, logger('sağ tık menüsü')));
+    contextMenuService.setContextMenuStyle(style, logger(m('sağ tık menüsü', 'context menu'))));
   register('shell-ext:list', () => shellExtensionsService.listShellExtensions());
   register('shell-ext:set', (_event, id: string, enabled: boolean) =>
-    shellExtensionsService.setShellExtension(id, enabled, logger('sağ tık eklentisi')));
+    shellExtensionsService.setShellExtension(id, enabled, logger(m('sağ tık eklentisi', 'context menu extension'))));
   register('managedPolicy:files', () => managedPolicyService.managedPolicyFiles());
   register('managedPolicy:save', (_event, id: Parameters<typeof managedPolicyService.saveManagedPolicyFile>[0]) =>
     managedPolicyService.saveManagedPolicyFile(id));
   register('managedPolicy:apply', async (_event, id: Parameters<typeof managedPolicyService.applyManagedPolicyFile>[0]) => {
     const result = await managedPolicyService.applyManagedPolicyFile(id);
-    emit('hata ayıklama', result.message);
+    emit(m('hata ayıklama', 'debug'), result.message);
     return result;
   });
 
-  register('update:check', () => updaterService.checkForUpdate(logger('güncelleyici')));
+  register('update:check', () => updaterService.checkForUpdate(logger(m('güncelleyici', 'updater'))));
   register('update:download', (_event, info: Parameters<typeof updaterService.downloadUpdate>[0]) =>
     updaterService.downloadUpdate(
       info,
       (percent, downloaded, total) => mainWindow?.webContents.send('update:progress', { percent, downloaded, total }),
-      logger('güncelleyici'),
+      logger(m('güncelleyici', 'updater')),
     ));
-  register('update:install', (_event, filePath: string) => updaterService.installUpdate(filePath, logger('güncelleyici')));
+  register('update:install', (_event, filePath: string) => updaterService.installUpdate(filePath, logger(m('güncelleyici', 'updater'))));
   register('update:folder', () => updaterService.updateFolder());
 
   register('dialog:pick-folders', async () => {
     const result = await dialog.showOpenDialog({
-      title: 'Hariç tutulacak klasörleri seçin',
+      title: m('Hariç tutulacak klasörleri seçin', 'Select folders to exclude'),
       properties: ['openDirectory', 'multiSelections'],
     });
     if (result.canceled) return [];
@@ -620,7 +643,7 @@ function registerIpc(): void {
 
   register('files:pick-folders', async () => {
     const result = await dialog.showOpenDialog({
-      title: 'Taranacak klasörleri seçin',
+      title: m('Taranacak klasörleri seçin', 'Select folders to scan'),
       properties: ['openDirectory', 'multiSelections'],
     });
     if (result.canceled) return [];
@@ -643,7 +666,9 @@ function registerIpc(): void {
       if (stat.isDirectory()) await shell.openPath(targetPath);
       else shell.showItemInFolder(targetPath);
     } catch (error) {
-      emit('sistem', `Yol açılamadı: ${(error as Error).message}`);
+      emit(m('sistem', 'system'), mf('Yol açılamadı: {message}', 'Could not open path: {message}', {
+        message: (error as Error).message,
+      }));
     }
   });
 
@@ -654,10 +679,10 @@ function registerIpc(): void {
   // Paket listesi yedeği
   register('package:backup-folder', () => packagesService.backupFolder());
   register('package:backup-list', () => packagesService.listBackups());
-  register('package:export', () => packagesService.exportPackages(logger('paket yedeği')));
+  register('package:export', () => packagesService.exportPackages(logger(m('paket yedeği', 'package backup'))));
   register('package:read-backup', (_event, file: string) => packagesService.readBackup(file));
   register('package:import', (_event, file: string, idents: string[]) =>
-    packagesService.importPackages(file, idents, logger('paket geri yükleme')));
+    packagesService.importPackages(file, idents, logger(m('paket geri yükleme', 'package restore'))));
 
   // Dosya tarayıcı ve disk analizi
   register('files:scan', (_event, options: Parameters<typeof fileScanService.scanFiles>[0]) =>
@@ -669,28 +694,28 @@ function registerIpc(): void {
   // Sistem onarımı, gelişmiş başlangıç ve gizlilik
   register('repair:backup-folder', () => repairService.backupFolder());
   register('repair:run', (_event, kind: Parameters<typeof repairService.runRepair>[0]) =>
-    repairService.runRepair(kind, logger('onarım')));
-  register('autoruns:scan', () => autorunsService.scanAutoruns(logger('başlangıç')));
+    repairService.runRepair(kind, logger(m('onarım', 'repair'))));
+  register('autoruns:scan', () => autorunsService.scanAutoruns(logger(m('başlangıç', 'startup'))));
   register('autoruns:set', (_event, item: Parameters<typeof autorunsService.setAutorun>[0], enabled: boolean) =>
-    autorunsService.setAutorun(item, enabled, logger('başlangıç')));
+    autorunsService.setAutorun(item, enabled, logger(m('başlangıç', 'startup'))));
   register('privacy:list', () => privacyService.listPrivacy());
   register('privacy:set', (_event, tweak: Parameters<typeof privacyService.setPrivacy>[0], apply: boolean) =>
-    privacyService.setPrivacy(tweak, apply, logger('gizlilik')));
+    privacyService.setPrivacy(tweak, apply, logger(m('gizlilik', 'privacy'))));
 
   // Sistem ayarları, optimizasyon profilleri ve DNS
   register('tweaks:list', () => tweaksService.listTweaks());
   register('tweaks:set', (_event, id: string, apply: boolean) =>
-    tweaksService.setTweak(id, apply, logger('sistem ayarı')));
+    tweaksService.setTweak(id, apply, logger(m('sistem ayarı', 'system setting'))));
   register('tweaks:backup-folder', () => tweaksService.tweakBackupFolder());
   register('profile:list', () => tweaksService.profileList());
   register('profile:apply', (_event, id: Parameters<typeof tweaksService.applyProfile>[0], apply: boolean) =>
-    tweaksService.applyProfile(id, apply, logger('optimizasyon profili')));
+    tweaksService.applyProfile(id, apply, logger(m('optimizasyon profili', 'optimization profile'))));
   register('dns:providers', () => dnsService.dnsProviders());
   register('dns:current', () => dnsService.dnsCurrent());
-  register('dns:benchmark', () => dnsService.dnsBenchmark(logger('dns ölçümü')));
+  register('dns:benchmark', () => dnsService.dnsBenchmark(logger(m('dns ölçümü', 'dns benchmark'))));
   register('dns:switch', (_event, id: Parameters<typeof dnsService.dnsSwitch>[0]) =>
-    dnsService.dnsSwitch(id, logger('dns değiştirme')));
-  register('dns:reset', () => dnsService.dnsReset(logger('dns sıfırlama')));
+    dnsService.dnsSwitch(id, logger(m('dns değiştirme', 'dns change'))));
+  register('dns:reset', () => dnsService.dnsReset(logger(m('dns sıfırlama', 'dns reset'))));
 }
 
 // Tek örnek: ikinci başlatma mevcut pencereyi öne getirip kapanır.
@@ -716,7 +741,7 @@ if (!singleInstance) {
     nativeTheme.on('updated', () => {
       if (settingsService.getSettings().theme === 'auto') mainWindow?.setBackgroundColor(themeBackground('auto'));
     });
-    stopScheduler = schedulerService.startScheduler(logger('zamanlama'));
+    stopScheduler = schedulerService.startScheduler(logger(m('zamanlama', 'scheduling')));
 
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) createWindow();

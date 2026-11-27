@@ -2,6 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import type { DriverActionResult, DriverBackupResult, DriverScanResult } from '../../shared/types';
+import { m, mf } from '../i18n-main';
 import { LogFn, powershellJson, psLiteral } from '../util';
 
 const ADMIN_CHECK = `$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)`;
@@ -95,10 +96,79 @@ function removeIdFile(file: string): void {
   try { fs.unlinkSync(file); } catch { /* ignore */ }
 }
 
+/** PowerShell betiğinin yazdığı satırları yalnızca gösterimde çevirir; betik aynen kalır. */
+function translatedDriverLog(onLine?: LogFn): LogFn | undefined {
+  if (!onLine) return undefined;
+  return (line) => {
+    const text = line.trim();
+    if (text === 'UYARI: Sürücü yedeği alınamadı.') {
+      onLine(m('UYARI: Sürücü yedeği alınamadı.', 'WARNING: Driver backup could not be created.'));
+    } else if (text.startsWith('Yedek: ')) {
+      onLine(mf('Yedek: {path}', 'Backup: {path}', { path: text.slice('Yedek: '.length) }));
+    } else {
+      const downloading = text.match(/^(\d+) güncelleme indiriliyor…$/);
+      const installing = text.match(/^(\d+) güncelleme kuruluyor…$/);
+      const status = text.match(/^İndirme durumu: (.+)$/);
+      if (downloading) {
+        onLine(mf('{count} güncelleme indiriliyor…', 'Downloading {count} update(s)…', { count: downloading[1] }));
+      } else if (installing) {
+        onLine(mf('{count} güncelleme kuruluyor…', 'Installing {count} update(s)…', { count: installing[1] }));
+      } else if (status) {
+        onLine(mf('İndirme durumu: {status}', 'Download result: {status}', { status: status[1] }));
+      } else {
+        onLine(line);
+      }
+    }
+  };
+}
+
+/** Betikten gelen sonuç mesajlarını gösterimde çevirir. */
+function translatedDriverMessage(message: string): string {
+  const text = message || '';
+  switch (text) {
+    case 'Yönetici izni gerekiyor. Uygulamayı yönetici olarak başlatın.':
+      return m('Yönetici izni gerekiyor. Uygulamayı yönetici olarak başlatın.', 'Administrator permission is required. Start the app as an administrator.');
+    case 'Güncelleme artık listede yok.':
+      return m('Güncelleme artık listede yok.', 'The update is no longer listed.');
+    case 'Kuruldu.':
+      return m('Kuruldu.', 'Installed.');
+    case 'Uyarılarla kuruldu.':
+      return m('Uyarılarla kuruldu.', 'Installed with warnings.');
+    case 'İndirme tamamlanamadı.':
+      return m('İndirme tamamlanamadı.', 'Download could not be completed.');
+    case 'İndirildi.':
+      return m('İndirildi.', 'Downloaded.');
+    case 'İndirilemedi.':
+      return m('İndirilemedi.', 'Could not be downloaded.');
+    case 'Sürücüler yedeklendi.':
+      return m('Sürücüler yedeklendi.', 'Drivers backed up.');
+  }
+  const errorCode = text.match(/^Hata kodu: (.+)$/);
+  if (errorCode) return mf('Hata kodu: {code}', 'Error code: {code}', { code: errorCode[1] });
+  const dism = text.match(/^DISM hata kodu: (.+?)\. Yönetici izni gerekebilir\.$/);
+  if (dism) {
+    return mf('DISM hata kodu: {code}. Yönetici izni gerekebilir.', 'DISM error code: {code}. Administrator permission may be required.', { code: dism[1] });
+  }
+  return message;
+}
+
+function translatedReboot(value: string): string {
+  switch (value) {
+    case 'Yok': return m('Yok', 'No');
+    case 'Olabilir': return m('Olabilir', 'May be');
+    case 'Gerekli': return m('Gerekli', 'Required');
+    case 'Bilinmiyor': return m('Bilinmiyor', 'Unknown');
+    default: return value;
+  }
+}
+
 export async function scanDrivers(onLine?: LogFn): Promise<DriverScanResult> {
-  onLine?.('Kurulu sürücüler okunuyor…');
-  const result = await powershellJson<DriverScanResult>(SCAN_SCRIPT, onLine, 5 * 60 * 1000);
-  onLine?.(`${result.installed.length} sürücü, ${result.updates.length} güncelleme bulundu.`);
+  onLine?.(m('Kurulu sürücüler okunuyor…', 'Reading installed drivers…'));
+  const result = await powershellJson<DriverScanResult>(SCAN_SCRIPT, translatedDriverLog(onLine), 5 * 60 * 1000);
+  for (const update of result.updates || []) update.reboot = translatedReboot(update.reboot);
+  onLine?.(mf('{installed} sürücü, {updates} güncelleme bulundu.', 'Found {installed} drivers and {updates} updates.', {
+    installed: result.installed.length, updates: result.updates.length,
+  }));
   return result;
 }
 
@@ -201,10 +271,12 @@ async function runAction(
   try {
     const result = await powershellJson<{ results?: DriverActionResult[] }>(
       actionScript(mode, idFile, backup, destination),
-      onLine,
+      translatedDriverLog(onLine),
       20 * 60 * 1000,
     );
-    return Array.isArray(result.results) ? result.results : [];
+    const rows = Array.isArray(result.results) ? result.results : [];
+    for (const row of rows) row.message = translatedDriverMessage(row.message);
+    return rows;
   } finally {
     removeIdFile(idFile);
   }
@@ -220,7 +292,7 @@ export function installDrivers(ids: string[], backup: boolean, onLine?: LogFn): 
 
 export async function backupDrivers(onLine?: LogFn): Promise<DriverBackupResult> {
   const destination = backupPath();
-  onLine?.(`Sürücüler yedekleniyor: ${destination}`);
+  onLine?.(mf('Sürücüler yedekleniyor: {path}', 'Backing up drivers: {path}', { path: destination }));
   const result = await powershellJson<{ ok: boolean; path?: string; message: string }>(String.raw`
 $ErrorActionPreference = 'SilentlyContinue'
 $destination = ${psLiteral(destination)}
@@ -235,6 +307,7 @@ try {
 } catch {
   [pscustomobject]@{ ok = $false; message = $_.Exception.Message } | ConvertTo-Json -Compress
 }
-`, onLine, 20 * 60 * 1000);
+`, translatedDriverLog(onLine), 20 * 60 * 1000);
+  result.message = translatedDriverMessage(result.message);
   return result;
 }

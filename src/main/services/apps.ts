@@ -31,7 +31,7 @@ function Add-Apps($hive, $viewName) {
       if (-not $seen.Add($normalized)) { continue }
       $iconPath = [string]$sub.GetValue('DisplayIcon')
       $iconB64 = $null
-      if ($iconPath -and $items.Count -lt 140) {
+      if ($iconPath -and $items.Count -lt 500) {
         $iconPath = $iconPath -replace '^"|"$',''
         $iconPath = ($iconPath -split ',')[0]
         $iconPath = [Environment]::ExpandEnvironmentVariables($iconPath)

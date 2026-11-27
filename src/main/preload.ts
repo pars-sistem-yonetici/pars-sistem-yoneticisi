@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import type {
-  AppApi, InstallItem, InstallProgress, InstallResult, LeftoverProgress, LogEntry, UpdateProgress,
+  AppApi, InstallItem, InstallProgress, InstallResult, LeftoverProgress, LogEntry, MalwareScanProgress, UpdateProgress,
 } from '../shared/types';
 
 const api: AppApi = {
@@ -74,7 +74,14 @@ const api: AppApi = {
   firewallSet: (id, enabled) => ipcRenderer.invoke('firewall:set', id, enabled),
   firewallDelete: (id) => ipcRenderer.invoke('firewall:delete', id),
   firewallBackupPath: () => ipcRenderer.invoke('firewall:backup-path'),
-  malwareScan: (engines) => ipcRenderer.invoke('malware:scan', engines),
+  malwareScan: (engines, requestId) => ipcRenderer.invoke('malware:scan', engines, requestId),
+  onMalwareProgress: (callback) => {
+    const listener = (_event: Electron.IpcRendererEvent, progress: MalwareScanProgress) => callback(progress);
+    ipcRenderer.on('malware:progress', listener);
+    return () => ipcRenderer.removeListener('malware:progress', listener);
+  },
+  cancelMalwareScan: (requestId) => ipcRenderer.invoke('malware:cancel', requestId),
+  malwareExportReport: (content, format) => ipcRenderer.invoke('malware:export', content, format),
   scheduleList: () => ipcRenderer.invoke('schedule:list'),
   scheduleSave: (tasks) => ipcRenderer.invoke('schedule:save', tasks),
   scheduleRun: (task) => ipcRenderer.invoke('schedule:run', task),

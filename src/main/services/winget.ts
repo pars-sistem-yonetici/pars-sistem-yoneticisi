@@ -1,5 +1,6 @@
 import type { Package } from '../../shared/types';
 import { LogFn, runCommand } from '../util';
+import { m, mf } from '../i18n-main';
 
 const AGREEMENTS = ['--accept-source-agreements', '--accept-package-agreements'];
 const QUIET = ['--disable-interactivity', '--nowarn'];
@@ -12,7 +13,7 @@ const IDENT_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._+-]*\.[A-Za-z0-9][A-Za-z0-9._+-]*
 function requireIdent(ident: string, action: string): string {
   const value = ident.trim();
   if (value.length < 3 || value.length > 128 || !IDENT_PATTERN.test(value)) {
-    throw new WingetError(`${action}: geçersiz paket kimliği.`);
+    throw new WingetError(mf('{action}: geçersiz paket kimliği.', 'Invalid package ID for {action}.', { action }));
   }
   return value;
 }
@@ -20,7 +21,7 @@ function requireIdent(ident: string, action: string): string {
 function requireQuery(query: string): string {
   const value = query.trim();
   if (!value || value.length > 120 || /^[-/]/.test(value) || /[\r\n]/.test(value)) {
-    throw new WingetError('Arama sorgusu geçersiz.');
+    throw new WingetError(m('Arama sorgusu geçersiz.', 'Invalid search query.'));
   }
   return value;
 }
@@ -53,14 +54,21 @@ async function run(args: string[], onLine?: LogFn, timeout = 15 * 60 * 1000) {
   try {
     return await runCommand('winget', args, onLine, timeout);
   } catch (error) {
-    throw new WingetError(`winget.exe bulunamadı. Windows 10/11 ve App Installer gerekli. (${(error as Error).message})`);
+    throw new WingetError(mf(
+      'winget.exe bulunamadı. Windows 10/11 ve App Installer gerekli. ({message})',
+      'winget.exe not found. Windows 10/11 and App Installer are required. ({message})',
+      { message: (error as Error).message },
+    ));
   }
 }
 
 export async function version(): Promise<{ available: boolean; version: string }> {
   try {
     const result = await run(['--version'], undefined, 30_000);
-    return { available: result.code === 0, version: result.lines.filter((line) => line.trim()).join(' ').trim() || 'bilinmiyor' };
+    return {
+      available: result.code === 0,
+      version: result.lines.filter((line) => line.trim()).join(' ').trim() || m('bilinmiyor', 'unknown'),
+    };
   } catch (error) {
     return { available: false, version: (error as Error).message };
   }
@@ -69,7 +77,7 @@ export async function version(): Promise<{ available: boolean; version: string }
 function fromJson(text: string): Package[] {
   const start = text.indexOf('{');
   const end = text.lastIndexOf('}');
-  if (start < 0 || end < start) throw new Error('JSON yok');
+  if (start < 0 || end < start) throw new Error(m('JSON yok', 'No JSON'));
   const data = JSON.parse(text.slice(start, end + 1)) as Record<string, unknown>;
   const rows = (data.Packages || data.InstalledPackages || []) as Record<string, unknown>[];
   return rows
@@ -165,11 +173,11 @@ function targetArgs(pkg: Package): string[] {
   if (byName(pkg.ident)) {
     const name = pkg.name.trim();
     if (!name || name.length > 512 || /^[-/]/.test(name) || /[\r\n]/.test(name)) {
-      throw new WingetError('İşlem: geçersiz paket adı.');
+      throw new WingetError(m('İşlem: geçersiz paket adı.', 'Operation: invalid package name.'));
     }
     return ['--name', name, '--exact'];
   }
-  return ['--id', requireIdent(pkg.ident, 'İşlem'), '--exact'];
+  return ['--id', requireIdent(pkg.ident, m('İşlem', 'Operation')), '--exact'];
 }
 
 function silentFlag(silent: boolean): string[] {
@@ -177,7 +185,7 @@ function silentFlag(silent: boolean): string[] {
 }
 
 export async function install(ident: string, silent: boolean, onLine?: LogFn): Promise<number> {
-  const result = await run(['install', '--id', requireIdent(ident, 'Kurulum'), '--exact', ...AGREEMENTS, ...QUIET, ...silentFlag(silent)], onLine);
+  const result = await run(['install', '--id', requireIdent(ident, m('Kurulum', 'Installation')), '--exact', ...AGREEMENTS, ...QUIET, ...silentFlag(silent)], onLine);
   return result.code;
 }
 
@@ -206,16 +214,20 @@ export async function download(ident: string, onLine?: LogFn) {
     ? `${process.env.USERPROFILE}\\Downloads`
     : process.cwd());
   const result = await run(
-    ['download', '--id', requireIdent(ident, 'İndirme'), '--exact', ...AGREEMENTS, ...QUIET, '--download-directory', downloads],
+    ['download', '--id', requireIdent(ident, m('İndirme', 'Download')), '--exact', ...AGREEMENTS, ...QUIET, '--download-directory', downloads],
     onLine,
     10 * 60 * 1000,
   );
   if (result.code === 0) {
-    return { ok: true, message: `İndirme tamamlandı: ${downloads}`, path: downloads };
+    return {
+      ok: true,
+      message: mf('İndirme tamamlandı: {path}', 'Download complete: {path}', { path: downloads }),
+      path: downloads,
+    };
   }
   return {
     ok: false,
     message: result.text.split(/\r?\n/).filter((line) => /error|failed|hata|not support/i.test(line)).slice(-1)[0]
-      || 'winget download bu sürümde desteklenmiyor. Kurulum sekmesinden yükleyebilirsiniz.',
+      || m('winget download bu sürümde desteklenmiyor. Kurulum sekmesinden yükleyebilirsiniz.', 'winget download is not supported in this version. You can install from the Install tab.'),
   };
 }

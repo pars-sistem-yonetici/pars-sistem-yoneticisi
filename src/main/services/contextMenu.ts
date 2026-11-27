@@ -1,5 +1,6 @@
 import type { ContextMenuActionResult, ContextMenuStatus, ContextMenuStyle } from '../../shared/types';
 import { LogFn, runCommand } from '../util';
+import { m, mf } from '../i18n-main';
 
 const CLASSIC_KEY = 'HKCU\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}';
 const INPROC_KEY = `${CLASSIC_KEY}\\InprocServer32`;
@@ -14,10 +15,10 @@ export async function contextMenuStatus(): Promise<ContextMenuStatus> {
 }
 
 async function restartExplorer(onLine?: LogFn): Promise<boolean> {
-  onLine?.('Windows Gezgini kapatılıyor…');
+  onLine?.(m('Windows Gezgini kapatılıyor…', 'Closing Windows Explorer…'));
   const kill = await runCommand('cmd.exe', ['/c', 'taskkill /f /im explorer.exe'], onLine, 30_000);
   const notRunning = /not found|bulunamad|no process/i.test(`${kill.text} ${kill.stderr}`);
-  onLine?.('Windows Gezgini yeniden başlatılıyor…');
+  onLine?.(m('Windows Gezgini yeniden başlatılıyor…', 'Restarting Windows Explorer…'));
   const start = await runCommand('cmd.exe', ['/c', 'start "" explorer.exe'], onLine, 30_000);
   return start.code === 0 || (kill.code === 0 && notRunning);
 }
@@ -28,7 +29,7 @@ export async function setContextMenuStyle(
   onLine?: LogFn,
 ): Promise<ContextMenuActionResult> {
   const command = style === 'windows10' ? REG_ADD_WIN10 : REG_DELETE_WIN11;
-  onLine?.(`Komut çalıştırılıyor: ${command}`);
+  onLine?.(mf('Komut çalıştırılıyor: {command}', 'Running command: {command}', { command }));
   const result = await runCommand('cmd.exe', ['/c', command], onLine, 30_000);
   const combined = `${result.text} ${result.stderr}`;
   const alreadyAbsent = style === 'windows11' && /unable to find the specified registry key|belirtilen kayıt defteri anahtarı/i.test(combined);
@@ -37,7 +38,7 @@ export async function setContextMenuStyle(
     return {
       style,
       ok: false,
-      message: result.stderr.trim() || result.text.trim() || 'Kayıt defteri işlemi başarısız oldu.',
+      message: result.stderr.trim() || result.text.trim() || m('Kayıt defteri işlemi başarısız oldu.', 'The registry operation failed.'),
       explorerRestarted: false,
     };
   }
@@ -45,14 +46,15 @@ export async function setContextMenuStyle(
   const explorerRestarted = await restartExplorer(onLine);
   const status = await contextMenuStatus();
   const ok = status.style === style;
+  const label = style === 'windows10' ? 'Windows 10' : 'Windows 11';
   return {
     style: status.style,
     ok,
     explorerRestarted,
     message: ok
       ? explorerRestarted
-        ? `${style === 'windows10' ? 'Windows 10' : 'Windows 11'} sağ tık menüsü etkin. Windows Gezgini yeniden başlatıldı.`
-        : `${style === 'windows10' ? 'Windows 10' : 'Windows 11'} sağ tık menüsü etkin. Windows Gezgini yeniden başlatılamadı; oturumu kapatıp açın.`
-      : 'Kayıt defteri değişikliği doğrulanamadı.',
+        ? mf('{label} sağ tık menüsü etkin. Windows Gezgini yeniden başlatıldı.', '{label} right-click menu is active. Windows Explorer was restarted.', { label })
+        : mf('{label} sağ tık menüsü etkin. Windows Gezgini yeniden başlatılamadı; oturumu kapatıp açın.', '{label} right-click menu is active. Windows Explorer could not be restarted; sign out and back in.', { label })
+      : m('Kayıt defteri değişikliği doğrulanamadı.', 'The registry change could not be verified.'),
   };
 }

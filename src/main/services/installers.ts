@@ -1,4 +1,5 @@
 import type { InstallItem, InstallProgress, InstallResult, Package, PackageManagerStatus, PackageSource } from '../../shared/types';
+import { m, mf } from '../i18n-main';
 import { LogFn, runCommand } from '../util';
 import { probeManager } from './prereqs';
 import * as winget from './winget';
@@ -22,11 +23,13 @@ const LABELS: Record<PackageSource, string> = {
 
 /** Kaynağa göre paket kimliğini doğrular; komut satırına yalnızca geçerli değer gider. */
 export function requireIdent(source: PackageSource, ident: string): string {
-  if (!(source in IDENT_PATTERNS)) throw new Error(`Desteklenmeyen paket kaynağı: ${source}`);
+  if (!(source in IDENT_PATTERNS)) {
+    throw new Error(mf('Desteklenmeyen paket kaynağı: {source}', 'Unsupported package source: {source}', { source }));
+  }
   const value = String(ident || '').trim();
   const pattern = IDENT_PATTERNS[source];
   if (value.length < 1 || value.length > 128 || !pattern.test(value)) {
-    throw new Error(`${LABELS[source]}: geçersiz paket kimliği.`);
+    throw new Error(mf('{label}: geçersiz paket kimliği.', '{label}: invalid package identifier.', { label: LABELS[source] }));
   }
   return value;
 }
@@ -36,7 +39,7 @@ export function requireInstallItem(item: InstallItem): InstallItem {
   const ident = requireIdent(source, String(item.ident || ''));
   const name = String(item.name || '').trim();
   if (name.length < 1 || name.length > 256 || /[\r\n]/.test(name)) {
-    throw new Error('Geçersiz uygulama adı.');
+    throw new Error(m('Geçersiz uygulama adı.', 'Invalid application name.'));
   }
   return { name, ident, source };
 }
@@ -99,7 +102,9 @@ async function installOne(item: InstallItem, silent: boolean, onLine?: LogFn): P
     const result = await runCommand(command, args, onLine, 20 * 60 * 1000);
     return result.code;
   } catch (error) {
-    throw new Error(`${LABELS[safe.source]} başlatılamadı: ${(error as Error).message}`);
+    throw new Error(mf('{label} başlatılamadı: {message}', 'Could not start {label}: {message}', {
+      label: LABELS[safe.source], message: (error as Error).message,
+    }));
   }
 }
 
@@ -180,10 +185,11 @@ async function runQueue(
       const code = await task.run(onLine);
       const ok = code === 0;
       percent = 100;
-      emit('done', ok ? task.doneText : `Çıkış kodu ${code}`, ok);
+      const message = ok ? task.doneText : mf('Çıkış kodu {code}', 'Exit code {code}', { code });
+      emit('done', message, ok);
       results.push({
         name: task.name, ident: task.ident, source: task.source,
-        ok, code, message: ok ? task.doneText : `Çıkış kodu ${code}`,
+        ok, code, message,
       });
     } catch (error) {
       const message = (error as Error).message.slice(0, 250);
@@ -208,16 +214,18 @@ export async function installQueue(
     ident: item.ident,
     source: item.source,
     run: (onLine) => installOne(item, silent, onLine),
-    doneText: 'Kurulum tamamlandı.',
+    doneText: m('Kurulum tamamlandı.', 'Installation completed.'),
   })), requestId, onProgress, cancelled);
 }
 
 function requireUpgradeItem(pkg: Package): Package {
   const source: PackageSource = (pkg?.source || 'winget') as PackageSource;
-  if (!(source in IDENT_PATTERNS)) throw new Error(`Desteklenmeyen güncelleme kaynağı: ${source}`);
+  if (!(source in IDENT_PATTERNS)) {
+    throw new Error(mf('Desteklenmeyen güncelleme kaynağı: {source}', 'Unsupported update source: {source}', { source }));
+  }
   const name = String(pkg?.name || '').trim();
   if (name.length < 1 || name.length > 512 || /^[-/]/.test(name) || /[\r\n]/.test(name)) {
-    throw new Error('Geçersiz güncelleme paketi adı.');
+    throw new Error(m('Geçersiz güncelleme paketi adı.', 'Invalid update package name.'));
   }
   const ident = requireIdent(source, String(pkg?.ident || ''));
   return {
@@ -248,11 +256,15 @@ function upgradeOne(pkg: Package, silent: boolean, onLine?: LogFn): Promise<numb
       args = ['update', ident];
       break;
     default:
-      throw new Error(`Desteklenmeyen güncelleme kaynağı: ${pkg.source}`);
+      throw new Error(mf('Desteklenmeyen güncelleme kaynağı: {source}', 'Unsupported update source: {source}', { source: pkg.source }));
   }
   return runCommand(command, args, onLine, 20 * 60 * 1000)
     .then((result) => result.code)
-    .catch((error) => { throw new Error(`${LABELS[pkg.source as PackageSource]} güncellemesi başlatılamadı: ${(error as Error).message}`); });
+    .catch((error) => {
+      throw new Error(mf('{label} güncellemesi başlatılamadı: {message}', 'Could not start the {label} update: {message}', {
+        label: LABELS[pkg.source as PackageSource], message: (error as Error).message,
+      }));
+    });
 }
 
 /** Seçilen güncellemeler kaynaklarına göre sırayla uygulanır; her adım canlı ilerleme bildirir. */
@@ -269,6 +281,6 @@ export async function upgradeQueue(
     ident: pkg.ident,
     source: pkg.source as PackageSource,
     run: (onLine) => upgradeOne(pkg, silent, onLine),
-    doneText: 'Güncelleme tamamlandı.',
+    doneText: m('Güncelleme tamamlandı.', 'Update completed.'),
   })), requestId, onProgress, cancelled);
 }

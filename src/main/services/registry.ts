@@ -6,6 +6,7 @@ import { REG_SCAN_SCOPES } from '../../shared/types';
 import type {
   RegExportResult, RegIssue, RegResult, RegRisk, RegScanResult, RegScanScope, RegStats,
 } from '../../shared/types';
+import { m, mf } from '../i18n-main';
 import { powershellJson, psLiteral } from '../util';
 
 /**
@@ -777,31 +778,33 @@ function csvCell(value: unknown): string {
 
 function toCsv(report: RegScanResult): string {
   const header = [
-    'Kategori', 'Risk', 'Uygulama', 'Yayıncı', 'Sorun', 'Detay', 'Kök', 'Anahtar',
-    'Değer', 'Öneri', 'İmza', 'Silinebilir', 'Kök Kodu',
+    m('Kategori', 'Category'), m('Risk', 'Risk'), m('Uygulama', 'Application'), m('Yayıncı', 'Publisher'),
+    m('Sorun', 'Issue'), m('Detay', 'Detail'), m('Kök', 'Root'), m('Anahtar', 'Key'),
+    m('Değer', 'Value'), m('Öneri', 'Recommendation'), m('İmza', 'Signature'),
+    m('Silinebilir', 'Deletable'), m('Kök Kodu', 'Root code'),
   ];
   const rows = report.issues.map((issue) => [
     issue.category || 'uninstall', issue.risk || 'warning', issue.name, issue.publisher,
     issue.reason, issue.detail, issue.label, issue.key, issue.valueName || '',
-    issue.recommendation || '', issue.signature || '', issue.fixable ? 'evet' : 'hayır', issue.hive,
+    issue.recommendation || '', issue.signature || '', issue.fixable ? m('evet', 'yes') : m('hayır', 'no'), issue.hive,
   ].map(csvCell).join(','));
   return [header.map(csvCell).join(','), ...rows].join('\r\n');
 }
 
 export async function exportReport(format: 'json' | 'csv'): Promise<RegExportResult> {
-  if (!lastReport) return { ok: false, message: 'Önce kayıt defteri taraması yapın.', path: '' };
+  if (!lastReport) return { ok: false, message: m('Önce kayıt defteri taraması yapın.', 'Run a registry scan first.'), path: '' };
   const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
   const extension = format === 'csv' ? 'csv' : 'json';
   const options = {
-    title: 'Kayıt defteri tarama raporu',
+    title: m('Kayıt defteri tarama raporu', 'Registry scan report'),
     defaultPath: path.join(app.getPath('documents'), `kayit-defteri-tarama-${stamp}.${extension}`),
     filters: format === 'csv'
-      ? [{ name: 'CSV raporu', extensions: ['csv'] }]
-      : [{ name: 'JSON raporu', extensions: ['json'] }],
+      ? [{ name: m('CSV raporu', 'CSV report'), extensions: ['csv'] }]
+      : [{ name: m('JSON raporu', 'JSON report'), extensions: ['json'] }],
   };
   const parent = BrowserWindow.getFocusedWindow();
   const target = parent ? await dialog.showSaveDialog(parent, options) : await dialog.showSaveDialog(options);
-  if (target.canceled || !target.filePath) return { ok: false, message: 'Kaydetme iptal edildi.', path: '' };
+  if (target.canceled || !target.filePath) return { ok: false, message: m('Kaydetme iptal edildi.', 'Save canceled.'), path: '' };
   try {
     const content = format === 'csv'
       ? `\uFEFF${toCsv(lastReport)}`
@@ -812,9 +815,19 @@ export async function exportReport(format: 'json' | 'csv'): Promise<RegExportRes
         issues: lastReport.issues,
       }, null, 2);
     fs.writeFileSync(target.filePath, content, 'utf8');
-    return { ok: true, message: `Rapor kaydedildi: ${target.filePath}`, path: target.filePath };
+    return {
+      ok: true,
+      message: mf('Rapor kaydedildi: {path}', 'Report saved: {path}', { path: target.filePath }),
+      path: target.filePath,
+    };
   } catch (error) {
-    return { ok: false, message: `Rapor kaydedilemedi: ${(error as Error).message}`, path: '' };
+    return {
+      ok: false,
+      message: mf('Rapor kaydedilemedi: {message}', 'Report could not be saved: {message}', {
+        message: (error as Error).message,
+      }),
+      path: '',
+    };
   }
 }
 

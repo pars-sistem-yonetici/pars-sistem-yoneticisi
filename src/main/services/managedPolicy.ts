@@ -10,6 +10,7 @@ import {
 } from '../../shared/managedPolicy';
 import type { ManagedPolicyApplyResult, ManagedPolicyFile, ManagedPolicySaveResult } from '../../shared/types';
 import { powershellJson, psLiteral, runCommand } from '../util';
+import { m, mf } from '../i18n-main';
 
 const CHECK_SCRIPT = String.raw`
 $ErrorActionPreference = 'SilentlyContinue'
@@ -46,7 +47,7 @@ foreach ($entry in $keys) {
 
 function definition(id: ManagedPolicyFixId): ManagedPolicyFixDefinition {
   const fix = MANAGED_POLICY_FIXES.find((item) => item.id === id);
-  if (!fix) throw new Error('Bilinmeyen .reg dosyası.');
+  if (!fix) throw new Error(m('Bilinmeyen .reg dosyası.', 'Unknown .reg file.'));
   return fix;
 }
 
@@ -91,16 +92,23 @@ export async function saveManagedPolicyFile(id: ManagedPolicyFixId): Promise<Man
   const options = {
     title: fix.fileName,
     defaultPath: path.join(app.getPath('documents'), fix.fileName),
-    filters: [{ name: 'Registry dosyası', extensions: ['reg'] }],
+    filters: [{ name: m('Registry dosyası', 'Registry file'), extensions: ['reg'] }],
   };
   const parent = BrowserWindow.getFocusedWindow();
   const result = parent ? await dialog.showSaveDialog(parent, options) : await dialog.showSaveDialog(options);
-  if (result.canceled || !result.filePath) return { ok: false, message: 'Kaydetme iptal edildi.' };
+  if (result.canceled || !result.filePath) return { ok: false, message: m('Kaydetme iptal edildi.', 'Save canceled.') };
   try {
     fs.copyFileSync(sourcePath(fix), result.filePath);
-    return { ok: true, message: `Dosya kaydedildi: ${result.filePath}`, path: result.filePath };
+    return {
+      ok: true,
+      message: mf('Dosya kaydedildi: {path}', 'File saved: {path}', { path: result.filePath }),
+      path: result.filePath,
+    };
   } catch (error) {
-    return { ok: false, message: `Dosya kaydedilemedi: ${(error as Error).message}` };
+    return {
+      ok: false,
+      message: mf('Dosya kaydedilemedi: {message}', 'File could not be saved: {message}', { message: (error as Error).message }),
+    };
   }
 }
 
@@ -118,13 +126,24 @@ export async function applyManagedPolicyFile(id: ManagedPolicyFixId): Promise<Ma
 
   const targets = await existingKeys(fix.keys);
   if (!targets.length) {
-    return { ...empty, ok: true, message: 'Bu dosyadaki ilke anahtarları zaten yok; değişiklik gerekmedi.' };
+    return {
+      ...empty,
+      ok: true,
+      message: m('Bu dosyadaki ilke anahtarları zaten yok; değişiklik gerekmedi.', 'The policy keys in this file are already absent; no changes are needed.'),
+    };
   }
 
   try {
     fs.mkdirSync(folder, { recursive: true });
   } catch (error) {
-    return { ...empty, message: `Yedek klasörü oluşturulamadı: ${(error as Error).message}. Değişiklik yapılmadı.` };
+    return {
+      ...empty,
+      message: mf(
+        'Yedek klasörü oluşturulamadı: {message}. Değişiklik yapılmadı.',
+        'Could not create the backup folder: {message}. No changes were made.',
+        { message: (error as Error).message },
+      ),
+    };
   }
 
   const stamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, 14);
@@ -139,7 +158,7 @@ export async function applyManagedPolicyFile(id: ManagedPolicyFixId): Promise<Ma
     if (result.code !== 0 || !saved) {
       return {
         ...empty,
-        message: 'Yedek alınamadı; hiçbir ilke anahtarı silinmedi. Yedek klasörünü kontrol edin.',
+        message: m('Yedek alınamadı; hiçbir ilke anahtarı silinmedi. Yedek klasörünü kontrol edin.', 'Backup failed; no policy keys were deleted. Check the backup folder.'),
       };
     }
   }
@@ -159,7 +178,11 @@ export async function applyManagedPolicyFile(id: ManagedPolicyFixId): Promise<Ma
       ...empty,
       applied: true,
       backups: targets.length,
-      message: `Bazı ilke anahtarları hâlâ mevcut (${remaining.length}). Yönetici ilkeleri yeniden uygulamış olabilir. Yedekler: ${folder}`,
+      message: mf(
+        'Bazı ilke anahtarları hâlâ mevcut ({count}). Yönetici ilkeleri yeniden uygulamış olabilir. Yedekler: {folder}',
+        'Some policy keys are still present ({count}). Administrative policies may have been reapplied. Backups: {folder}',
+        { count: remaining.length, folder },
+      ),
     };
   }
   if (errors.length) {
@@ -168,7 +191,11 @@ export async function applyManagedPolicyFile(id: ManagedPolicyFixId): Promise<Ma
       ok: false,
       applied: true,
       backups: targets.length,
-      message: `İçe aktarma sırasında hata oluştu: ${errors.join(' | ')}. Yedekler: ${folder}`,
+      message: mf(
+        'İçe aktarma sırasında hata oluştu: {errors}. Yedekler: {folder}',
+        'An error occurred during import: {errors}. Backups: {folder}',
+        { errors: errors.join(' | '), folder },
+      ),
     };
   }
 
@@ -177,7 +204,10 @@ export async function applyManagedPolicyFile(id: ManagedPolicyFixId): Promise<Ma
     applied: true,
     backups: targets.length,
     backupFolder: folder,
-    message: `${targets.length} ilke anahtarı kaldırıldı. Yedekler: ${folder}`,
+    message: mf('{count} ilke anahtarı kaldırıldı. Yedekler: {folder}', '{count} policy key(s) removed. Backups: {folder}', {
+      count: targets.length,
+      folder,
+    }),
   };
 }
 

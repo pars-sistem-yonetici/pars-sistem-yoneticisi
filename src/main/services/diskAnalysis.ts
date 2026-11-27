@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import type { DiskAnalysisResult, DiskExtension, DiskTreeNode, LargeFile } from '../../shared/types';
 import { directorySize, isProtectedPath, isRuntimePath } from '../util';
+import { m } from '../i18n-main';
 import { isExcludedPath } from './exclusions';
 
 interface WalkResult {
@@ -17,13 +18,14 @@ const MAX_TOP_FILES = 60;
 /** Bir sürücü/klasörün alan dağılımını tek geçişte çıkarır (salt okunur). */
 export function analyzeDisk(rootInput: string): DiskAnalysisResult {
   const started = Date.now();
+  const noExtension = m('(uzantısız)', '(no extension)');
   let root = '';
   try { root = path.resolve(rootInput); } catch { /* geçersiz */ }
   const errors: string[] = [];
   const empty: DiskAnalysisResult = {
     root, total: 0, files: 0, folders: 0, topFiles: [], extensions: [], tree: [],
     durationMs: Date.now() - started,
-    errors: ['Taranacak geçerli bir klasör seçilmedi.'],
+    errors: [m('Taranacak geçerli bir klasör seçilmedi.', 'No valid folder to scan was selected.')],
   };
   if (!root || !fs.existsSync(root) || !fs.statSync(root).isDirectory()) return empty;
 
@@ -51,7 +53,7 @@ export function analyzeDisk(rootInput: string): DiskAnalysisResult {
           const stat = fs.statSync(full);
           size += stat.size;
           files += 1;
-          const ext = path.extname(full).toLowerCase() || '(uzantısız)';
+          const ext = path.extname(full).toLowerCase() || noExtension;
           const row = extensions.get(ext) || { size: 0, files: 0 };
           row.size += stat.size;
           row.files += 1;
@@ -93,7 +95,7 @@ export function analyzeDisk(rootInput: string): DiskAnalysisResult {
         const stat = fs.statSync(full);
         rootSize += stat.size;
         rootFiles += 1;
-        const ext = path.extname(full).toLowerCase() || '(uzantısız)';
+        const ext = path.extname(full).toLowerCase() || noExtension;
         const row = extensions.get(ext) || { size: 0, files: 0 };
         row.size += stat.size;
         row.files += 1;

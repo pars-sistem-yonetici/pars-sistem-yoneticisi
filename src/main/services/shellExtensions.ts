@@ -1,4 +1,5 @@
 import type { ShellExtensionActionResult, ShellExtensionItem } from '../../shared/types';
+import { m } from '../i18n-main';
 import { LogFn, psLiteral, powershellJson, runCommand, runPowerShell } from '../util';
 import { backupFolder } from './registry';
 
@@ -14,6 +15,30 @@ import { backupFolder } from './registry';
  */
 
 const ROOTS = ['*', 'Directory', 'Directory\\Background', 'Folder', 'Drive'] as const;
+
+/** PowerShell betiğinin hata metinlerini yalnızca gösterimde çevirir. */
+function translatedShellMessage(message: string): string {
+  switch ((message || '').trim()) {
+    case 'Geçersiz kök.':
+      return m('Geçersiz kök.', 'Invalid root.');
+    case 'Geçersiz girdi adı.':
+      return m('Geçersiz girdi adı.', 'Invalid entry name.');
+    case 'Geçersiz kimlik.':
+      return m('Geçersiz kimlik.', 'Invalid identifier.');
+    case 'Yedek alınamadı; kayıt defteri değiştirilmedi.':
+      return m('Yedek alınamadı; kayıt defteri değiştirilmedi.', 'Backup could not be created; the registry was not modified.');
+    case 'ProgrammaticAccessOnly kaldırılamadı.':
+      return m('ProgrammaticAccessOnly kaldırılamadı.', 'ProgrammaticAccessOnly could not be removed.');
+    case 'ProgrammaticAccessOnly yazılamadı.':
+      return m('ProgrammaticAccessOnly yazılamadı.', 'ProgrammaticAccessOnly could not be written.');
+    default:
+      return message;
+  }
+}
+
+function translatedShellLog(onLine?: LogFn): LogFn | undefined {
+  return onLine ? (line) => onLine(translatedShellMessage(line)) : undefined;
+}
 
 const SCAN_SCRIPT = String.raw`
 $ErrorActionPreference = 'Stop'
@@ -130,10 +155,10 @@ export async function listShellExtensions(): Promise<ShellExtensionItem[]> {
 }
 
 async function restartExplorer(onLine?: LogFn): Promise<boolean> {
-  onLine?.('Windows Gezgini kapatılıyor…');
+  onLine?.(m('Windows Gezgini kapatılıyor…', 'Closing Windows Explorer…'));
   const kill = await runCommand('taskkill.exe', ['/f', '/im', 'explorer.exe'], onLine, 30_000);
   const notRunning = /not found|bulunamad|no process/i.test(`${kill.text} ${kill.stderr}`);
-  onLine?.('Windows Gezgini yeniden başlatılıyor…');
+  onLine?.(m('Windows Gezgini yeniden başlatılıyor…', 'Restarting Windows Explorer…'));
   try {
     const start = await runPowerShell("Start-Process -FilePath 'explorer.exe' -ErrorAction Stop", onLine, 20_000);
     return start.code === 0 || (kill.code === 0 && notRunning);
@@ -153,7 +178,11 @@ export async function setShellExtension(
 ): Promise<ShellExtensionActionResult> {
   const item = (await listShellExtensions()).find((candidate) => candidate.id === id);
   if (!item) {
-    return { ok: false, enabled: !enabled, message: 'Eklenti bulunamadı; liste yenilenmeli.', backupPath: '', explorerRestarted: false };
+    return {
+      ok: false, enabled: !enabled,
+      message: m('Eklenti bulunamadı; liste yenilenmeli.', 'Extension not found; refresh the list.'),
+      backupPath: '', explorerRestarted: false,
+    };
   }
   if (item.strategy === 'unsupported') {
     return {
@@ -161,11 +190,14 @@ export async function setShellExtension(
       enabled: item.enabled,
       backupPath: '',
       explorerRestarted: false,
-      message: 'Bu girdi için güvenli bir kapatma yöntemi bulunamadı.',
+      message: m('Bu girdi için güvenli bir kapatma yöntemi bulunamadı.', 'No safe way to disable this entry was found.'),
     };
   }
   if (item.enabled === enabled) {
-    return { ok: true, enabled: item.enabled, backupPath: '', explorerRestarted: false, message: 'Değişiklik gerekmedi.' };
+    return {
+      ok: true, enabled: item.enabled, backupPath: '', explorerRestarted: false,
+      message: m('Değişiklik gerekmedi.', 'No changes needed.'),
+    };
   }
 
   const folder = item.kind === 'shellex' ? 'shellex\\ContextMenuHandlers' : 'shell';
@@ -244,7 +276,7 @@ if ($strategy -eq 'blocked') {
 `;
 
   try {
-    const result = await powershellJson<{ ok?: boolean; backupPath?: string }>(script, onLine, 90_000);
+    const result = await powershellJson<{ ok?: boolean; backupPath?: string }>(script, translatedShellLog(onLine), 90_000);
     let explorerRestarted = false;
     try { explorerRestarted = await restartExplorer(onLine); } catch { /* Gezgin yeniden başlamazsa oturum kapatma gerekir. */ }
     const after = (await listShellExtensions()).find((candidate) => candidate.id === id);
@@ -255,9 +287,9 @@ if ($strategy -eq 'blocked') {
       explorerRestarted,
       message: after?.enabled === enabled
         ? enabled
-          ? 'Sağ tık eklentisi yeniden açıldı.'
-          : 'Sağ tık eklentisi kapatıldı; Gezgin menüsünde görünmez.'
-        : 'Değişiklik doğrulanamadı; yedek dosyasını içe aktararak geri alabilirsiniz.',
+          ? m('Sağ tık eklentisi yeniden açıldı.', 'Right-click extension enabled again.')
+          : m('Sağ tık eklentisi kapatıldı; Gezgin menüsünde görünmez.', 'Right-click extension disabled; it no longer appears in the Explorer menu.')
+        : m('Değişiklik doğrulanamadı; yedek dosyasını içe aktararak geri alabilirsiniz.', 'The change could not be verified; you can restore it by importing the backup file.'),
     };
   } catch (error) {
     return {
@@ -265,7 +297,7 @@ if ($strategy -eq 'blocked') {
       enabled: item.enabled,
       backupPath: '',
       explorerRestarted: false,
-      message: (error as Error).message,
+      message: translatedShellMessage((error as Error).message),
     };
   }
 }

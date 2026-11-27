@@ -269,8 +269,13 @@ export interface FirewallRule {
   reasons: string[];
 }
 
-export type MalwareEngine = 'signatures' | 'heuristics' | 'scripts' | 'integrity' | 'persistence';
+export const MALWARE_ENGINE_IDS = [
+  'signatures', 'heuristics', 'scripts', 'integrity', 'persistence', 'defender', 'hosts', 'browser',
+] as const;
+
+export type MalwareEngine = (typeof MALWARE_ENGINE_IDS)[number];
 export type MalwareSeverity = 'critical' | 'medium' | 'low' | 'info';
+export type MalwareScanStatus = 'running' | 'done' | 'failed' | 'cancelled';
 
 export interface MalwareFinding {
   id: string;
@@ -283,8 +288,29 @@ export interface MalwareFinding {
 
 export interface MalwareScanResult {
   findings: MalwareFinding[];
+  /** Her motorun gerçekte incelediği nesne sayısı (bulgu sayısı değil). */
   scanned: Record<MalwareEngine, number>;
   durationMs: number;
+  /** Kullanıcı taramayı iptal ettiyse true; kısmi bulgular yine döndürülür. */
+  cancelled?: boolean;
+}
+
+export interface MalwareScanProgress {
+  requestId: string;
+  engine: MalwareEngine;
+  status: MalwareScanStatus;
+  index: number;
+  total: number;
+  /** Bu ana kadar toplanan bulgu sayısı. */
+  findings: number;
+  /** Tamamlanan motorun incelediği nesne sayısı. */
+  scanned: number;
+}
+
+export interface MalwareExportResult {
+  ok: boolean;
+  message: string;
+  path: string;
 }
 
 export type ScheduleKind = 'weekly-full' | 'daily-light' | 'monthly-deep' | 'custom';
@@ -798,7 +824,10 @@ export interface AppApi {
   firewallSet: (id: string, enabled: boolean) => Promise<string>;
   firewallDelete: (id: string) => Promise<string>;
   firewallBackupPath: () => Promise<string>;
-  malwareScan: (engines: MalwareEngine[]) => Promise<MalwareScanResult>;
+  malwareScan: (engines: MalwareEngine[], requestId?: string) => Promise<MalwareScanResult>;
+  onMalwareProgress: (callback: (progress: MalwareScanProgress) => void) => () => void;
+  cancelMalwareScan: (requestId: string) => void;
+  malwareExportReport: (content: string, format: 'json' | 'txt') => Promise<MalwareExportResult>;
   scheduleList: () => Promise<ScheduleTask[]>;
   scheduleSave: (tasks: ScheduleTask[]) => Promise<ScheduleTask[]>;
   scheduleRun: (task: ScheduleTask) => Promise<{ taskId: string; ran: boolean; message: string }>;

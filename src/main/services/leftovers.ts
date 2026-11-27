@@ -4,6 +4,7 @@ import os from 'os';
 import path from 'path';
 import type { AppLeftovers, DeleteResult, Leftover, LeftoverScanTarget } from '../../shared/types';
 import { directorySize, isProtectedPath, isRuntimePath, normalizeName, powershellJson, psLiteral, removeTree } from '../util';
+import { m, mf } from '../i18n-main';
 import { exclusionReason, hasExcludedDescendant, isExcludedPath } from './exclusions';
 
 const GENERIC = new Set([
@@ -191,6 +192,15 @@ function safeSize(filePath: string): number {
   try { return fs.statSync(filePath).size; } catch { return 0; }
 }
 
+/** Dışarıdaki neden metnini çevirir; hariç tutma kararı exclusions.ts'de kalır. */
+function localizedExclusionReason(target: string): string {
+  const reason = exclusionReason(target);
+  if (reason.startsWith('Hariç tutulan uzantı')) {
+    return reason.replace('Hariç tutulan uzantı', m('Hariç tutulan uzantı', 'Excluded extension'));
+  }
+  return m('Hariç tutulan klasör', 'Excluded folder');
+}
+
 /**
  * Birden çok uygulamanın kalıntılarını tek taramada bulur.
  * Her uygulama için en fazla 300 sonuç döner; iptal edilirse o ana kadarki sonuçlar döner.
@@ -283,8 +293,8 @@ foreach ($target in $targets) {
     for (const { index, item } of pending) {
       const row = byIndex.get(index);
       results[index] = row?.ok
-        ? { path: item.path, ok: true, message: 'Geri Dönüşüm Kutusu\'na taşındı.' }
-        : { path: item.path, ok: false, message: String(row?.err || 'PowerShell sonucu alınamadı.').slice(0, 160) };
+        ? { path: item.path, ok: true, message: m('Geri Dönüşüm Kutusu\'na taşındı.', 'Moved to the Recycle Bin.') }
+        : { path: item.path, ok: false, message: String(row?.err || m('PowerShell sonucu alınamadı.', 'No PowerShell result received.')).slice(0, 160) };
     }
   } catch (error) {
     for (const { index, item } of pending) {
@@ -306,15 +316,15 @@ export async function deleteLeftovers(items: Leftover[], mode: 'recycle' | 'perm
       continue;
     }
     if (isExcludedPath(item.path)) {
-      results[index] = { path: item.path, ok: false, message: `${exclusionReason(item.path)}; atlandı.` };
+      results[index] = { path: item.path, ok: false, message: mf('{reason}; atlandı.', 'Skipped: {reason}.', { reason: localizedExclusionReason(item.path) }) };
       continue;
     }
     if (isProtectedPath(item.path) || isRuntimePath(item.path)) {
-      results[index] = { path: item.path, ok: false, message: 'Korumalı yol; atlandı.' };
+      results[index] = { path: item.path, ok: false, message: m('Korumalı yol; atlandı.', 'Protected path; skipped.') };
       continue;
     }
     if (item.kind === 'folder' && hasExcludedDescendant(item.path)) {
-      results[index] = { path: item.path, ok: false, message: 'İçinde hariç tutulan öğe var; klasör atlandı.' };
+      results[index] = { path: item.path, ok: false, message: m('İçinde hariç tutulan öğe var; klasör atlandı.', 'Contains an excluded item; folder skipped.') };
       continue;
     }
     pending.push({ index, item });
@@ -331,7 +341,7 @@ export async function deleteLeftovers(items: Leftover[], mode: 'recycle' | 'perm
         } else {
           fs.rmSync(item.path, { force: true });
         }
-        results[index] = { path: item.path, ok: true, message: 'Kalıcı olarak silindi.' };
+        results[index] = { path: item.path, ok: true, message: m('Kalıcı olarak silindi.', 'Permanently deleted.') };
       } catch (error) {
         results[index] = { path: item.path, ok: false, message: (error as Error).message.slice(0, 160) };
       }
@@ -419,19 +429,19 @@ async function deleteRegistryBatch(pending: PendingItem[], results: DeleteResult
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
   for (const { index, item } of pending) {
     if (!isRegistryPathSafe(item.path)) {
-      results[index] = { path: item.path, ok: false, message: 'Korumalı veya bilinmeyen kayıt yolu; silinmedi.' };
+      results[index] = { path: item.path, ok: false, message: m('Korumalı veya bilinmeyen kayıt yolu; silinmedi.', 'Protected or unknown registry path; not deleted.') };
       continue;
     }
     const leaf = (item.path.split('\\').pop() || 'key').replace(/[^A-Za-z0-9_.-]/g, '_').slice(0, 80);
     const backup = path.join(folder, `leftover_${leaf}_${stamp}.reg`);
     const exported = spawnSync('reg.exe', ['export', item.path, backup, '/y'], { windowsHide: true });
     if (exported.status !== 0 || !fs.existsSync(backup)) {
-      results[index] = { path: item.path, ok: false, message: 'Kayıt yedeği alınamadı; silinmedi.' };
+      results[index] = { path: item.path, ok: false, message: m('Kayıt yedeği alınamadı; silinmedi.', 'Could not create a registry backup; not deleted.') };
       continue;
     }
     const removed = spawnSync('reg.exe', ['delete', item.path, '/f'], { windowsHide: true });
     results[index] = removed.status === 0
-      ? { path: item.path, ok: true, message: `Kayıt girdisi silindi. Yedek: ${path.basename(backup)}` }
-      : { path: item.path, ok: false, message: String(removed.stderr?.toString() || 'Silinemedi.').slice(0, 160) };
+      ? { path: item.path, ok: true, message: mf('Kayıt girdisi silindi. Yedek: {backup}', 'Registry entry deleted. Backup: {backup}', { backup: path.basename(backup) }) }
+      : { path: item.path, ok: false, message: String(removed.stderr?.toString() || m('Silinemedi.', 'Could not be deleted.')).slice(0, 160) };
   }
 }

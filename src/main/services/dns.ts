@@ -5,6 +5,7 @@ import { app } from 'electron';
 import type {
   DnsBenchmarkResult, DnsCurrentResult, DnsProvider, DnsProviderId, DnsSwitchResult,
 } from '../../shared/types';
+import { m, mf } from '../i18n-main';
 import { LogFn, parsePowerShellJson, powershellJson, psLiteral, runPowerShell } from '../util';
 
 export const DNS_PROVIDERS: DnsProvider[] = [
@@ -17,6 +18,14 @@ export const DNS_PROVIDERS: DnsProvider[] = [
 
 const SAMPLE_HOST = 'example.com';
 const BACKUP_KEY = 'SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces';
+
+/** PowerShell'den gelen hata metnini yalnızca gösterimde çevirir. */
+function translatedDnsError(message: string): string {
+  if ((message || '').trim() === 'Etkin ağ bağdaştırıcısı bulunamadı.') {
+    return m('Etkin ağ bağdaştırıcısı bulunamadı.', 'No active network adapter found.');
+  }
+  return message;
+}
 
 export function dnsProviders(): DnsProvider[] {
   return DNS_PROVIDERS.map((item) => ({ ...item }));
@@ -50,9 +59,14 @@ export async function dnsCurrent(): Promise<DnsCurrentResult> {
         servers: servers.map((value) => String(value)),
       };
     });
-    return { adapters, message: adapters.length ? `${adapters.length} etkin bağdaştırıcı bulundu.` : 'Etkin ağ bağdaştırıcısı bulunamadı.' };
+    return {
+      adapters,
+      message: adapters.length
+        ? mf('{count} etkin bağdaştırıcı bulundu.', 'Found {count} active adapter(s).', { count: adapters.length })
+        : m('Etkin ağ bağdaştırıcısı bulunamadı.', 'No active network adapter found.'),
+    };
   } catch (error) {
-    return { adapters: [], message: (error as Error).message.slice(0, 200) };
+    return { adapters: [], message: translatedDnsError((error as Error).message).slice(0, 200) };
   }
 }
 
@@ -61,7 +75,7 @@ export async function dnsBenchmark(onLine?: LogFn): Promise<DnsBenchmarkResult> 
   const started = Date.now();
   const rows = [];
   for (const provider of DNS_PROVIDERS) {
-    onLine?.(`${provider.name} ölçülüyor: ${provider.primary}`);
+    onLine?.(mf('{name} ölçülüyor: {address}', 'Measuring {name}: {address}', { name: provider.name, address: provider.primary }));
     const samples: number[] = [];
     let ok = false;
     let detail = '';
@@ -78,7 +92,7 @@ export async function dnsBenchmark(onLine?: LogFn): Promise<DnsBenchmarkResult> 
       }
       detail = result.status === 0 || latency > 0
         ? `nslookup ${SAMPLE_HOST} → ${provider.primary}`
-        : (text.split(/\r?\n/).filter(Boolean).slice(-1)[0] || 'Yanıt alınamadı.').slice(0, 160);
+        : (text.split(/\r?\n/).filter(Boolean).slice(-1)[0] || m('Yanıt alınamadı.', 'No response received.')).slice(0, 160);
     }
     rows.push({
       id: provider.id, name: provider.name, primary: provider.primary, secondary: provider.secondary,
@@ -99,7 +113,7 @@ function mandatoryBackup(stamp: string): string {
   const regFile = path.join(folder, `interfaces_${stamp}.reg`);
   const result = spawnSync('reg.exe', ['export', BACKUP_KEY, regFile, '/y'], { windowsHide: true });
   if (result.status !== 0 || !fs.existsSync(regFile) || fs.statSync(regFile).size < 20) {
-    throw new Error('DNS arabirim kayıt defteri yedeği alınamadı; değişiklik yapılmadı.');
+    throw new Error(m('DNS arabirim kayıt defteri yedeği alınamadı; değişiklik yapılmadı.', 'Could not back up the DNS interface registry; no changes were made.'));
   }
   return regFile;
 }
@@ -139,25 +153,29 @@ foreach ($idx in $indexes) {
 `;
     const result = await runPowerShell(script, onLine, 60_000);
     const text = `${result.text}\n${result.stderr}`;
-    if (result.code !== 0 || !text.includes('DNS_OK')) throw new Error(text.trim().slice(-300) || 'DNS değiştirilemedi.');
+    if (result.code !== 0 || !text.includes('DNS_OK')) {
+      throw new Error(text.trim().slice(-300) || m('DNS değiştirilemedi.', 'DNS could not be changed.'));
+    }
     const previous = current.adapters.flatMap((adapter) => adapter.servers);
     return {
       ok: true, id,
       message: provider
-        ? `${provider.name} DNS sunucuları ${current.adapters.length} bağdaştırıcıya uygulandı.`
-        : 'DNS sunucuları DHCP’den alınacak şekilde sıfırlandı.',
+        ? mf('{name} DNS sunucuları {count} bağdaştırıcıya uygulandı.', '{name} DNS servers applied to {count} adapter(s).', {
+          name: provider.name, count: current.adapters.length,
+        })
+        : m('DNS sunucuları DHCP’den alınacak şekilde sıfırlandı.', 'DNS servers were reset to be obtained from DHCP.'),
       backupPath, previous,
     };
   } catch (error) {
     return {
-      ok: false, id, message: (error as Error).message.slice(0, 300), backupPath, previous: [],
+      ok: false, id, message: translatedDnsError((error as Error).message).slice(0, 300), backupPath, previous: [],
     };
   }
 }
 
 export async function dnsSwitch(id: DnsProviderId, onLine?: LogFn): Promise<DnsSwitchResult> {
   const provider = DNS_PROVIDERS.find((item) => item.id === id);
-  if (!provider) throw new Error('Bilinmeyen DNS sağlayıcısı.');
+  if (!provider) throw new Error(m('Bilinmeyen DNS sağlayıcısı.', 'Unknown DNS provider.'));
   return changeDns(provider, 'switch', onLine);
 }
 

@@ -118,7 +118,7 @@ Kurulum UAC onayı ister; `winget.exe` eksikse kurucu Microsoft.WinGet.Client ü
 
 `release/` klasöründe:
 
-- `Pars Sistem Yoneticisi Setup 1.3.0.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur ve winget eksikse resmi kaynaktan otomatik kurar
+- `Pars Sistem Yoneticisi Setup 1.4.0.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur ve winget eksikse resmi kaynaktan otomatik kurar
 - `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
 - `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
 
@@ -152,7 +152,7 @@ sorular [GitHub Wiki](https://github.com/pars-sistem-yonetici/pars-sistem-yoneti
 | **Yazılım Yedeği** | `winget export` ile kurulu paket listesini JSON olarak yedekler; yeni kurulumdan sonra yedek dosyasını inceleyip yalnızca seçtiğiniz paketleri `winget import` ile geri yükler. Yedekler uygulama veri klasöründe tutulur, dosya yolu dışarıdan okunamaz. Program verileri yedeklenmez. |
 | **Başlangıç** | Windows ile açılan uygulamaları (HKCU/HKLM `Run`, `RunOnce` ve Başlangıç klasörleri) listeler; tek tıkla kapatıp açar. Devre dışı bırakılan kayıt girdileri yedeklenir, kısayollar `.disabled` olarak yeniden adlandırılır; geri açma anında geçerlidir. |
 | **Güvenlik Duvarı** | Etkin gelen kuralları denetler; kapsamı geniş (`Any`/`0.0.0.0/0`), programı belirtilmemiş, dosya yolu eksik veya imzasız/bozuk imzalı ikilileri **KRİTİK**, tek başına sorunlu olanları **ORTA** olarak işaretler. Seçilen kural tek tıkla devre dışı bırakılabilir veya silinebilir; silmeden önce kural + filtreler JSON olarak yedeklenir (yedek alınamazsa silinmez). |
-| **Kötü Amaçlı Yazılım** | Beş yerel, salt-okunur motor: imzalar (Run/task/process kalıpları), sezgisel analiz (user-writable imzasız ikililer, çift uzantı), betik analizi (PowerShell profilleri, WMI abonelikleri, başlangıç betikleri), sistem bütünlüğü (kritik sistem ikililerinin imzası, Winlogon ayarları) ve kalıcılık (WMI, zamanlı görevler, servisler, AppInit/IFEO). Motorlar ayrı ayrı açılıp kapatılabilir; dosya silmez, işlem sonlandırmaz, antivirüs yerine geçmez. |
+| **Kötü Amaçlı Yazılım** | Sekiz yerel, salt-okunur motor: imzalar, sezgisel analiz, betikler, sistem bütünlüğü, kalıcılık izleri, Defender durumu, HOSTS dosyası ve tarayıcı eklentileri/ilkeleri. Her motor ayrı ayrı açılıp kapatılabilir; tarama gerçek incelenen nesne sayısını (`scanned`) bildirir, bulgular aranabilir/filtrelenebilir ve metin veya JSON olarak dışa aktarılabilir. Dosya silmez, işlem sonlandırmaz, kayıt yazmaz ve antivirüs yerine geçmez. |
 | **Disk Temizleme** | Geçici dosyalar, küçük resim önbelleği, Windows Update indirmeleri, hata raporları, internet önbelleği, Delivery Optimization, yalnızca cache alt klasörleri (Edge/Chrome/Firefox), npm/NuGet/pip önbellekleri, DNS ve Geri Dönüşüm Kutusu kategorilerini tarar; seçilenleri onay sonrası temizler. Her temizleme `%LOCALAPPDATA%\ParsSistemYoneticisi\logs\disk-cleanup.jsonl` dosyasına kalıcı olarak kaydedilir ve "Temizlik kaydını aç" düğmesiyle görüntülenebilir. |
 | **Dosya Tarayıcı** | Seçtiğiniz köklerde yinelenen dosyaları SHA-256 ile doğrulayıp gruplar, 20 MB üzeri dosyaları ve boş dosya/klasörleri listeler. Referans olarak eklediğiniz klasörler taramada görünür ama asla silinmez; sembolik bağlantılar, korumalı sistem yolları ve hariç tutulanlar atlanır. Silme varsayılan olarak Geri Dönüşüm Kutusu’na yapılır, kalıcı silme açık onay ister. |
 | **Disk Analizi** | Bir sürücü/klasörün toplam boyutunu, klasör ağacını, uzantı dağılımını ve en büyük dosyaları tek geçişte çıkarır; treemap üzerinden klasörleri açar. Tamamen salt okunurdur, hiçbir şey silmez. |
@@ -206,19 +206,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.3.0",
+  "version": "1.4.0",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.3.0.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.4.0.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83631421,
-  "url": "Pars Sistem Yoneticisi Setup 1.3.0.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.4.0.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.3.0.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.4.0.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
@@ -500,7 +500,7 @@ from the official Microsoft.WinGet.Client source. The manifest draft is in the `
 
 In `release/`:
 
-- `Pars Sistem Yoneticisi Setup 1.3.0.exe` — NSIS installer (Start menu + desktop shortcut); detects
+- `Pars Sistem Yoneticisi Setup 1.4.0.exe` — NSIS installer (Start menu + desktop shortcut); detects
   older versions, removes and reinstalls them during an upgrade, preserves application data and
   installs winget from the official source when it is missing.
 - `ParsSistemYoneticisi-Portable.exe` — single-file build that needs no installation.
@@ -598,10 +598,10 @@ address or local folder in **Settings → Update source**. Notification format:
 {
   "version": "1.3.0",
   "notes": "New features and fixes",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.3.0.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.4.0.exe",
   "sha512": "<base64 or hex SHA-512 checksum of the exe>",
   "size": 83632376,
-  "url": "Pars Sistem Yoneticisi Setup 1.3.0.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.4.0.exe"
 }
 ```
 
@@ -609,7 +609,7 @@ address or local folder in **Settings → Update source**. Notification format:
 checksum:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.3.0.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.4.0.exe" SHA512
 ```
 
 `npm run publish` automates these steps. It reads the version from `package.json`, finds the setup exe

@@ -3,6 +3,7 @@ import path from 'path';
 import { app } from 'electron';
 import type { AutorunActionResult, AutorunItem, AutorunScanResult } from '../../shared/types';
 import { LogFn, powershellJson, psLiteral, runPowerShell } from '../util';
+import { m } from '../i18n-main';
 
 const SCAN_SCRIPT = String.raw`
 $ErrorActionPreference = 'SilentlyContinue'
@@ -203,7 +204,7 @@ function registryScript(item: AutorunItem, enabled: boolean, backup: string): st
   return `
 $ErrorActionPreference = 'Stop'
 & reg.exe export ${psLiteral(target.key)} ${psLiteral(backup)} /y | Out-Null
-if (-not (Test-Path -LiteralPath ${psLiteral(backup)})) { throw 'Yedek alınamadı; değişiklik yapılmadı.' }
+if (-not (Test-Path -LiteralPath ${psLiteral(backup)})) { throw ${psLiteral(m('Yedek alınamadı; değişiklik yapılmadı.', 'Backup could not be created; no changes were made.'))} }
 Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\\${target.key.replace(/^HKLM\\/, '').replace(/'/g, "''")}' -Name ${psLiteral(target.value)} -Value ${psLiteral(value)} -Type String -ErrorAction Stop
 'REGISTRY_OK'
 `;
@@ -221,20 +222,20 @@ export async function setAutorun(item: AutorunItem, enabled: boolean, onLine?: L
       // Mevcut durum geri alınabilsin diye yedeklenir.
       fs.writeFileSync(backup, JSON.stringify(item, null, 2), 'utf8');
       const result = await runPowerShell(item.category === 'task' ? taskScript(item, enabled) : serviceScript(item, enabled), onLine, 120_000);
-      if (result.code !== 0) throw new Error((result.stderr || result.text || 'Komut başarısız.').slice(-300));
-      return { ok: true, enabled, backupPath: backup, message: enabled ? 'Etkinleştirildi.' : 'Devre dışı bırakıldı.' };
+      if (result.code !== 0) throw new Error((result.stderr || result.text || m('Komut başarısız.', 'Command failed.')).slice(-300));
+      return { ok: true, enabled, backupPath: backup, message: enabled ? m('Etkinleştirildi.', 'Enabled.') : m('Devre dışı bırakıldı.', 'Disabled.') };
     }
     if (item.category === 'winlogon' || item.category === 'wmi') {
       return {
         ok: false,
         enabled: item.enabled,
         backupPath: '',
-        message: 'Bu girdi sistem açılışı için kritik olduğundan otomatik değiştirilmez. İnceleyip elle müdahale edin.',
+        message: m('Bu girdi sistem açılışı için kritik olduğundan otomatik değiştirilmez. İnceleyip elle müdahale edin.', 'This entry is critical to system startup and is not changed automatically. Review it and make any changes manually.'),
       };
     }
     const result = await runPowerShell(registryScript(item, enabled, backup), onLine, 120_000);
-    if (result.code !== 0) throw new Error((result.stderr || result.text || 'Komut başarısız.').slice(-300));
-    return { ok: true, enabled, backupPath: backup, message: enabled ? 'Özgün değer geri yazıldı.' : 'Değer boşaltıldı; kayıt yedeği alındı.' };
+    if (result.code !== 0) throw new Error((result.stderr || result.text || m('Komut başarısız.', 'Command failed.')).slice(-300));
+    return { ok: true, enabled, backupPath: backup, message: enabled ? m('Özgün değer geri yazıldı.', 'Original value restored.') : m('Değer boşaltıldı; kayıt yedeği alındı.', 'Value cleared; a registry backup was created.') };
   } catch (error) {
     try { if (fs.existsSync(backup)) fs.unlinkSync(backup); } catch { /* ignore */ }
     return { ok: false, enabled: item.enabled, backupPath: '', message: (error as Error).message.slice(0, 300) };

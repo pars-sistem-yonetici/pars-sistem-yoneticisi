@@ -7,6 +7,8 @@
  * bilinen alanlari dondurur.
  */
 
+import { m, mf } from './i18n-main';
+
 export type Validator = (value: unknown, field: string) => unknown;
 
 export class IpcValidationError extends Error {
@@ -22,7 +24,7 @@ function fail(field: string, detail: string): never {
 
 function record(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    fail('değer', 'nesne bekleniyor');
+    fail(m('değer', 'value'), m('nesne bekleniyor', 'object expected'));
   }
   return value as Record<string, unknown>;
 }
@@ -36,37 +38,43 @@ interface StringOptions {
 
 export function str(options: StringOptions = {}): Validator {
   return (value, field) => {
-    if (typeof value !== 'string') fail(field, 'metin bekleniyor');
+    if (typeof value !== 'string') fail(field, m('metin bekleniyor', 'string expected'));
     const text = value as string;
-    if (!options.allowEmpty && !text.trim()) fail(field, 'boş olamaz');
-    if (options.min !== undefined && text.length < options.min) fail(field, `en az ${options.min} karakter olmalı`);
-    if (options.max !== undefined && text.length > options.max) fail(field, `en fazla ${options.max} karakter olabilir`);
-    if (options.pattern && !options.pattern.test(text)) fail(field, 'geçersiz biçim');
+    if (!options.allowEmpty && !text.trim()) fail(field, m('boş olamaz', 'cannot be empty'));
+    if (options.min !== undefined && text.length < options.min) {
+      fail(field, mf('en az {min} karakter olmalı', 'must be at least {min} characters', { min: options.min }));
+    }
+    if (options.max !== undefined && text.length > options.max) {
+      fail(field, mf('en fazla {max} karakter olabilir', 'can be at most {max} characters', { max: options.max }));
+    }
+    if (options.pattern && !options.pattern.test(text)) fail(field, m('geçersiz biçim', 'invalid format'));
     return text;
   };
 }
 
 export const bool: Validator = (value, field) => {
-  if (typeof value !== 'boolean') fail(field, 'doğru/yanlış bekleniyor');
+  if (typeof value !== 'boolean') fail(field, m('doğru/yanlış bekleniyor', 'true/false expected'));
   return value;
 };
 
 export const num: Validator = (value, field) => {
-  if (typeof value !== 'number' || !Number.isFinite(value)) fail(field, 'sayı bekleniyor');
+  if (typeof value !== 'number' || !Number.isFinite(value)) fail(field, m('sayı bekleniyor', 'number expected'));
   return value;
 };
 
 export function oneOf<T extends string | number>(values: readonly T[]): Validator {
   return (value, field) => {
-    if (!values.includes(value as T)) fail(field, `izin verilenler: ${values.join(', ')}`);
+    if (!values.includes(value as T)) {
+      fail(field, mf('izin verilenler: {values}', 'allowed values: {values}', { values: values.join(', ') }));
+    }
     return value;
   };
 }
 
 export function arr(item: Validator, max = 1000): Validator {
   return (value, field) => {
-    if (!Array.isArray(value)) fail(field, 'dizi bekleniyor');
-    if (value.length > max) fail(field, `en fazla ${max} öğe olabilir`);
+    if (!Array.isArray(value)) fail(field, m('dizi bekleniyor', 'array expected'));
+    if (value.length > max) fail(field, mf('en fazla {max} öğe olabilir', 'can contain at most {max} items', { max }));
     return value.map((entry, index) => item(entry, `${field}[${index}]`));
   };
 }
@@ -83,7 +91,7 @@ export function shape(fields: Record<string, FieldSpec>, strip = false): Validat
     const output: Record<string, unknown> = {};
     for (const [key, spec] of Object.entries(fields)) {
       if (!(key in source)) {
-        if (!spec.optional) fail(`${field}.${key}`, 'eksik');
+        if (!spec.optional) fail(`${field}.${key}`, m('eksik', 'missing'));
         continue;
       }
       output[key] = spec.validate(source[key], `${field}.${key}`);

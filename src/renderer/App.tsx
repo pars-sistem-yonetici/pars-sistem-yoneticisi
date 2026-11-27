@@ -1,8 +1,9 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import { categoryIcon, Glyph, UiIcon } from './uiIcons';
 import { CATALOG, CATEGORIES, favicon, recKey, type RecommendedSoftware } from '../shared/catalog';
+import { catalogText } from '../shared/catalogI18n';
 import { APP_LINKS, DEFAULT_UPDATE_SOURCE } from '../shared/constants';
-import { translate, translateFormat } from '../shared/i18n';
+import { translate, translateFormat, translateMalwareDetail, translateMalwareTitle } from '../shared/i18n';
 import { REG_SCAN_SCOPES } from '../shared/types';
 import type {
   AppApi,
@@ -37,7 +38,9 @@ import type {
   LeftoverProgress,
   LogEntry,
   MalwareEngine,
+  MalwareScanProgress,
   MalwareScanResult,
+  MalwareSeverity,
   ManagedPolicyFile,
   ManagedPolicyFixId,
   OptimizationProfile,
@@ -100,6 +103,17 @@ const MALWARE_ENGINES: Array<{ id: MalwareEngine; label: string }> = [
   { id: 'scripts', label: 'Betik analizi' },
   { id: 'integrity', label: 'Sistem bütünlüğü' },
   { id: 'persistence', label: 'Kalıcılık taraması' },
+  { id: 'defender', label: 'Defender koruması' },
+  { id: 'hosts', label: 'HOSTS ve DNS' },
+  { id: 'browser', label: 'Tarayıcı eklentileri' },
+];
+
+const MALWARE_SEVERITY_FILTERS: Array<{ id: 'all' | MalwareSeverity; label: string }> = [
+  { id: 'all', label: 'Tümü' },
+  { id: 'critical', label: 'KRİTİK' },
+  { id: 'medium', label: 'ORTA' },
+  { id: 'low', label: 'Düşük' },
+  { id: 'info', label: 'Bilgi' },
 ];
 
 const TWEAK_CATEGORY_META: Record<TweakCategory, { label: string; icon: string; description: string }> = {
@@ -448,6 +462,13 @@ function updateIcon(pkg: Package, installed: InstalledApp[]): string | undefined
   return catalogItem ? favicon(catalogItem) : undefined;
 }
 
+/** Ad üzerinden kurulu uygulamanın kayıt defterinden alınmış gerçek ikonunu bulur. */
+function appIconForName(name: string, installed: InstalledApp[]): string | undefined {
+  const key = name.toLocaleLowerCase('tr-TR').trim();
+  if (!key) return undefined;
+  return installed.find((app) => app.name.toLocaleLowerCase('tr-TR').trim() === key)?.icon;
+}
+
 function Toggle({ checked, onChange, label, hint }: { checked: boolean; onChange: (value: boolean) => void; label: string; hint?: string }) {
   return (
     <label className="toggle-row">
@@ -510,14 +531,14 @@ function Meter({ label, value, text, tone, icon }: { label: string; value: numbe
   );
 }
 
-function ConfirmDialog({ state, onClose }: { state: ConfirmState; onClose: () => void }) {
+function ConfirmDialog({ state, onClose, lang }: { state: ConfirmState; onClose: () => void; lang: Language }) {
   return (
     <div className="modal-backdrop modal-front" role="presentation">
       <div className="modal" role="dialog" aria-modal="true" aria-label={state.title}>
         <div className="modal-icon"><Glyph name="TriangleAlert" size={14} /></div>
         <h2><UiIcon icon="TriangleAlert" />{state.title}</h2>
         <p>{state.message}</p>
-        {state.warning && <div className="danger-zone"><b>DİKKAT</b><p>{state.warning}</p></div>}
+        {state.warning && <div className="danger-zone"><b>{translate('DİKKAT', lang)}</b><p>{state.warning}</p></div>}
         <div className="modal-actions">
           {state.options.map((option) => (
             <button
@@ -598,6 +619,10 @@ export default function App() {
   const [firewallBackupPath, setFirewallBackupPath] = useState('');
   const [malwareEngines, setMalwareEngines] = useState<MalwareEngine[]>(MALWARE_ENGINES.map((engine) => engine.id));
   const [malwareResult, setMalwareResult] = useState<MalwareScanResult | null>(null);
+  const [malwareProgress, setMalwareProgress] = useState<MalwareScanProgress | null>(null);
+  const [malwareFilter, setMalwareFilter] = useState<'all' | MalwareSeverity>('all');
+  const [malwareQuery, setMalwareQuery] = useState('');
+  const malwareRequestId = useRef('');
   const [schedules, setSchedules] = useState<ScheduleTask[]>([]);
   const [leftovers, setLeftovers] = useState<Leftover[]>([]);
   const [selectedLeftovers, setSelectedLeftovers] = useState<Set<string>>(new Set());
@@ -677,6 +702,16 @@ export default function App() {
     const rank = { critical: 0, medium: 1, low: 2, info: 3 };
     return rank[a.severity] - rank[b.severity];
   });
+  const visibleMalware = malwareFindings.filter((finding) => {
+    if (malwareFilter !== 'all' && finding.severity !== malwareFilter) return false;
+    if (!malwareQuery.trim()) return true;
+    const needle = malwareQuery.trim().toLocaleLowerCase();
+    return [finding.title, finding.detail, finding.path ?? '', finding.engine]
+      .some((value) => value.toLocaleLowerCase().includes(needle));
+  });
+  const malwareInspected = malwareResult
+    ? Object.values(malwareResult.scanned).reduce((sum, count) => sum + count, 0)
+    : 0;
 
   const notify = useCallback((kind: Toast['kind'], text: string) => setToast({ kind, text }), []);
 
@@ -684,6 +719,10 @@ export default function App() {
 
   useEffect(() => api.onLeftoverProgress((progress) => {
     if (progress.requestId === leftoverRequestId.current) setLeftoverProgress(progress);
+  }), []);
+
+  useEffect(() => api.onMalwareProgress((progress) => {
+    if (progress.requestId === malwareRequestId.current) setMalwareProgress(progress);
   }), []);
 
   useEffect(() => api.onInstallProgress((progress) => {
@@ -813,6 +852,58 @@ export default function App() {
     }
   }, [notify]);
 
+  const startMalwareScan = useCallback(() => {
+    const requestId = `malware-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+    malwareRequestId.current = requestId;
+    setMalwareProgress(null);
+    setMalwareResult(null);
+    void run(t('Tehdit taraması sürüyor'), async () => {
+      const result = await api.malwareScan(malwareEngines, requestId);
+      setMalwareResult(result);
+      if (result.cancelled) notify('info', t('Tarama iptal edildi.'));
+    });
+  }, [malwareEngines, notify, run, t]);
+
+  const exportMalwareReport = useCallback((format: 'json' | 'txt') => {
+    const engineLabel = (id: MalwareEngine) => t(MALWARE_ENGINES.find((item) => item.id === id)?.label ?? id);
+    const rows = visibleMalware.map((finding) => ({
+      severity: finding.severity,
+      engine: engineLabel(finding.engine),
+      title: translateMalwareTitle(finding.title, lang),
+      detail: translateMalwareDetail(finding.detail, lang),
+      path: finding.path ?? '',
+    }));
+    const content = format === 'json'
+      ? JSON.stringify({
+        generatedAt: new Date().toISOString(),
+        version: '1.4.0',
+        engines: malwareEngines.map(engineLabel),
+        scanned: malwareResult?.scanned ?? {},
+        totalFindings: malwareResult?.findings.length ?? 0,
+        shownFindings: rows.length,
+        findings: rows,
+      }, null, 2)
+      : [
+        'Pars Sistem Yoneticisi - Malware report',
+        `Generated: ${new Date().toISOString()}`,
+        `Engines: ${malwareEngines.map(engineLabel).join(', ')}`,
+        `Inspected: ${malwareInspected}`,
+        `Total findings: ${malwareResult?.findings.length ?? 0}`,
+        `Shown findings: ${rows.length}`,
+        '',
+        ...rows.map((row, index) => [
+          `${index + 1}. [${row.severity.toUpperCase()}] ${row.title}`,
+          `   Engine: ${row.engine}`,
+          `   Detail: ${row.detail}`,
+          `   Path: ${row.path || '-'}`,
+        ].join('\n')),
+      ].join('\r\n');
+    void run(t(format === 'json' ? 'JSON raporu' : 'TXT raporu'), async () => {
+      const result = await api.malwareExportReport(content, format);
+      notify(result.ok ? 'ok' : 'error', result.message);
+    });
+  }, [lang, malwareEngines, malwareInspected, malwareResult, notify, run, t, visibleMalware]);
+
   const startRepair = (action: RepairAction) => {
     const backupLabel = repairBackupPath || '%LOCALAPPDATA%\\ParsSistemYoneticisi\\repair_backups';
     const message = action.confirm
@@ -867,11 +958,11 @@ export default function App() {
   const installAppUpdate = useCallback(async (filePath: string) => {
     try {
       const result = await api.appUpdateInstall(filePath);
-      notify(result.ok ? 'ok' : 'error', result.message);
+      notify(result.ok ? 'ok' : 'error', result.ok ? translate(result.message, lang) : result.message);
     } catch (error) {
       notify('error', (error as Error).message);
     }
-  }, [notify]);
+  }, [lang, notify]);
 
   const downloadAppUpdate = useCallback(async (info: AppUpdateInfo) => {
     setUpdateBusy(true);
@@ -889,7 +980,7 @@ export default function App() {
         title: t('Güncellemeyi kur'),
         message: info.portable
           ? t('Portable sürümde dosya kendiliğinden değiştirilemez. İndirilenler klasörü açılacak; yeni exe’yi eskisinin üzerine kopyalayıp uygulamayı yeniden başlatın.')
-          : t('Kurulum başlatılacak ve uygulama kapanacak. Devam etmek istiyor musunuz?'),
+          : t('Kurulum başlatılacak ve uygulama güncellendikten sonra kendiliğinden yeniden açılacak. Devam etmek istiyor musunuz?'),
         options: [
           { label: t('Sonra'), value: 'later' },
           { label: t('Kur'), value: 'install', kind: 'primary' },
@@ -1178,18 +1269,19 @@ export default function App() {
   );
 
   const filteredRecommended = useMemo(() => {
-    const query = recQuery.toLocaleLowerCase('tr-TR').trim();
+    const locale = lang === 'tr' ? 'tr-TR' : 'en';
+    const query = recQuery.toLocaleLowerCase(locale).trim();
     const categoryOrder = new Map(CATEGORIES.map((category, index) => [category, index]));
     return CATALOG.filter((item) =>
       (recCategory === 'Tümü' || item.category === recCategory) &&
       (recSource === 'all' || (item.source ?? 'winget') === recSource) &&
-      (!query || `${item.name} ${item.ident} ${item.description}`.toLocaleLowerCase('tr-TR').includes(query)))
+      (!query || `${catalogText(item.name, lang)} ${item.ident} ${catalogText(item.description, lang)} ${catalogText(item.category, lang)}`.toLocaleLowerCase(locale).includes(query)))
       .sort((a, b) => {
         const left = categoryOrder.get(a.category) ?? CATEGORIES.length;
         const right = categoryOrder.get(b.category) ?? CATEGORIES.length;
-        return left - right || a.name.localeCompare(b.name, 'tr-TR');
+        return left - right || catalogText(a.name, lang).localeCompare(catalogText(b.name, lang), locale);
       });
-  }, [recCategory, recQuery, recSource]);
+  }, [lang, recCategory, recQuery, recSource]);
 
   /** Sekmelerdeki kategori sırasıyla aynı sıralamada kart üstü başlıkları üretir. */
   const groupedRecommended = useMemo(() => {
@@ -1952,7 +2044,7 @@ export default function App() {
           </div>
           <div className="sidebar-foot">
             <span className="dot" style={{ background: 'var(--accent)' }} />
-            {t('Sistem Bakım Merkezi · v1.3.0')}
+            {t('Sistem Bakım Merkezi · v1.4.0')}
           </div>
         </div>
       </aside>
@@ -2170,7 +2262,7 @@ export default function App() {
                   </tbody>
                 </table>
               </div>
-              <p className="muted small">{tf('Toplam {count} uygulama listeleniyor. Boyutlar kayıt defterindeki EstimatedSize değerinden alınır.', { count: apps.length })}</p>
+              <p className="muted small">{tf('Toplam {count} uygulama listeleniyor. İkonlar kayıt defterinden, boyutlar EstimatedSize değerinden alınır.', { count: apps.length })}</p>
             </section>
           )}
 
@@ -2217,7 +2309,7 @@ export default function App() {
                       <tr key={item.id}>
                         <td><input type="checkbox" checked={selectedBloatware.has(item.id)} onChange={() => toggle(setSelectedBloatware, item.id)} /></td>
                         <td>
-                          <b>{item.name}</b>
+                          <div className="cell-app"><Avatar name={item.name} src={appIconForName(item.name, apps)} /><b>{item.name}</b></div>
                           {item.version && <div className="muted small">{item.version}</div>}
                         </td>
                         <td>
@@ -2288,7 +2380,7 @@ export default function App() {
                   <tbody>
                     {startupItems.map((item) => (
                       <tr key={item.id} className={item.enabled ? undefined : 'muted'}>
-                        <td><b>{item.name}</b></td>
+                        <td><div className="cell-app"><Avatar name={item.name} src={appIconForName(item.name, apps)} /><b>{item.name}</b></div></td>
                         <td className="mono small" title={item.command}>{item.command}</td>
                         <td className="small">{t(item.location)}</td>
                         <td><span className="badge">{t(item.scope === 'user' ? 'Kullanıcı' : 'Sistem')}</span></td>
@@ -2396,10 +2488,14 @@ export default function App() {
               <div className="toolbar">
                 <div>
                   <h2><UiIcon label="Kötü amaçlı yazılım taraması" />{t('Kötü amaçlı yazılım taraması')}</h2>
-                  <p className="muted">{t('Çoklu motorlu yerel denetim: imzalar, sezgisel analiz, betik analizi, sistem bütünlüğü ve kalıcılık.')}</p>
+                  <p className="muted">{t('Çoklu motorlu yerel denetim: imzalar, sezgisel analiz, betik analizi, sistem bütünlüğü, kalıcılık, Defender, HOSTS/DNS ve tarayıcı eklentileri.')}</p>
                 </div>
                 <div className="toolbar-actions">
-                  <button className="btn btn-primary" disabled={!malwareEngines.length || !!busy} onClick={() => void run(t('Tehdit taraması sürüyor'), async () => setMalwareResult(await api.malwareScan(malwareEngines)))}><UiIcon label="Taramayı başlat" />{t('Taramayı başlat')}</button>
+                  <button className="btn btn-primary" disabled={!malwareEngines.length || !!busy} onClick={startMalwareScan}><UiIcon label="Taramayı başlat" />{t('Taramayı başlat')}</button>
+                  <button className="btn" disabled={!busy || !malwareProgress || malwareProgress.status === 'cancelled'} onClick={() => {
+                    api.cancelMalwareScan(malwareRequestId.current);
+                    setMalwareProgress((prev) => prev ? { ...prev, status: 'cancelled' } : prev);
+                  }}><UiIcon label="Taramayı iptal et" />{t(malwareProgress?.status === 'cancelled' ? 'İptal ediliyor…' : 'Taramayı iptal et')}</button>
                 </div>
               </div>
               <div className="filter-row">
@@ -2414,27 +2510,63 @@ export default function App() {
                 ))}
               </div>
               <p className="muted small">{t('Bu tarama yalnızca okunabilir denetim yapar; dosya silmez, işlem sonlandırmaz. Antivirüs yerine geçmez.')}</p>
+              {malwareProgress && busy && (
+                <div className="scan-progress">
+                  <div className="scan-progress-head">
+                    <span>{t(MALWARE_ENGINES.find((engine) => engine.id === malwareProgress.engine)?.label ?? malwareProgress.engine)} · {t(malwareProgress.status === 'running' ? 'Tehdit taraması sürüyor' : malwareProgress.status === 'cancelled' ? 'İptal ediliyor…' : 'Tarama tamamlandı.')}</span>
+                    <span>{malwareProgress.index}/{malwareProgress.total} · {t('Taranan')}: {malwareProgress.scanned} · {t('Toplam bulgu')}: {malwareProgress.findings}</span>
+                  </div>
+                  <div className="progress-track">
+                    <div className="progress-fill" style={{ width: `${Math.round((malwareProgress.index / Math.max(1, malwareProgress.total)) * 100)}%` }} />
+                  </div>
+                </div>
+              )}
               {malwareResult && (
                 <>
                   <div className="stat-strip">
                     <span>{t('Toplam bulgu')}: <b>{malwareFindings.length}</b></span>
                     <span>{t('Kritik')}: <b className="danger-text">{malwareFindings.filter((item) => item.severity === 'critical').length}</b></span>
                     <span>{t('Orta')}: <b className="warn-text">{malwareFindings.filter((item) => item.severity === 'medium').length}</b></span>
+                    <span>{t('Taranan')}: <b>{malwareInspected}</b></span>
+                    <span>{t('Gösterilen')}: <b>{visibleMalware.length}</b></span>
                     <span>{t('Süre')}: <b>{(malwareResult.durationMs / 1000).toFixed(1)} sn</b></span>
+                  </div>
+                  <div className="table-wrap">
+                    <table>
+                      <thead><tr><th>{t('Motor sonuçları')}</th><th>{t('Taranan')}</th><th>{t('Bulgu sayısı')}</th></tr></thead>
+                      <tbody>
+                        {malwareEngines.map((id) => (
+                          <tr key={id}>
+                            <td>{t(MALWARE_ENGINES.find((engine) => engine.id === id)?.label ?? id)}</td>
+                            <td>{malwareResult.scanned[id] ?? 0}</td>
+                            <td>{malwareFindings.filter((finding) => finding.engine === id).length}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="filter-row">
+                    <span className="muted small">{t('Bulgu filtresi')}:</span>
+                    {MALWARE_SEVERITY_FILTERS.map((filter) => (
+                      <button key={filter.id} className={`chip ${malwareFilter === filter.id ? 'chip-active' : ''}`} onClick={() => setMalwareFilter(filter.id)}>{t(filter.label)}</button>
+                    ))}
+                    <input className="search" placeholder={t('Bulgu ara…')} value={malwareQuery} onChange={(event) => setMalwareQuery(event.target.value)} />
+                    <button className="btn btn-small" disabled={!visibleMalware.length} onClick={() => exportMalwareReport('json')}><UiIcon label="Rapor dışa aktar" />{t('JSON raporu')}</button>
+                    <button className="btn btn-small" disabled={!visibleMalware.length} onClick={() => exportMalwareReport('txt')}><UiIcon label="Rapor dışa aktar" />{t('TXT raporu')}</button>
                   </div>
                   <div className="table-wrap">
                     <table>
                       <thead><tr><th>{t('Önem')}</th><th>{t('Motor')}</th><th>{t('Bulgu')}</th><th>{t('Detay')}</th></tr></thead>
                       <tbody>
-                        {malwareFindings.map((finding) => (
+                        {visibleMalware.map((finding) => (
                           <tr key={finding.id}>
-                            <td><span className={`badge ${finding.severity === 'critical' ? 'badge-danger' : finding.severity === 'medium' ? 'badge-warn' : ''}`}>{t(finding.severity === 'critical' ? 'KRİTİK' : finding.severity === 'medium' ? 'ORTA' : finding.severity === 'low' ? 'DÜŞÜK' : 'BİLGİ')}</span></td>
+                            <td><span className={`badge ${finding.severity === 'critical' ? 'badge-danger' : finding.severity === 'medium' ? 'badge-warn' : ''}`}>{t(finding.severity === 'critical' ? 'KRİTİK' : finding.severity === 'medium' ? 'ORTA' : finding.severity === 'low' ? 'Düşük' : 'Bilgi')}</span></td>
                             <td className="small">{t(MALWARE_ENGINES.find((engine) => engine.id === finding.engine)?.label ?? finding.engine)}</td>
-                            <td><b>{finding.title}</b>{finding.path && <div className="muted small mono">{finding.path}</div>}</td>
-                            <td className="small">{finding.detail}</td>
+                            <td><b>{translateMalwareTitle(finding.title, lang)}</b>{finding.path && <div className="muted small mono">{finding.path}</div>}</td>
+                            <td className="small">{translateMalwareDetail(finding.detail, lang)}</td>
                           </tr>
                         ))}
-                        {!malwareFindings.length && <tr><td colSpan={4} className="empty">{t('Seçilen motorlarda şüpheli bulgu bulunamadı.')}</td></tr>}
+                        {!visibleMalware.length && <tr><td colSpan={4} className="empty">{t(malwareFindings.length ? 'Filtrelenmiş bulgu yok.' : 'Seçilen motorlarda şüpheli bulgu bulunamadı.')}</td></tr>}
                       </tbody>
                     </table>
                   </div>
@@ -2661,7 +2793,7 @@ export default function App() {
               />
               <CategoryDock
                 value={recCategory} onChange={setRecCategory}
-                categories={['Tümü', ...CATEGORIES]} t={t}
+                categories={['Tümü', ...CATEGORIES]} t={(text) => catalogText(t(text), lang)}
               />
               <div className="library-layout">
                 <div className="software-grid library-grid">
@@ -2669,7 +2801,7 @@ export default function App() {
                     <Fragment key={category}>
                       <div className="library-group-head">
                         <UiIcon icon={categoryIcon(category)} />
-                        <h3>{t(category)}</h3>
+                        <h3>{catalogText(t(category), lang)}</h3>
                         <span className="library-group-count">{tf('{count} uygulama', { count: items.length })}</span>
                         {recSource !== 'all' && <span className="library-group-source">{sourceLabel(recSource)}</span>}
                       </div>
@@ -2687,14 +2819,14 @@ export default function App() {
                             aria-pressed={selectedRec.has(key)}
                           >
                             <div className="software-head">
-                              <Avatar name={item.name} src={favicon(item)} />
+                              <Avatar name={catalogText(item.name, lang)} src={favicon(item)} />
                               <div className="software-title">
-                                <b>{item.name}</b>
-                                <small>{t(item.category)} · {sourceLabel(item.source)}</small>
+                                <b>{catalogText(item.name, lang)}</b>
+                                <small>{catalogText(item.category, lang)} · {sourceLabel(item.source)}</small>
                               </div>
                               <input type="checkbox" checked={selectedRec.has(key)} onChange={() => toggle(setSelectedRec, key)} onClick={(event) => event.stopPropagation()} />
                             </div>
-                            <p>{item.description}</p>
+                            <p>{catalogText(item.description, lang)}</p>
                             <div className="software-foot">
                               <code>{item.ident}</code>
                               {installed && <span className="badge badge-green">{t('kurulu')}</span>}
@@ -2713,7 +2845,7 @@ export default function App() {
                     <ul className="selected-list">
                       {selectedRecommended.map((item) => (
                         <li key={recKey(item)}>
-                          <span>{item.name}</span>
+                          <span>{catalogText(item.name, lang)}</span>
                           <button className="btn btn-small" onClick={() => toggle(setSelectedRec, recKey(item))}>{t('Kaldır')}</button>
                         </li>
                       ))}
@@ -2958,7 +3090,7 @@ export default function App() {
                   <tbody>
                     {searchResults.map((pkg) => (
                       <tr key={pkgKey(pkg) + pkg.source}>
-                        <td><div className="cell-app"><Avatar name={pkg.name} /><b>{pkg.name}</b></div></td>
+                        <td><div className="cell-app"><Avatar name={pkg.name} src={updateIcon(pkg, apps)} /><b>{pkg.name}</b></div></td>
                         <td className="mono">{pkg.ident}</td>
                         <td>{pkg.version || '—'}</td>
                         <td>{pkg.source || 'winget'}</td>
@@ -3127,7 +3259,7 @@ export default function App() {
                     ))}
                   </select>
                 </div>
-                <p className="muted small">{t('Diğer diller Electron dil paketlerinden gelir. Çeviri dosyası eklemek için klasörü açın; eksik çeviriler İngilizce gösterilir.')}</p>
+                <p className="muted small">{t('Ek diller, çeviri klasörüne eklediğiniz JSON dosyalarından gelir; eksik çeviriler İngilizce gösterilir.')}</p>
                 <button className="btn" onClick={() => void api.localeFolder().then((folder) => api.openPath(folder)).catch((error: Error) => notify('error', error.message))}><UiIcon label="Çeviri klasörünü aç" />{t('Çeviri klasörünü aç')}</button>
                 <div className="setting-row">
                   <div><strong>{t('Tema')}</strong><small>{t('Uygulama teması. Değişiklik anında uygulanır.')}</small></div>
@@ -4068,7 +4200,7 @@ export default function App() {
       {leftoverTarget && (
         <div className="modal-backdrop" role="presentation">
           <div className="modal wide" role="dialog" aria-modal="true" aria-label={t('Kalıntılar')}>
-            <h2><UiIcon label="{name} — kalıntılar" />{tf('{name} — kalıntılar', { name: leftoverTarget.label })}</h2>
+            <h2><Avatar name={leftoverTarget.label} src={appIconForName(leftoverTarget.label, apps)} />{tf('{name} — kalıntılar', { name: leftoverTarget.label })}</h2>
             <p className="muted">{tf('Bulunan {count} öğe. Varsayılan olarak Geri Dönüşüm Kutusu kullanılır; kalıcı silme açık onay gerektirir.', { count: leftovers.length })}</p>
             {leftoverScanning && (
               <div className="scan-progress">
@@ -4119,7 +4251,7 @@ export default function App() {
         </div>
       )}
 
-      {confirm && <ConfirmDialog state={confirm} onClose={() => setConfirm(null)} />}
+      {confirm && <ConfirmDialog state={confirm} lang={lang} onClose={() => setConfirm(null)} />}
       </div>
     </div>
   );
