@@ -449,14 +449,14 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
                 <div class="meta">Pars.Sistem.Yoneticisi.Setup.1.3.0.exe · 85,4 MB · NSIS</div>
                 <a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/Pars.Sistem.Yoneticisi.Setup.1.3.0.exe">Kurulumu indir</a>
                 <span class="hash-label">SHA-256</span>
-                <code class="hash">05c5aae34d26aa5e69fadde121969fa977482b479ec5cdde9d124d7177944a44</code>
+                <code class="hash">55567ec3e35f5fb04cd0cb1a24c816a2f226a7e03334b49ea734428d295c4677</code>
               </div>
               <div class="dlcard reveal" style="--d:.14s">
                 <h3>Portable sürüm</h3>
                 <div class="meta">ParsSistemYoneticisi-Portable.exe · 85,2 MB · Kurulum gerektirmez</div>
                 <a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/ParsSistemYoneticisi-Portable.exe">Portable indir</a>
                 <span class="hash-label">SHA-256</span>
-                <code class="hash">5ba24d8f386f322a8810188310bc6d77babff48625a0cad4075444098c76766f</code>
+                <code class="hash">3f25e54013bfd1d97bd6304027aaa14c25209e59f62f767c776db85ade160493</code>
               </div>
             </div>
             <div class="note"><b>Dijital imza henüz yok.</b> Windows “bilinmeyen yayımcı” uyarısı gösterebilir. Dosyanın değişmediğini yukarıdaki SHA-256 özetiyle doğrulayabilirsiniz. Kurucu, winget eksikse Microsoft’un resmi kaynağından sessizce kurar.</div>

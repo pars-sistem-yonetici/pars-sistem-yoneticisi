@@ -2,12 +2,12 @@
   "version": "1.3.0",
   "notes": "Uygulama kütüphanesindeki ikonlar yenilendi: 127 ikon eklendi, 7 bozuk favicon düzeltildi ve 249 girdinin tamamı doğrulandı.",
   "fileName": "Pars Sistem Yoneticisi Setup 1.3.0.exe",
-  "sha512": "d2e0370fb723ee4c8a5e82dad8168a193bd207c9f6c6dfea0ba430b25c1744d73dd20fb8c05aeaaf89f4a9b58d4645ff7fa2bc1f2f04822a44191ed93aaa7d3c",
-  "sha256": "05c5aae34d26aa5e69fadde121969fa977482b479ec5cdde9d124d7177944a44",
-  "size": 85426530,
+  "sha512": "981238eaedecf08cecd451fa34c07338475ae9fda0e0346ee840a58c8646b84875c1ba8408d7da7cd23886c3612137d969c46977990ff464b5e8cf13de66bac5",
+  "sha256": "55567ec3e35f5fb04cd0cb1a24c816a2f226a7e03334b49ea734428d295c4677",
+  "size": 85427326,
   "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/Pars.Sistem.Yoneticisi.Setup.1.3.0.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
-  "portableSha256": "5ba24d8f386f322a8810188310bc6d77babff48625a0cad4075444098c76766f",
-  "portableSize": 85212444,
+  "portableSha256": "3f25e54013bfd1d97bd6304027aaa14c25209e59f62f767c776db85ade160493",
+  "portableSize": 85213148,
   "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/ParsSistemYoneticisi-Portable.exe"
 }
