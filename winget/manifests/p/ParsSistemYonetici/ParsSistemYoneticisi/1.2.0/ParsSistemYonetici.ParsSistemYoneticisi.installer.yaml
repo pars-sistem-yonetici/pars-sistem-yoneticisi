@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.28.0.schema.json
+PackageIdentifier: ParsSistemYonetici.ParsSistemYoneticisi
+PackageVersion: 1.2.0
+InstallerLocale: tr-TR
+Platform:
+- Windows.Desktop
+InstallerType: nullsoft
+Scope: machine
+InstallModes:
+- silent
+- silentWithProgress
+InstallerSwitches:
+  Silent: /S
+  SilentWithProgress: /S
+AppsAndFeaturesEntries:
+- DisplayName: Pars Sistem Yöneticisi
+  DisplayVersion: 1.2.0
+  Publisher: Pars Sistem Yöneticisi
+Installers:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.2.0/Pars.Sistem.Yoneticisi.Setup.1.2.0.exe
+  InstallerSha256: 0FB6FF678A8181E1946CA046039E0F43FE020CC514529215A19B48CF9B69F923
+  ElevationRequirement: elevationRequired
+ManifestType: installer
+ManifestVersion: 1.28.0
