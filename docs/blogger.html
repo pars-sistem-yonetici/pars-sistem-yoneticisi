@@ -4,8 +4,8 @@ BLOGGER YAYIN TALİMATI
 1) Önerilen: website/blogger.js içindeki CONFIG değerlerini düzenleyip
    npm run build:blogger komutunu yeniden çalıştırın. Böylece ayarlar korunur.
 2) Alternatif: Aşağıdaki yer tutucuları bu dosyada doğrudan değiştirin:
-   https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/Pars.Sistem.Yoneticisi.Setup.1.3.0.exe     kurulum exe'sinin tam URL'si
-   https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/ParsSistemYoneticisi-Portable.exe  portable exe URL'si
+   https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.4.0/Pars.Sistem.Yoneticisi.Setup.1.4.0.exe     kurulum exe'sinin tam URL'si
+   https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.4.0/ParsSistemYoneticisi-Portable.exe  portable exe URL'si
    https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/downloads/latest.json latest.json tam URL'si; kullanmayacaksanız CONFIG.latestJsonUrl = '' yapın
 3) Dosyanın tamamını Blogger → Sayfalar → Yeni Sayfa → HTML görünümü içine yapıştırın.
 4) Yayınladıktan sonra bağlantıları ve sürüm bilgisini kontrol edin.
@@ -446,7 +446,7 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
 <section class="hero">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <span class="pill"><span class="dot"></span> <span data-latest-version>v1.3.0</span> · Windows 10 / 11 · x64</span>
+          <span class="pill"><span class="dot"></span> <span data-latest-version>v1.4.0</span> · Windows 10 / 11 · x64</span>
           <h1>Windows bakımı ve yazılım yönetimi, <em>tek panelde.</em></h1>
           <p class="hero-lead">winget ile güncelleme ve kaldırma, disk temizleme, kayıt defteri onarımı, güvenlik duvarı denetimi ve sürücü yönetimi. Her yıkıcı işlem onaylı, her kritik değişiklik yedekli.</p>
           <div class="hero-actions">
@@ -553,7 +553,7 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
 <section class="stats-band" aria-label="Özet bilgiler">
       <div class="wrap stats-grid">
         <div class="stat reveal"><b>142</b><span>doğrulanmış winget uygulaması</span></div>
-        <div class="stat reveal"><b>5</b><span>salt-okunur yerel tarama motoru</span></div>
+        <div class="stat reveal"><b>8</b><span>salt-okunur yerel tarama motoru</span></div>
         <div class="stat reveal"><b>63</b><span>tersine çevrilebilir sistem ayarı</span></div>
         <div class="stat reveal"><b>55+</b><span>arayüz dili ve iki tam çeviri</span></div>
       </div>
@@ -572,7 +572,7 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
           <article class="feature reveal"><div class="feature-icon">◫</div><h3>Disk temizleme</h3><p>Geçici dosyalar, önbellekler, Windows Update indirmeleri ve DNS dahil yedi kategoride güvenli temizlik.</p></article>
           <article class="feature reveal"><div class="feature-icon">⚙</div><h3>Kayıt defteri</h3><p>Bozuk kaldırma girdilerini 64 ve 32-bit üzerinde tarar. Silmeden önce her girdi .reg olarak yedeklenir.</p></article>
           <article class="feature reveal"><div class="feature-icon">⚑</div><h3>Güvenlik duvarı</h3><p>Etkin gelen kuralları denetler; geniş kapsam, eksik program yolu ve imzasız ikilileri kritik olarak işaretler.</p></article>
-          <article class="feature reveal"><div class="feature-icon">☣</div><h3>Kötü amaçlı yazılım</h3><p>Beş yerel, salt-okunur motor: imzalar, sezgisel analiz, betikler, sistem bütünlüğü ve kalıcılık izleri.</p></article>
+          <article class="feature reveal"><div class="feature-icon">☣</div><h3>Kötü amaçlı yazılım</h3><p>Sekiz yerel, salt-okunur motor: imzalar, sezgisel analiz, betikler, sistem bütünlüğü, kalıcılık, Defender, HOSTS ve tarayıcı denetimi.</p></article>
           <article class="feature reveal"><div class="feature-icon">⚒</div><h3>Sürücüler</h3><p>Windows Update Agent ile sürücü güncellemelerini tarar; kurulum öncesi DISM ile yedek alma seçeneği sunar.</p></article>
           <article class="feature reveal"><div class="feature-icon">◷</div><h3>Zamanlama</h3><p>Haftalık, günlük, aylık ve özel olmak üzere dört devre dışı plan. Uygulama açıkken 60 saniyelik döngüyle çalışır.</p></article>
           <article class="feature reveal"><div class="feature-icon">◉</div><h3>63 sistem ayarı</h3><p>Ağ, performans, arayüz, gizlilik ve servislerde tersine çevrilebilir ayarlar. Her değişiklikten önce zorunlu .reg ve JSON yedeği alınır; hiçbiri otomatik uygulanmaz.</p></article>
@@ -612,8 +612,8 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
 <section class="page-hero wrap">
       <p class="eyebrow">İndirme</p>
       <h2>Pars Sistem Yöneticisi’ni indir</h2>
-      <p class="pill" data-latest-notes style="margin: 0 0 14px">Son sürüm: v1.3.0</p>
-      <p>İki sürüm de aynı v1.3.0 kod tabanını kullanır. Kalıcı kurulum istiyorsanız kurulum dosyasını, tek dosya taşımak istiyorsanız portable sürümü seçin.</p>
+      <p class="pill" data-latest-notes style="margin: 0 0 14px">Son sürüm: v1.4.0</p>
+      <p>İki sürüm de aynı v1.4.0 kod tabanını kullanır. Kalıcı kurulum istiyorsanız kurulum dosyasını, tek dosya taşımak istiyorsanız portable sürümü seçin.</p>
     </section>
 
 <section class="section-tight">
@@ -624,20 +624,20 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
             <h2>Kurulum Dosyası</h2>
             <p class="sub">Başlat menüsüne kayıt olur, yönetici izniyle kurulur. Günlük kullanım ve birden fazla oturum için önerilir.</p>
             <div class="download-meta">
-              <div><small>Sürüm</small><b>1.3.0</b></div>
+              <div><small>Sürüm</small><b>1.4.0</b></div>
               <div><small>Boyut</small><b>85,4 MB</b></div>
               <div><small>Sistem</small><b>Windows 10/11 x64</b></div>
               <div><small>Dosya</small><b class="mono">.exe · NSIS</b></div>
             </div>
-            <a class="btn btn-primary btn-block btn-lg" data-setup-link href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/Pars.Sistem.Yoneticisi.Setup.1.3.0.exe" download="Pars Sistem Yoneticisi Setup 1.3.0.exe">
+            <a class="btn btn-primary btn-block btn-lg" data-setup-link href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.4.0/Pars.Sistem.Yoneticisi.Setup.1.4.0.exe" download="Pars Sistem Yoneticisi Setup 1.4.0.exe">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg>
               Kurulumu indir
             </a>
             <div class="checksum">
               <small>SHA-256 · dosya bütünlüğü</small>
               <div class="checksum-row">
-                <code data-setup-checksum>55567ec3e35f5fb04cd0cb1a24c816a2f226a7e03334b49ea734428d295c4677</code>
-                <button class="copy-btn" type="button" data-setup-copy data-copy="55567ec3e35f5fb04cd0cb1a24c816a2f226a7e03334b49ea734428d295c4677">Kopyala</button>
+                <code data-setup-checksum>59981085f2d3ad08b1ab516004300a27108a668073470b43ad5c1fd3c9ab445a</code>
+                <button class="copy-btn" type="button" data-setup-copy data-copy="59981085f2d3ad08b1ab516004300a27108a668073470b43ad5c1fd3c9ab445a">Kopyala</button>
               </div>
             </div>
           </article>
@@ -647,20 +647,20 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
             <h2>Portable Sürüm</h2>
             <p class="sub">Çalıştırınca geçici klasöre çıkarılır, kapatınca temizlenir. Ayarlar ve yedekler kullanıcı klasörünüzde kalır.</p>
             <div class="download-meta">
-              <div><small>Sürüm</small><b>1.3.0</b></div>
+              <div><small>Sürüm</small><b>1.4.0</b></div>
               <div><small>Boyut</small><b>85,2 MB</b></div>
               <div><small>Sistem</small><b>Windows 10/11 x64</b></div>
               <div><small>Dosya</small><b class="mono">.exe · tek dosya</b></div>
             </div>
-            <a class="btn btn-block btn-lg" data-portable-link href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/ParsSistemYoneticisi-Portable.exe" download="ParsSistemYoneticisi-Portable.exe">
+            <a class="btn btn-block btn-lg" data-portable-link href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.4.0/ParsSistemYoneticisi-Portable.exe" download="ParsSistemYoneticisi-Portable.exe">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg>
               Portable’ı indir
             </a>
             <div class="checksum">
               <small>SHA-256 · dosya bütünlüğü</small>
               <div class="checksum-row">
-                <code data-portable-checksum>3f25e54013bfd1d97bd6304027aaa14c25209e59f62f767c776db85ade160493</code>
-                <button class="copy-btn" type="button" data-portable-copy data-copy="3f25e54013bfd1d97bd6304027aaa14c25209e59f62f767c776db85ade160493">Kopyala</button>
+                <code data-portable-checksum>b8a30016cccd35a68929493ea68a5354c75fb309804fb5d92929c1feeeef4cc7</code>
+                <button class="copy-btn" type="button" data-portable-copy data-copy="b8a30016cccd35a68929493ea68a5354c75fb309804fb5d92929c1feeeef4cc7">Kopyala</button>
               </div>
             </div>
           </article>
@@ -725,7 +725,7 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
           <h2>İndirdiğiniz dosyayı kontrol edin</h2>
           <p>PowerShell’i dosyanın bulunduğu klasörde açın ve aşağıdaki komutlardan birini çalıştırın. Sonuç yukarıdaki değerle aynı olmalıdır.</p>
         </div>
-        <pre class="code-block"><code>Get-FileHash ".\Pars Sistem Yoneticisi Setup 1.3.0.exe" -Algorithm SHA256
+        <pre class="code-block"><code>Get-FileHash ".\Pars Sistem Yoneticisi Setup 1.4.0.exe" -Algorithm SHA256
 Get-FileHash ".\ParsSistemYoneticisi-Portable.exe" -Algorithm SHA256</code></pre>
       </div>
     </section>
@@ -756,7 +756,7 @@ Get-FileHash ".\ParsSistemYoneticisi-Portable.exe" -Algorithm SHA256</code></pre
           <details><summary>Verilerim nereye kaydediliyor?</summary><p>Ayarlar ve ek çeviriler %APPDATA%\pars-sistem-yoneticisi-ts altında; kayıt, güvenlik duvarı ve sürücü yedekleri %LOCALAPPDATA%\ParsSistemYoneticisi altında tutulur. Hiçbir veri uzak sunucuya gönderilmez.</p></details>
           <details><summary>İnternet olmadan çalışır mı?</summary><p>Arayüz ve yerel bakım araçları çevrimdışı çalışır. winget kataloğu, sürücü taraması ve uygulama güncelleyici internet bağlantısı gerektirir.</p></details>
           <details><summary>winget kurulu değilse ne olur?</summary><p>Kurulum exe’si winget’i algılar ve eksikse Microsoft’un resmi kaynağından sessizce kurar. Başarısız olursa uygulama yine kurulur; Ayarlar → Gerekli bileşenler alanından yeniden deneyebilirsiniz.</p></details>
-          <details><summary>Kötü amaçlı yazılım sekmesi antivirüs yerine geçer mi?</summary><p>Hayır. Beş motor yalnızca yerel ve salt-okunur denetim yapar; gerçek zamanlı koruma, karantina veya dosya silme işlemi yoktur. Mevcut güvenlik yazılımınızı kullanmaya devam edin.</p></details>
+          <details><summary>Kötü amaçlı yazılım sekmesi antivirüs yerine geçer mi?</summary><p>Hayır. Sekiz motor yalnızca yerel ve salt-okunur denetim yapar; gerçek zamanlı koruma, karantina veya dosya silme işlemi yoktur. Mevcut güvenlik yazılımınızı kullanmaya devam edin.</p></details>
           <details><summary>Başlangıçta tepsiye küçültmeyi nasıl kapatırım?</summary><p>Ayarlar → Kapatma davranışı alanından “Uygulamayı kapat”ı seçin; “Windows ile başlat” anahtarını kapatarak otomatik açılışı tamamen devre dışı bırakabilirsiniz.</p></details>
         </div>
       </div>
@@ -765,7 +765,7 @@ Get-FileHash ".\ParsSistemYoneticisi-Portable.exe" -Algorithm SHA256</code></pre
 
   <footer class="site-footer">
     <div class="wrap">
-      <span><strong>Pars Sistem Yöneticisi</strong> · Sistem Bakım Merkezi · <span data-latest-version>v1.3.0</span></span>
+      <span><strong>Pars Sistem Yöneticisi</strong> · Sistem Bakım Merkezi · <span data-latest-version>v1.4.0</span></span>
       <span>Windows 10 / 11 x64 · <a href="#indir">İndir</a></span>
     </div>
   </footer>
@@ -775,8 +775,8 @@ Get-FileHash ".\ParsSistemYoneticisi-Portable.exe" -Algorithm SHA256</code></pre
  * {{...}} yer tutucu değerlerini yayınlamadan önce düzenleyin.
  */
 var CONFIG = {
-  setupUrl: 'https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/Pars.Sistem.Yoneticisi.Setup.1.3.0.exe',
-  portableUrl: 'https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/ParsSistemYoneticisi-Portable.exe',
+  setupUrl: 'https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.4.0/Pars.Sistem.Yoneticisi.Setup.1.4.0.exe',
+  portableUrl: 'https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.4.0/ParsSistemYoneticisi-Portable.exe',
   latestJsonUrl: 'https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/downloads/latest.json'
 };
 
