@@ -140,6 +140,11 @@ ${bloggerJs}
 
 html = html.replace(/src="assets\/icon\.png"/g, `src="${iconData}"`);
 
+// Blogger sayfası kendi alan adında sunulduğu için göreli assets/ yolları çözümlenmez.
+// Ekran görüntülerini yayındaki GitHub Pages adresine sabitle.
+const siteAssets = 'https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/assets/';
+html = html.replace(/src="assets\/([^"]+)"/g, (_full, name) => `src="${siteAssets}${name}"`);
+
 const output = path.join(web, 'blogger.html');
 fs.writeFileSync(output, html, 'utf8');
 console.log(`Blogger tek dosyalık sürümü oluşturuldu: ${output}`);
