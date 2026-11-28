@@ -28,7 +28,7 @@ Kudu’nun macOS ve Linux denetimleri salt-okunur denetim paneli olarak eklendi;
 
 | Windows dosyası | Boyut | SHA-256 |
 | --- | --- | --- |
-| `Pars.Sistem.Yoneticisi.Setup.1.8.0.exe` | 85.501.299 bayt | `e6639c4c8c3e2753d4138c5f5e06343b7aa31ae9459ded6ba938ccafd423b14b` |
-| `ParsSistemYoneticisi-Portable.exe` | 85.287.074 bayt | `49736bf115719b3915b5161232dfa74a544692b841efba7e20547f5100f6e394` |
+| `Pars.Sistem.Yoneticisi.Setup.1.8.0.exe` | 85.502.538 bayt | `c0985ca5f6124ed5dfc6323d1d3414d683b4e4f64bcf302de1357400d01be5d8` |
+| `ParsSistemYoneticisi-Portable.exe` | 85.288.409 bayt | `2d6ea01330b432787cab0d73642e7013afb1352bf6c516dfdc1bc7ffa2614b94` |
 
 > İmzasız dağıtım olduğu için SmartScreen ve Gatekeeper uyarıları çıkabilir. İndirmeden önce release içindeki SHA-256 özetleriyle dosya bütünlüğünü doğrulayın.
