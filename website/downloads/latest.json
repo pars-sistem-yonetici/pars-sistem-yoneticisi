@@ -9,5 +9,13 @@
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
   "portableSha256": "b8a30016cccd35a68929493ea68a5354c75fb309804fb5d92929c1feeeef4cc7",
   "portableSize": 85249524,
-  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/ParsSistemYoneticisi-Portable.exe"
+  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/ParsSistemYoneticisi-Portable.exe",
+  "linuxAppImageFileName": "Pars.Sistem.Yoneticisi-1.6.0-x64.AppImage",
+  "linuxAppImageSha256": "f0ddffe55e88b353186beeb3cffa49061955faa26990a798f2972b1fef6bc143",
+  "linuxAppImageSize": 112085429,
+  "linuxAppImageUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.AppImage",
+  "linuxDebFileName": "Pars.Sistem.Yoneticisi-1.6.0-x64.deb",
+  "linuxDebSha256": "354f83b5e824d01b77a521aad4ae78309d4be8e4a4360a64bf86a74a60aaaffb",
+  "linuxDebSize": 76023250,
+  "linuxDebUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.deb"
 }
