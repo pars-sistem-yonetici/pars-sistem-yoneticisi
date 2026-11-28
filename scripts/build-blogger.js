@@ -26,6 +26,7 @@ function between(source, start, end) {
   return source.slice(begin, to).trim();
 }
 
+const manifest = JSON.parse(fs.readFileSync(path.join(root, 'docs', 'downloads', 'latest.json'), 'utf8'));
 const indexHtml = read('index.html');
 const downloadHtml = read('download.html');
 const css = read('styles.css');
@@ -74,8 +75,8 @@ BLOGGER YAYIN TALİMATI
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#171719" />
-  <meta name="description" content="Pars Sistem Yöneticisi — Windows için winget tabanlı yazılım yönetimi, sistem bakımı, güvenlik denetimi ve güvenli temizleme paneli." />
-  <title>Pars Sistem Yöneticisi — Windows Sistem Bakım Merkezi</title>
+  <meta name="description" content="Pars Sistem Yöneticisi — Windows, macOS ve Linux için sistem bakımı, yazılım yönetimi, güvenlik denetimi ve güvenli temizleme paneli." />
+  <title>Pars Sistem Yöneticisi — Sistem Bakım Merkezi</title>
   <link rel="icon" href="${iconData}" />
   <style>
 ${css}
@@ -126,7 +127,7 @@ ${faq}
 
   <footer class="site-footer">
     <div class="wrap">
-      <span><strong>Pars Sistem Yöneticisi</strong> · Sistem Bakım Merkezi · <span data-latest-version>v1.0.2</span></span>
+      <span><strong>Pars Sistem Yöneticisi</strong> · Sistem Bakım Merkezi · <span data-latest-version>v${manifest.version}</span></span>
       <span>Windows 10 / 11 x64 · <a href="#indir">İndir</a></span>
     </div>
   </footer>
