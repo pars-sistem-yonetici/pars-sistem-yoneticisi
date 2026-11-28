@@ -499,7 +499,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
                 <code class="hash">354f83b5e824d01b77a521aad4ae78309d4be8e4a4360a64bf86a74a60aaaffb</code>
               </div>
             </div>
-            <div class="note"><b>İmza ve doğrulama:</b> Paketler kod imzasıyla yayınlanmadı. Windows SmartScreen ve macOS Gatekeeper uyarıları normaldir; indirmeden önce SHA-256 özetini doğrulayın. Windows paketleri iç sürüm 1.7.0, macOS paketleri 1.5.0, Linux paketleri 1.7.0 kaynak derlemelerindendir; 1.7.0 birleşik dağıtım etiketidir.</div>
+            <div class="note"><b>İmza ve doğrulama:</b> Paketler kod imzasıyla yayınlanmadı. Windows SmartScreen ve macOS Gatekeeper uyarıları normaldir; indirmeden önce SHA-256 özetini doğrulayın. Windows paketleri iç sürüm 1.7.0, macOS paketleri 1.5.0, Linux paketleri 1.6.0 kaynak derlemelerindendir; 1.7.0 birleşik dağıtım etiketidir.</div>
           </div>
 
           <div class="block reveal" id="sss">
