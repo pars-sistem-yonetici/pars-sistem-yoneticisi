@@ -68,7 +68,7 @@ export interface InstalledApp {
   name: string;
   ident: string;
   version: string;
-  /** Kayıt defterindeki EstimatedSize (KB) değerinden hesaplanan bayt cinsinden boyut. */
+  /** Bayt cinsinden boyut: kayıt defterindeki EstimatedSize (KB) veya kurulum klasörü ölçümü. */
   size: number;
   publisher: string;
   installLocation: string;
