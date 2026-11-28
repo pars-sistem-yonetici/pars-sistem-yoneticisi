@@ -54,6 +54,9 @@ h1 > .ui-icon, h2 > .ui-icon, h3 > .ui-icon {
   --accent-2: #b37f24;
   --accent-rgb: 217, 164, 65;
   --accent-2-rgb: 179, 127, 36;
+  --library-selected: #f59e0b;
+  --library-selected-rgb: 245, 158, 11;
+  --library-selected-text: #ffd39b;
   --scan-accent: #d9a441;
   --scan-accent-rgb: 217, 164, 65;
   --scan-highlight: #f0cd80;
@@ -136,6 +139,9 @@ html[data-theme="windows11"] {
   --accent-2: #7a5200;
   --accent-rgb: 154, 103, 0;
   --accent-2-rgb: 122, 82, 0;
+  --library-selected: #c2560b;
+  --library-selected-rgb: 194, 86, 11;
+  --library-selected-text: #8a3d00;
   --scan-accent: #9a6700;
   --scan-accent-rgb: 154, 103, 0;
   --scan-highlight: #c8952f;
@@ -865,7 +871,14 @@ tbody tr:last-child td { border-bottom: none; }
 .library-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 14px; align-items: start; }
 .library-grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
 .library-card { cursor: pointer; }
-.library-card.selected { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(var(--accent-rgb), .35) inset; }
+.library-card.selected,
+.library-card.selected:hover {
+  border-color: var(--library-selected);
+  background: linear-gradient(135deg, rgba(var(--library-selected-rgb), .22), rgba(var(--library-selected-rgb), .06)), var(--panel-2);
+  box-shadow: 0 0 0 1px rgba(var(--library-selected-rgb), .45) inset, 0 8px 20px rgba(var(--library-selected-rgb), .14);
+}
+.library-card.selected .software-title b { color: var(--library-selected-text); }
+.library-card.selected input[type='checkbox'] { accent-color: var(--library-selected); cursor: pointer; }
 .library-card input[type='checkbox'] { cursor: pointer; }
 /* Kategori sekmesiyle aynı ikon/ad/sıralamayı kullanan kart üstü başlıkları. */
 .library-group-head {

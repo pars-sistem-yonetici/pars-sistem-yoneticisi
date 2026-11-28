@@ -2,12 +2,12 @@
   "version": "1.6.0",
   "notes": "Windows paketleri artık gerçek 1.6.0 derlemesidir. Windows, macOS ve Linux paketleri birleşik 1.6.0 release’inde toplandı; Windows kurulum/portable, macOS DMG/ZIP ve Linux AppImage/DEB tek indirme sayfasında.",
   "fileName": "Pars Sistem Yoneticisi Setup 1.6.0.exe",
-  "sha512": "05aba4574eeab8d835d264b0eeaf363c07bb73fa550f8763a615b0fdd2902e11e13cfb558be209ecabea482e57798f2575eadaa8439b326cb6fdb5fcb1aa0278",
-  "sha256": "7365dd34399c912b8faddf7671a02e9f0330f090562efa596f01acf636d36195",
-  "size": 85493651,
+  "sha512": "27b784c8d64405133edfb6493ee01fdcecef053b3f8756ee371ba0b6f6c126f9736790d01719e3206d711d2502ebd19f90164f196b06d509011b3c577f87b6f2",
+  "sha256": "bbb65e11162a6e73b3a4d0e6541a5637c66c5c518b4ce7f6319c04fe72f5d15f",
+  "size": 85495029,
   "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi.Setup.1.6.0.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
-  "portableSha256": "07d4cfffc97e53804fe45b4a86b0b909290601205a59163dd98d74f4ba77bad0",
-  "portableSize": 85279532,
+  "portableSha256": "17b95a8891eb85e5027d095ed0ca3ca940e19f843740d4105d3e3bf83b9b9a61",
+  "portableSize": 85280800,
   "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/ParsSistemYoneticisi-Portable.exe"
 }

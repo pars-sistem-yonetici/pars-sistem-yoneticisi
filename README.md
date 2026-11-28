@@ -24,8 +24,8 @@ TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klas
 
 | Platform | Dosyalar | SHA-256 (özet) |
 | --- | --- | --- |
-| Windows | `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe` | `7365dd34399c912b8faddf7671a02e9f0330f090562efa596f01acf636d36195` |
-| Windows | `ParsSistemYoneticisi-Portable.exe` | `07d4cfffc97e53804fe45b4a86b0b909290601205a59163dd98d74f4ba77bad0` |
+| Windows | `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe` | `bbb65e11162a6e73b3a4d0e6541a5637c66c5c518b4ce7f6319c04fe72f5d15f` |
+| Windows | `ParsSistemYoneticisi-Portable.exe` | `17b95a8891eb85e5027d095ed0ca3ca940e19f843740d4105d3e3bf83b9b9a61` |
 | macOS arm64 | `.dmg` / `.zip` | `0f1bb0a9…` / `22af969d…` |
 | macOS x64 | `.dmg` / `.zip` | `027cd67d…` / `4b0421d4…` |
 | Linux x64 | `.AppImage` | `f0ddffe55e88b353186beeb3cffa49061955faa26990a798f2972b1fef6bc143` |

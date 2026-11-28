@@ -55,8 +55,8 @@
       <tr><th>Platform</th><th>Dosya</th><th>SHA-256</th></tr>
     </thead>
     <tbody>
-      <tr><td>Windows</td><td>Pars.Sistem.Yoneticisi.Setup.1.6.0.exe</td><td><code>7365dd34399c912b8faddf7671a02e9f0330f090562efa596f01acf636d36195</code></td></tr>
-      <tr><td>Windows</td><td>ParsSistemYoneticisi-Portable.exe</td><td><code>07d4cfffc97e53804fe45b4a86b0b909290601205a59163dd98d74f4ba77bad0</code></td></tr>
+      <tr><td>Windows</td><td>Pars.Sistem.Yoneticisi.Setup.1.6.0.exe</td><td><code>bbb65e11162a6e73b3a4d0e6541a5637c66c5c518b4ce7f6319c04fe72f5d15f</code></td></tr>
+      <tr><td>Windows</td><td>ParsSistemYoneticisi-Portable.exe</td><td><code>17b95a8891eb85e5027d095ed0ca3ca940e19f843740d4105d3e3bf83b9b9a61</code></td></tr>
       <tr><td>macOS arm64</td><td>Pars.Sistem.Yoneticisi-1.6.0-arm64.dmg</td><td><code>0f1bb0a96758f52ab1bee748eeee727699d8a3221a9919404dee498cdf52eb55</code></td></tr>
       <tr><td>macOS arm64</td><td>Pars.Sistem.Yoneticisi-1.6.0-arm64.zip</td><td><code>22af969d9f76abead27bf1b45b918ea12f1fead95ab6be7a39120965e971a75e</code></td></tr>
       <tr><td>macOS x64</td><td>Pars.Sistem.Yoneticisi-1.6.0-x64.dmg</td><td><code>027cd67d5d86956b94d3de3861de65dabda4e9a71379f4292ea17c776df114ce</code></td></tr>
