@@ -28,6 +28,7 @@ import * as prereqService from './services/prereqs';
 import * as leftoversService from './services/leftovers';
 import * as malwareService from './services/malware';
 import * as malwarePosixService from './services/malware-posix';
+import * as malwareQuarantineService from './services/malware-quarantine';
 import * as packagesService from './services/packages';
 import * as privacyService from './services/privacy';
 import * as registryService from './services/registry';
@@ -44,7 +45,7 @@ import * as winget from './services/winget';
 import * as updatesService from './services/updates';
 import {
   arr, autorunItem, bloatwareItem, bool, filePath, fileScanOptions, ident, installItem, IpcValidationError, isInside,
-  leftover, leftoverScanTarget, oneOf, pathList, privacyTweak, regIssue,
+  leftover, leftoverScanTarget, malwareTarget, oneOf, pathList, privacyTweak, regIssue,
   scheduleTask, searchQuery, settingsPatch, startupItem, str, updateInfo,
   Validator, wingetPkg,
 } from './ipc-guard';
@@ -364,6 +365,8 @@ const UNSUPPORTED_ON_POSIX = new Set([
   'profile:apply', 'dns:providers', 'dns:current', 'dns:benchmark', 'dns:switch', 'dns:reset',
   'package:backup-folder', 'package:backup-list', 'package:read-backup', 'package:import', 'package:export',
   'files:delete', 'update:check', 'update:download', 'update:install',
+  'malware:quarantine', 'malware:quarantine-list', 'malware:quarantine-restore',
+  'malware:quarantine-delete', 'malware:delete-files',
 ]);
 
 /** Argüman alan kanallar için tek merkezde şema tanımı. */
@@ -396,6 +399,10 @@ const IPC_SCHEMAS: Record<string, Validator[]> = {
   'malware:scan': [arr(oneOf(capabilities.malwareEngines), capabilities.malwareEngines.length), optionalRequestId],
   'malware:cancel': [str({ max: 64 })],
   'malware:export': [str({ max: 2_000_000 }), oneOf(['json', 'txt'] as const)],
+  'malware:quarantine': [arr(malwareTarget, 200)],
+  'malware:quarantine-restore': [arr(str({ max: 64 }), 200)],
+  'malware:quarantine-delete': [arr(str({ max: 64 }), 200)],
+  'malware:delete-files': [arr(malwareTarget, 200)],
   'schedule:save': [arr(scheduleTask, 100)],
   'schedule:run': [scheduleTask],
   'drivers:download': [arr(str({ max: 256 }), 500)],
@@ -657,6 +664,15 @@ export function registerIpc(): void {
   });
   register('malware:export', (_event, content: string, format: 'json' | 'txt') =>
     malwareService.exportReport(content, format));
+  register('malware:quarantine', (_event, targets: Parameters<typeof malwareQuarantineService.quarantineFiles>[0]) =>
+    malwareQuarantineService.quarantineFiles(targets));
+  register('malware:quarantine-list', () => malwareQuarantineService.listQuarantine());
+  register('malware:quarantine-restore', (_event, ids: string[]) =>
+    malwareQuarantineService.restoreFiles(ids));
+  register('malware:quarantine-delete', (_event, ids: string[]) =>
+    malwareQuarantineService.deleteQuarantinedFiles(ids));
+  register('malware:delete-files', (_event, targets: Parameters<typeof malwareQuarantineService.deleteFindingFiles>[0]) =>
+    malwareQuarantineService.deleteFindingFiles(targets));
 
   register('schedule:list', () => schedulerService.listSchedules());
   register('schedule:save', (_event, tasks: ScheduleTask[]) => schedulerService.saveSchedules(tasks));

@@ -84,6 +84,11 @@ async function ipcCheck(): Promise<void> {
   await mustReject('winget:install yazma reddi', 'winget:install', 'curl', true);
   await mustReject('registry:scan yazma reddi', 'registry:scan');
   await mustReject('files:delete yazma reddi', 'files:delete', [], [], 'permanent');
+  const malwareWriteTarget = [{ id: 'x', path: '/tmp/ornek.exe', engine: 'signatures', title: 'test' }];
+  await mustReject('malware:quarantine yazma reddi', 'malware:quarantine', malwareWriteTarget);
+  await mustReject('malware:quarantine-restore yazma reddi', 'malware:quarantine-restore', ['x']);
+  await mustReject('malware:quarantine-delete yazma reddi', 'malware:quarantine-delete', ['x']);
+  await mustReject('malware:delete-files yazma reddi', 'malware:delete-files', malwareWriteTarget);
   await mustReject('update:check yazma reddi', 'update:check');
   await mustReject('schedule:save yazma reddi', 'schedule:save', []);
   await mustReject('prereq:scan yazma reddi', 'prereq:scan');

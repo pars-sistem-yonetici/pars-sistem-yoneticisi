@@ -37,10 +37,13 @@ import type {
   Leftover,
   LeftoverProgress,
   LogEntry,
+  MalwareActionResult,
   MalwareEngine,
+  MalwareQuarantineItem,
   MalwareScanProgress,
   MalwareScanResult,
   MalwareSeverity,
+  MalwareTarget,
   ManagedPolicyFile,
   ManagedPolicyFixId,
   OptimizationProfile,
@@ -641,6 +644,9 @@ export default function App() {
   const [malwareProgress, setMalwareProgress] = useState<MalwareScanProgress | null>(null);
   const [malwareFilter, setMalwareFilter] = useState<'all' | MalwareSeverity>('all');
   const [malwareQuery, setMalwareQuery] = useState('');
+  const [selectedMalware, setSelectedMalware] = useState<Set<string>>(new Set());
+  const [quarantineItems, setQuarantineItems] = useState<MalwareQuarantineItem[]>([]);
+  const [selectedQuarantine, setSelectedQuarantine] = useState<Set<string>>(new Set());
   const malwareRequestId = useRef('');
   const [schedules, setSchedules] = useState<ScheduleTask[]>([]);
   const [leftovers, setLeftovers] = useState<Leftover[]>([]);
@@ -879,12 +885,103 @@ export default function App() {
     malwareRequestId.current = requestId;
     setMalwareProgress(null);
     setMalwareResult(null);
+    setSelectedMalware(new Set());
     void run(t('Tehdit taraması sürüyor'), async () => {
       const result = await api.malwareScan(malwareEngines, requestId);
       setMalwareResult(result);
       if (result.cancelled) notify('info', t('Tarama iptal edildi.'));
     });
   }, [malwareEngines, notify, run, t]);
+
+  const malwareTargets = useCallback((ids: Set<string>): MalwareTarget[] => malwareFindings
+    .filter((finding) => ids.has(finding.id) && finding.path)
+    .map((finding) => ({
+      id: finding.id,
+      path: finding.path as string,
+      engine: finding.engine,
+      title: finding.title,
+    })), [malwareFindings]);
+
+  const refreshQuarantine = useCallback(async () => {
+    setSelectedMalware(new Set());
+    setSelectedQuarantine(new Set());
+    try { setQuarantineItems(await api.malwareQuarantineList()); } catch { /* sessiz */ }
+  }, []);
+
+  const reportMalwareActions = useCallback((results: MalwareActionResult[]) => {
+    const ok = results.filter((result) => result.ok).length;
+    const failed = results.find((result) => !result.ok);
+    const summary = tf('{ok}/{total} dosya işlemi tamamlandı.', { ok, total: results.length });
+    notify(failed && !ok ? 'error' : ok === results.length ? 'ok' : 'info', failed ? `${summary} · ${failed.message}` : summary);
+  }, [notify, tf]);
+
+  const quarantineSelected = useCallback(() => {
+    const targets = malwareTargets(selectedMalware);
+    if (!targets.length) return;
+    setConfirm({
+      title: t('Karantinaya alma onayı'),
+      message: tf('{count} dosya karantinaya alınacak.\n\nDosyalar kullanıcı karantina klasörüne taşınır ve geri yüklenebilir. İşlem sonlandırılmaz, kayıt defteri değiştirilmez.', { count: targets.length }),
+      options: [{ label: t('Vazgeç'), value: 'cancel' }, { label: t('Karantinaya al'), value: 'quarantine', kind: 'primary' }],
+      onChoose: (value) => {
+        if (value !== 'quarantine') return;
+        void run(t('Dosyalar karantinaya alınıyor'), async () => {
+          reportMalwareActions(await api.malwareQuarantine(targets));
+          await refreshQuarantine();
+        });
+      },
+    });
+  }, [malwareTargets, refreshQuarantine, reportMalwareActions, run, selectedMalware, setConfirm, t, tf]);
+
+  const deleteSelectedFindings = useCallback(() => {
+    const targets = malwareTargets(selectedMalware);
+    if (!targets.length) return;
+    setConfirm({
+      title: t('Kalıcı silme onayı'),
+      message: tf('{count} dosya kalıcı olarak silinecek. Bu işlem geri alınamaz.\n\nYalnızca korumalı olmayan kullanıcı dosyaları silinir; işlem sonlandırma ve kayıt defteri yazma yapılmaz.', { count: targets.length }),
+      options: [{ label: t('Vazgeç'), value: 'cancel' }, { label: t('Kalıcı sil'), value: 'delete', kind: 'danger' }],
+      onChoose: (value) => {
+        if (value !== 'delete') return;
+        void run(t('Dosyalar kalıcı olarak siliniyor'), async () => {
+          reportMalwareActions(await api.malwareDeleteFiles(targets));
+          await refreshQuarantine();
+        });
+      },
+    });
+  }, [malwareTargets, refreshQuarantine, reportMalwareActions, run, selectedMalware, setConfirm, t, tf]);
+
+  const restoreSelectedQuarantine = useCallback(() => {
+    const ids = [...selectedQuarantine];
+    if (!ids.length) return;
+    setConfirm({
+      title: t('Geri yükleme onayı'),
+      message: tf('{count} dosya özgün konumuna geri yüklenecek. Aynı adda dosya varsa geri yükleme atlanır.', { count: ids.length }),
+      options: [{ label: t('Vazgeç'), value: 'cancel' }, { label: t('Geri yükle'), value: 'restore', kind: 'primary' }],
+      onChoose: (value) => {
+        if (value !== 'restore') return;
+        void run(t('Dosyalar geri yükleniyor'), async () => {
+          reportMalwareActions(await api.malwareQuarantineRestore(ids));
+          await refreshQuarantine();
+        });
+      },
+    });
+  }, [refreshQuarantine, reportMalwareActions, run, selectedQuarantine, setConfirm, t, tf]);
+
+  const deleteSelectedQuarantine = useCallback(() => {
+    const ids = [...selectedQuarantine];
+    if (!ids.length) return;
+    setConfirm({
+      title: t('Karantina silme onayı'),
+      message: tf('Karantinadaki {count} dosya kalıcı olarak silinecek. Bu işlem geri alınamaz.', { count: ids.length }),
+      options: [{ label: t('Vazgeç'), value: 'cancel' }, { label: t('Kalıcı sil'), value: 'delete', kind: 'danger' }],
+      onChoose: (value) => {
+        if (value !== 'delete') return;
+        void run(t('Karantina kalıcı olarak temizleniyor'), async () => {
+          reportMalwareActions(await api.malwareQuarantineDelete(ids));
+          await refreshQuarantine();
+        });
+      },
+    });
+  }, [refreshQuarantine, reportMalwareActions, run, selectedQuarantine, setConfirm, t, tf]);
 
   const exportMalwareReport = useCallback((format: 'json' | 'txt') => {
     const engineLabel = (id: MalwareEngine) => t(MALWARE_ENGINES.find((item) => item.id === id)?.label ?? id);
@@ -1067,6 +1164,11 @@ export default function App() {
     if (tab !== 'schedule' || schedules.length) return;
     void api.scheduleList().then(setSchedules).catch(() => undefined);
   }, [tab, schedules.length]);
+
+  useEffect(() => {
+    if (tab !== 'malware' || !CAPABILITIES.allowWriteActions) return;
+    void api.malwareQuarantineList().then(setQuarantineItems).catch(() => undefined);
+  }, [tab]);
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 });
@@ -2539,7 +2641,9 @@ export default function App() {
                   </button>
                 ))}
               </div>
-              <p className="muted small">{t('Bu tarama yalnızca okunabilir denetim yapar; dosya silmez, işlem sonlandırmaz. Antivirüs yerine geçmez.')}</p>
+              <p className="muted small">{CAPABILITIES.allowWriteActions
+                ? t('Tarama salt okunurdur; karantina ve silme yalnızca seçtiğiniz dosyalara, açık onayla ve Windows’ta uygulanır. İşlem sonlandırma ve kayıt defteri yazma yapılmaz. Antivirüs yerine geçmez.')
+                : t('Bu tarama yalnızca okunabilir denetim yapar; dosya silmez, işlem sonlandırmaz. Antivirüs yerine geçmez.')}</p>
               {malwareProgress && busy && (
                 <div className="scan-progress">
                   <div className="scan-progress-head">
@@ -2584,22 +2688,64 @@ export default function App() {
                     <button className="btn btn-small" disabled={!visibleMalware.length} onClick={() => exportMalwareReport('json')}><UiIcon label="Rapor dışa aktar" />{t('JSON raporu')}</button>
                     <button className="btn btn-small" disabled={!visibleMalware.length} onClick={() => exportMalwareReport('txt')}><UiIcon label="Rapor dışa aktar" />{t('TXT raporu')}</button>
                   </div>
+                  {CAPABILITIES.allowWriteActions && (
+                    <div className="filter-row">
+                      <button className="btn btn-small" disabled={!selectedMalware.size || !!busy} onClick={quarantineSelected}><UiIcon label="Karantinaya al" />{t('Karantinaya al')}</button>
+                      <button className="btn btn-small btn-danger-ghost" disabled={!selectedMalware.size || !!busy} onClick={deleteSelectedFindings}><UiIcon label="Kalıcı sil" />{t('Kalıcı sil')}</button>
+                      <span className="muted small">{t('Dosya yolu olmayan bulgular işleme alınmaz.')}</span>
+                    </div>
+                  )}
                   <div className="table-wrap">
                     <table>
-                      <thead><tr><th>{t('Önem')}</th><th>{t('Motor')}</th><th>{t('Bulgu')}</th><th>{t('Detay')}</th></tr></thead>
+                      <thead><tr>
+                        {CAPABILITIES.allowWriteActions && <th className="col-check"><input type="checkbox" checked={visibleMalware.some((item) => item.path) && malwareTargets(selectedMalware).length === visibleMalware.filter((item) => item.path).length} onChange={() => setSelectedMalware(new Set(visibleMalware.filter((item) => item.path).map((item) => item.id)))} /></th>}
+                        <th>{t('Önem')}</th><th>{t('Motor')}</th><th>{t('Bulgu')}</th><th>{t('Detay')}</th>
+                      </tr></thead>
                       <tbody>
                         {visibleMalware.map((finding) => (
                           <tr key={finding.id}>
+                            {CAPABILITIES.allowWriteActions && <td><input type="checkbox" disabled={!finding.path} checked={selectedMalware.has(finding.id)} onChange={() => toggle(setSelectedMalware, finding.id)} /></td>}
                             <td><span className={`badge ${finding.severity === 'critical' ? 'badge-danger' : finding.severity === 'medium' ? 'badge-warn' : ''}`}>{t(finding.severity === 'critical' ? 'KRİTİK' : finding.severity === 'medium' ? 'ORTA' : finding.severity === 'low' ? 'Düşük' : 'Bilgi')}</span></td>
                             <td className="small">{t(MALWARE_ENGINES.find((engine) => engine.id === finding.engine)?.label ?? finding.engine)}</td>
                             <td><b>{translateMalwareTitle(finding.title, lang)}</b>{finding.path && <div className="muted small mono">{finding.path}</div>}</td>
                             <td className="small">{translateMalwareDetail(finding.detail, lang)}</td>
                           </tr>
                         ))}
-                        {!visibleMalware.length && <tr><td colSpan={4} className="empty">{t(malwareFindings.length ? 'Filtrelenmiş bulgu yok.' : 'Seçilen motorlarda şüpheli bulgu bulunamadı.')}</td></tr>}
+                        {!visibleMalware.length && <tr><td colSpan={CAPABILITIES.allowWriteActions ? 5 : 4} className="empty">{t(malwareFindings.length ? 'Filtrelenmiş bulgu yok.' : 'Seçilen motorlarda şüpheli bulgu bulunamadı.')}</td></tr>}
                       </tbody>
                     </table>
                   </div>
+                  {CAPABILITIES.allowWriteActions && (
+                    <>
+                      <div className="filter-row">
+                        <b>{t('Karantina')}</b>
+                        <span className="muted small">{t('Karantinadaki dosyalar geri yüklenebilir veya kalıcı silinebilir.')}</span>
+                        <button className="btn btn-small" disabled={!selectedQuarantine.size || !!busy} onClick={restoreSelectedQuarantine}><UiIcon label="Geri yükle" />{t('Geri yükle')}</button>
+                        <button className="btn btn-small btn-danger-ghost" disabled={!selectedQuarantine.size || !!busy} onClick={deleteSelectedQuarantine}><UiIcon label="Karantinayı temizle" />{t('Karantinayı temizle')}</button>
+                      </div>
+                      <div className="table-wrap">
+                        <table>
+                          <thead><tr>
+                            <th className="col-check"><input type="checkbox" checked={quarantineItems.length > 0 && selectedQuarantine.size === quarantineItems.length} onChange={() => toggleAll(quarantineItems, (item) => item.id, selectedQuarantine, setSelectedQuarantine)} /></th>
+                            <th>{t('Dosya')}</th><th>{t('Özgün konum')}</th><th>{t('Motor')}</th><th>{t('Karantina tarihi')}</th><th>{t('Boyut')}</th>
+                          </tr></thead>
+                          <tbody>
+                            {quarantineItems.map((item) => (
+                              <tr key={item.id}>
+                                <td><input type="checkbox" checked={selectedQuarantine.has(item.id)} onChange={() => toggle(setSelectedQuarantine, item.id)} /></td>
+                                <td className="small">{item.name}</td>
+                                <td className="small mono">{item.path}</td>
+                                <td className="small">{t(MALWARE_ENGINES.find((engine) => engine.id === item.engine)?.label ?? item.engine)}</td>
+                                <td className="small">{new Date(item.quarantinedAt).toLocaleString(lang === 'tr' ? 'tr-TR' : 'en-US')}</td>
+                                <td className="mono small">{sizeText(item.size)}</td>
+                              </tr>
+                            ))}
+                            {!quarantineItems.length && <tr><td colSpan={6} className="empty">{t('Karantinada dosya yok.')}</td></tr>}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </section>

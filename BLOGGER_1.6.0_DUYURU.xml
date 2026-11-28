@@ -55,8 +55,8 @@
       <tr><th>Platform</th><th>Dosya</th><th>SHA-256</th></tr>
     </thead>
     <tbody>
-      <tr><td>Windows</td><td>Pars.Sistem.Yoneticisi.Setup.1.6.0.exe</td><td><code>1b0256aa324e2d93940d83788fa03f46f41be2663c7583825be0f14766258a90</code></td></tr>
-      <tr><td>Windows</td><td>ParsSistemYoneticisi-Portable.exe</td><td><code>2952b083d4960e8d666538051c00932ae572e4d55d6e2bbe7f555299af48a560</code></td></tr>
+      <tr><td>Windows</td><td>Pars.Sistem.Yoneticisi.Setup.1.6.0.exe</td><td><code>7365dd34399c912b8faddf7671a02e9f0330f090562efa596f01acf636d36195</code></td></tr>
+      <tr><td>Windows</td><td>ParsSistemYoneticisi-Portable.exe</td><td><code>07d4cfffc97e53804fe45b4a86b0b909290601205a59163dd98d74f4ba77bad0</code></td></tr>
       <tr><td>macOS arm64</td><td>Pars.Sistem.Yoneticisi-1.6.0-arm64.dmg</td><td><code>0f1bb0a96758f52ab1bee748eeee727699d8a3221a9919404dee498cdf52eb55</code></td></tr>
       <tr><td>macOS arm64</td><td>Pars.Sistem.Yoneticisi-1.6.0-arm64.zip</td><td><code>22af969d9f76abead27bf1b45b918ea12f1fead95ab6be7a39120965e971a75e</code></td></tr>
       <tr><td>macOS x64</td><td>Pars.Sistem.Yoneticisi-1.6.0-x64.dmg</td><td><code>027cd67d5d86956b94d3de3861de65dabda4e9a71379f4292ea17c776df114ce</code></td></tr>
@@ -74,7 +74,7 @@
   <h3>Güvenlik ve kapsam</h3>
   <ul>
     <li><strong>Windows:</strong> yönetici izni, açık onay, zorunlu yedek ve salt-okunur tarama modeli korunur. <code>UserChoice</code>, COM/CLSID, hizmet, SharedDLLs, Font ve ODBC kayıtları otomatik silinmez.</li>
-    <li><strong>Kötü amaçlı yazılım modülü:</strong> salt-okunur çalışır; dosya silme, karantinaya taşıma, işlem sonlandırma ve kayıt yazma yapılmaz. Zaman sınırları ve hariç tutulan yollar korunur.</li>
+    <li><strong>Kötü amaçlı yazılım modülü:</strong> tarama salt-okunurdur; zaman sınırları ve hariç tutulan yollar korunur. Windows’ta yalnızca sizin seçtiğiniz dosyalar açık onayla karantinaya alınabilir, geri yüklenebilir veya kalıcı silinebilir. İşlem sonlandırma ve kayıt yazma yapılmaz; macOS/Linux salt-okunur kalır.</li>
     <li><strong>macOS:</strong> salt-okunur çekirdek; registry/UAC/servis yazma sekmeleri gizlidir, self-update kapalıdır, <code>defender</code> motoru bulunmaz.</li>
     <li><strong>Linux:</strong> AppImage ve <code>.deb</code> paketleri; apt/dnf/pacman/flatpak/snap yalnızca arama ve listeleme için salt-okunur kullanılır. systemd/XDG desteği vardır; POSIX deneysel kapsamda yazma eylemleri ve self-update kapalıdır.</li>
     <li><strong>Güncelleme:</strong> Windows uygulaması güncellemeleri GitHub Pages üzerindeki <code>downloads/latest.json</code> dosyasından kontrol eder; indirme ve kurulum yalnızca sizin onayınızla başlar, dosya SHA-512 ile doğrulanır. macOS ve Linux’ta self-update kapalıdır; yeni sürüm elle indirilir.</li>

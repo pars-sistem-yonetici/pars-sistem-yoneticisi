@@ -614,7 +614,7 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
             <li><i>✓</i><span><b>.reg yedeği:</b> kayıt defterinden silmeden önce ilgili anahtar dışa aktarılır; yedek başarısızsa silinmez.</span></li>
             <li><i>✓</i><span><b>JSON yedeği:</b> güvenlik duvarı kuralları silinmeden önce kural ve filtreler kaydedilir.</span></li>
             <li><i>✓</i><span><b>Geri Dönüşüm Kutusu:</b> kalıntı silmede varsayılan davranış budur; kalıcı silme açık onay gerektirir.</span></li>
-            <li><i>✓</i><span><b>Salt-okunur tarama:</b> kötü amaçlı yazılım motoru dosya silmez, işlem sonlandırmaz, kayıt değiştirmez.</span></li>
+            <li><i>✓</i><span><b>Salt-okunur tarama:</b> karantina ve silme yalnızca Windows’ta seçtiğiniz dosyalara açık onayla uygulanır; işlem sonlandırma ve kayıt yazma yapılmaz.</span></li>
           </ul>
         </div>
       </div>
@@ -649,8 +649,8 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
             <div class="checksum">
               <small>SHA-256 · dosya bütünlüğü</small>
               <div class="checksum-row">
-                <code data-setup-checksum>1b0256aa324e2d93940d83788fa03f46f41be2663c7583825be0f14766258a90</code>
-                <button class="copy-btn" type="button" data-setup-copy data-copy="1b0256aa324e2d93940d83788fa03f46f41be2663c7583825be0f14766258a90">Kopyala</button>
+                <code data-setup-checksum>7365dd34399c912b8faddf7671a02e9f0330f090562efa596f01acf636d36195</code>
+                <button class="copy-btn" type="button" data-setup-copy data-copy="7365dd34399c912b8faddf7671a02e9f0330f090562efa596f01acf636d36195">Kopyala</button>
               </div>
             </div>
           </article>
@@ -672,8 +672,8 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
             <div class="checksum">
               <small>SHA-256 · dosya bütünlüğü</small>
               <div class="checksum-row">
-                <code data-portable-checksum>2952b083d4960e8d666538051c00932ae572e4d55d6e2bbe7f555299af48a560</code>
-                <button class="copy-btn" type="button" data-portable-copy data-copy="2952b083d4960e8d666538051c00932ae572e4d55d6e2bbe7f555299af48a560">Kopyala</button>
+                <code data-portable-checksum>07d4cfffc97e53804fe45b4a86b0b909290601205a59163dd98d74f4ba77bad0</code>
+                <button class="copy-btn" type="button" data-portable-copy data-copy="07d4cfffc97e53804fe45b4a86b0b909290601205a59163dd98d74f4ba77bad0">Kopyala</button>
               </div>
             </div>
           </article>
@@ -909,10 +909,10 @@ Get-FileHash ".\ParsSistemYoneticisi-Portable.exe" -Algorithm SHA256</code></pre
           <details><summary>Verilerim nereye kaydediliyor?</summary><p>Ayarlar ve ek çeviriler %APPDATA%\pars-sistem-yoneticisi-ts altında; kayıt, güvenlik duvarı ve sürücü yedekleri %LOCALAPPDATA%\ParsSistemYoneticisi altında tutulur. Hiçbir veri uzak sunucuya gönderilmez.</p></details>
           <details><summary>İnternet olmadan çalışır mı?</summary><p>Arayüz ve yerel bakım araçları çevrimdışı çalışır. winget kataloğu, sürücü taraması ve uygulama güncelleyici internet bağlantısı gerektirir.</p></details>
           <details><summary>winget kurulu değilse ne olur?</summary><p>Kurulum exe’si winget’i algılar ve eksikse Microsoft’un resmi kaynağından sessizce kurar. Başarısız olursa uygulama yine kurulur; Ayarlar → Gerekli bileşenler alanından yeniden deneyebilirsiniz.</p></details>
-          <details><summary>Kötü amaçlı yazılım sekmesi antivirüs yerine geçer mi?</summary><p>Hayır. Sekiz motor yalnızca yerel ve salt-okunur denetim yapar; gerçek zamanlı koruma, karantina veya dosya silme işlemi yoktur. Mevcut güvenlik yazılımınızı kullanmaya devam edin.</p></details>
+          <details><summary>Kötü amaçlı yazılım sekmesi antivirüs yerine geçer mi?</summary><p>Hayır. Sekiz motor yerel denetim yapar; gerçek zamanlı koruma yoktur. Windows’ta yalnızca seçtiğiniz dosyalar açık onayla karantinaya alınabilir, özgün konumuna geri yüklenebilir veya kalıcı silinebilir; macOS ve Linux’ta yazma işlemi yoktur. Mevcut güvenlik yazılımınızı kullanmaya devam edin.</p></details>
           <details><summary>Başlangıçta tepsiye küçültmeyi nasıl kapatırım?</summary><p>Ayarlar → Kapatma davranışı alanından “Uygulamayı kapat”ı seçin; “Windows ile başlat” anahtarını kapatarak otomatik açılışı tamamen devre dışı bırakabilirsiniz.</p></details>
           <details><summary>macOS ve Linux’ta hangi işlemler kullanılabilir?</summary><p>Salt-okunur çekirdek: yazılım envanteri, güncelleme taraması, kötü amaçlı yazılım denetimi, sistem bütünlüğü, HOSTS/DNS ve tarayıcı eklentileri. Windows’a özgü kayıt defteri, UAC, kabuk menüsü, hizmet, güvenlik duvarı, sürücü ve zamanlama sekmeleri gizlidir ve IPC katmanında reddedilir.</p></details>
-          <details><summary>Hangi platformlarda kendini güncelleme var?</summary><p>Yalnızca Windows’ta. Windows uygulaması GitHub Pages üzerindeki <code class="mono">downloads/latest.json</code> dosyasını kontrol eder, SHA-512 ile doğrular ve onayınızla kurar. macOS ve Linux’ta self-update kapalıdır; yeni sürümü elle indirin. Kötü amaçlı yazılım taraması tüm platformlarda salt-okunurdur: dosya silme, karantina, işlem sonlandırma veya kayıt yazma yapılmaz.</p></details>
+          <details><summary>Hangi platformlarda kendini güncelleme var?</summary><p>Yalnızca Windows’ta. Windows uygulaması GitHub Pages üzerindeki <code class="mono">downloads/latest.json</code> dosyasını kontrol eder, SHA-512 ile doğrular ve onayınızla kurar. macOS ve Linux’ta self-update kapalıdır; yeni sürümü elle indirin. Kötü amaçlı yazılım taraması tüm platformlarda salt-okunurdur; yalnızca Windows’ta seçili dosyalar için onaylı karantina/silme kullanılabilir. İşlem sonlandırma ve kayıt yazma yapılmaz.</p></details>
         </div>
       </div>
     </section>

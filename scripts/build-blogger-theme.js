@@ -490,7 +490,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
           <div class="block reveal" id="ozellikler">
             <p class="kicker">Neler yapar?</p>
             <h2 class="section-title">Bakımı ve indirmeleri tek panelde yönetin</h2>
-            <p class="section-sub">Windows’ta yazma özellikleri, macOS ve Linux’ta salt-okunur çekirdek. Kötü amaçlı yazılım taraması tüm platformlarda salt-okunurdur.</p>
+            <p class="section-sub">Windows’ta yazma özellikleri, macOS ve Linux’ta salt-okunur çekirdek. Kötü amaçlı yazılım taraması salt-okunurdur; Windows’ta seçili dosyalar için onaylı karantina/silme vardır.</p>
             <div class="grid">
               <div class="card reveal" style="--d:.05s"><div class="num">1</div><h3>Yazılım envanteri</h3><p>Kurulu uygulamaları listeler; sürüm ve boyut bilgilerini gösterir.</p></div>
               <div class="card reveal" style="--d:.1s"><div class="num">2</div><h3>Sağ tık eklentileri</h3><p>WinRAR ve 7-Zip gibi eklentileri tek tıkla kapatıp açar; kendi menüsünü eklemez.</p></div>
@@ -609,7 +609,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
             <details class="faq reveal"><summary>Yedek almak zorunlu mu?</summary><p>Evet. Yıkıcı işlemlerde yedek alınamazsa uygulama değişiklik yapmaz.</p></details>
             <details class="faq reveal"><summary>Kendi sağ tık menüsünü ekliyor mu?</summary><p>Hayır. Uygulama kendi Gezgin girdisini eklemez; yalnızca mevcut üçüncü taraf eklentileri açıp kapatır.</p></details>
             <details class="faq reveal"><summary>macOS ve Linux’ta hangi işlemler kullanılabilir?</summary><p>Salt-okunur çekirdek: yazılım envanteri, güncelleme taraması, kötü amaçlı yazılım denetimi, HOSTS/DNS ve sistem bütünlüğü. Windows’a özgü kayıt defteri, UAC, kabuk menüsü, hizmet ve sürücü sekmeleri gizlidir.</p></details>
-            <details class="faq reveal"><summary>Kendini güncelleme hangi platformlarda var?</summary><p>Yalnızca Windows’ta. macOS ve Linux’ta self-update kapalıdır; yeni sürümü elle indirin. Kötü amaçlı yazılım taraması tüm platformlarda salt-okunurdur: dosya silme, karantina, işlem sonlandırma veya kayıt yazma yapılmaz.</p></details>
+            <details class="faq reveal"><summary>Kendini güncelleme hangi platformlarda var?</summary><p>Yalnızca Windows’ta. macOS ve Linux’ta self-update kapalıdır; yeni sürümü elle indirin. Kötü amaçlı yazılım taraması tüm platformlarda salt-okunurdur; yalnızca Windows’ta seçili dosyalar için onaylı karantina/silme kullanılabilir. İşlem sonlandırma ve kayıt yazma yapılmaz.</p></details>
           </div>
         </div>
       </b:includable>

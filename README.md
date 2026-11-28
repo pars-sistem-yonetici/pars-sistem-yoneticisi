@@ -24,8 +24,8 @@ TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klas
 
 | Platform | Dosyalar | SHA-256 (özet) |
 | --- | --- | --- |
-| Windows | `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe` | `1b0256aa324e2d93940d83788fa03f46f41be2663c7583825be0f14766258a90` |
-| Windows | `ParsSistemYoneticisi-Portable.exe` | `2952b083d4960e8d666538051c00932ae572e4d55d6e2bbe7f555299af48a560` |
+| Windows | `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe` | `7365dd34399c912b8faddf7671a02e9f0330f090562efa596f01acf636d36195` |
+| Windows | `ParsSistemYoneticisi-Portable.exe` | `07d4cfffc97e53804fe45b4a86b0b909290601205a59163dd98d74f4ba77bad0` |
 | macOS arm64 | `.dmg` / `.zip` | `0f1bb0a9…` / `22af969d…` |
 | macOS x64 | `.dmg` / `.zip` | `027cd67d…` / `4b0421d4…` |
 | Linux x64 | `.AppImage` | `f0ddffe55e88b353186beeb3cffa49061955faa26990a798f2972b1fef6bc143` |
@@ -307,8 +307,11 @@ GitHub → Actions → **Sürüm yayınla** → **Run workflow** ile sürümü y
   Yedekler `%LOCALAPPDATA%\ParsSistemYoneticisi\registry_backups` altındadır.
 - Güvenlik duvarı kural silme işlemi de yedek zorunluluğuna tabidir; kural ve port/uygulama filtreleri
   `%LOCALAPPDATA%\ParsSistemYoneticisi\firewall_backups` altına JSON olarak yazılır. Yedek başarısızsa kural silinmez.
-- Kötü amaçlı yazılım sekmesi salt okunur denetim yapar; hiçbir dosyayı, işlemi, kayıt girdisini veya
-  güvenlik duvarı kuralını değiştirmez. `defender` motoru yalnızca Windows’ta bulunur.
+- Kötü amaçlı yazılım taraması salt okunur denetim yapar; `defender` motoru yalnızca Windows’ta bulunur.
+  Windows’ta yalnızca kullanıcı onayıyla seçilen dosyalar karantinaya alınabilir, özgün konumuna geri
+  yüklenebilir veya kalıcı silinebilir. Karantina `%APPDATA%\pars-sistem-yoneticisi-ts\quarantine`
+  altındadır; işlem sonlandırma, kayıt yazma ve korumalı/sistem yollarına dokunma yoktur.
+  macOS ve Linux’ta yazma işlemleri kapalıdır.
 - macOS ve Linux çekirdeği salt-okunurdur; registry/UAC/servis yazma sekmeleri gizlidir. Linux’ta
   apt/dnf/pacman/flatpak/snap yalnızca arama ve listeleme için kullanılır; kurulum, güncelleme,
   kaldırma ve self-update yoktur.

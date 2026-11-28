@@ -238,7 +238,7 @@
             <li><i>✓</i><span><b>.reg yedeği:</b> kayıt defterinden silmeden önce ilgili anahtar dışa aktarılır; yedek başarısızsa silinmez.</span></li>
             <li><i>✓</i><span><b>JSON yedeği:</b> güvenlik duvarı kuralları silinmeden önce kural ve filtreler kaydedilir.</span></li>
             <li><i>✓</i><span><b>Geri Dönüşüm Kutusu:</b> kalıntı silmede varsayılan davranış budur; kalıcı silme açık onay gerektirir.</span></li>
-            <li><i>✓</i><span><b>Salt-okunur tarama:</b> kötü amaçlı yazılım motoru dosya silmez, işlem sonlandırmaz, kayıt değiştirmez.</span></li>
+            <li><i>✓</i><span><b>Salt-okunur tarama:</b> karantina ve silme yalnızca Windows’ta seçtiğiniz dosyalara açık onayla uygulanır; işlem sonlandırma ve kayıt yazma yapılmaz.</span></li>
           </ul>
         </div>
       </div>
@@ -270,10 +270,10 @@
           <details><summary>Verilerim nereye kaydediliyor?</summary><p>Ayarlar ve ek çeviriler %APPDATA%\pars-sistem-yoneticisi-ts altında; kayıt, güvenlik duvarı ve sürücü yedekleri %LOCALAPPDATA%\ParsSistemYoneticisi altında tutulur. Hiçbir veri uzak sunucuya gönderilmez.</p></details>
           <details><summary>İnternet olmadan çalışır mı?</summary><p>Arayüz ve yerel bakım araçları çevrimdışı çalışır. winget kataloğu, sürücü taraması ve uygulama güncelleyici internet bağlantısı gerektirir.</p></details>
           <details><summary>winget kurulu değilse ne olur?</summary><p>Kurulum exe’si winget’i algılar ve eksikse Microsoft’un resmi kaynağından sessizce kurar. Başarısız olursa uygulama yine kurulur; Ayarlar → Gerekli bileşenler alanından yeniden deneyebilirsiniz.</p></details>
-          <details><summary>Kötü amaçlı yazılım sekmesi antivirüs yerine geçer mi?</summary><p>Hayır. Sekiz motor yalnızca yerel ve salt-okunur denetim yapar; gerçek zamanlı koruma, karantina veya dosya silme işlemi yoktur. Mevcut güvenlik yazılımınızı kullanmaya devam edin.</p></details>
+          <details><summary>Kötü amaçlı yazılım sekmesi antivirüs yerine geçer mi?</summary><p>Hayır. Sekiz motor yerel denetim yapar; gerçek zamanlı koruma yoktur. Windows’ta yalnızca seçtiğiniz dosyalar açık onayla karantinaya alınabilir, özgün konumuna geri yüklenebilir veya kalıcı silinebilir; macOS ve Linux’ta yazma işlemi yoktur. Mevcut güvenlik yazılımınızı kullanmaya devam edin.</p></details>
           <details><summary>Başlangıçta tepsiye küçültmeyi nasıl kapatırım?</summary><p>Ayarlar → Kapatma davranışı alanından “Uygulamayı kapat”ı seçin; “Windows ile başlat” anahtarını kapatarak otomatik açılışı tamamen devre dışı bırakabilirsiniz.</p></details>
           <details><summary>macOS ve Linux’ta hangi işlemler kullanılabilir?</summary><p>Salt-okunur çekirdek: yazılım envanteri, güncelleme taraması, kötü amaçlı yazılım denetimi, sistem bütünlüğü, HOSTS/DNS ve tarayıcı eklentileri. Windows’a özgü kayıt defteri, UAC, kabuk menüsü, hizmet, güvenlik duvarı, sürücü ve zamanlama sekmeleri gizlidir ve IPC katmanında reddedilir.</p></details>
-          <details><summary>Hangi platformlarda kendini güncelleme var?</summary><p>Yalnızca Windows’ta. Windows uygulaması GitHub Pages üzerindeki <code class="mono">downloads/latest.json</code> dosyasını kontrol eder, SHA-512 ile doğrular ve onayınızla kurar. macOS ve Linux’ta self-update kapalıdır; yeni sürümü elle indirin. Kötü amaçlı yazılım taraması tüm platformlarda salt-okunurdur: dosya silme, karantina, işlem sonlandırma veya kayıt yazma yapılmaz.</p></details>
+          <details><summary>Hangi platformlarda kendini güncelleme var?</summary><p>Yalnızca Windows’ta. Windows uygulaması GitHub Pages üzerindeki <code class="mono">downloads/latest.json</code> dosyasını kontrol eder, SHA-512 ile doğrular ve onayınızla kurar. macOS ve Linux’ta self-update kapalıdır; yeni sürümü elle indirin. Kötü amaçlı yazılım taraması tüm platformlarda salt-okunurdur; yalnızca Windows’ta seçili dosyalar için onaylı karantina/silme kullanılabilir. İşlem sonlandırma ve kayıt yazma yapılmaz.</p></details>
         </div>
       </div>
     </section>

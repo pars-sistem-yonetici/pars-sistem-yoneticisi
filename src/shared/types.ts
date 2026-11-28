@@ -334,6 +334,32 @@ export interface MalwareExportResult {
   path: string;
 }
 
+/** Karantina/silme için renderer'dan gelen en küçük bulgu bilgisi. */
+export interface MalwareTarget {
+  id: string;
+  path: string;
+  engine: MalwareEngine;
+  title: string;
+}
+
+/** Geri alınabilir karantinada tutulan dosya kaydı. */
+export interface MalwareQuarantineItem {
+  id: string;
+  findingId: string;
+  path: string;
+  storedPath: string;
+  name: string;
+  engine: MalwareEngine;
+  title: string;
+  quarantinedAt: string;
+  size: number;
+}
+
+/** Karantina/silme işleminin dosya başına sonucu. */
+export interface MalwareActionResult extends DeleteResult {
+  storedPath?: string;
+}
+
 export type ScheduleKind = 'weekly-full' | 'daily-light' | 'monthly-deep' | 'custom';
 
 export interface ScheduleTask {
@@ -851,6 +877,11 @@ export interface AppApi {
   onMalwareProgress: (callback: (progress: MalwareScanProgress) => void) => () => void;
   cancelMalwareScan: (requestId: string) => void;
   malwareExportReport: (content: string, format: 'json' | 'txt') => Promise<MalwareExportResult>;
+  malwareQuarantine: (targets: MalwareTarget[]) => Promise<MalwareActionResult[]>;
+  malwareQuarantineList: () => Promise<MalwareQuarantineItem[]>;
+  malwareQuarantineRestore: (ids: string[]) => Promise<MalwareActionResult[]>;
+  malwareQuarantineDelete: (ids: string[]) => Promise<MalwareActionResult[]>;
+  malwareDeleteFiles: (targets: MalwareTarget[]) => Promise<MalwareActionResult[]>;
   scheduleList: () => Promise<ScheduleTask[]>;
   scheduleSave: (tasks: ScheduleTask[]) => Promise<ScheduleTask[]>;
   scheduleRun: (task: ScheduleTask) => Promise<{ taskId: string; ran: boolean; message: string }>;

@@ -9,6 +9,7 @@
 
 import path from 'path';
 import { m, mf } from './i18n-main';
+import { MALWARE_ENGINE_IDS } from '../shared/types';
 import { detectPlatform } from '../shared/platform';
 
 const platform = detectPlatform(process.platform);
@@ -240,6 +241,13 @@ export const settingsPatch: Validator = shape({
 
 export const filePath: Validator = str({ min: 2, max: 4096 });
 export const pathList: Validator = arr(filePath, 2000);
+
+export const malwareTarget: Validator = shape({
+  id: { validate: str({ max: 256 }) },
+  path: { validate: filePath },
+  engine: { validate: oneOf(MALWARE_ENGINE_IDS) },
+  title: { validate: str({ allowEmpty: true, max: 1000 }) },
+}, true);
 
 export const fileScanOptions: Validator = shape({
   roots: { validate: pathList },
