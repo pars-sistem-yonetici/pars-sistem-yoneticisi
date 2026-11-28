@@ -20,7 +20,7 @@ Kudu’nun macOS ve Linux denetimleri salt-okunur denetim paneli olarak eklendi;
 
 - `npm run build` başarılı; TypeScript ve Vite derlemesi tamamlandı.
 - POSIX IPC smoke testleri macOS ve Linux workflow’lerinde çalışır; yazma kanallarının reddedildiğini doğrular.
-- Tüm paketlerin SHA-256 özetleri release içindeki `SHA256SUMS-1.8.0.txt` ve `SHA256SUMS-Linux.txt` dosyalarındadır.
+- macOS özetleri `SHA256SUMS-macOS.txt`, Linux özetleri `SHA256SUMS-Linux.txt` dosyasındadır; Windows özetleri aşağıdaki tabloda yer alır.
 
 ## İndirme
 

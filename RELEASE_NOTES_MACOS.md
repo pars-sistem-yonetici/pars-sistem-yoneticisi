@@ -15,7 +15,7 @@ Bu sürüm macOS için salt-okunur çekirdeği korur ve Kudu’dan uyarlanan **P
 
 - `.dmg` — uygulamayı Sürükle & Bırak ile kurun.
 - `.zip` — elle açıp `Pars Sistem Yoneticisi.app` dosyasını istediğiniz yere kopyalayın.
-- `SHA256SUMS-1.8.0.txt` — birleşik release’deki Windows ve macOS dosya özetlerini doğrulamak için.
+- `SHA256SUMS-macOS.txt` — birleşik release’deki macOS dosya özetlerini doğrulamak için.
 
 Paketler **imzalanmamıştır** ve noterlemeye gönderilmemiştir. macOS Gatekeeper ilk açılışta uyarı gösterebilir: `Sistem Ayarları → Gizlilik ve Güvenlik → Yine de aç` yolunu kullanabilirsiniz. App Store dağıtımı yoktur.
 

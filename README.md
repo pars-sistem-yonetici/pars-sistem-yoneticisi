@@ -21,7 +21,7 @@ TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klas
 - **POSIX Denetimi:** Kudu’nun macOS/Linux denetimlerinin salt-okunur karşılığı eklendi. Başlangıç öğeleri, hizmetler, ağ bağlantıları, tarayıcı süreçleri, gizlilik ayarları, imza/ClamAV kontrolleri, temizlik adayları ve çöp kutusu metadata’sı tek panelde raporlanır; ayar değiştirilmez, dosya silinmez, süreç kapatılmaz.
 - **Fluent Amber teması:** Grafit zemin, kehribar vurgu ve yoğun veri düzeniyle dördüncü tema eklendi. `default`, `windows11` ve `auto` temaları korundu; **Ayarlar → Tema** üzerinden geçiş yapılabilir.
 - **Kapsam sınırı:** macOS ve Linux’ta yazma işlemleri, self-update, bulut/daemon modu, telemetri ve uzak komut kapalıdır. Windows’ta yönetici onayı, açık kullanıcı onayı ve zorunlu yedek modeli değişmedi.
-- **Doğrulama:** SHA-256 özetleri release içindeki `SHA256SUMS-1.8.0.txt` ve `SHA256SUMS-Linux.txt` dosyalarında yayımlanır.
+- **Doğrulama:** SHA-256 özetleri release içindeki `SHA256SUMS-macOS.txt` ve `SHA256SUMS-Linux.txt` dosyalarında yayımlanır; Windows özetleri sürüm notlarındaki tabloda yer alır.
 
 Arayüzde özel pencere çerçevesi, sistem tepsisi simgesi, tek örnek davranışı ve anasayfa durum kartları korunur. Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 
