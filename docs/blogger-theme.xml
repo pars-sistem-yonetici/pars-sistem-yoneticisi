@@ -6,7 +6,7 @@
   <title><data:blog.pageTitle/></title>
   <b:skin><![CDATA[
 /* =========================================================
-   Pars Sistem Yoneticisi -tam- Blogger temasi 1.7.0
+   Pars Sistem Yoneticisi -tam- Blogger temasi 1.8.0
    Grafit / amber. Tum icerik temanin icindedir.
    ========================================================= */
 :root {
@@ -356,9 +356,9 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
           <div>
             <span class="eyebrow">Sistem bakım merkezi</span>
             <h1><a expr:href="data:blog.homepageUrl"><data:blog.title/></a></h1>
-            <p>Windows, macOS ve Linux için sistem bakımı ve yazılım yönetimi tek panelde. Güncel birleşik sürüm:<b> 1.7.0</b></p>
+            <p>Windows, macOS ve Linux için sistem bakımı ve yazılım yönetimi tek panelde. Güncel birleşik sürüm:<b> 1.8.0</b></p>
             <div class="pillrow">
-              <span class="pill">Sürüm <b>v1.7.0</b></span>
+              <span class="pill">Sürüm <b>v1.8.0</b></span>
               <span class="pill">Windows 10/11 x64</span>
               <span class="pill">macOS 13+ arm64/x64</span>
               <span class="pill">Linux x64 · deneysel</span>
@@ -371,12 +371,12 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
           </div>
           <div class="release-card">
             <span class="tag">Güncel sürüm</span>
-            <div class="ver">1.7.0</div>
+            <div class="ver">1.8.0</div>
             <div class="desc">Doğrudan GitHub Releases üzerinden indirilir.</div>
             <div class="rows">
               <div class="release-row"><span>Windows</span><b>85,5 MB kurulum · 85,3 MB portable</b></div>
               <div class="release-row"><span>macOS</span><b>DMG · ZIP (arm64 / x64)</b></div>
-              <div class="release-row"><span>Linux</span><b>112,1 MB AppImage · 76,1 MB deb</b></div>
+              <div class="release-row"><span>Linux</span><b>? MB AppImage · ? MB deb</b></div>
               <div class="release-row"><span>Doğrulama</span><b>SHA-256</b></div>
             </div>
             <div class="micro">Dosya bütünlüğünü indirmeden sonra özetlerle kontrol edebilirsiniz.</div>
@@ -405,14 +405,14 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
 
             <div class="section-head" id="platformlar" style="margin-top:42px">
               <h2 class="section-title">Üç platform, tek sürüm</h2>
-              <p class="section-sub">1.7.0 birleşik sürümü Windows, macOS ve Linux paketlerini aynı release’de sunar. Kapsam platforma göre değişir; güvenlik modeli değişmez.</p>
+              <p class="section-sub">1.8.0 birleşik sürümü Windows, macOS ve Linux paketlerini aynı release’de sunar. Kapsam platforma göre değişir; güvenlik modeli değişmez.</p>
             </div>
             <div class="grid">
               <div class="card reveal"><div class="num">▣</div><h3>Windows 10/11 x64</h3><p>Tam kapsam: winget ile yazılım yönetimi, kayıt defteri, güvenlik duvarı, sürücüler, sağ tık menüsü ve sistem ayarları. Yıkıcı işlemler yönetici izni, açık onay ve zorunlu yedek gerektirir.</p></div>
               <div class="card reveal"><div class="num">◈</div><h3>macOS 13+ · arm64/x64</h3><p>Salt-okunur çekirdek: envanter, Homebrew/npm güncelleme taraması, kötü amaçlı yazılım denetimi, HOSTS/DNS ve sistem bütünlüğü. Registry/UAC/servis sekmeleri gizlidir; self-update kapalıdır.</p></div>
               <div class="card reveal"><div class="num">⬡</div><h3>Linux x64 · deneysel</h3><p>Salt-okunur POSIX çekirdeği: apt/dnf/pacman/flatpak/snap yalnızca arama/listeleme için kullanılır. systemd/XDG desteği vardır; yazma eylemleri ve self-update kapalıdır.</p></div>
             </div>
-            <p class="section-sub" style="margin-top:16px">SHA-256 özetleri ve tüm paketler aynı release’de: <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.7.0">1.7.0 release</a>.</p>
+            <p class="section-sub" style="margin-top:16px">SHA-256 özetleri ve tüm paketler aynı release’de: <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.8.0">1.8.0 release</a>.</p>
           </div>
 
           <div class="block reveal" id="vitrin">
@@ -446,7 +446,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
             <p class="section-sub">Windows kurulumu yaklaşık 1 dakika sürer ve Windows 10/11 x64 gerektirir. macOS için DMG’yi Sürükle &amp; Bırak ile kurun; Linux için AppImage’ı çalıştırılabilir yapın veya .deb paketini kurun.</p>
             <div class="steps">
               <div class="step reveal" style="--d:.05s"><b>Kurulum dosyasını indirin</b><span>Aşağıdaki “Kurulumu indir” düğmesini kullanın.</span></div>
-              <div class="step reveal" style="--d:.12s"><b>SHA-256 özetini doğrulayın</b><span>PowerShell: <code class="mono">Get-FileHash .\Pars.Sistem.Yoneticisi.Setup.1.7.0.exe -Algorithm SHA256</code></span></div>
+              <div class="step reveal" style="--d:.12s"><b>SHA-256 özetini doğrulayın</b><span>PowerShell: <code class="mono">Get-FileHash .\Pars.Sistem.Yoneticisi.Setup.1.8.0.exe -Algorithm SHA256</code></span></div>
               <div class="step reveal" style="--d:.19s"><b>Kurulumu başlatın</b><span>“Windows korudu” uyarısında <b>Daha fazla bilgi → Yine de çalıştır</b> seçin.</span></div>
               <div class="step reveal" style="--d:.26s"><b>Yönetici olarak açın</b><span>Sistem değişiklikleri için uygulama yönetici izni isteyecektir.</span></div>
             </div>
@@ -455,26 +455,26 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
           <div class="block reveal" id="indir">
             <p class="kicker">İndir</p>
             <h2 class="section-title">Üç platform, tek release</h2>
-            <p class="section-sub">Windows kurulum/portable, macOS DMG/ZIP ve Linux AppImage/deb dosyaları aynı 1.7.0 release’indedir. Her dosyanın SHA-256 özeti aşağıdadır.</p>
+            <p class="section-sub">Windows kurulum/portable, macOS DMG/ZIP ve Linux AppImage/deb dosyaları aynı 1.8.0 release’indedir. Her dosyanın SHA-256 özeti aşağıdadır.</p>
             <div class="dlgrid">
               <div class="dlcard main reveal" style="--d:.06s">
                 <h3>Kurulum sürümü · Önerilen</h3>
-                <div class="meta">Pars.Sistem.Yoneticisi.Setup.1.7.0.exe · 85,5 MB · NSIS</div>
-                <a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi.Setup.1.7.0.exe">Kurulumu indir</a>
+                <div class="meta">Pars.Sistem.Yoneticisi.Setup.1.8.0.exe · 85,5 MB · NSIS</div>
+                <a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.8.0/Pars.Sistem.Yoneticisi.Setup.1.8.0.exe">Kurulumu indir</a>
                 <span class="hash-label">SHA-256</span>
-                <code class="hash">a17cffb5561fde97876d6954e2374d37ee9ff6934cb39d329c74b03ff7b72f5d</code>
+                <code class="hash">c0985ca5f6124ed5dfc6323d1d3414d683b4e4f64bcf302de1357400d01be5d8</code>
               </div>
               <div class="dlcard reveal" style="--d:.14s">
                 <h3>Portable sürüm</h3>
                 <div class="meta">ParsSistemYoneticisi-Portable.exe · 85,3 MB · Kurulum gerektirmez</div>
-                <a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/ParsSistemYoneticisi-Portable.exe">Portable indir</a>
+                <a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.8.0/ParsSistemYoneticisi-Portable.exe">Portable indir</a>
                 <span class="hash-label">SHA-256</span>
-                <code class="hash">be9eb1a9664e5aa3f3549f78c6330f1b8f3fddb644eae4b647d500197e056980</code>
+                <code class="hash">2d6ea01330b432787cab0d73642e7013afb1352bf6c516dfdc1bc7ffa2614b94</code>
               </div>
               <div class="dlcard reveal" style="--d:.22s">
                 <h3>macOS · arm64</h3>
-                <div class="meta">1.7.0 · DMG / ZIP · Apple Silicon</div>
-                <div class="btnrow"><a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-arm64.dmg">arm64 DMG</a><a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-arm64.zip">arm64 ZIP</a></div>
+                <div class="meta">1.8.0 · DMG / ZIP · Apple Silicon</div>
+                <div class="btnrow"><a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.8.0/Pars.Sistem.Yoneticisi-1.8.0-arm64.dmg">arm64 DMG</a><a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.8.0/Pars.Sistem.Yoneticisi-1.8.0-arm64.zip">arm64 ZIP</a></div>
                 <span class="hash-label">SHA-256 · DMG</span>
                 <code class="hash">0f1bb0a96758f52ab1bee748eeee727699d8a3221a9919404dee498cdf52eb55</code>
                 <span class="hash-label">SHA-256 · ZIP</span>
@@ -482,8 +482,8 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
               </div>
               <div class="dlcard reveal" style="--d:.3s">
                 <h3>macOS · x64</h3>
-                <div class="meta">1.7.0 · DMG / ZIP · Intel</div>
-                <div class="btnrow"><a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.dmg">x64 DMG</a><a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.zip">x64 ZIP</a></div>
+                <div class="meta">1.8.0 · DMG / ZIP · Intel</div>
+                <div class="btnrow"><a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.8.0/Pars.Sistem.Yoneticisi-1.8.0-x64.dmg">x64 DMG</a><a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.8.0/Pars.Sistem.Yoneticisi-1.8.0-x64.zip">x64 ZIP</a></div>
                 <span class="hash-label">SHA-256 · DMG</span>
                 <code class="hash">027cd67d5d86956b94d3de3861de65dabda4e9a71379f4292ea17c776df114ce</code>
                 <span class="hash-label">SHA-256 · ZIP</span>
@@ -491,15 +491,15 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
               </div>
               <div class="dlcard reveal" style="--d:.38s">
                 <h3>Linux x64 · deneysel</h3>
-                <div class="meta">1.7.0 · 112,1 MB AppImage · 76,1 MB deb</div>
-                <div class="btnrow"><a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.AppImage">AppImage indir</a><a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.deb">.deb indir</a></div>
+                <div class="meta">1.8.0 · ? MB AppImage · ? MB deb</div>
+                <div class="btnrow"><a class="btn" href="">AppImage indir</a><a class="btn-2" href="">.deb indir</a></div>
                 <span class="hash-label">SHA-256 · AppImage</span>
-                <code class="hash">8ea6934e8e5ff132a0b06dcb1bacb844b0fcdec8f8b01be03f8e30ee82330f23</code>
+                <code class="hash"></code>
                 <span class="hash-label">SHA-256 · deb</span>
-                <code class="hash">d69ba475bd034b1a3a75478a98d89551946abd264e653a1436bc20375f0019ab</code>
+                <code class="hash"></code>
               </div>
             </div>
-            <div class="note"><b>İmza ve doğrulama:</b> Paketler kod imzasıyla yayınlanmadı. Windows SmartScreen ve macOS Gatekeeper uyarıları normaldir; indirmeden önce SHA-256 özetini doğrulayın. Windows paketleri iç sürüm 1.7.0, macOS paketleri 1.5.0, Linux paketleri 1.7.0 kaynak derlemelerindendir; 1.7.0 birleşik dağıtım etiketidir.</div>
+            <div class="note"><b>İmza ve doğrulama:</b> Paketler kod imzasıyla yayınlanmadı. Windows SmartScreen ve macOS Gatekeeper uyarıları normaldir; indirmeden önce SHA-256 özetini doğrulayın. Tüm platform paketleri 1.8.0 kaynak derlemesindendir; 1.8.0 birleşik dağıtım etiketidir.</div>
           </div>
 
           <div class="block reveal" id="sss">
@@ -539,7 +539,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
     <b:widget id="HTML1" locked="false" title="Alt bilgi" type="HTML" version="2">
       <b:includable id="main">
         <div class="footer-inner">
-          <span>Pars Sistem Yöneticisi · Sürüm 1.7.0 · Windows 10/11 x64 · macOS 13+ · Linux x64</span>
+          <span>Pars Sistem Yöneticisi · Sürüm 1.8.0 · Windows 10/11 x64 · macOS 13+ · Linux x64</span>
           <span><a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi">Kaynak kod</a> · <a href="https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/">Web sitesi</a> · <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases">Tüm sürümler</a></span>
         </div>
       </b:includable>
