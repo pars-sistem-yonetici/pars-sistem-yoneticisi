@@ -25,6 +25,7 @@ const api: AppApi = {
   systemSnapshot: (drive) => ipcRenderer.invoke('system:snapshot', drive),
   systemDrives: () => ipcRenderer.invoke('system:drives'),
   systemDriveLabels: () => ipcRenderer.invoke('system:drive-labels'),
+  posixAudit: () => ipcRenderer.invoke('posix:audit'),
   wingetVersion: () => ipcRenderer.invoke('winget:version'),
   wingetSourceUpdate: () => ipcRenderer.invoke('winget:source-update'),
   wingetList: () => ipcRenderer.invoke('winget:list'),

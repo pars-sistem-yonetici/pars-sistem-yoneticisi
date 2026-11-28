@@ -222,7 +222,7 @@ export const updateInfo: Validator = shape({
 
 export const settingsPatch: Validator = shape({
   language: { validate: str({ max: 64 }), optional: true },
-  theme: { validate: oneOf(['default', 'windows11', 'auto'] as const), optional: true },
+  theme: { validate: oneOf(['default', 'windows11', 'fluent', 'auto'] as const), optional: true },
   wingetVersion: { validate: str({ allowEmpty: true, max: 128 }), optional: true },
   wingetAvailable: { validate: bool, optional: true },
   autoUpdateScan: { validate: bool, optional: true },

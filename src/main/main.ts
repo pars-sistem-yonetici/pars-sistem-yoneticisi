@@ -39,6 +39,7 @@ import * as settingsService from './services/settings';
 import * as startupService from './services/startup';
 import * as systemService from './services/system';
 import * as systemPosixService from './services/system-posix';
+import * as posixAuditService from './services/posix-audit';
 import * as tweaksService from './services/tweaks';
 import * as updaterService from './services/updater';
 import * as winget from './services/winget';
@@ -194,13 +195,16 @@ function setupTray(): void {
 }
 
 /** Windows temasını izleyen seçenek için pencere arka planını çözümler. */
-function resolvedTheme(theme: Theme): 'default' | 'windows11' {
+function resolvedTheme(theme: Theme): 'default' | 'windows11' | 'fluent' {
   if (theme === 'auto') return nativeTheme.shouldUseDarkColors ? 'default' : 'windows11';
   return theme;
 }
 
 function themeBackground(theme: Theme): string {
-  return resolvedTheme(theme) === 'windows11' ? '#f3f3f3' : '#171719';
+  const resolved = resolvedTheme(theme);
+  if (resolved === 'windows11') return '#f3f3f3';
+  if (resolved === 'fluent') return '#0e1013';
+  return '#171719';
 }
 
 function createWindow(): void {
@@ -373,6 +377,8 @@ const UNSUPPORTED_ON_POSIX = new Set([
 const IPC_SCHEMAS: Record<string, Validator[]> = {
   'window:action': [oneOf(['minimize', 'maximize', 'close', 'close-to-tray'] as const)],
   'system:snapshot': [optionalDrive],
+  // Argüman almaz; yalnızca okuma yapan POSIX denetim raporunu döndürür.
+  'posix:audit': [],
   'winget:search': [searchQuery],
   'winget:install': [ident, bool],
   'winget:upgrade': [wingetPkg, bool],
@@ -495,6 +501,7 @@ export function registerIpc(): void {
   register('system:drive-labels', () => capabilities.kind === 'windows'
     ? systemService.driveLabels()
     : systemPosixService.driveLabels());
+  register('posix:audit', () => posixAuditService.audit());
 
   register('winget:version', async () => {
     const result = capabilities.kind === 'windows'

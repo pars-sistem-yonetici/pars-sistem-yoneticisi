@@ -1,9 +1,11 @@
 import { app } from 'electron';
 import os from 'os';
 import { detectPlatform, getCapabilities } from '../shared/platform';
+import type { PosixAuditReport } from '../shared/types';
 import { isInside } from './ipc-guard';
 import { invokeForSmoke, registerIpc } from './main';
 import { parseOutdated } from './services/brew';
+import { parseDesktopEntry, parseLaunchctl, parseLsof, parseSs, parseSystemdUnits } from './services/posix-audit';
 
 /**
  * macOS/Linux runner'larda çalışan IPC smoke testi. Gerçek pencere açmadan
@@ -36,6 +38,7 @@ function capCheck(): void {
   check('kendini güncelleme kapalı', capabilities.allowSelfUpdate === false);
   check('registry sekmesi gizli', !capabilities.tabs.includes('registry'));
   check('Defender motoru yok', !capabilities.malwareEngines.includes('defender'));
+  check('POSIX denetim sekmesi açık', capabilities.tabs.includes('posixaudit'));
   if (kind === 'linux') {
     check(
       'Linux paket kaynakları',
@@ -58,6 +61,13 @@ function guardCheck(): void {
     casks: [],
   }));
   check('brew JSON ayrıştırma', rows.length === 1 && rows[0].ident === 'curl' && rows[0].available === '8.1');
+  check('launchctl ayrıştırma', parseLaunchctl('PID\tStatus\tLabel\n123\t0\tcom.example.app').some((item) => item.status === 'running'));
+  check('systemd ayrıştırma', parseSystemdUnits('UNIT LOAD ACTIVE SUB DESCRIPTION\nx.service loaded active running Example').some((item) => item.status === 'running'));
+  check('ss loopback filtresi', parseSs('State Recv-Q Send-Q Local Peer\nESTAB 0 0 127.0.0.1:1 127.0.0.1:2').length === 0);
+  check('ss uzak adres', parseSs('State Recv-Q Send-Q Local Peer Process\nESTAB 0 0 192.0.2.1:400 198.51.100.2:443 users:(("x"))')
+    .some((item) => item.label === '192.0.2.1:400' && item.detail.includes('198.51.100.2:443')));
+  check('desktop.disabled algılandı', parseDesktopEntry('x.desktop.disabled', '/home/u/.config/autostart/x.desktop.disabled', '[Desktop Entry]\nName=X\nExec=x').status === 'disabled');
+  check('lsof ayrıştırma', parseLsof('p42\nn1.2.3.4:443->5.6.7.8:1234').some((item) => item.detail.includes('42')));
 }
 
 async function ipcCheck(): Promise<void> {
@@ -71,6 +81,10 @@ async function ipcCheck(): Promise<void> {
 
   const labels = await invokeForSmoke('system:drive-labels') as Record<string, string>;
   check('system:drive-labels', Boolean(labels && labels['/']), labels?.['/'] || 'boş');
+
+  const audit = await invokeForSmoke('posix:audit') as PosixAuditReport;
+  check('POSIX denetim raporu', audit?.sections?.length === 8 && audit.sections.every((item) => Array.isArray(item.rows)),
+    `${audit?.platform || '?'} · ${audit?.sections?.length ?? 0} bölüm`);
 
   const scan = await invokeForSmoke('malware:scan', ['hosts', 'signatures'], `smoke-${Date.now()}`) as {
     findings?: unknown[];
