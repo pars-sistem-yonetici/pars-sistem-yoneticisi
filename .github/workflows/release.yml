@@ -1,18 +1,15 @@
 name: Sürüm yayınla (exe + site)
 
-# İki tetikleyici:
-#  1) Manuel: Actions > "Sürüm yayınla" > Run workflow > sürümü yazın (önerilen)
-#  2) Otomatik: 1.0.2 gibi bir etiket push edildiğinde
+# Yalnızca manuel tetiklenir.
+# 1.6.0 gibi birleşik release etiketi push edildiğinde Windows derlemesi otomatik başlamaz;
+# mevcut ikililer elle toplanır. Yeni Windows derlemesi için Actions > "Sürüm yayınla" > Run workflow.
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Yayınlanacak sürüm (örn. 1.0.2)'
+        description: 'Yayınlanacak sürüm (örn. 1.6.0)'
         required: true
         type: string
-  push:
-    tags:
-      - '*.*.*'
 
 permissions:
   contents: write
