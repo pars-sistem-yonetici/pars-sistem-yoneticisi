@@ -2,15 +2,34 @@
 
 # 🇹🇷 Pars Sistem Yöneticisi (TypeScript / Electron)
 
-Windows için winget tabanlı sistem bakım ve yazılım yöneticisi paneli. Mevcut Python uygulamasının
+Windows, macOS ve Linux için sistem bakım ve yazılım yöneticisi paneli. Windows’ta winget tabanlı
+yazma özellikleri; macOS ve Linux’ta salt-okunur çekirdek. Mevcut Python uygulamasının
 TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klasörüne dokunulmaz.
 
 [![Son sürüm](https://img.shields.io/github/v/release/pars-sistem-yonetici/pars-sistem-yoneticisi?label=s%C3%BCr%C3%BCm&style=for-the-badge)](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/latest)
 [![İndirmeler](https://img.shields.io/github/downloads/pars-sistem-yonetici/pars-sistem-yoneticisi/total?label=indirme&style=for-the-badge)](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases)
 [![Lisans](https://img.shields.io/badge/lisans-MIT-gold?style=for-the-badge)](LICENSE)
 [![Windows](https://img.shields.io/badge/Windows-10%2F11-x64-blue?style=for-the-badge)](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
+[![macOS](https://img.shields.io/badge/macOS-13%2B-arm64%20%7C%20x64-blue?style=for-the-badge)](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
+[![Linux](https://img.shields.io/badge/Linux-x64-AppImage%20%7C%20deb-orange?style=for-the-badge)](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
 
 **Dil / Language:** [🇹🇷 Türkçe](#turkce) · [🇬🇧 English](#english)
+
+## 🆕 1.6.0 birleşik sürümü
+
+- **Tek release, üç platform:** Windows kurulum/portable `.exe`, macOS `arm64`/`x64` `.dmg` + `.zip` ve Linux `x64` AppImage + `.deb` aynı [1.6.0 release’inde](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0) toplandı. Bu release GitHub **Latest**’tir; `1.4.0` ve macOS `1.5.0` release’leri geçmiş olarak korunur.
+- **İç sürüm notu:** Windows dosyaları `1.4.0`, macOS dosyaları `1.5.0`, Linux dosyaları `1.6.0` kaynak derlemeleridir. `1.6.0` birleşik dağıtım etiketidir.
+- **Linux kapsamı:** apt, dnf, pacman, flatpak ve snap yalnızca arama/listeleme için salt-okunur kullanılır; yazma eylemleri ve self-update kapalıdır.
+- **Doğrulama:** `SHA256SUMS-1.6.0.txt` (Windows + macOS), `SHA256SUMS-Linux.txt` (Linux) ve tüm dosyaların ayrıntılı listesi `INDIRME_LINKLERI.md` asset’lerinde yayımlandı.
+
+| Platform | Dosyalar | SHA-256 (özet) |
+| --- | --- | --- |
+| Windows | `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe` | `59981085f2d3ad08b1ab516004300a27108a668073470b43ad5c1fd3c9ab445a` |
+| Windows | `ParsSistemYoneticisi-Portable.exe` | `b8a30016cccd35a68929493ea68a5354c75fb309804fb5d92929c1feeeef4cc7` |
+| macOS arm64 | `.dmg` / `.zip` | `0f1bb0a9…` / `22af969d…` |
+| macOS x64 | `.dmg` / `.zip` | `027cd67d…` / `4b0421d4…` |
+| Linux x64 | `.AppImage` | `f0ddffe55e88b353186beeb3cffa49061955faa26990a798f2972b1fef6bc143` |
+| Linux x64 | `.deb` | `354f83b5e824d01b77a521aad4ae78309d4be8e4a4360a64bf86a74a60aaaffb` |
 
 Arayüz, grafit/gümüş palet ve koyu sarı vurgularla temalandırılmıştır. **Ayarlar → Tema** üzerinden
 Windows 11 açık temasına anında geçilebilir; tercih `settings.json` içinde saklanır. Windows'un native
@@ -101,10 +120,11 @@ ve GitHub Releases sayfası aynı dosyaları kullanır.
 
 ## ⬇️ Hızlı kurulum
 
-- **Son sürüm:** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/latest)
-- **Kurulum dosyası (1.3.0):** [`Pars.Sistem.Yoneticisi.Setup.1.3.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/Pars.Sistem.Yoneticisi.Setup.1.3.0.exe)
-- **Portable (1.3.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/ParsSistemYoneticisi-Portable.exe)
-- **Doğrulama:** [İndirme sayfasındaki SHA-256 özetleri](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
+- **Son sürüm (1.6.0, birleşik):** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0)
+- **Windows:** [`Pars.Sistem.Yoneticisi.Setup.1.6.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi.Setup.1.6.0.exe) · [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/ParsSistemYoneticisi-Portable.exe)
+- **macOS:** [`arm64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-arm64.dmg) · [`arm64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-arm64.zip) · [`x64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.dmg) · [`x64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.zip)
+- **Linux:** [`x64.AppImage`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.AppImage) · [`x64.deb`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.deb)
+- **Doğrulama:** [İndirme sayfasındaki SHA-256 özetleri](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html) · [`SHA256SUMS-1.6.0.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/SHA256SUMS-1.6.0.txt) · [`SHA256SUMS-Linux.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/SHA256SUMS-Linux.txt)
 
 winget kataloğuna alındığında tek satır kurulum:
 
@@ -116,30 +136,33 @@ Kurulum UAC onayı ister; `winget.exe` eksikse kurucu Microsoft.WinGet.Client ü
 
 ## 📦 Hazır çıktılar
 
-`release/` klasöründe:
+1.6.0 release’inde 11 dosya yayımlandı:
 
-- `Pars Sistem Yoneticisi Setup 1.4.0.exe` — NSIS kurulum dosyası (başlat menüsü + masaüstü kısayolu); eski sürümü algılar, yükseltmede kaldırıp yeniden kurar, uygulama verilerini korur ve winget eksikse resmi kaynaktan otomatik kurar
-- `ParsSistemYoneticisi-Portable.exe` — tek dosya, kurulum gerektirmeyen sürüm
-- `win-unpacked/` — derleme sırasında oluşan geçici klasör; dağıtıma dahil edilmez ve temizlenir
+- **Windows (2):** `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe`, `ParsSistemYoneticisi-Portable.exe`
+- **macOS (4):** arm64 ve x64 için `.dmg` + `.zip`
+- **Linux (2):** `Pars.Sistem.Yoneticisi-1.6.0-x64.AppImage`, `Pars.Sistem.Yoneticisi-1.6.0-x64.deb`
+- **Doğrulama/belge (3):** `SHA256SUMS-1.6.0.txt`, `SHA256SUMS-Linux.txt`, `INDIRME_LINKLERI.md`
 
-GitHub Releases’taki kurulum dosyasının adı noktalıdır:
-`Pars.Sistem.Yoneticisi.Setup.1.3.0.exe`. Yerel kopyalar
-`YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`
-klasörlerinde tutulur; depoya eklenmez.
+Yerel `release/` klasöründeki exe’ler önizleme derlemeleridir; yayınlanan asset’lerle aynı özete sahip
+değildir. Yayınlanan dosyaların adları ve özetleri yukarıdaki release bağlantılarındadır. `win-unpacked/`
+derleme sırasında oluşan geçici klasördür; dağıtıma dahil edilmez. Yerel kopyalar
+`YazilimYoneticisiTS\release\` ve `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\` klasörlerinde tutulur;
+depoya eklenmez.
 
 ## 🌐 Tanıtım ve indirme sitesi
 
 `website/` klasöründe uygulamanın grafit/altın paletini kullanan bağımsız bir statik site vardır:
 
 - `index.html` — tanıtım, özellikler, güvenlik yaklaşımı ve sık sorulan sorular
-- `download.html` — kurulum/portable indirme kartları, SHA-256 doğrulama ve kurulum adımları
-- `downloads/latest.json` — son sürüm bildirimi
+- `download.html` — Windows kurulum/portable, macOS DMG/ZIP ve Linux AppImage/DEB kartları; SHA-256 doğrulama ve kurulum adımları
+- `downloads/latest.json` — son sürüm bildirimi (Windows alanlarına ek olarak Linux AppImage/DEB ad, özet, boyut ve URL)
 - `blogger.html` — Blogger için CSS/JS/ikon gömülü tek dosyalık sürüm (`npm run build:blogger`)
 
 Yerel görüntülemek için `website/index.html` dosyasını tarayıcıda açın. Yayınlanan site `docs/`
-klasöründen GitHub Pages üzerinde durur. Sürüm, URL, SHA özetleri ve Blogger teması
-`.github/workflows/release.yml` tarafından otomatik üretilir; elle kopyalama gerekmez.
-Ayrıntılar `GitHubYukleme\05_ACTIONS_REHBER.md` dosyasındadır. Kullanım kılavuzu ve sık sorulan
+klasöründen GitHub Pages üzerinde durur; `docs/` ve `website/` dosyaları bayt bayt aynı tutulur.
+Windows/macOS üretimi `.github/workflows/release.yml`, Linux AppImage/DEB üretimi
+`.github/workflows/release-linux.yml` ile manuel olarak başlatılır. Ayrıntılar
+`GitHubYukleme\05_ACTIONS_REHBER.md` dosyasındadır. Kullanım kılavuzu ve sık sorulan
 sorular [GitHub Wiki](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/wiki) sayfasındadır.
 
 ## 🧩 Özellikler
@@ -182,10 +205,12 @@ npm install
 npm run dev       # Vite + Electron geliştirme modu
 npm run build     # TypeScript + Vite derlemesi
 npm run dist      # release/ içine NSIS + portable exe üretir
+npm run dist:linux # release/ içine AppImage + .deb üretir (Linux runner önerilir)
 npm run publish   # publish/updates içine latest.json + setup exe hazırlar
 ```
 
 Node.js 20+ gerekir. Windows 10 (1809+) / Windows 11 ve güncel App Installer (winget) önerilir.
+Linux paketleri `ubuntu-latest` runner üzerinde `.github/workflows/release-linux.yml` ile üretilir.
 
 ## 🔄 Uygulama güncellemesi
 
@@ -197,6 +222,7 @@ Kurulumdan önce ikinci bir onay alınır ve NSIS kurucusu `/S --updated` anahta
 başlatılır. Kurulum başlatılamazsa uygulama “başarılı” demeden hatayı bildirir. 1.0.4–1.0.6 sürümlerinden
 gelen istemciler de yeni kurucuyu `/SILENT` ile çağırsa bile `preInit` uyumluluğu sayesinde sessizce kurulur.
 Portable sürümde exe değiştirilemediği için indirilenler klasörü açılır ve dosyayı elle kopyalama yönergesi gösterilir.
+**macOS ve Linux’ta self-update kapalıdır**; yeni sürümü indirme sayfasından elle alın.
 
 Varsayılan kaynak, projenin Pages adresindeki `downloads/latest.json` dosyasıdır
 (`https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/downloads`). Pakete ayrıca
@@ -282,7 +308,10 @@ GitHub → Actions → **Sürüm yayınla** → **Run workflow** ile sürümü y
 - Güvenlik duvarı kural silme işlemi de yedek zorunluluğuna tabidir; kural ve port/uygulama filtreleri
   `%LOCALAPPDATA%\ParsSistemYoneticisi\firewall_backups` altına JSON olarak yazılır. Yedek başarısızsa kural silinmez.
 - Kötü amaçlı yazılım sekmesi salt okunur denetim yapar; hiçbir dosyayı, işlemi, kayıt girdisini veya
-  güvenlik duvarı kuralını değiştirmez.
+  güvenlik duvarı kuralını değiştirmez. `defender` motoru yalnızca Windows’ta bulunur.
+- macOS ve Linux çekirdeği salt-okunurdur; registry/UAC/servis yazma sekmeleri gizlidir. Linux’ta
+  apt/dnf/pacman/flatpak/snap yalnızca arama ve listeleme için kullanılır; kurulum, güncelleme,
+  kaldırma ve self-update yoktur.
 - Sağ tık menüsü değişikliği `HKCU` altında tek bir CLSID kaydını ekler/siler ve Gezgin’i yeniden
   başlatır. İşlemden önce onay istenir; açık dosya pencereleri kapanabilir.
 - Uygulama güncelleyici yalnızca bildirimde geçerli SHA-512 özeti olan dosyaları kabul eder; özet veya
@@ -325,8 +354,10 @@ release/         Üretilen .exe dosyaları (depoya eklenmez)
 ## 🐙 GitHub yayını
 
 Site `docs/` altında bulunur ve GitHub Pages üzerinden yayınlanır. Kurulum dosyaları depoya
-eklenmez; **Releases** bölümünde tutulur. Sürüm akışı `GitHubYukleme\05_ACTIONS_REHBER.md`,
-Blogger teması `GitHubYukleme\08_BLOGGER_TEMA\OKUNMAMI_REHBER.md` dosyalarında anlatılır.
+eklenmez; **Releases** bölümünde tutulur. `1.6.0` release’i Windows, macOS ve Linux paketlerini
+tek altında toplar ve GitHub **Latest** olarak işaretlidir; eski sürümler korunur. Sürüm akışı
+`GitHubYukleme\05_ACTIONS_REHBER.md`, Blogger teması
+`GitHubYukleme\08_BLOGGER_TEMA\OKUNMAMI_REHBER.md` dosyalarında anlatılır.
 
 ## ☕ Destek
 
@@ -357,9 +388,17 @@ Pars Sistem Yöneticisi **MIT Lisansı** ile dağıtılır.
 
 ## 📝 Overview
 
-Pars Sistem Yöneticisi (Pars System Manager) is a winget-based system maintenance and software
-management panel for Windows. It is the TypeScript + Electron + React counterpart of the original
-Python application; the legacy `YazilimYoneticisi/` folder is left untouched.
+Pars Sistem Yöneticisi (Pars System Manager) is a system maintenance and software management panel
+for Windows, macOS and Linux. On Windows it includes winget-based write features; macOS and Linux use
+a read-only core. It is the TypeScript + Electron + React counterpart of the original Python
+application; the legacy `YazilimYoneticisi/` folder is left untouched.
+
+## 🆕 1.6.0 unified release
+
+- **One release, three platforms:** Windows installer/portable `.exe`, macOS `arm64`/`x64` `.dmg` + `.zip`, and Linux `x64` AppImage + `.deb` are collected in the [1.6.0 release](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0), which is GitHub **Latest**. The `1.4.0` and macOS `1.5.0` releases remain in history.
+- **Internal versions:** Windows files are built from `1.4.0`, macOS from `1.5.0` and Linux from `1.6.0` sources; `1.6.0` is the unified distribution label.
+- **Linux scope:** apt, dnf, pacman, flatpak and snap are used read-only for search/listing; write actions and self-update are disabled.
+- **Verification:** `SHA256SUMS-1.6.0.txt` (Windows + macOS), `SHA256SUMS-Linux.txt` (Linux) and `INDIRME_LINKLERI.md` list every package.
 
 The interface uses a graphite/silver palette with dark-gold accents. **Settings → Theme** switches
 instantly to the Windows 11 light theme and stores the preference in `settings.json`. Instead of the
@@ -482,10 +521,11 @@ use the same files.
 
 ## ⬇️ Quick install
 
-- **Latest release:** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/latest)
-- **Installer (1.3.0):** [`Pars.Sistem.Yoneticisi.Setup.1.3.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/Pars.Sistem.Yoneticisi.Setup.1.3.0.exe)
-- **Portable (1.3.0):** [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.3.0/ParsSistemYoneticisi-Portable.exe)
-- **Verification:** [SHA-256 checksums on the download page](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
+- **Latest release (unified 1.6.0):** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0)
+- **Windows:** [`Pars.Sistem.Yoneticisi.Setup.1.6.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi.Setup.1.6.0.exe) · [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/ParsSistemYoneticisi-Portable.exe)
+- **macOS:** [`arm64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-arm64.dmg) · [`arm64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-arm64.zip) · [`x64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.dmg) · [`x64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.zip)
+- **Linux:** [`x64.AppImage`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.AppImage) · [`x64.deb`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.deb)
+- **Verification:** [SHA-256 checksums on the download page](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html) · [`SHA256SUMS-1.6.0.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/SHA256SUMS-1.6.0.txt) · [`SHA256SUMS-Linux.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/SHA256SUMS-Linux.txt)
 
 Once the package is accepted into the winget catalog, installation is a single command:
 
@@ -498,16 +538,16 @@ from the official Microsoft.WinGet.Client source. The manifest draft is in the `
 
 ## 📦 Ready-to-use builds
 
-In `release/`:
+The 1.6.0 release publishes 11 files:
 
-- `Pars Sistem Yoneticisi Setup 1.4.0.exe` — NSIS installer (Start menu + desktop shortcut); detects
-  older versions, removes and reinstalls them during an upgrade, preserves application data and
-  installs winget from the official source when it is missing.
-- `ParsSistemYoneticisi-Portable.exe` — single-file build that needs no installation.
-- `win-unpacked/` — temporary build folder; not distributed and cleaned up.
+- **Windows (2):** `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe`, `ParsSistemYoneticisi-Portable.exe`
+- **macOS (4):** `.dmg` + `.zip` for arm64 and x64
+- **Linux (2):** `Pars.Sistem.Yoneticisi-1.6.0-x64.AppImage`, `Pars.Sistem.Yoneticisi-1.6.0-x64.deb`
+- **Verification/docs (3):** `SHA256SUMS-1.6.0.txt`, `SHA256SUMS-Linux.txt`, `INDIRME_LINKLERI.md`
 
-The installer file name on GitHub Releases uses dots:
-`Pars.Sistem.Yoneticisi.Setup.1.3.0.exe`. Local copies are kept under
+The exe files in the local `release/` folder are preview builds and do not have the same checksums
+as the published assets. Published names and checksums are in the release links above. `win-unpacked/`
+is a temporary build folder and is not distributed. Local copies are kept under
 `YazilimYoneticisiTS\release\` and `GitHubYukleme\02_GITHUB_RELEASE_EXELERI\`; they are not committed.
 
 ## 🌐 Website and download portal
@@ -515,15 +555,15 @@ The installer file name on GitHub Releases uses dots:
 The `website/` folder contains a standalone static site using the app's graphite/gold palette:
 
 - `index.html` — overview, features, security approach and FAQ
-- `download.html` — installer/portable download cards, SHA-256 verification and setup steps
-- `downloads/latest.json` — latest-release notification
+- `download.html` — Windows installer/portable, macOS DMG/ZIP and Linux AppImage/DEB cards, SHA-256 verification and setup steps
+- `downloads/latest.json` — latest-release notification (Windows fields plus Linux AppImage/DEB name, checksum, size and URL)
 - `blogger.html` — single-file Blogger version with CSS/JS/icon embedded (`npm run build:blogger`)
 
 Open `website/index.html` in a browser for a local preview. The published site is served from
-`docs/` through GitHub Pages. Version, URLs, checksums and the Blogger theme are generated
-automatically by `.github/workflows/release.yml`; manual copying is not required. Details are in
-`GitHubYukleme\05_ACTIONS_REHBER.md`. The user guide and FAQ live on the
-[GitHub Wiki](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/wiki).
+`docs/` through GitHub Pages; `docs/` and `website/` are kept byte-for-byte identical. Windows/macOS
+builds are started manually via `.github/workflows/release.yml`, Linux AppImage/DEB builds via
+`.github/workflows/release-linux.yml`. Details are in `GitHubYukleme\05_ACTIONS_REHBER.md`. The user
+guide and FAQ live on the [GitHub Wiki](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/wiki).
 
 ## 🧩 Features
 
@@ -571,11 +611,12 @@ npm install
 npm run dev       # Vite + Electron development mode
 npm run build     # TypeScript + Vite build
 npm run dist      # produces NSIS + portable exe into release/
+npm run dist:linux # produces AppImage + .deb into release/ (Linux runner recommended)
 npm run publish   # prepares latest.json + setup exe into publish/updates
 ```
 
 Node.js 20+ is required. Windows 10 (1809+) / Windows 11 and a recent App Installer (winget) are
-recommended.
+recommended. Linux packages are built on an `ubuntu-latest` runner via `.github/workflows/release-linux.yml`.
 
 ## 🔄 Self-update
 
@@ -588,6 +629,7 @@ silent mode with `/S --updated`. If setup cannot start, the app reports the erro
 success. Clients coming from 1.0.4–1.0.6 still install silently thanks to `preInit` compatibility even
 if they call the new installer with `/SILENT`. In the portable build, where the running exe cannot be
 replaced, the Downloads folder opens and manual copy instructions are shown.
+**Self-update is disabled on macOS and Linux**; get new versions manually from the download page.
 
 The default source is `downloads/latest.json` on the project's Pages site
 (`https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/downloads`). A sample notification
@@ -674,7 +716,10 @@ Actions → **Release** → **Run workflow**. Downloaded setup files are kept un
 - Firewall rule deletion is also backup-gated; the rule and port/app filters are written as JSON under
   `%LOCALAPPDATA%\ParsSistemYoneticisi\firewall_backups`. If the backup fails, the rule is not deleted.
 - The Malware tab performs read-only auditing; it changes no file, process, registry entry or firewall
-  rule.
+  rule. The `defender` engine is available on Windows only.
+- The macOS and Linux cores are read-only; registry/UAC/service write tabs are hidden. On Linux,
+  apt/dnf/pacman/flatpak/snap are used only for search and listing; installation, updating, removal
+  and self-update are unavailable.
 - The context-menu change adds/removes a single CLSID entry under `HKCU` and restarts Explorer.
   Approval is requested before the operation; open file windows may close.
 - The app updater accepts only files with a valid SHA-512 checksum in the notification; if the
@@ -719,8 +764,10 @@ release/         Generated .exe files (not committed)
 ## 🐙 GitHub release
 
 The site lives under `docs/` and is published through GitHub Pages. Installer files are not committed;
-they are kept in **Releases**. The release flow is described in `GitHubYukleme\05_ACTIONS_REHBER.md`
-and the Blogger theme in `GitHubYukleme\08_BLOGGER_TEMA\OKUNMAMI_REHBER.md`.
+they are kept in **Releases**. The `1.6.0` release collects Windows, macOS and Linux packages under a
+single tag and is marked GitHub **Latest**; older releases remain in history. The release flow is
+described in `GitHubYukleme\05_ACTIONS_REHBER.md` and the Blogger theme in
+`GitHubYukleme\08_BLOGGER_TEMA\OKUNMAMI_REHBER.md`.
 
 ## ☕ Support
 

@@ -30,5 +30,5 @@ Paketler **imzalanmamıştır** ve noterlemeye gönderilmemiştir. macOS Gatekee
 
 - İmzasız paket nedeniyle Gatekeeper uyarısı normaldir.
 - CPU yüzdesi macOS yük ortalamasından tahmin edilir; Windows performans sayacıyla birebir aynı değildir.
-- GitHub "Latest" etiketi Windows `1.4.0` sürümünde kalır; macOS `1.5.0` kararlı olmasına rağmen genel "en yeni sürüm" olarak işaretlenmez.
-- Linux paketleri (AppImage + `.deb`) `2.0` sürümünde planlanmıştır.
+- macOS `1.5.0` kararlıdır ancak genel "Latest" etiketi birleşik `1.6.0` release’indedir; eski sürümler korunur.
+- Linux paketleri (AppImage + `.deb`) `1.6.0` ile yayımlandı; ayrıntılar [1.6.0 release](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0) sayfasındadır.
