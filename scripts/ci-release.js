@@ -87,34 +87,49 @@ function versionText(text) {
     .replace(new RegExp(String.raw`(?<![\d.%])\d+\.\d+\.\d+` + versionLookahead, 'g'), version);
 }
 
-function checksumText(text, setupSha, portableSha, label) {
-  // download.html icinde JSON-LD checksum alani da gercek hex oldugu icin
-  // 5. bir SHA-256 ortaya cikar: ilk 3 kurulum, son 2 portable alanidir.
-  // Eski 4 alanli sablonlar (yalniz indirme kartlari) da desteklenir.
-  const count = (text.match(/\b[0-9a-f]{64}\b/g) || []).length;
-  if (count !== 0 && count !== 4 && count !== 5) {
-    throw new Error(`${label}: beklenen 4 veya 5 SHA-256 alani, bulunan ${count}`);
+/** release/ klasöründeki SHA256SUMS dosyalarını dosya adına göre okur. */
+function checksumMap(file) {
+  const result = {};
+  const full = path.join(root, 'release', file);
+  if (!fs.existsSync(full)) return result;
+  for (const line of fs.readFileSync(full, 'utf8').split(/\r?\n/)) {
+    const match = line.trim().match(/^([0-9a-f]{64})\s+\*?(.+)$/i);
+    if (match) result[path.basename(match[2].trim())] = match[1].toLowerCase();
   }
-  const setupCount = count === 5 ? 3 : 2;
-  let index = 0;
-  return text.replace(/\b[0-9a-f]{64}\b/g, () => {
-    index += 1;
-    return index <= setupCount ? setupSha : portableSha;
-  });
+  return result;
 }
 
-// Site sablonlarindaki yer tutucularini doldurur. JSON-LD icindeki ozet/boyut
-// alanlari da burada uretilir; checksumText yalnizca gercek hex ozetlerini sayar.
+function sumFor(map, pattern) {
+  const name = Object.keys(map).find((item) => pattern.test(item));
+  return name ? map[name] : '';
+}
+
+// Site sablonlarindaki yer tutucularini doldurur. Bir ozet dosyasi henuz
+// release'de yoksa ilgili yer tutucu korunur; bos hex yazilmaz.
 function templateText(text) {
-  return text
-    .split('{{SETUP_URL}}').join(setupUrl)
-    .split('{{PORTABLE_URL}}').join(portableUrl)
-    .split('{{LATEST_JSON_URL}}').join(latestJsonUrl)
-    .split('{{SETUP_SHA256}}').join(setupSha256)
-    .split('{{PORTABLE_SHA256}}').join(portableSha256)
-    .split('{{SETUP_SHA512}}').join(setupSha512)
-    .split('{{SETUP_SIZE}}').join(String(setupSize))
-    .split('{{PORTABLE_SIZE}}').join(String(portableSize));
+  const macSums = checksumMap('SHA256SUMS-macOS.txt');
+  const linuxSums = checksumMap('SHA256SUMS-Linux.txt');
+  const values = {
+    '{{SETUP_URL}}': setupUrl,
+    '{{PORTABLE_URL}}': portableUrl,
+    '{{LATEST_JSON_URL}}': latestJsonUrl,
+    '{{SETUP_SHA256}}': setupSha256,
+    '{{PORTABLE_SHA256}}': portableSha256,
+    '{{SETUP_SHA512}}': setupSha512,
+    '{{SETUP_SIZE}}': String(setupSize),
+    '{{PORTABLE_SIZE}}': String(portableSize),
+    '{{MACOS_ARM64_DMG_SHA}}': sumFor(macSums, /arm64.*\.dmg$/i),
+    '{{MACOS_ARM64_ZIP_SHA}}': sumFor(macSums, /arm64.*\.zip$/i),
+    '{{MACOS_X64_DMG_SHA}}': sumFor(macSums, /x64.*\.dmg$/i),
+    '{{MACOS_X64_ZIP_SHA}}': sumFor(macSums, /x64.*\.zip$/i),
+    '{{LINUX_APPIMAGE_SHA}}': sumFor(linuxSums, /x64.*\.AppImage$/i),
+    '{{LINUX_DEB_SHA}}': sumFor(linuxSums, /x64\.deb$/i),
+  };
+  let out = text;
+  for (const [key, value] of Object.entries(values)) {
+    if (value) out = out.split(key).join(value);
+  }
+  return out;
 }
 
 // 1) Setup exe'yi GitHub asset adiyla kopyala (web arayuzu de ayni adi uretir).
@@ -165,13 +180,7 @@ for (const dir of [docsDir, webDir]) {
   for (const name of ['download.html', 'index.html', 'blogger.js', 'blogger.html']) {
     const file = path.join(dir, name);
     if (!fs.existsSync(file)) continue;
-    replacer(file, (text) => {
-      let out = versionText(text);
-      if (name === 'download.html' || name === 'blogger.html' || name === 'blogger.js') {
-        out = checksumText(out, setupSha256, portableSha256, name);
-      }
-      return templateText(out);
-    });
+    replacer(file, (text) => templateText(versionText(text)));
   }
 }
 

@@ -502,7 +502,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
 
             <div class="section-head" id="platformlar" style="margin-top:42px">
               <h2 class="section-title">Üç platform, tek sürüm</h2>
-              <p class="section-sub">1.7.0 birleşik sürümü Windows, macOS ve Linux paketlerini aynı release’de sunar. Kapsam platforma göre değişir; güvenlik modeli değişmez.</p>
+              <p class="section-sub">{{VERSION}} birleşik sürümü Windows, macOS ve Linux paketlerini aynı release’de sunar. Kapsam platforma göre değişir; güvenlik modeli değişmez.</p>
             </div>
             <div class="grid">
               <div class="card reveal"><div class="num">▣</div><h3>Windows 10/11 x64</h3><p>Tam kapsam: winget ile yazılım yönetimi, kayıt defteri, güvenlik duvarı, sürücüler, sağ tık menüsü ve sistem ayarları. Yıkıcı işlemler yönetici izni, açık onay ve zorunlu yedek gerektirir.</p></div>
@@ -596,7 +596,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
                 <code class="hash">{{LINUX_DEB_SHA}}</code>
               </div>
             </div>
-            <div class="note"><b>İmza ve doğrulama:</b> Paketler kod imzasıyla yayınlanmadı. Windows SmartScreen ve macOS Gatekeeper uyarıları normaldir; indirmeden önce SHA-256 özetini doğrulayın. Windows paketleri iç sürüm {{VERSION}}, macOS paketleri 1.5.0, Linux paketleri 1.7.0 kaynak derlemelerindendir; {{VERSION}} birleşik dağıtım etiketidir.</div>
+            <div class="note"><b>İmza ve doğrulama:</b> Paketler kod imzasıyla yayınlanmadı. Windows SmartScreen ve macOS Gatekeeper uyarıları normaldir; indirmeden önce SHA-256 özetini doğrulayın. Tüm platform paketleri {{VERSION}} kaynak derlemesindendir; {{VERSION}} birleşik dağıtım etiketidir.</div>
           </div>
 
           <div class="block reveal" id="sss">
