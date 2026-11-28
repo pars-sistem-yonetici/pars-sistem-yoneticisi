@@ -15,17 +15,17 @@ TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klas
 
 **Dil / Language:** [🇹🇷 Türkçe](#turkce) · [🇬🇧 English](#english)
 
-## 🆕 1.6.0 birleşik sürümü
+## 🆕 1.7.0 birleşik sürümü
 
-- **Tek release, üç platform:** Windows kurulum/portable `.exe`, macOS `arm64`/`x64` `.dmg` + `.zip` ve Linux `x64` AppImage + `.deb` aynı [1.6.0 release’inde](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0) toplandı. Bu release GitHub **Latest**’tir; `1.4.0` ve macOS `1.5.0` release’leri geçmiş olarak korunur.
-- **İç sürüm notu:** Windows dosyaları `1.6.0`, macOS dosyaları `1.5.0`, Linux dosyaları `1.6.0` kaynak derlemeleridir. `1.6.0` birleşik dağıtım etiketidir.
+- **Tek release, üç platform:** Windows kurulum/portable `.exe`, macOS `arm64`/`x64` `.dmg` + `.zip` ve Linux `x64` AppImage + `.deb` aynı [1.7.0 release’inde](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.7.0) toplandı. Bu release GitHub **Latest**’tir; `1.4.0` ve macOS `1.5.0` release’leri geçmiş olarak korunur.
+- **İç sürüm notu:** Windows dosyaları `1.7.0`, macOS dosyaları `1.5.0`, Linux dosyaları `1.6.0` kaynak derlemeleridir. `1.7.0` birleşik dağıtım etiketidir.
 - **Linux kapsamı:** apt, dnf, pacman, flatpak ve snap yalnızca arama/listeleme için salt-okunur kullanılır; yazma eylemleri ve self-update kapalıdır.
-- **Doğrulama:** `SHA256SUMS-1.6.0.txt` (Windows + macOS), `SHA256SUMS-Linux.txt` (Linux) ve tüm dosyaların ayrıntılı listesi `INDIRME_LINKLERI.md` asset’lerinde yayımlandı.
+- **Doğrulama:** `SHA256SUMS-1.7.0.txt` (Windows + macOS), `SHA256SUMS-Linux.txt` (Linux) ve tüm dosyaların ayrıntılı listesi `INDIRME_LINKLERI.md` asset’lerinde yayımlandı.
 
 | Platform | Dosyalar | SHA-256 (özet) |
 | --- | --- | --- |
-| Windows | `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe` | `bbb65e11162a6e73b3a4d0e6541a5637c66c5c518b4ce7f6319c04fe72f5d15f` |
-| Windows | `ParsSistemYoneticisi-Portable.exe` | `17b95a8891eb85e5027d095ed0ca3ca940e19f843740d4105d3e3bf83b9b9a61` |
+| Windows | `Pars.Sistem.Yoneticisi.Setup.1.7.0.exe` | `a17cffb5561fde97876d6954e2374d37ee9ff6934cb39d329c74b03ff7b72f5d` |
+| Windows | `ParsSistemYoneticisi-Portable.exe` | `be9eb1a9664e5aa3f3549f78c6330f1b8f3fddb644eae4b647d500197e056980` |
 | macOS arm64 | `.dmg` / `.zip` | `0f1bb0a9…` / `22af969d…` |
 | macOS x64 | `.dmg` / `.zip` | `027cd67d…` / `4b0421d4…` |
 | Linux x64 | `.AppImage` | `f0ddffe55e88b353186beeb3cffa49061955faa26990a798f2972b1fef6bc143` |
@@ -120,11 +120,11 @@ ve GitHub Releases sayfası aynı dosyaları kullanır.
 
 ## ⬇️ Hızlı kurulum
 
-- **Son sürüm (1.6.0, birleşik):** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0)
-- **Windows:** [`Pars.Sistem.Yoneticisi.Setup.1.6.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi.Setup.1.6.0.exe) · [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/ParsSistemYoneticisi-Portable.exe)
-- **macOS:** [`arm64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-arm64.dmg) · [`arm64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-arm64.zip) · [`x64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.dmg) · [`x64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.zip)
-- **Linux:** [`x64.AppImage`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.AppImage) · [`x64.deb`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.deb)
-- **Doğrulama:** [İndirme sayfasındaki SHA-256 özetleri](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html) · [`SHA256SUMS-1.6.0.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/SHA256SUMS-1.6.0.txt) · [`SHA256SUMS-Linux.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/SHA256SUMS-Linux.txt)
+- **Son sürüm (1.7.0, birleşik):** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.7.0)
+- **Windows:** [`Pars.Sistem.Yoneticisi.Setup.1.7.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi.Setup.1.7.0.exe) · [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/ParsSistemYoneticisi-Portable.exe)
+- **macOS:** [`arm64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-arm64.dmg) · [`arm64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-arm64.zip) · [`x64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.dmg) · [`x64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.zip)
+- **Linux:** [`x64.AppImage`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.AppImage) · [`x64.deb`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.deb)
+- **Doğrulama:** [İndirme sayfasındaki SHA-256 özetleri](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html) · [`SHA256SUMS-1.7.0.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/SHA256SUMS-1.7.0.txt) · [`SHA256SUMS-Linux.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/SHA256SUMS-Linux.txt)
 
 winget kataloğuna alındığında tek satır kurulum:
 
@@ -136,12 +136,12 @@ Kurulum UAC onayı ister; `winget.exe` eksikse kurucu Microsoft.WinGet.Client ü
 
 ## 📦 Hazır çıktılar
 
-1.6.0 release’inde 11 dosya yayımlandı:
+1.7.0 release’inde 11 dosya yayımlandı:
 
-- **Windows (2):** `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe`, `ParsSistemYoneticisi-Portable.exe`
+- **Windows (2):** `Pars.Sistem.Yoneticisi.Setup.1.7.0.exe`, `ParsSistemYoneticisi-Portable.exe`
 - **macOS (4):** arm64 ve x64 için `.dmg` + `.zip`
-- **Linux (2):** `Pars.Sistem.Yoneticisi-1.6.0-x64.AppImage`, `Pars.Sistem.Yoneticisi-1.6.0-x64.deb`
-- **Doğrulama/belge (3):** `SHA256SUMS-1.6.0.txt`, `SHA256SUMS-Linux.txt`, `INDIRME_LINKLERI.md`
+- **Linux (2):** `Pars.Sistem.Yoneticisi-1.7.0-x64.AppImage`, `Pars.Sistem.Yoneticisi-1.7.0-x64.deb`
+- **Doğrulama/belge (3):** `SHA256SUMS-1.7.0.txt`, `SHA256SUMS-Linux.txt`, `INDIRME_LINKLERI.md`
 
 Yerel `release/` klasöründeki exe’ler önizleme derlemeleridir; yayınlanan asset’lerle aynı özete sahip
 değildir. Yayınlanan dosyaların adları ve özetleri yukarıdaki release bağlantılarındadır. `win-unpacked/`
@@ -232,19 +232,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.4.0",
+  "version": "1.7.0",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.4.0.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.7.0.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83631421,
-  "url": "Pars Sistem Yoneticisi Setup 1.4.0.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.7.0.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.4.0.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.7.0.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
@@ -357,7 +357,7 @@ release/         Üretilen .exe dosyaları (depoya eklenmez)
 ## 🐙 GitHub yayını
 
 Site `docs/` altında bulunur ve GitHub Pages üzerinden yayınlanır. Kurulum dosyaları depoya
-eklenmez; **Releases** bölümünde tutulur. `1.6.0` release’i Windows, macOS ve Linux paketlerini
+eklenmez; **Releases** bölümünde tutulur. `1.7.0` release’i Windows, macOS ve Linux paketlerini
 tek altında toplar ve GitHub **Latest** olarak işaretlidir; eski sürümler korunur. Sürüm akışı
 `GitHubYukleme\05_ACTIONS_REHBER.md`, Blogger teması
 `GitHubYukleme\08_BLOGGER_TEMA\OKUNMAMI_REHBER.md` dosyalarında anlatılır.
@@ -396,12 +396,12 @@ for Windows, macOS and Linux. On Windows it includes winget-based write features
 a read-only core. It is the TypeScript + Electron + React counterpart of the original Python
 application; the legacy `YazilimYoneticisi/` folder is left untouched.
 
-## 🆕 1.6.0 unified release
+## 🆕 1.7.0 unified release
 
-- **One release, three platforms:** Windows installer/portable `.exe`, macOS `arm64`/`x64` `.dmg` + `.zip`, and Linux `x64` AppImage + `.deb` are collected in the [1.6.0 release](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0), which is GitHub **Latest**. The `1.4.0` and macOS `1.5.0` releases remain in history.
-- **Internal versions:** Windows files are built from `1.4.0`, macOS from `1.5.0` and Linux from `1.6.0` sources; `1.6.0` is the unified distribution label.
+- **One release, three platforms:** Windows installer/portable `.exe`, macOS `arm64`/`x64` `.dmg` + `.zip`, and Linux `x64` AppImage + `.deb` are collected in the [1.7.0 release](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.7.0), which is GitHub **Latest**. The `1.4.0` and macOS `1.5.0` releases remain in history.
+- **Internal versions:** Windows files are built from `1.7.0`, macOS from `1.5.0` and Linux from `1.6.0` sources; `1.7.0` is the unified distribution label.
 - **Linux scope:** apt, dnf, pacman, flatpak and snap are used read-only for search/listing; write actions and self-update are disabled.
-- **Verification:** `SHA256SUMS-1.6.0.txt` (Windows + macOS), `SHA256SUMS-Linux.txt` (Linux) and `INDIRME_LINKLERI.md` list every package.
+- **Verification:** `SHA256SUMS-1.7.0.txt` (Windows + macOS), `SHA256SUMS-Linux.txt` (Linux) and `INDIRME_LINKLERI.md` list every package.
 
 The interface uses a graphite/silver palette with dark-gold accents. **Settings → Theme** switches
 instantly to the Windows 11 light theme and stores the preference in `settings.json`. Instead of the
@@ -524,11 +524,11 @@ use the same files.
 
 ## ⬇️ Quick install
 
-- **Latest release (unified 1.6.0):** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0)
-- **Windows:** [`Pars.Sistem.Yoneticisi.Setup.1.6.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi.Setup.1.6.0.exe) · [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/ParsSistemYoneticisi-Portable.exe)
-- **macOS:** [`arm64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-arm64.dmg) · [`arm64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-arm64.zip) · [`x64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.dmg) · [`x64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.zip)
-- **Linux:** [`x64.AppImage`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.AppImage) · [`x64.deb`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi-1.6.0-x64.deb)
-- **Verification:** [SHA-256 checksums on the download page](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html) · [`SHA256SUMS-1.6.0.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/SHA256SUMS-1.6.0.txt) · [`SHA256SUMS-Linux.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/SHA256SUMS-Linux.txt)
+- **Latest release (unified 1.7.0):** [GitHub Releases](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.7.0)
+- **Windows:** [`Pars.Sistem.Yoneticisi.Setup.1.7.0.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi.Setup.1.7.0.exe) · [`ParsSistemYoneticisi-Portable.exe`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/ParsSistemYoneticisi-Portable.exe)
+- **macOS:** [`arm64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-arm64.dmg) · [`arm64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-arm64.zip) · [`x64.dmg`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.dmg) · [`x64.zip`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.zip)
+- **Linux:** [`x64.AppImage`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.AppImage) · [`x64.deb`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.deb)
+- **Verification:** [SHA-256 checksums on the download page](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html) · [`SHA256SUMS-1.7.0.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/SHA256SUMS-1.7.0.txt) · [`SHA256SUMS-Linux.txt`](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/SHA256SUMS-Linux.txt)
 
 Once the package is accepted into the winget catalog, installation is a single command:
 
@@ -541,12 +541,12 @@ from the official Microsoft.WinGet.Client source. The manifest draft is in the `
 
 ## 📦 Ready-to-use builds
 
-The 1.6.0 release publishes 11 files:
+The 1.7.0 release publishes 11 files:
 
-- **Windows (2):** `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe`, `ParsSistemYoneticisi-Portable.exe`
+- **Windows (2):** `Pars.Sistem.Yoneticisi.Setup.1.7.0.exe`, `ParsSistemYoneticisi-Portable.exe`
 - **macOS (4):** `.dmg` + `.zip` for arm64 and x64
-- **Linux (2):** `Pars.Sistem.Yoneticisi-1.6.0-x64.AppImage`, `Pars.Sistem.Yoneticisi-1.6.0-x64.deb`
-- **Verification/docs (3):** `SHA256SUMS-1.6.0.txt`, `SHA256SUMS-Linux.txt`, `INDIRME_LINKLERI.md`
+- **Linux (2):** `Pars.Sistem.Yoneticisi-1.7.0-x64.AppImage`, `Pars.Sistem.Yoneticisi-1.7.0-x64.deb`
+- **Verification/docs (3):** `SHA256SUMS-1.7.0.txt`, `SHA256SUMS-Linux.txt`, `INDIRME_LINKLERI.md`
 
 The exe files in the local `release/` folder are preview builds and do not have the same checksums
 as the published assets. Published names and checksums are in the release links above. `win-unpacked/`
@@ -643,10 +643,10 @@ address or local folder in **Settings → Update source**. Notification format:
 {
   "version": "1.3.0",
   "notes": "New features and fixes",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.4.0.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.7.0.exe",
   "sha512": "<base64 or hex SHA-512 checksum of the exe>",
   "size": 83632376,
-  "url": "Pars Sistem Yoneticisi Setup 1.4.0.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.7.0.exe"
 }
 ```
 
@@ -654,7 +654,7 @@ address or local folder in **Settings → Update source**. Notification format:
 checksum:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.4.0.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.7.0.exe" SHA512
 ```
 
 `npm run publish` automates these steps. It reads the version from `package.json`, finds the setup exe
@@ -767,7 +767,7 @@ release/         Generated .exe files (not committed)
 ## 🐙 GitHub release
 
 The site lives under `docs/` and is published through GitHub Pages. Installer files are not committed;
-they are kept in **Releases**. The `1.6.0` release collects Windows, macOS and Linux packages under a
+they are kept in **Releases**. The `1.7.0` release collects Windows, macOS and Linux packages under a
 single tag and is marked GitHub **Latest**; older releases remain in history. The release flow is
 described in `GitHubYukleme\05_ACTIONS_REHBER.md` and the Blogger theme in
 `GitHubYukleme\08_BLOGGER_TEMA\OKUNMAMI_REHBER.md`.

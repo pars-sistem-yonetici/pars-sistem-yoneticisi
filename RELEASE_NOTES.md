@@ -1,4 +1,4 @@
-# Pars Sistem Yöneticisi 1.4.0
+# Pars Sistem Yöneticisi 1.7.0
 
 Kötü amaçlı yazılım sekmesi sekiz salt-okunur motorla genişletildi; İngilizce denetimi ana süreç, katalog ve bulgulara kadar yaydırıldı; uygulama ikonları renkli hâle getirildi ve self-update sonrası otomatik yeniden başlatma eklendi.
 
@@ -24,11 +24,12 @@ Görseller 1.3.0 arayüzünden alınmıştır; 1.4.0 arayüzü aynı düzeni kor
 
 ## İndirme
 
-- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.4.0.exe` (NSIS, başlat menüsü + masaüstü kısayolu) — 85.463.607 bayt
-  - SHA-256: `59981085f2d3ad08b1ab516004300a27108a668073470b43ad5c1fd3c9ab445a`
-  - SHA-512: `6d889c00495e1dd8a74070b6f9ac0cca2d11516366198908a3731601c8b6e0f83b4b5ca0eaa55ce3802c6318b5c11fd65e09ff42b1b8406484a0487a49b96b62`
-- **Portable:** `ParsSistemYoneticisi-Portable.exe` — 85.249.524 bayt
-  - SHA-256: `b8a30016cccd35a68929493ea68a5354c75fb309804fb5d92929c1feeeef4cc7`
+- **Kurulum:** `Pars Sistem Yoneticisi Setup 1.7.0.exe` (NSIS, başlat menüsü + masaüstü kısayolu) — 85.493.782 bayt
+  - SHA-256: `a17cffb5561fde97876d6954e2374d37ee9ff6934cb39d329c74b03ff7b72f5d`
+  - SHA-512: `441849d53698960802993904ca40efce5fe5926c754d93ab2761a703186b85e5038fd9c89e2ef5dcb4281a9537ecc45c0d34485a894f80eb5a4f0e3bea636638`
+- **Portable:** `ParsSistemYoneticisi-Portable.exe` — 85.279.655 bayt
+  - SHA-256: `be9eb1a9664e5aa3f3549f78c6330f1b8f3fddb644eae4b647d500197e056980`
+  - SHA-512: `b146b0d5ca73c1bddd441a7762facf0a56630d0fd59b2c5d85fd2b95dd9175cf53819957ea7af1b7c64151d309762e79021add120f620d7b9d57596e1b40887c`
 
 Windows 10 (1809+) / Windows 11 x64 gereklidir. Kurulum exe’si winget eksikse resmi kaynaktan kurar; portable sürümde winget “Gerekli bileşenler” panelinden kurulabilir. Chocolatey, npm ve Scoop taramaları yalnızca ilgili araç kuruluysa seçilebilir.
 Uygulama yönetici izinleriyle çalışır; açılışta UAC onayı görünür.

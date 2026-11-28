@@ -995,7 +995,7 @@ export default function App() {
     const content = format === 'json'
       ? JSON.stringify({
         generatedAt: new Date().toISOString(),
-        version: '1.6.0',
+        version: '1.7.0',
         engines: malwareEngines.map(engineLabel),
         scanned: malwareResult?.scanned ?? {},
         totalFindings: malwareResult?.findings.length ?? 0,
@@ -2172,7 +2172,7 @@ export default function App() {
           </div>
           <div className="sidebar-foot">
             <span className="dot" style={{ background: 'var(--accent)' }} />
-            {t('Sistem Bakım Merkezi · v1.6.0')}
+            {t('Sistem Bakım Merkezi · v1.7.0')}
           </div>
         </div>
       </aside>

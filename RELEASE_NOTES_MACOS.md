@@ -1,12 +1,12 @@
 # Pars Sistem Yöneticisi 1.5.0 — macOS
 
-Bu, macOS için ilk **kararlı** sürümdür. Kapsam salt-okunur çekirdektir; Windows'a özgü yazma özellikleri macOS'e taşınmamıştır. Windows paketleri artık `1.6.0` derlemesidir; GitHub "Latest" etiketi birleşik `1.6.0` release’indedir.
+Bu, macOS için ilk **kararlı** sürümdür. Kapsam salt-okunur çekirdektir; Windows'a özgü yazma özellikleri macOS'e taşınmamıştır. Windows paketleri artık `1.7.0` derlemesidir; GitHub "Latest" etiketi birleşik `1.7.0` release’indedir.
 
 ## İndirme
 
 - `.dmg` — uygulamayı Sürükle & Bırak ile kurun.
 - `.zip` — elle açıp `Pars Sistem Yoneticisi.app` dosyasını istediğiniz yere kopyalayın.
-- `SHA256SUMS-1.6.0.txt` — birleşik release’deki Windows ve macOS dosya özetlerini doğrulamak için.
+- `SHA256SUMS-1.7.0.txt` — birleşik release’deki Windows ve macOS dosya özetlerini doğrulamak için.
 
 Paketler **imzalanmamıştır** ve noterlemeye gönderilmemiştir. macOS Gatekeeper ilk açılışta uyarı gösterebilir:
 `Sistem Ayarları → Gizlilik ve Güvenlik → Yine de aç` yolunu kullanabilirsiniz. App Store dağıtımı yoktur.
@@ -30,5 +30,5 @@ Paketler **imzalanmamıştır** ve noterlemeye gönderilmemiştir. macOS Gatekee
 
 - İmzasız paket nedeniyle Gatekeeper uyarısı normaldir.
 - CPU yüzdesi macOS yük ortalamasından tahmin edilir; Windows performans sayacıyla birebir aynı değildir.
-- macOS `1.5.0` kararlıdır ancak genel "Latest" etiketi birleşik `1.6.0` release’indedir; eski sürümler korunur.
-- Linux paketleri (AppImage + `.deb`) `1.6.0` ile yayımlandı; ayrıntılar [1.6.0 release](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0) sayfasındadır.
+- macOS `1.5.0` kararlıdır ancak genel "Latest" etiketi birleşik `1.7.0` release’indedir; eski sürümler korunur.
+- Linux paketleri (AppImage + `.deb`) `1.6.0` derlemesi olarak `1.7.0` release; ayrıntılar [1.7.0 release](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.7.0) sayfasındadır.

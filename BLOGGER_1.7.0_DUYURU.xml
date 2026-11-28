@@ -1,0 +1,92 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="tr" class="pars-duyuru">
+  <h2>Pars Sistem Yöneticisi 1.7.0 — Windows, macOS ve Linux tek sürümde</h2>
+  <p><time datetime="2026-11-28">28 Kasım 2026</time></p>
+  <p>
+    <strong>Pars Sistem Yöneticisi 1.7.0</strong> yayımlandı. Windows, macOS ve Linux paketleri tek bir
+    <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.7.0">1.7.0 release</a>
+    altında toplandı; bu release GitHub <strong>Latest</strong> olarak işaretlidir. Eski <code>1.4.0</code> ve macOS
+    <code>1.5.0</code> release’leri geçmiş olarak korunur.
+  </p>
+  <p>
+    Bu sürümde Windows paketleri <code>1.7.0</code> kaynak kodundan yeniden derlendi. Dosya iç sürümleri Windows için
+    <code>1.7.0</code>, macOS için <code>1.5.0</code>, Linux için <code>1.6.0</code>’dır; <code>1.7.0</code> etiketi
+    üç platformu birleştiren dağıtım sürümüdür.
+  </p>
+
+  <h3>İndirme</h3>
+  <ul>
+    <li>
+      <strong>Windows 10/11 x64:</strong>
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi.Setup.1.7.0.exe">Kurulum .exe</a>
+      ·
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/ParsSistemYoneticisi-Portable.exe">Portable .exe</a>
+    </li>
+    <li>
+      <strong>macOS:</strong>
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-arm64.dmg">arm64 .dmg</a>
+      ·
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-arm64.zip">arm64 .zip</a>
+      ·
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.dmg">x64 .dmg</a>
+      ·
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.zip">x64 .zip</a>
+    </li>
+    <li>
+      <strong>Linux x64:</strong>
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.AppImage">AppImage</a>
+      ·
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.deb">.deb</a>
+    </li>
+    <li>
+      <strong>Doğrulama:</strong>
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/SHA256SUMS-1.7.0.txt">SHA256SUMS-1.7.0.txt</a>
+      ·
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/SHA256SUMS-Linux.txt">SHA256SUMS-Linux.txt</a>
+      ·
+      <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/INDIRME_LINKLERI.md">INDIRME_LINKLERI.md</a>
+      ·
+      <a href="https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html">İndirme sayfası</a>
+    </li>
+  </ul>
+
+  <h3>SHA-256 özetleri</h3>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr><th>Platform</th><th>Dosya</th><th>SHA-256</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Windows</td><td>Pars.Sistem.Yoneticisi.Setup.1.7.0.exe</td><td><code>a17cffb5561fde97876d6954e2374d37ee9ff6934cb39d329c74b03ff7b72f5d</code></td></tr>
+      <tr><td>Windows</td><td>ParsSistemYoneticisi-Portable.exe</td><td><code>be9eb1a9664e5aa3f3549f78c6330f1b8f3fddb644eae4b647d500197e056980</code></td></tr>
+      <tr><td>macOS arm64</td><td>Pars.Sistem.Yoneticisi-1.7.0-arm64.dmg</td><td><code>0f1bb0a96758f52ab1bee748eeee727699d8a3221a9919404dee498cdf52eb55</code></td></tr>
+      <tr><td>macOS arm64</td><td>Pars.Sistem.Yoneticisi-1.7.0-arm64.zip</td><td><code>22af969d9f76abead27bf1b45b918ea12f1fead95ab6be7a39120965e971a75e</code></td></tr>
+      <tr><td>macOS x64</td><td>Pars.Sistem.Yoneticisi-1.7.0-x64.dmg</td><td><code>027cd67d5d86956b94d3de3861de65dabda4e9a71379f4292ea17c776df114ce</code></td></tr>
+      <tr><td>macOS x64</td><td>Pars.Sistem.Yoneticisi-1.7.0-x64.zip</td><td><code>4b0421d42a6bf9fe13fa6841f42cee2f6c557a90787d1809e69a0c0b8f07f90e</code></td></tr>
+      <tr><td>Linux x64</td><td>Pars.Sistem.Yoneticisi-1.7.0-x64.AppImage</td><td><code>f0ddffe55e88b353186beeb3cffa49061955faa26990a798f2972b1fef6bc143</code></td></tr>
+      <tr><td>Linux x64</td><td>Pars.Sistem.Yoneticisi-1.7.0-x64.deb</td><td><code>354f83b5e824d01b77a521aad4ae78309d4be8e4a4360a64bf86a74a60aaaffb</code></td></tr>
+    </tbody>
+  </table>
+  <p>
+    Paketler imzalanmamıştır. Windows SmartScreen, macOS Gatekeeper ve Linux çalıştırma uyarıları normaldir;
+    kurulumdan önce özetleri doğrulayın. macOS için DMG’yi Sürükle &amp; Bırak ile kurabilir, Gatekeeper uyarısını
+    <strong>Sistem Ayarları → Gizlilik ve Güvenlik → Yine de aç</strong> yolundan onaylayabilirsiniz.
+  </p>
+
+  <h3>Güvenlik ve kapsam</h3>
+  <ul>
+    <li><strong>Windows:</strong> yönetici izni, açık onay, zorunlu yedek ve salt-okunur tarama modeli korunur. <code>UserChoice</code>, COM/CLSID, hizmet, SharedDLLs, Font ve ODBC kayıtları otomatik silinmez.</li>
+    <li><strong>Kötü amaçlı yazılım modülü:</strong> tarama salt-okunurdur; zaman sınırları ve hariç tutulan yollar korunur. Windows’ta yalnızca sizin seçtiğiniz dosyalar açık onayla karantinaya alınabilir, geri yüklenebilir veya kalıcı silinebilir. İşlem sonlandırma ve kayıt yazma yapılmaz; macOS/Linux salt-okunur kalır.</li>
+    <li><strong>macOS:</strong> salt-okunur çekirdek; registry/UAC/servis yazma sekmeleri gizlidir, self-update kapalıdır, <code>defender</code> motoru bulunmaz.</li>
+    <li><strong>Linux:</strong> AppImage ve <code>.deb</code> paketleri; apt/dnf/pacman/flatpak/snap yalnızca arama ve listeleme için salt-okunur kullanılır. systemd/XDG desteği vardır; POSIX deneysel kapsamda yazma eylemleri ve self-update kapalıdır.</li>
+    <li><strong>Güncelleme:</strong> Windows uygulaması güncellemeleri GitHub Pages üzerindeki <code>downloads/latest.json</code> dosyasından kontrol eder; indirme ve kurulum yalnızca sizin onayınızla başlar, dosya SHA-512 ile doğrulanır. macOS ve Linux’ta self-update kapalıdır; yeni sürüm elle indirilir.</li>
+  </ul>
+
+  <h3>Bağlantılar</h3>
+  <ul>
+    <li><a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi">Kaynak depo</a></li>
+    <li><a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.7.0">1.7.0 birleşik sürümü (Latest)</a></li>
+    <li><a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/wiki/Home">Kullanım kılavuzu (wiki)</a></li>
+    <li><a href="https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/">Tanıtım sitesi</a></li>
+    <li><a href="https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html">İndirme sayfası</a></li>
+  </ul>
+  <p><em>Pars Sistem Yöneticisi · Sistem Bakım Merkezi · v1.7.0</em></p>
+</div>
