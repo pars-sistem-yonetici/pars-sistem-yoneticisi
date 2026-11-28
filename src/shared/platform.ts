@@ -11,14 +11,15 @@ type GlobalHints = {
   navigator?: { platform?: string; userAgent?: string; userAgentData?: { platform?: string } };
 };
 
-const WINDOWS_TABS: readonly TabId[] = TAB_IDS;
+/** POSIX denetimi yalnızca macOS/Linux için; Windows listesinde yer almaz. */
+const WINDOWS_TABS: readonly TabId[] = TAB_IDS.filter((id): id is TabId => id !== 'posixaudit');
 
 /**
  * 1.5 macOS kapsamı: salt-okunur çekirdek. Kayıt defteri, UAC, kabuk, hizmet,
  * güvenlik duvarı, sürücü ve planlanmış görev sekmeleri POSIX'te açılmaz.
  */
 const POSIX_TABS: readonly TabId[] = [
-  'home', 'updates', 'malware', 'duplicates', 'analysis', 'recommended', 'search', 'settings', 'debugging',
+  'home', 'updates', 'malware', 'duplicates', 'analysis', 'recommended', 'search', 'settings', 'debugging', 'posixaudit',
 ];
 
 const WINDOWS_SOURCES: readonly PackageSource[] = ['winget', 'choco', 'npm', 'scoop'];

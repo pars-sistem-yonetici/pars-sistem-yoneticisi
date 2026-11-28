@@ -11,7 +11,7 @@ export type PackageSource = 'winget' | 'choco' | 'npm' | 'scoop' | 'brew' | 'apt
 export const TAB_IDS = [
   'home', 'updates', 'apps', 'packages', 'bloatware', 'startup', 'firewall', 'malware', 'disk', 'duplicates',
   'analysis', 'repair', 'drivers', 'recommended', 'registry', 'schedule', 'search', 'autoruns', 'privacy',
-  'tweaks', 'profiles', 'dns', 'contextmenu', 'debugging', 'settings',
+  'tweaks', 'profiles', 'dns', 'contextmenu', 'posixaudit', 'debugging', 'settings',
 ] as const;
 export type TabId = (typeof TAB_IDS)[number];
 
@@ -224,7 +224,7 @@ export type { ManagedPolicyFixId } from './managedPolicy';
 
 /** 'tr' ve 'en' tam çevirili; diğer kodlar Electron dil paketlerinden/ek çeviri dosyalarından gelir. */
 export type Language = string;
-export type Theme = 'default' | 'windows11' | 'auto';
+export type Theme = 'default' | 'windows11' | 'fluent' | 'auto';
 export type WindowAction = 'minimize' | 'maximize' | 'close' | 'close-to-tray';
 /** Kapat düğmesine basıldığında ne yapılacağı. 'ask' her seferinde sorar. */
 export type CloseBehavior = 'ask' | 'tray' | 'quit';
@@ -821,6 +821,32 @@ export interface DnsSwitchResult {
   previous: string[];
 }
 
+/** Kudu'dan uyarlanan POSIX denetimlerinin salt-okunur veri modeli. */
+export type PosixAuditStatus = 'enabled' | 'disabled' | 'running' | 'stopped' | 'finding' | 'unavailable';
+
+export type PosixAuditSectionId =
+  | 'startup' | 'services' | 'network' | 'browsers' | 'privacy' | 'malware' | 'cleanup' | 'trash';
+
+export interface PosixAuditRow {
+  label: string;
+  detail: string;
+  status?: PosixAuditStatus;
+  size?: number;
+  count?: number;
+}
+
+export interface PosixAuditSection {
+  id: PosixAuditSectionId;
+  rows: PosixAuditRow[];
+  error?: string;
+}
+
+export interface PosixAuditReport {
+  platform: 'macos' | 'linux';
+  startedAt: string;
+  sections: PosixAuditSection[];
+}
+
 export interface AppApi {
   platform: () => PlatformKind;
   capabilities: () => PlatformCapabilities;
@@ -831,6 +857,7 @@ export interface AppApi {
   systemSnapshot: (drive?: string) => Promise<SystemSnapshot>;
   systemDrives: () => Promise<string[]>;
   systemDriveLabels: () => Promise<Record<string, string>>;
+  posixAudit: () => Promise<PosixAuditReport>;
   wingetVersion: () => Promise<{ available: boolean; version: string }>;
   wingetSourceUpdate: () => Promise<number>;
   wingetList: () => Promise<Package[]>;
