@@ -57,6 +57,16 @@ jobs:
       - name: Blogger çıktısını yenile
         run: npm run build:blogger
 
+      - name: macOS ve Linux SHA-256 özetlerini al
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          gh release download ${{ env.RELEASE_VERSION }} --pattern 'SHA256SUMS-*.txt' --dir release --clobber
+          if (-not (Test-Path 'release/SHA256SUMS-macOS.txt')) { throw 'macOS özet dosyası release’de yok.' }
+          if (-not (Test-Path 'release/SHA256SUMS-Linux.txt')) { throw 'Linux özet dosyası release’de yok.' }
+
       - name: Manifest ve site dosyalarını hazırla
         shell: pwsh
         run: node scripts/ci-release.js --version ${{ env.RELEASE_VERSION }}

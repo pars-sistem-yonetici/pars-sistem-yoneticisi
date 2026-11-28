@@ -48,10 +48,7 @@ jobs:
             exit 1
           fi
           echo "RELEASE_VERSION=$v" >> "$GITHUB_ENV"
-          # Windows release.yml yalnizca *.*.* etiketlerinde tetiklenir.
-          # Kararli surum olsa bile etiket macos-experimental-* kalir; bu desen eslesmez.
-          safe_tag=$(echo "$v" | tr '.' '_')
-          echo "RELEASE_TAG=macos-experimental-$safe_tag" >> "$GITHUB_ENV"
+          echo "RELEASE_TAG=$v" >> "$GITHUB_ENV"
 
       - name: Bağımlılıkları kur
         run: npm ci
@@ -71,16 +68,20 @@ jobs:
         shell: bash
         run: shasum -a 256 release/*.dmg release/*.zip > release/SHA256SUMS-macOS.txt
 
-      - name: GitHub Release oluştur
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.RELEASE_TAG }}
-          name: Pars Sistem Yoneticisi ${{ env.RELEASE_VERSION }} (macOS)
-          body_path: RELEASE_NOTES_MACOS.md
-          prerelease: false
-          make_latest: false
-          fail_on_unmatched_files: true
-          files: |
-            release/*.dmg
-            release/*.zip
-            release/SHA256SUMS-macOS.txt
+      - name: macOS dosyalarını release’a yükle
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" \
+              --title "Pars Sistem Yöneticisi $RELEASE_VERSION (macOS)" \
+              --notes-file RELEASE_NOTES_MACOS.md \
+              --latest=false
+          fi
+          gh release upload "$RELEASE_TAG" \
+            release/*.dmg \
+            release/*.zip \
+            release/SHA256SUMS-macOS.txt \
+            --clobber
