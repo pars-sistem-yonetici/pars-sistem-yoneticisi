@@ -376,7 +376,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
             <div class="rows">
               <div class="release-row"><span>Windows</span><b>85,5 MB kurulum · 85,3 MB portable</b></div>
               <div class="release-row"><span>macOS</span><b>DMG · ZIP (arm64 / x64)</b></div>
-              <div class="release-row"><span>Linux</span><b>112,1 MB AppImage · 76,0 MB deb</b></div>
+              <div class="release-row"><span>Linux</span><b>112,1 MB AppImage · 76,1 MB deb</b></div>
               <div class="release-row"><span>Doğrulama</span><b>SHA-256</b></div>
             </div>
             <div class="micro">Dosya bütünlüğünü indirmeden sonra özetlerle kontrol edebilirsiniz.</div>
@@ -491,15 +491,15 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
               </div>
               <div class="dlcard reveal" style="--d:.38s">
                 <h3>Linux x64 · deneysel</h3>
-                <div class="meta">1.7.0 · 112,1 MB AppImage · 76,0 MB deb</div>
+                <div class="meta">1.7.0 · 112,1 MB AppImage · 76,1 MB deb</div>
                 <div class="btnrow"><a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.AppImage">AppImage indir</a><a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.7.0/Pars.Sistem.Yoneticisi-1.7.0-x64.deb">.deb indir</a></div>
                 <span class="hash-label">SHA-256 · AppImage</span>
-                <code class="hash">f0ddffe55e88b353186beeb3cffa49061955faa26990a798f2972b1fef6bc143</code>
+                <code class="hash">8ea6934e8e5ff132a0b06dcb1bacb844b0fcdec8f8b01be03f8e30ee82330f23</code>
                 <span class="hash-label">SHA-256 · deb</span>
-                <code class="hash">354f83b5e824d01b77a521aad4ae78309d4be8e4a4360a64bf86a74a60aaaffb</code>
+                <code class="hash">d69ba475bd034b1a3a75478a98d89551946abd264e653a1436bc20375f0019ab</code>
               </div>
             </div>
-            <div class="note"><b>İmza ve doğrulama:</b> Paketler kod imzasıyla yayınlanmadı. Windows SmartScreen ve macOS Gatekeeper uyarıları normaldir; indirmeden önce SHA-256 özetini doğrulayın. Windows paketleri iç sürüm 1.7.0, macOS paketleri 1.5.0, Linux paketleri 1.6.0 kaynak derlemelerindendir; 1.7.0 birleşik dağıtım etiketidir.</div>
+            <div class="note"><b>İmza ve doğrulama:</b> Paketler kod imzasıyla yayınlanmadı. Windows SmartScreen ve macOS Gatekeeper uyarıları normaldir; indirmeden önce SHA-256 özetini doğrulayın. Windows paketleri iç sürüm 1.7.0, macOS paketleri 1.5.0, Linux paketleri 1.7.0 kaynak derlemelerindendir; 1.7.0 birleşik dağıtım etiketidir.</div>
           </div>
 
           <div class="block reveal" id="sss">

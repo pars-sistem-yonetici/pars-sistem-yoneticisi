@@ -31,7 +31,7 @@
   </p>
   <p>
     Bu sürümde Windows paketleri <code>1.7.0</code> kaynak kodundan yeniden derlendi. Dosya iç sürümleri Windows için
-    <code>1.7.0</code>, macOS için <code>1.5.0</code>, Linux için <code>1.6.0</code>’dır; <code>1.7.0</code> etiketi
+    <code>1.7.0</code>, macOS için <code>1.5.0</code>, Linux için <code>1.7.0</code>’dır; <code>1.7.0</code> etiketi
     üç platformu birleştiren dağıtım sürümüdür.
   </p>
 
@@ -83,8 +83,8 @@
       <tr><td>macOS arm64</td><td>Pars.Sistem.Yoneticisi-1.7.0-arm64.zip</td><td><code>22af969d9f76abead27bf1b45b918ea12f1fead95ab6be7a39120965e971a75e</code></td></tr>
       <tr><td>macOS x64</td><td>Pars.Sistem.Yoneticisi-1.7.0-x64.dmg</td><td><code>027cd67d5d86956b94d3de3861de65dabda4e9a71379f4292ea17c776df114ce</code></td></tr>
       <tr><td>macOS x64</td><td>Pars.Sistem.Yoneticisi-1.7.0-x64.zip</td><td><code>4b0421d42a6bf9fe13fa6841f42cee2f6c557a90787d1809e69a0c0b8f07f90e</code></td></tr>
-      <tr><td>Linux x64</td><td>Pars.Sistem.Yoneticisi-1.7.0-x64.AppImage</td><td><code>f0ddffe55e88b353186beeb3cffa49061955faa26990a798f2972b1fef6bc143</code></td></tr>
-      <tr><td>Linux x64</td><td>Pars.Sistem.Yoneticisi-1.7.0-x64.deb</td><td><code>354f83b5e824d01b77a521aad4ae78309d4be8e4a4360a64bf86a74a60aaaffb</code></td></tr>
+      <tr><td>Linux x64</td><td>Pars.Sistem.Yoneticisi-1.7.0-x64.AppImage</td><td><code>8ea6934e8e5ff132a0b06dcb1bacb844b0fcdec8f8b01be03f8e30ee82330f23</code></td></tr>
+      <tr><td>Linux x64</td><td>Pars.Sistem.Yoneticisi-1.7.0-x64.deb</td><td><code>d69ba475bd034b1a3a75478a98d89551946abd264e653a1436bc20375f0019ab</code></td></tr>
     </tbody>
   </table>
   <p>

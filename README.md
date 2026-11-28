@@ -28,8 +28,8 @@ TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klas
 | Windows | `ParsSistemYoneticisi-Portable.exe` | `be9eb1a9664e5aa3f3549f78c6330f1b8f3fddb644eae4b647d500197e056980` |
 | macOS arm64 | `.dmg` / `.zip` | `0f1bb0a9…` / `22af969d…` |
 | macOS x64 | `.dmg` / `.zip` | `027cd67d…` / `4b0421d4…` |
-| Linux x64 | `.AppImage` | `f0ddffe55e88b353186beeb3cffa49061955faa26990a798f2972b1fef6bc143` |
-| Linux x64 | `.deb` | `354f83b5e824d01b77a521aad4ae78309d4be8e4a4360a64bf86a74a60aaaffb` |
+| Linux x64 | `.AppImage` | `8ea6934e8e5ff132a0b06dcb1bacb844b0fcdec8f8b01be03f8e30ee82330f23` |
+| Linux x64 | `.deb` | `d69ba475bd034b1a3a75478a98d89551946abd264e653a1436bc20375f0019ab` |
 
 Arayüz, grafit/gümüş palet ve koyu sarı vurgularla temalandırılmıştır. **Ayarlar → Tema** üzerinden
 Windows 11 açık temasına anında geçilebilir; tercih `settings.json` içinde saklanır. Windows'un native
