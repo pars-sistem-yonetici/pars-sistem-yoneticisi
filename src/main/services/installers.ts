@@ -3,6 +3,7 @@ import type { InstallItem, InstallProgress, InstallResult, Package, PackageManag
 import { m, mf } from '../i18n-main';
 import { LogFn, runCommand } from '../util';
 import * as brew from './brew';
+import * as linux from './linux-packages';
 import { probeManager } from './prereqs';
 import * as winget from './winget';
 
@@ -18,10 +19,16 @@ const IDENT_PATTERNS: Record<PackageSource, RegExp> = {
   npm: /^(?:@[A-Za-z0-9][A-Za-z0-9._-]*\/)?[A-Za-z0-9][A-Za-z0-9._-]*$/,
   scoop: /^(?:[A-Za-z0-9][A-Za-z0-9._-]*\/)?[A-Za-z0-9][A-Za-z0-9._-]*$/,
   brew: /^[A-Za-z0-9][A-Za-z0-9@+._/-]*$/,
+  apt: /^[A-Za-z0-9][A-Za-z0-9+._-]*$/,
+  dnf: /^[A-Za-z0-9][A-Za-z0-9+._-]*$/,
+  pacman: /^[A-Za-z0-9][A-Za-z0-9@+._-]*$/,
+  flatpak: /^[A-Za-z0-9][A-Za-z0-9._-]*$/,
+  snap: /^[A-Za-z0-9][A-Za-z0-9._-]*$/,
 };
 
 const LABELS: Record<PackageSource, string> = {
   winget: 'winget', choco: 'Chocolatey', npm: 'npm', scoop: 'Scoop', brew: 'Homebrew',
+  apt: 'APT', dnf: 'DNF', pacman: 'Pacman', flatpak: 'Flatpak', snap: 'Snap',
 };
 
 /** Kaynağa göre paket kimliğini doğrular; komut satırına yalnızca geçerli değer gider. */
@@ -96,6 +103,9 @@ function commandFor(source: PackageSource, ident: string, silent: boolean): { co
       return { command: 'scoop.cmd', args: ['install', ident] };
     case 'brew':
       return { command: 'brew', args: ['install', ident] };
+    default:
+      // Linux paket kaynakları salt okunurdur; yazma komutu üretilmez.
+      throw new Error(mf('{label}: yazma işlemleri bu platformda devre dışı.', '{label}: write actions are disabled on this platform.', { label: LABELS[source] }));
   }
 }
 
@@ -122,6 +132,11 @@ export async function managerStatus(): Promise<PackageManagerStatus[]> {
     npm: () => probeManager('npm'),
     scoop: () => probeManager('scoop'),
     brew: () => brew.status(),
+    apt: () => linux.status('apt'),
+    dnf: () => linux.status('dnf'),
+    pacman: () => linux.status('pacman'),
+    flatpak: () => linux.status('flatpak'),
+    snap: () => linux.status('snap'),
   };
   const rows = await Promise.all(sources.map(async (source) => ({
     source,
@@ -133,6 +148,20 @@ export async function managerStatus(): Promise<PackageManagerStatus[]> {
     available: row.available,
     version: (row.version || '').slice(0, 80),
   }));
+}
+
+/** Salt-okunur Linux köprüsü: sürüm sorgusu, yazma işlemi içermez. */
+export function linuxVersion(sources: readonly PackageSource[]): ReturnType<typeof linux.statusFirstAvailable> {
+  return linux.statusFirstAvailable(sources);
+}
+
+/** Salt-okunur Linux köprüsü: arama sorgusu, yazma işlemi içermez. */
+export function linuxSearch(
+  sources: readonly PackageSource[],
+  query: string,
+  onLine?: LogFn,
+): ReturnType<typeof linux.searchAcross> {
+  return linux.searchAcross(sources, query, onLine);
 }
 
 interface QueueTask {

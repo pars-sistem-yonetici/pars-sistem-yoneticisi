@@ -23,7 +23,7 @@ const POSIX_TABS: readonly TabId[] = [
 
 const WINDOWS_SOURCES: readonly PackageSource[] = ['winget', 'choco', 'npm', 'scoop'];
 const MACOS_SOURCES: readonly PackageSource[] = ['brew', 'npm'];
-const LINUX_SOURCES: readonly PackageSource[] = ['npm'];
+const LINUX_SOURCES: readonly PackageSource[] = ['npm', 'apt', 'dnf', 'pacman', 'flatpak', 'snap'];
 
 const POSIX_ENGINES: readonly MalwareEngine[] = MALWARE_ENGINE_IDS.filter(
   (id): id is MalwareEngine => id !== 'defender',

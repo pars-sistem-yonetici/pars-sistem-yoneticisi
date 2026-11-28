@@ -1,8 +1,8 @@
 {
   "name": "pars-sistem-yoneticisi-ts",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
-  "description": "Windows sistem bakım ve winget tabanlı yazılım yöneticisi (TypeScript / Electron)",
+  "description": "Windows, macOS ve Linux için sistem bakım ve yazılım yöneticisi (TypeScript / Electron)",
   "license": "MIT",
   "main": "dist-electron/main/main.js",
   "scripts": {
@@ -10,6 +10,7 @@
     "build": "tsc -p tsconfig.json && tsc -p tsconfig.node.json && vite build",
     "dist": "npm run build && electron-builder",
     "dist:portable": "npm run build && electron-builder --dir",
+    "dist:linux": "npm run build && electron-builder --linux --publish never",
     "smoke:posix": "electron dist-electron/main/posix-smoke.js",
     "publish": "node scripts/publish-update.js",
     "build:blogger": "node scripts/build-blogger.js",
@@ -93,6 +94,35 @@
     },
     "dmg": {
       "title": "Pars Sistem Yoneticisi ${version}${arch}"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon-512.png",
+      "artifactName": "Pars.Sistem.Yoneticisi-${version}-${arch}.${ext}",
+      "executableName": "ParsSistemYoneticisi",
+      "category": "Utility",
+      "synopsis": "System maintenance and software manager",
+      "description": "Read-only POSIX system maintenance and software management panel.",
+      "desktop": {
+        "Name": "Pars Sistem Yoneticisi",
+        "Comment": "System maintenance and software manager",
+        "Terminal": "false",
+        "Type": "Application",
+        "Categories": "Utility;"
+      }
     },
     "win": {
       "target": [

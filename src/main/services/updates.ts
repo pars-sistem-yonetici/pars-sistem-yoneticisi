@@ -2,6 +2,7 @@ import { getCapabilities } from '../../shared/platform';
 import type { Package, PackageSource } from '../../shared/types';
 import { LogFn, runCommand } from '../util';
 import * as brew from './brew';
+import * as linux from './linux-packages';
 import * as winget from './winget';
 
 /** Tüm güncelleme taramaları salt okunur; hiçbiri kendiliğinden kurulum yapmaz. */
@@ -93,6 +94,13 @@ export async function listUpdates(source: PackageSource, onLine?: LogFn): Promis
     }
     case 'brew':
       return brew.listUpdates(onLine);
+    case 'apt':
+    case 'dnf':
+    case 'pacman':
+    case 'flatpak':
+    case 'snap':
+      // Linux kaynakları yalnızca o platformun yetenek listesindeyse taranır.
+      return getCapabilities().packageSources.includes(source) ? linux.listOutdated(source, onLine) : [];
   }
 }
 

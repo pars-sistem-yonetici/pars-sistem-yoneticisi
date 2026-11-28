@@ -6,7 +6,7 @@ export interface Package {
   source: string;
 }
 
-export type PackageSource = 'winget' | 'choco' | 'npm' | 'scoop' | 'brew';
+export type PackageSource = 'winget' | 'choco' | 'npm' | 'scoop' | 'brew' | 'apt' | 'dnf' | 'pacman' | 'flatpak' | 'snap';
 
 export const TAB_IDS = [
   'home', 'updates', 'apps', 'packages', 'bloatware', 'startup', 'firewall', 'malware', 'disk', 'duplicates',

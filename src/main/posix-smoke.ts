@@ -36,7 +36,17 @@ function capCheck(): void {
   check('kendini güncelleme kapalı', capabilities.allowSelfUpdate === false);
   check('registry sekmesi gizli', !capabilities.tabs.includes('registry'));
   check('Defender motoru yok', !capabilities.malwareEngines.includes('defender'));
-  check('Homebrew POSIX kaynağı', capabilities.packageSources.includes('brew'));
+  if (kind === 'linux') {
+    check(
+      'Linux paket kaynakları',
+      ['npm', 'apt', 'dnf', 'pacman', 'flatpak', 'snap'].every((source) =>
+        capabilities.packageSources.includes(source as typeof capabilities.packageSources[number]),
+      ),
+      capabilities.packageSources.join(', '),
+    );
+  } else {
+    check('Homebrew POSIX kaynağı', capabilities.packageSources.includes('brew'));
+  }
 }
 
 function guardCheck(): void {

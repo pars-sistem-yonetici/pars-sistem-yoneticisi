@@ -5,9 +5,10 @@ export const EN: Record<string, string> = {
   // Ortak
   'Pars Sistem Yöneticisi': 'Pars System Manager',
   'Sistem Bakım Merkezi': 'System Maintenance Center',
-  'Sistem Bakım Merkezi · v1.5.0': 'System Maintenance Center · v1.5.0',
+  'Sistem Bakım Merkezi · v1.6.0': 'System Maintenance Center · v1.6.0',
   'Sistem bakım ve yazılım yönetimi paneli': 'System maintenance and software management panel',
   'Homebrew durumu': 'Homebrew status',
+  'Paket yöneticisi durumu': 'Package manager status',
   'Salt okunur': 'Read-only',
   'Bu platformda kurulum kapalıdır; yalnızca arama ve listeleme kullanılabilir.': 'Installation is disabled on this platform; only search and listing are available.',
   'Deneysel salt okunur POSIX denetimi: imzalar, sezgisel analiz, betik analizi, sistem bütünlüğü, kalıcılık, HOSTS/DNS ve tarayıcı eklentileri.': 'Experimental read-only POSIX audit: signatures, heuristics, script analysis, system integrity, persistence, HOSTS/DNS and browser extensions.',

@@ -359,6 +359,11 @@ function sourceLabel(source?: string): string {
     case 'npm': return 'npm';
     case 'scoop': return 'Scoop';
     case 'brew': return 'Homebrew';
+    case 'apt': return 'APT';
+    case 'dnf': return 'DNF';
+    case 'pacman': return 'Pacman';
+    case 'flatpak': return 'Flatpak';
+    case 'snap': return 'Snap';
     case 'winget': return 'winget';
     default: return 'winget';
   }
@@ -405,9 +410,11 @@ function SourceDock({ value, onChange, statuses, t, title, titleIcon }: {
   const sources = ALLOWED_SOURCES;
   const icons: Record<'all' | PackageSource, string> = {
     all: 'SquareCheck', winget: 'AppWindow', choco: 'Package', npm: 'Package', scoop: 'Boxes', brew: 'Boxes',
+    apt: 'Package', dnf: 'Package', pacman: 'Boxes', flatpak: 'Boxes', snap: 'Boxes',
   };
   const labels: Record<'all' | PackageSource, string> = {
     all: t('Tümü'), winget: 'winget', choco: 'Chocolatey', npm: 'npm', scoop: 'Scoop', brew: 'Homebrew',
+    apt: 'APT', dnf: 'DNF', pacman: 'Pacman', flatpak: 'Flatpak', snap: 'Snap',
   };
   return (
     <div className="dock-bar" role="group" aria-label={title}>
@@ -891,7 +898,7 @@ export default function App() {
     const content = format === 'json'
       ? JSON.stringify({
         generatedAt: new Date().toISOString(),
-        version: '1.5.0',
+        version: '1.6.0',
         engines: malwareEngines.map(engineLabel),
         scanned: malwareResult?.scanned ?? {},
         totalFindings: malwareResult?.findings.length ?? 0,
@@ -2063,7 +2070,7 @@ export default function App() {
           </div>
           <div className="sidebar-foot">
             <span className="dot" style={{ background: 'var(--accent)' }} />
-            {t('Sistem Bakım Merkezi · v1.5.0')}
+            {t('Sistem Bakım Merkezi · v1.6.0')}
           </div>
         </div>
       </aside>
@@ -3589,7 +3596,7 @@ export default function App() {
               </>
               )}
               <div className="card settings-card">
-                <h2><UiIcon label={CAPABILITIES.kind === 'windows' ? 'winget durumu' : 'Homebrew durumu'} />{CAPABILITIES.kind === 'windows' ? t('winget durumu') : t('Homebrew durumu')}</h2>
+                <h2><UiIcon label={CAPABILITIES.kind === 'windows' ? 'winget durumu' : CAPABILITIES.kind === 'linux' ? 'Paket yöneticisi durumu' : 'Homebrew durumu'} />{CAPABILITIES.kind === 'windows' ? t('winget durumu') : CAPABILITIES.kind === 'linux' ? t('Paket yöneticisi durumu') : t('Homebrew durumu')}</h2>
                 <dl className="summary">
                   <div><dt>{t('Durum')}</dt><dd>{settings.wingetAvailable ? t('Kullanılabilir') : t('Bulunamadı')}</dd></div>
                   <div><dt>{t('Sürüm')}</dt><dd className="mono">{settings.wingetVersion || '—'}</dd></div>

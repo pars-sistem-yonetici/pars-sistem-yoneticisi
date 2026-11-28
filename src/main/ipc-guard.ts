@@ -189,7 +189,7 @@ export const leftoverScanTarget: Validator = shape({
 export const installItem: Validator = shape({
   name: { validate: str({ max: 256 }) },
   ident: { validate: str({ max: 128 }) },
-  source: { validate: oneOf(['winget', 'choco', 'npm', 'scoop', 'brew'] as const) },
+  source: { validate: oneOf(['winget', 'choco', 'npm', 'scoop', 'brew', 'apt', 'dnf', 'pacman', 'flatpak', 'snap'] as const) },
 }, true);
 
 export const bloatwareItem: Validator = shape({

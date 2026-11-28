@@ -492,7 +492,10 @@ export function registerIpc(): void {
   register('winget:version', async () => {
     const result = capabilities.kind === 'windows'
       ? await winget.version()
-      : await brewService.status().catch(() => ({ available: false, version: '' }));
+      : capabilities.kind === 'linux'
+        ? await installersService.linuxVersion(capabilities.packageSources)
+          .catch(() => ({ available: false, version: '' }))
+        : await brewService.status().catch(() => ({ available: false, version: '' }));
     settingsService.setSettings({ wingetAvailable: result.available, wingetVersion: result.version });
     return result;
   });
@@ -503,7 +506,9 @@ export function registerIpc(): void {
     source === 'all' ? updatesService.listAllUpdates(logger(m('güncelleme', 'update'))) : updatesService.listUpdates(source, logger(m('güncelleme', 'update'))));
   register('winget:search', (_event, query: string) => capabilities.kind === 'windows'
     ? winget.search(query, logger('winget'))
-    : brewService.search(query, logger('brew')));
+    : capabilities.kind === 'linux'
+      ? installersService.linuxSearch(capabilities.packageSources, query, logger('linux'))
+      : brewService.search(query, logger('brew')));
   register('winget:install', (_event, ident: string, silent: boolean) => winget.install(ident, silent, logger(m('kurulum', 'install'))));
   register('winget:upgrade', (_event, pkg: Package, silent: boolean) => winget.upgrade(pkg, silent, logger(m('güncelleme', 'update'))));
   register('winget:upgrade-all', (_event, silent: boolean) => winget.upgradeAll(silent, logger(m('güncelleme', 'update'))));
