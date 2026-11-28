@@ -1,12 +1,12 @@
-name: Sürüm yayınla (macOS deneysel)
+name: Sürüm yayınla (macOS)
 
-# 1.5–1.9 aralığı için deneysel macOS derlemesi. Windows workflow'undan bağımsızdır:
+# 1.5–1.9 aralığı için macOS derlemesi. Windows workflow'undan bağımsızdır:
 # Windows exe/site işlerini tetiklemez, yalnızca imzasız DMG + ZIP yayınlar.
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Yayınlanacak deneysel sürüm (örn. 1.5.0)'
+        description: 'Yayınlanacak macOS sürüm (örn. 1.5.0)'
         required: true
         type: string
 
@@ -39,7 +39,7 @@ jobs:
           set -euo pipefail
           v='${{ github.event.inputs.version }}'
           if [[ ! "$v" =~ ^1\.[5-9]\.[0-9]+$ ]]; then
-            echo "Geçersiz deneysel macOS sürümü: $v (beklenen 1.5.x–1.9.x)" >&2
+            echo "Geçersiz macOS sürümü: $v (beklenen 1.5.x–1.9.x)" >&2
             exit 1
           fi
           pkg=$(node -p "require('./package.json').version")
@@ -49,7 +49,7 @@ jobs:
           fi
           echo "RELEASE_VERSION=$v" >> "$GITHUB_ENV"
           # Windows release.yml yalnizca *.*.* etiketlerinde tetiklenir.
-          # macOS deneysel etiketi bu deseni eslestirmesin; noktalari alt cizgiye ceviriyoruz.
+          # Kararli surum olsa bile etiket macos-experimental-* kalir; bu desen eslesmez.
           safe_tag=$(echo "$v" | tr '.' '_')
           echo "RELEASE_TAG=macos-experimental-$safe_tag" >> "$GITHUB_ENV"
 
@@ -71,13 +71,13 @@ jobs:
         shell: bash
         run: shasum -a 256 release/*.dmg release/*.zip > release/SHA256SUMS-macOS.txt
 
-      - name: Deneysel GitHub Release oluştur
+      - name: GitHub Release oluştur
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          name: Pars Sistem Yoneticisi ${{ env.RELEASE_VERSION }} (macOS deneysel)
+          name: Pars Sistem Yoneticisi ${{ env.RELEASE_VERSION }} (macOS)
           body_path: RELEASE_NOTES_MACOS.md
-          prerelease: true
+          prerelease: false
           make_latest: false
           fail_on_unmatched_files: true
           files: |
