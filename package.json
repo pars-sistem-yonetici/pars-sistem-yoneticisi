@@ -116,6 +116,14 @@
       "category": "Utility",
       "synopsis": "System maintenance and software manager",
       "description": "Read-only POSIX system maintenance and software management panel.",
+      "maintainer": "Pars Sistem Yoneticisi <umcullah@gmail.com>",
+      "vendor": "Pars Sistem Yoneticisi",
+      "appImage": {
+        "artifactName": "Pars.Sistem.Yoneticisi-${version}-x64.AppImage"
+      },
+      "deb": {
+        "artifactName": "Pars.Sistem.Yoneticisi-${version}-x64.deb"
+      },
       "desktop": {
         "Name": "Pars Sistem Yoneticisi",
         "Comment": "System maintenance and software manager",
