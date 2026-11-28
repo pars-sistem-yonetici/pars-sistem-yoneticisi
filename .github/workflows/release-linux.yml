@@ -1,12 +1,12 @@
 name: Sürüm yayınla (Linux)
 
-# Birleşik 1.6.0 release'ine yalnızca Linux asset'leri ekler.
+# Birleşik 1.7.0 release'ine yalnızca Linux asset'leri ekler.
 # Release başlığını, gövdesini, diğer platform dosyalarını veya Latest durumunu değiştirmez.
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Birleşik sürüm (örn. 1.6.0)'
+        description: 'Birleşik sürüm (örn. 1.7.0)'
         required: true
         type: string
 
@@ -36,8 +36,8 @@ jobs:
         run: |
           set -euo pipefail
           v='${{ github.event.inputs.version }}'
-          if [[ ! "$v" =~ ^1\.6\.[0-9]+$ ]]; then
-            echo "Bu iş akışı yalnızca 1.6.x için kullanılabilir: $v" >&2
+          if [[ ! "$v" =~ ^1\.7\.[0-9]+$ ]]; then
+            echo "Bu iş akışı yalnızca 1.7.x için kullanılabilir: $v" >&2
             exit 1
           fi
           pkg=$(node -p "require('./package.json').version")
@@ -46,7 +46,7 @@ jobs:
             exit 1
           fi
           echo "RELEASE_VERSION=$v" >> "$GITHUB_ENV"
-          echo "RELEASE_TAG=1.6.0" >> "$GITHUB_ENV"
+          echo "RELEASE_TAG=1.7.0" >> "$GITHUB_ENV"
 
       - name: Bağımlılıkları kur
         run: npm ci
