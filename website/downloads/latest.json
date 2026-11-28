@@ -1,13 +1,13 @@
 {
-  "version": "1.4.0",
-  "notes": "Kötü amaçlı yazılım sekmesi sekiz salt-okunur motorla genişletildi; İngilizce denetimi ana süreç, katalog ve bulgulara kadar yaydırıldı; uygulama ikonları renkli hâle getirildi ve self-update sonrası otomatik yeniden başlatma eklendi.",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.4.0.exe",
+  "version": "1.6.0",
+  "notes": "Windows, macOS ve Linux paketleri birleşik 1.6.0 release’inde toplandı; Windows kurulum/portable, macOS DMG/ZIP ve Linux AppImage/DEB tek indirme sayfasında.",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.6.0.exe",
   "sha512": "6d889c00495e1dd8a74070b6f9ac0cca2d11516366198908a3731601c8b6e0f83b4b5ca0eaa55ce3802c6318b5c11fd65e09ff42b1b8406484a0487a49b96b62",
   "sha256": "59981085f2d3ad08b1ab516004300a27108a668073470b43ad5c1fd3c9ab445a",
   "size": 85463607,
-  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.4.0/Pars.Sistem.Yoneticisi.Setup.1.4.0.exe",
+  "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi.Setup.1.6.0.exe",
   "portableFileName": "ParsSistemYoneticisi-Portable.exe",
   "portableSha256": "b8a30016cccd35a68929493ea68a5354c75fb309804fb5d92929c1feeeef4cc7",
   "portableSize": 85249524,
-  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.4.0/ParsSistemYoneticisi-Portable.exe"
+  "portableUrl": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/ParsSistemYoneticisi-Portable.exe"
 }
