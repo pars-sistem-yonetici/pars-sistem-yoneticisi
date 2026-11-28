@@ -64,8 +64,8 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           gh release download ${{ env.RELEASE_VERSION }} --pattern 'SHA256SUMS-*.txt' --dir release --clobber
-          if (-not (Test-Path 'release/SHA256SUMS-macOS.txt')) { throw 'macOS özet dosyası release’de yok.' }
-          if (-not (Test-Path 'release/SHA256SUMS-Linux.txt')) { throw 'Linux özet dosyası release’de yok.' }
+          if (-not (Test-Path 'release/SHA256SUMS-macOS.txt')) { throw "macOS özet dosyası release icinde yok." }
+          if (-not (Test-Path 'release/SHA256SUMS-Linux.txt')) { throw "Linux özet dosyası release icinde yok." }
 
       - name: Manifest ve site dosyalarını hazırla
         shell: pwsh
