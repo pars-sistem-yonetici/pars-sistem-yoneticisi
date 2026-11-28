@@ -1,12 +1,12 @@
 # Pars Sistem Yöneticisi 1.5.0 — macOS
 
-Bu, macOS için ilk **kararlı** sürümdür. Kapsam salt-okunur çekirdektir; Windows'a özgü yazma özellikleri macOS'e taşınmamıştır. Windows `1.4.0` kararlı sürümü ve GitHub "Latest" etiketi etkilenmez.
+Bu, macOS için ilk **kararlı** sürümdür. Kapsam salt-okunur çekirdektir; Windows'a özgü yazma özellikleri macOS'e taşınmamıştır. Windows paketleri artık `1.6.0` derlemesidir; GitHub "Latest" etiketi birleşik `1.6.0` release’indedir.
 
 ## İndirme
 
 - `.dmg` — uygulamayı Sürükle & Bırak ile kurun.
 - `.zip` — elle açıp `Pars Sistem Yoneticisi.app` dosyasını istediğiniz yere kopyalayın.
-- `SHA256SUMS-macOS.txt` — dosya özetlerini doğrulamak için.
+- `SHA256SUMS-1.6.0.txt` — birleşik release’deki Windows ve macOS dosya özetlerini doğrulamak için.
 
 Paketler **imzalanmamıştır** ve noterlemeye gönderilmemiştir. macOS Gatekeeper ilk açılışta uyarı gösterebilir:
 `Sistem Ayarları → Gizlilik ve Güvenlik → Yine de aç` yolunu kullanabilirsiniz. App Store dağıtımı yoktur.
