@@ -4,6 +4,12 @@
   "private": true,
   "description": "Windows, macOS ve Linux için sistem bakım ve yazılım yöneticisi (TypeScript / Electron)",
   "license": "MIT",
+  "author": {
+    "name": "Pars Sistem Yoneticisi",
+    "email": "umcullah@gmail.com",
+    "url": "https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi"
+  },
+  "copyright": "Copyright © 2026 Pars Sistem Yoneticisi",
   "main": "dist-electron/main/main.js",
   "scripts": {
     "dev": "vite",
