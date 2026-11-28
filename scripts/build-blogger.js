@@ -145,6 +145,7 @@ html = html.replace(/src="assets\/icon\.png"/g, `src="${iconData}"`);
 // Ekran görüntülerini yayındaki GitHub Pages adresine sabitle.
 const siteAssets = 'https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/assets/';
 html = html.replace(/src="assets\/([^"]+)"/g, (_full, name) => `src="${siteAssets}${name}"`);
+html = html.replace(/href="download\.html/g, 'href="https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html');
 
 const output = path.join(web, 'blogger.html');
 fs.writeFileSync(output, html, 'utf8');

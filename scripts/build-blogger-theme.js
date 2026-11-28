@@ -61,6 +61,8 @@ function assetName(url, fallback) {
   }
 }
 
+const releaseBase = `https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/${manifest.version}/`;
+
 const values = {
   VERSION: xml(manifest.version),
   SETUP_URL: xml(manifest.url),
@@ -77,6 +79,20 @@ const values = {
   SHOT_UPDATES: xml(assetBase + 'screen-updates.png'),
   SHOT_LIBRARY: xml(assetBase + 'screen-library.png'),
   SHOT_CONTEXT: xml(assetBase + 'screen-context.png'),
+  MACOS_ARM64_DMG_URL: xml(releaseBase + `Pars.Sistem.Yoneticisi-${manifest.version}-arm64.dmg`),
+  MACOS_ARM64_DMG_SHA: '0f1bb0a96758f52ab1bee748eeee727699d8a3221a9919404dee498cdf52eb55',
+  MACOS_ARM64_ZIP_URL: xml(releaseBase + `Pars.Sistem.Yoneticisi-${manifest.version}-arm64.zip`),
+  MACOS_ARM64_ZIP_SHA: '22af969d9f76abead27bf1b45b918ea12f1fead95ab6be7a39120965e971a75e',
+  MACOS_X64_DMG_URL: xml(releaseBase + `Pars.Sistem.Yoneticisi-${manifest.version}-x64.dmg`),
+  MACOS_X64_DMG_SHA: '027cd67d5d86956b94d3de3861de65dabda4e9a71379f4292ea17c776df114ce',
+  MACOS_X64_ZIP_URL: xml(releaseBase + `Pars.Sistem.Yoneticisi-${manifest.version}-x64.zip`),
+  MACOS_X64_ZIP_SHA: '4b0421d42a6bf9fe13fa6841f42cee2f6c557a90787d1809e69a0c0b8f07f90e',
+  LINUX_APPIMAGE_URL: xml(manifest.linuxAppImageUrl),
+  LINUX_APPIMAGE_SHA: xml(manifest.linuxAppImageSha256),
+  LINUX_APPIMAGE_SIZE_MB: xml(megabytes(manifest.linuxAppImageSize)),
+  LINUX_DEB_URL: xml(manifest.linuxDebUrl),
+  LINUX_DEB_SHA: xml(manifest.linuxDebSha256),
+  LINUX_DEB_SIZE_MB: xml(megabytes(manifest.linuxDebSize)),
 };
 
 const TEMPLATE = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -437,16 +453,17 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
           <div>
             <span class="eyebrow">Sistem bakım merkezi</span>
             <h1><a expr:href="data:blog.homepageUrl"><data:blog.title/></a></h1>
-            <p>Windows bakımı, yazılım yönetimi ve güvenli temizlik tek panelde. Güncel sürüm:<b> {{VERSION}}</b></p>
+            <p>Windows, macOS ve Linux için sistem bakımı ve yazılım yönetimi tek panelde. Güncel birleşik sürüm:<b> {{VERSION}}</b></p>
             <div class="pillrow">
               <span class="pill">Sürüm <b>v{{VERSION}}</b></span>
-              <span class="pill">Windows 10 / 11</span>
-              <span class="pill">x64</span>
+              <span class="pill">Windows 10/11 x64</span>
+              <span class="pill">macOS 13+ arm64/x64</span>
+              <span class="pill">Linux x64 · deneysel</span>
               <span class="pill">İmzasız · SHA doğrulamalı</span>
             </div>
             <div class="btnrow">
-              <a class="btn" href="{{SETUP_URL}}">Kurulumu indir</a>
-              <a class="btn-2" href="#indir">Portable ve SHA özetleri</a>
+              <a class="btn" href="#indir">Tüm platformları indir</a>
+              <a class="btn-2" href="#platformlar">Platformları karşılaştır</a>
             </div>
           </div>
           <div class="release-card">
@@ -454,8 +471,9 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
             <div class="ver">{{VERSION}}</div>
             <div class="desc">Doğrudan GitHub Releases üzerinden indirilir.</div>
             <div class="rows">
-              <div class="release-row"><span>Kurulum</span><b>{{SETUP_SIZE_MB}}</b></div>
-              <div class="release-row"><span>Portable</span><b>{{PORTABLE_SIZE_MB}}</b></div>
+              <div class="release-row"><span>Windows</span><b>{{SETUP_SIZE_MB}} kurulum · {{PORTABLE_SIZE_MB}} portable</b></div>
+              <div class="release-row"><span>macOS</span><b>DMG · ZIP (arm64 / x64)</b></div>
+              <div class="release-row"><span>Linux</span><b>{{LINUX_APPIMAGE_SIZE_MB}} AppImage · {{LINUX_DEB_SIZE_MB}} deb</b></div>
               <div class="release-row"><span>Doğrulama</span><b>SHA-256</b></div>
             </div>
             <div class="micro">Dosya bütünlüğünü indirmeden sonra özetlerle kontrol edebilirsiniz.</div>
@@ -472,7 +490,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
           <div class="block reveal" id="ozellikler">
             <p class="kicker">Neler yapar?</p>
             <h2 class="section-title">Bakımı ve indirmeleri tek panelde yönetin</h2>
-            <p class="section-sub">Günlük temizlikten sağ tık eklentilerine kadar tüm işlemler yedek ve onay güvencesiyle çalışır.</p>
+            <p class="section-sub">Windows’ta yazma özellikleri, macOS ve Linux’ta salt-okunur çekirdek. Kötü amaçlı yazılım taraması tüm platformlarda salt-okunurdur.</p>
             <div class="grid">
               <div class="card reveal" style="--d:.05s"><div class="num">1</div><h3>Yazılım envanteri</h3><p>Kurulu uygulamaları listeler; sürüm ve boyut bilgilerini gösterir.</p></div>
               <div class="card reveal" style="--d:.1s"><div class="num">2</div><h3>Sağ tık eklentileri</h3><p>WinRAR ve 7-Zip gibi eklentileri tek tıkla kapatıp açar; kendi menüsünü eklemez.</p></div>
@@ -481,6 +499,17 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
               <div class="card reveal" style="--d:.25s"><div class="num">5</div><h3>Sistem görünümü</h3><p>Diskler, başlangıç süreleri ve ağ hızı tek ekranda görünür.</p></div>
               <div class="card reveal" style="--d:.3s"><div class="num">6</div><h3>Güncelleme kontrolü</h3><p>Yeni sürümü kontrol eder ve SHA doğrulamalı güncelleme sunar.</p></div>
             </div>
+
+            <div class="section-head" id="platformlar" style="margin-top:42px">
+              <h2 class="section-title">Üç platform, tek sürüm</h2>
+              <p class="section-sub">1.6.0 birleşik sürümü Windows, macOS ve Linux paketlerini aynı release’de sunar. Kapsam platforma göre değişir; güvenlik modeli değişmez.</p>
+            </div>
+            <div class="grid">
+              <div class="card reveal"><div class="num">▣</div><h3>Windows 10/11 x64</h3><p>Tam kapsam: winget ile yazılım yönetimi, kayıt defteri, güvenlik duvarı, sürücüler, sağ tık menüsü ve sistem ayarları. Yıkıcı işlemler yönetici izni, açık onay ve zorunlu yedek gerektirir.</p></div>
+              <div class="card reveal"><div class="num">◈</div><h3>macOS 13+ · arm64/x64</h3><p>Salt-okunur çekirdek: envanter, Homebrew/npm güncelleme taraması, kötü amaçlı yazılım denetimi, HOSTS/DNS ve sistem bütünlüğü. Registry/UAC/servis sekmeleri gizlidir; self-update kapalıdır.</p></div>
+              <div class="card reveal"><div class="num">⬡</div><h3>Linux x64 · deneysel</h3><p>Salt-okunur POSIX çekirdeği: apt/dnf/pacman/flatpak/snap yalnızca arama/listeleme için kullanılır. systemd/XDG desteği vardır; yazma eylemleri ve self-update kapalıdır.</p></div>
+            </div>
+            <p class="section-sub" style="margin-top:16px">SHA-256 özetleri ve tüm paketler aynı release’de: <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/{{VERSION}}">{{VERSION}} release</a>.</p>
           </div>
 
           <div class="block reveal" id="vitrin">
@@ -511,7 +540,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
           <div class="block reveal" id="kurulum">
             <p class="kicker">Başlarken</p>
             <h2 class="section-title">Kurulum</h2>
-            <p class="section-sub">Yaklaşık 1 dakika sürer. Windows 10/11 x64 gereklidir.</p>
+            <p class="section-sub">Windows kurulumu yaklaşık 1 dakika sürer ve Windows 10/11 x64 gerektirir. macOS için DMG’yi Sürükle &amp; Bırak ile kurun; Linux için AppImage’ı çalıştırılabilir yapın veya .deb paketini kurun.</p>
             <div class="steps">
               <div class="step reveal" style="--d:.05s"><b>Kurulum dosyasını indirin</b><span>Aşağıdaki “Kurulumu indir” düğmesini kullanın.</span></div>
               <div class="step reveal" style="--d:.12s"><b>SHA-256 özetini doğrulayın</b><span>PowerShell: <code class="mono">Get-FileHash .\\{{SETUP_FILE_NAME}} -Algorithm SHA256</code></span></div>
@@ -522,8 +551,8 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
 
           <div class="block reveal" id="indir">
             <p class="kicker">İndir</p>
-            <h2 class="section-title">İki sürüm, aynı kod tabanı</h2>
-            <p class="section-sub">Dosyalar GitHub Releases üzerinden sunulur; bağlantılar doğrudan exe’yi indirir.</p>
+            <h2 class="section-title">Üç platform, tek release</h2>
+            <p class="section-sub">Windows kurulum/portable, macOS DMG/ZIP ve Linux AppImage/deb dosyaları aynı {{VERSION}} release’indedir. Her dosyanın SHA-256 özeti aşağıdadır.</p>
             <div class="dlgrid">
               <div class="dlcard main reveal" style="--d:.06s">
                 <h3>Kurulum sürümü · Önerilen</h3>
@@ -539,8 +568,35 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
                 <span class="hash-label">SHA-256</span>
                 <code class="hash">{{PORTABLE_SHA256}}</code>
               </div>
+              <div class="dlcard reveal" style="--d:.22s">
+                <h3>macOS · arm64</h3>
+                <div class="meta">{{VERSION}} · DMG / ZIP · Apple Silicon</div>
+                <div class="btnrow"><a class="btn" href="{{MACOS_ARM64_DMG_URL}}">arm64 DMG</a><a class="btn-2" href="{{MACOS_ARM64_ZIP_URL}}">arm64 ZIP</a></div>
+                <span class="hash-label">SHA-256 · DMG</span>
+                <code class="hash">{{MACOS_ARM64_DMG_SHA}}</code>
+                <span class="hash-label">SHA-256 · ZIP</span>
+                <code class="hash">{{MACOS_ARM64_ZIP_SHA}}</code>
+              </div>
+              <div class="dlcard reveal" style="--d:.3s">
+                <h3>macOS · x64</h3>
+                <div class="meta">{{VERSION}} · DMG / ZIP · Intel</div>
+                <div class="btnrow"><a class="btn" href="{{MACOS_X64_DMG_URL}}">x64 DMG</a><a class="btn-2" href="{{MACOS_X64_ZIP_URL}}">x64 ZIP</a></div>
+                <span class="hash-label">SHA-256 · DMG</span>
+                <code class="hash">{{MACOS_X64_DMG_SHA}}</code>
+                <span class="hash-label">SHA-256 · ZIP</span>
+                <code class="hash">{{MACOS_X64_ZIP_SHA}}</code>
+              </div>
+              <div class="dlcard reveal" style="--d:.38s">
+                <h3>Linux x64 · deneysel</h3>
+                <div class="meta">{{VERSION}} · {{LINUX_APPIMAGE_SIZE_MB}} AppImage · {{LINUX_DEB_SIZE_MB}} deb</div>
+                <div class="btnrow"><a class="btn" href="{{LINUX_APPIMAGE_URL}}">AppImage indir</a><a class="btn-2" href="{{LINUX_DEB_URL}}">.deb indir</a></div>
+                <span class="hash-label">SHA-256 · AppImage</span>
+                <code class="hash">{{LINUX_APPIMAGE_SHA}}</code>
+                <span class="hash-label">SHA-256 · deb</span>
+                <code class="hash">{{LINUX_DEB_SHA}}</code>
+              </div>
             </div>
-            <div class="note"><b>Dijital imza henüz yok.</b> Windows “bilinmeyen yayımcı” uyarısı gösterebilir. Dosyanın değişmediğini yukarıdaki SHA-256 özetiyle doğrulayabilirsiniz. Kurucu, winget eksikse Microsoft’un resmi kaynağından sessizce kurar.</div>
+            <div class="note"><b>İmza ve doğrulama:</b> Paketler kod imzasıyla yayınlanmadı. Windows SmartScreen ve macOS Gatekeeper uyarıları normaldir; indirmeden önce SHA-256 özetini doğrulayın. Windows paketleri iç sürüm {{VERSION}}, macOS paketleri 1.5.0, Linux paketleri {{VERSION}} kaynak derlemelerindendir; {{VERSION}} birleşik dağıtım etiketidir.</div>
           </div>
 
           <div class="block reveal" id="sss">
@@ -552,6 +608,8 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
             <details class="faq reveal"><summary>Neden “Windows korudu” diyor?</summary><p>Çünkü exe henüz dijital olarak imzalanmadı. SHA-256 özetini kontrol edip “Yine de çalıştır” diyebilirsiniz.</p></details>
             <details class="faq reveal"><summary>Yedek almak zorunlu mu?</summary><p>Evet. Yıkıcı işlemlerde yedek alınamazsa uygulama değişiklik yapmaz.</p></details>
             <details class="faq reveal"><summary>Kendi sağ tık menüsünü ekliyor mu?</summary><p>Hayır. Uygulama kendi Gezgin girdisini eklemez; yalnızca mevcut üçüncü taraf eklentileri açıp kapatır.</p></details>
+            <details class="faq reveal"><summary>macOS ve Linux’ta hangi işlemler kullanılabilir?</summary><p>Salt-okunur çekirdek: yazılım envanteri, güncelleme taraması, kötü amaçlı yazılım denetimi, HOSTS/DNS ve sistem bütünlüğü. Windows’a özgü kayıt defteri, UAC, kabuk menüsü, hizmet ve sürücü sekmeleri gizlidir.</p></details>
+            <details class="faq reveal"><summary>Kendini güncelleme hangi platformlarda var?</summary><p>Yalnızca Windows’ta. macOS ve Linux’ta self-update kapalıdır; yeni sürümü elle indirin. Kötü amaçlı yazılım taraması tüm platformlarda salt-okunurdur: dosya silme, karantina, işlem sonlandırma veya kayıt yazma yapılmaz.</p></details>
           </div>
         </div>
       </b:includable>
@@ -578,7 +636,7 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
     <b:widget id="HTML1" locked="false" title="Alt bilgi" type="HTML" version="2">
       <b:includable id="main">
         <div class="footer-inner">
-          <span>Pars Sistem Yöneticisi · Sürüm {{VERSION}} · Windows 10/11 x64</span>
+          <span>Pars Sistem Yöneticisi · Sürüm {{VERSION}} · Windows 10/11 x64 · macOS 13+ · Linux x64</span>
           <span><a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi">Kaynak kod</a> · <a href="https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/">Web sitesi</a> · <a href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases">Tüm sürümler</a></span>
         </div>
       </b:includable>

@@ -447,16 +447,16 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
       <div class="wrap hero-grid">
         <div class="hero-copy">
           <span class="pill"><span class="dot"></span> <span data-latest-version>v1.6.0</span> · Windows + macOS + Linux · birleşik sürüm</span>
-          <h1>Windows bakımı ve yazılım yönetimi, <em>tek panelde.</em></h1>
-          <p class="hero-lead">winget ile güncelleme ve kaldırma, disk temizleme, kayıt defteri onarımı, güvenlik duvarı denetimi ve sürücü yönetimi. Her yıkıcı işlem onaylı, her kritik değişiklik yedekli.</p>
+          <h1>Üç platformda sistem bakımı, <em>tek panelde.</em></h1>
+          <p class="hero-lead">Windows’ta winget tabanlı güncelleme, kaldırma, kayıt defteri ve güvenlik duvarı yönetimi; macOS ve Linux’ta salt-okunur çekirdek. Envanter, güncelleme taraması, güvenlik denetimi ve kötü amaçlı yazılım taraması her platformda. Her yıkıcı işlem onaylı, her kritik değişiklik yedekli.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary btn-lg" href="download.html#setup">
+            <a class="btn btn-primary btn-lg" href="https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg>
-              Kurulumu indir
+              Tüm platformları indir
             </a>
-            <a class="btn btn-lg" href="download.html#portable">Portable sürüm</a>
+            <a class="btn btn-lg" href="#platformlar">Platformları karşılaştır</a>
           </div>
-          <p class="hero-note"><span>Yönetici olarak çalışır</span><i></i><span>Ücretsiz</span><i></i><span>İnternet bağlantısı winget işlemleri için gerekir</span></p>
+          <p class="hero-note"><span>Windows: yönetici izni</span><i></i><span>macOS/Linux: salt-okunur</span><i></i><span>Ücretsiz ve açık kaynak</span></p>
         </div>
 
         <div class="hero-visual" aria-label="Uygulama arayüzü önizlemesi">
@@ -564,7 +564,7 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
         <div class="section-head reveal">
           <p class="eyebrow">Özellikler</p>
           <h2>Bir bakım aracından fazlası</h2>
-          <p>Günlük bakımdan kurumsal ilke kaynaklı sorunlara kadar yaygın Windows baş ağrılarını tek bir arayüzde toplar.</p>
+          <p>Windows’ta günlük bakımdan kurumsal ilke kaynaklı sorunlara kadar yaygın sistem işlerini; macOS ve Linux’ta salt-okunur denetimleri tek bir arayüzde toplar.</p>
         </div>
         <div class="features">
           <article class="feature reveal"><div class="feature-icon">↑</div><h3>Güncellemeler</h3><p>winget ile güncellemesi olan paketleri tarar, seçili veya tüm güncellemeleri tek seferde uygular.</p></article>
@@ -584,6 +584,18 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
           <article class="feature reveal"><div class="feature-icon">⟳</div><h3>Kendi kendini güncelleme</h3><p>Yeni sürümü kontrol eder, SHA-512 ile doğrular ve onayınızla indirip kurar. Portable sürümde dosyayı değiştirmez.</p></article>
           <article class="feature reveal"><div class="feature-icon">✦</div><h3>Kişiselleştirme</h3><p>Grafit/altın veya Windows 11 açık teması, Türkçe/İngilizce ve 55 dil, hariç tutma listeleri ve gruplu animasyonlu menü.</p></article>
         </div>
+
+        <div class="section-head reveal" id="platformlar" style="margin-top:52px">
+          <p class="eyebrow">Platformlar</p>
+          <h2>Üç platform, tek sürüm</h2>
+          <p>1.6.0 birleşik sürümü Windows, macOS ve Linux paketlerini aynı release’de sunar. Kapsam platforma göre değişir; güvenlik modeli değişmez.</p>
+        </div>
+        <div class="features">
+          <article class="feature reveal"><div class="feature-icon">▣</div><h3>Windows 10/11 x64</h3><p>Tam kapsam: winget ile yazılım yönetimi, kayıt defteri, güvenlik duvarı, sürücüler, sağ tık menüsü ve sistem ayarları. Yıkıcı işlemler yönetici izni, açık onay ve zorunlu yedek gerektirir.</p></article>
+          <article class="feature reveal"><div class="feature-icon">◈</div><h3>macOS 13+ · arm64/x64</h3><p>Salt-okunur çekirdek: yazılım envanteri, Homebrew ve npm güncelleme taraması, kötü amaçlı yazılım denetimi, HOSTS/DNS ve sistem bütünlüğü. Registry/UAC/servis sekmeleri gizlidir; self-update kapalıdır.</p></article>
+          <article class="feature reveal"><div class="feature-icon">⬡</div><h3>Linux x64 · deneysel</h3><p>Salt-okunur POSIX çekirdeği: apt, dnf, pacman, flatpak ve snap yalnızca arama/listeleme için kullanılır. systemd/XDG desteği vardır; yazma eylemleri ve self-update kapalıdır.</p></article>
+        </div>
+        <p class="section-sub" style="margin-top:18px"><a href="https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html">Paketleri ve SHA-256 özetlerini indirme sayfasında görün →</a></p>
       </div>
     </section>
 
@@ -592,11 +604,11 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 14px); }
         <div class="section-head reveal" style="margin:0">
           <p class="eyebrow">Güvenlik yaklaşımı</p>
           <h2>Yıkıcı işlemlerde durur, yedek alır, sorar</h2>
-          <p>Hız için güvenlikten ödün verilmez: korumalı kökler hiçbir temizleme işlemine dahil edilmez, sembolik bağlantılar atlanır.</p>
+          <p>Hız için güvenlikten ödün verilmez: korumalı kökler hiçbir temizleme işlemine dahil edilmez, sembolik bağlantılar atlanır. Bu model Windows’ta yazma işlemleri için, macOS ve Linux’ta salt-okunur çekirdek için geçerlidir.</p>
         </div>
         <div class="security-panel reveal">
           <h3>Varsayılan güvenli davranış</h3>
-          <p>Uygulama yönetici izinleriyle çalışır; ancak aşağıdaki kurallar her işlemde geçerlidir.</p>
+          <p>Windows’ta uygulama yönetici izinleriyle çalışır; macOS ve Linux’ta yazma işlemleri hiç sunulmaz. Aşağıdaki kurallar her platformda geçerlidir.</p>
           <ul class="security-list">
             <li><i>✓</i><span><b>Onay zorunlu:</b> kaldırma, kalıcı silme, kural silme ve ilke .reg uygulama işlemleri açık onay ister.</span></li>
             <li><i>✓</i><span><b>.reg yedeği:</b> kayıt defterinden silmeden önce ilgili anahtar dışa aktarılır; yedek başarısızsa silinmez.</span></li>
@@ -892,13 +904,15 @@ Get-FileHash ".\ParsSistemYoneticisi-Portable.exe" -Algorithm SHA256</code></pre
           <h2>Merak edilenler</h2>
         </div>
         <div class="faq">
-          <details><summary>Neden yönetici izni istiyor?</summary><p>Güvenlik duvarı kuralları, HKLM kayıt girdileri, sürücü işlemleri ve sistem çapındaki temizlik işlemleri yükseltilmiş izin gerektirir. UAC penceresi beklenen bir davranıştır.</p></details>
+          <details><summary>Windows’ta neden yönetici izni istiyor?</summary><p>Güvenlik duvarı kuralları, HKLM kayıt girdileri, sürücü işlemleri ve sistem çapındaki temizlik işlemleri yükseltilmiş izin gerektirir. UAC penceresi beklenen bir davranıştır. macOS ve Linux’ta yazma işlemleri sunulmadığı için yönetici izni istenmez.</p></details>
           <details><summary>Portable sürüm kurulum gerektirmez mi?</summary><p>Gerektirmez. exe’yi çalıştırdığınızda geçici bir klasöre çıkarılır ve kapatınca temizlenir. Ayarlarınız ve yedekleriniz kullanıcı klasörünüzde saklandığı için kalıcıdır.</p></details>
           <details><summary>Verilerim nereye kaydediliyor?</summary><p>Ayarlar ve ek çeviriler %APPDATA%\pars-sistem-yoneticisi-ts altında; kayıt, güvenlik duvarı ve sürücü yedekleri %LOCALAPPDATA%\ParsSistemYoneticisi altında tutulur. Hiçbir veri uzak sunucuya gönderilmez.</p></details>
           <details><summary>İnternet olmadan çalışır mı?</summary><p>Arayüz ve yerel bakım araçları çevrimdışı çalışır. winget kataloğu, sürücü taraması ve uygulama güncelleyici internet bağlantısı gerektirir.</p></details>
           <details><summary>winget kurulu değilse ne olur?</summary><p>Kurulum exe’si winget’i algılar ve eksikse Microsoft’un resmi kaynağından sessizce kurar. Başarısız olursa uygulama yine kurulur; Ayarlar → Gerekli bileşenler alanından yeniden deneyebilirsiniz.</p></details>
           <details><summary>Kötü amaçlı yazılım sekmesi antivirüs yerine geçer mi?</summary><p>Hayır. Sekiz motor yalnızca yerel ve salt-okunur denetim yapar; gerçek zamanlı koruma, karantina veya dosya silme işlemi yoktur. Mevcut güvenlik yazılımınızı kullanmaya devam edin.</p></details>
           <details><summary>Başlangıçta tepsiye küçültmeyi nasıl kapatırım?</summary><p>Ayarlar → Kapatma davranışı alanından “Uygulamayı kapat”ı seçin; “Windows ile başlat” anahtarını kapatarak otomatik açılışı tamamen devre dışı bırakabilirsiniz.</p></details>
+          <details><summary>macOS ve Linux’ta hangi işlemler kullanılabilir?</summary><p>Salt-okunur çekirdek: yazılım envanteri, güncelleme taraması, kötü amaçlı yazılım denetimi, sistem bütünlüğü, HOSTS/DNS ve tarayıcı eklentileri. Windows’a özgü kayıt defteri, UAC, kabuk menüsü, hizmet, güvenlik duvarı, sürücü ve zamanlama sekmeleri gizlidir ve IPC katmanında reddedilir.</p></details>
+          <details><summary>Hangi platformlarda kendini güncelleme var?</summary><p>Yalnızca Windows’ta. Windows uygulaması GitHub Pages üzerindeki <code class="mono">downloads/latest.json</code> dosyasını kontrol eder, SHA-512 ile doğrular ve onayınızla kurar. macOS ve Linux’ta self-update kapalıdır; yeni sürümü elle indirin. Kötü amaçlı yazılım taraması tüm platformlarda salt-okunurdur: dosya silme, karantina, işlem sonlandırma veya kayıt yazma yapılmaz.</p></details>
         </div>
       </div>
     </section>
