@@ -1,0 +1,86 @@
+name: Sürüm yayınla (Linux)
+
+# Birleşik 1.6.0 release'ine yalnızca Linux asset'leri ekler.
+# Release başlığını, gövdesini, diğer platform dosyalarını veya Latest durumunu değiştirmez.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Birleşik sürüm (örn. 1.6.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Depoyu çek
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Node kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Sürümü doğrula
+        shell: bash
+        run: |
+          set -euo pipefail
+          v='${{ github.event.inputs.version }}'
+          if [[ ! "$v" =~ ^1\.6\.[0-9]+$ ]]; then
+            echo "Bu iş akışı yalnızca 1.6.x için kullanılabilir: $v" >&2
+            exit 1
+          fi
+          pkg=$(node -p "require('./package.json').version")
+          if [ "$pkg" != "$v" ]; then
+            echo "package.json sürümü ($pkg) ile yayın sürümü ($v) uyuşmuyor." >&2
+            exit 1
+          fi
+          echo "RELEASE_VERSION=$v" >> "$GITHUB_ENV"
+          echo "RELEASE_TAG=1.6.0" >> "$GITHUB_ENV"
+
+      - name: Bağımlılıkları kur
+        run: npm ci
+
+      - name: Derle
+        run: npm run build
+
+      - name: POSIX IPC smoke testi
+        env:
+          PARS_IPC_SMOKE: '1'
+        run: xvfb-run -a npm run smoke:posix
+
+      - name: AppImage ve DEB üret
+        run: npx electron-builder --linux --publish never
+
+      - name: SHA-256 özetleri
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd release
+          sha256sum \
+            "Pars.Sistem.Yoneticisi-${RELEASE_VERSION}-x64.AppImage" \
+            "Pars.Sistem.Yoneticisi-${RELEASE_VERSION}-x64.deb" \
+            > SHA256SUMS-Linux.txt
+
+      - name: Mevcut release'a Linux dosyalarını ekle
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh release view "$RELEASE_TAG" >/dev/null
+          gh release upload "$RELEASE_TAG" \
+            "release/Pars.Sistem.Yoneticisi-${RELEASE_VERSION}-x64.AppImage" \
+            "release/Pars.Sistem.Yoneticisi-${RELEASE_VERSION}-x64.deb" \
+            release/SHA256SUMS-Linux.txt \
+            --clobber
