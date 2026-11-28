@@ -57,7 +57,7 @@ jobs:
       - name: POSIX IPC smoke testi
         env:
           PARS_IPC_SMOKE: '1'
-        run: xvfb-run -a npm run smoke:posix
+        run: xvfb-run -a npm run smoke:posix -- --no-sandbox
 
       - name: AppImage ve DEB üret
         run: npx electron-builder --linux --publish never
