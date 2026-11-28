@@ -1,34 +1,32 @@
-# Pars Sistem Yöneticisi 1.5.0 — macOS
+# Pars Sistem Yöneticisi 1.8.0 — macOS
 
-Bu, macOS için ilk **kararlı** sürümdür. Kapsam salt-okunur çekirdektir; Windows'a özgü yazma özellikleri macOS'e taşınmamıştır. Windows paketleri artık `1.7.0` derlemesidir; GitHub "Latest" etiketi birleşik `1.7.0` release’indedir.
+Bu sürüm macOS için salt-okunur çekirdeği korur ve Kudu’dan uyarlanan **POSIX Denetimi** panelini ekler. Windows’a özgü yazma özellikleri macOS’e taşınmamıştır; genel “Latest” etiketi birleşik `1.8.0` release’indedir.
+
+## Bu sürümde
+
+- **POSIX Denetimi:** LaunchAgents/LaunchDaemons/StartupItems, `launchctl list`, `lsof` ile kurulu ağ bağlantıları, `ps` ile tarayıcı süreçleri, `defaults`/`sysctl`/`sshd_config` gizlilik ayarları, `codesign --verify --deep --strict` imza kontrolleri, önbellek/günlük boyutları ve `~/.Trash` metadata’sı salt-okunur raporlanır.
+- **Salt-okunur malware denetimi:** signatures, heuristics, scripts, integrity, persistence, hosts ve browser motorları sürer; Defender motoru macOS’te gösterilmez.
+- **Paket tarama:** Homebrew (`brew outdated --json=v2`) ve npm; kurulum/güncelleme/kaldırma komutları çalıştırılmaz.
+- **Windows’a özgü sekmeler:** Kayıt defteri, UAC, kabuk menüsü, hizmet, güvenlik duvarı, sürücü ve zamanlama sekmeleri gizlidir ve IPC katmanında reddedilir.
+- **Fluent Amber teması:** Dördüncü tema macOS’te de kullanılabilir; tercih `settings.json` içinde saklanır.
+- **Self-update kapalıdır:** Uygulama kendisini macOS’te güncellemez.
 
 ## İndirme
 
 - `.dmg` — uygulamayı Sürükle & Bırak ile kurun.
 - `.zip` — elle açıp `Pars Sistem Yoneticisi.app` dosyasını istediğiniz yere kopyalayın.
-- `SHA256SUMS-1.7.0.txt` — birleşik release’deki Windows ve macOS dosya özetlerini doğrulamak için.
+- `SHA256SUMS-1.8.0.txt` — birleşik release’deki Windows ve macOS dosya özetlerini doğrulamak için.
 
-Paketler **imzalanmamıştır** ve noterlemeye gönderilmemiştir. macOS Gatekeeper ilk açılışta uyarı gösterebilir:
-`Sistem Ayarları → Gizlilik ve Güvenlik → Yine de aç` yolunu kullanabilirsiniz. App Store dağıtımı yoktur.
-
-## Bu sürümde
-
-- macOS için platform algılama ve yetenek katmanı; Windows davranışı korunur.
-- Salt-okunur malware denetimi: imzalar, sezgisel analiz, betik analizi, sistem bütünlüğü, kalıcılık, HOSTS/DNS ve tarayıcı eklentileri. Defender motoru macOS'te gösterilmez.
-- Paket tarama: Homebrew (`brew outdated --json=v2`) ve npm; kurulum/güncelleme/kaldırma komutları çalıştırılmaz.
-- Windows'a özgü kayıt defteri, UAC, kabuk menüsü, hizmet, güvenlik duvarı, sürücü ve zamanlama sekmeleri gizlidir ve IPC katmanında reddedilir.
-- Uygulamanın kendini güncelleme özelliği macOS'te devre dışıdır.
-- Homebrew olmayan ortamlarda paket taraması boş döner; uygulama yine kullanılabilir.
+Paketler **imzalanmamıştır** ve noterlemeye gönderilmemiştir. macOS Gatekeeper ilk açılışta uyarı gösterebilir: `Sistem Ayarları → Gizlilik ve Güvenlik → Yine de aç` yolunu kullanabilirsiniz. App Store dağıtımı yoktur.
 
 ## Güvenlik notları
 
-- Tarama salt okunurdur: dosya silme, karantinaya taşıma, işlem sonlandırma veya kayıt yazma işlemi yoktur.
-- Sembolik bağlantılar izlenmez; sistem/yürütme zamanı yolları ve kullanıcı hariç tutmaları atlanır.
-- Süre sınırları: toplam tarama ~90 saniye, motor başına ~20 saniye.
+- Yeni denetim paneli yalnızca okuma yapar: ayar değiştirmez, dosya silmez, süreç kapatmaz, paket kurmaz.
+- Tüm komutlar kabuksuz argüman dizileriyle, timeout ve çıktı sınırıyla çalıştırılır; sudo kullanılmaz.
+- Sembolik bağlantılar izlenmez; kullanıcı hariç tutmaları ve sistem yolları korunur.
 
 ## Bilinen sınırlar
 
 - İmzasız paket nedeniyle Gatekeeper uyarısı normaldir.
 - CPU yüzdesi macOS yük ortalamasından tahmin edilir; Windows performans sayacıyla birebir aynı değildir.
-- macOS `1.5.0` kararlıdır ancak genel "Latest" etiketi birleşik `1.7.0` release’indedir; eski sürümler korunur.
-- Linux paketleri (AppImage + `.deb`) `1.7.0` derlemesi olarak `1.7.0` release; ayrıntılar [1.7.0 release](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.7.0) sayfasındadır.
+- POSIX Denetimi deneyseldir; bazı bölümler yetki veya araç yoksa `Kullanılamıyor` olarak işaretlenir.

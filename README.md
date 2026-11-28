@@ -15,29 +15,15 @@ TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klas
 
 **Dil / Language:** [🇹🇷 Türkçe](#turkce) · [🇬🇧 English](#english)
 
-## 🆕 1.7.0 birleşik sürümü
+## 🆕 1.8.0 birleşik sürümü
 
-- **Tek release, üç platform:** Windows kurulum/portable `.exe`, macOS `arm64`/`x64` `.dmg` + `.zip` ve Linux `x64` AppImage + `.deb` aynı [1.7.0 release’inde](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.7.0) toplandı. Bu release GitHub **Latest**’tir; `1.4.0` ve macOS `1.5.0` release’leri geçmiş olarak korunur.
-- **İç sürüm notu:** Windows dosyaları `1.7.0`, macOS dosyaları `1.5.0`, Linux dosyaları `1.6.0` kaynak derlemeleridir. `1.7.0` birleşik dağıtım etiketidir.
-- **Linux kapsamı:** apt, dnf, pacman, flatpak ve snap yalnızca arama/listeleme için salt-okunur kullanılır; yazma eylemleri ve self-update kapalıdır.
-- **Doğrulama:** `SHA256SUMS-1.7.0.txt` (Windows + macOS), `SHA256SUMS-Linux.txt` (Linux) ve tüm dosyaların ayrıntılı listesi `INDIRME_LINKLERI.md` asset’lerinde yayımlandı.
+- **Tek release, üç platform:** Windows kurulum/portable `.exe`, macOS `arm64`/`x64` `.dmg` + `.zip` ve Linux `x64` AppImage + `.deb` aynı [1.8.0 release’inde](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.8.0) toplanır. Bu release GitHub **Latest** olur; önceki sürümler geçmiş olarak korunur.
+- **POSIX Denetimi:** Kudu’nun macOS/Linux denetimlerinin salt-okunur karşılığı eklendi. Başlangıç öğeleri, hizmetler, ağ bağlantıları, tarayıcı süreçleri, gizlilik ayarları, imza/ClamAV kontrolleri, temizlik adayları ve çöp kutusu metadata’sı tek panelde raporlanır; ayar değiştirilmez, dosya silinmez, süreç kapatılmaz.
+- **Fluent Amber teması:** Grafit zemin, kehribar vurgu ve yoğun veri düzeniyle dördüncü tema eklendi. `default`, `windows11` ve `auto` temaları korundu; **Ayarlar → Tema** üzerinden geçiş yapılabilir.
+- **Kapsam sınırı:** macOS ve Linux’ta yazma işlemleri, self-update, bulut/daemon modu, telemetri ve uzak komut kapalıdır. Windows’ta yönetici onayı, açık kullanıcı onayı ve zorunlu yedek modeli değişmedi.
+- **Doğrulama:** SHA-256 özetleri release içindeki `SHA256SUMS-1.8.0.txt` ve `SHA256SUMS-Linux.txt` dosyalarında yayımlanır.
 
-| Platform | Dosyalar | SHA-256 (özet) |
-| --- | --- | --- |
-| Windows | `Pars.Sistem.Yoneticisi.Setup.1.7.0.exe` | `a17cffb5561fde97876d6954e2374d37ee9ff6934cb39d329c74b03ff7b72f5d` |
-| Windows | `ParsSistemYoneticisi-Portable.exe` | `be9eb1a9664e5aa3f3549f78c6330f1b8f3fddb644eae4b647d500197e056980` |
-| macOS arm64 | `.dmg` / `.zip` | `0f1bb0a9…` / `22af969d…` |
-| macOS x64 | `.dmg` / `.zip` | `027cd67d…` / `4b0421d4…` |
-| Linux x64 | `.AppImage` | `8ea6934e8e5ff132a0b06dcb1bacb844b0fcdec8f8b01be03f8e30ee82330f23` |
-| Linux x64 | `.deb` | `d69ba475bd034b1a3a75478a98d89551946abd264e653a1436bc20375f0019ab` |
-
-Arayüz, grafit/gümüş palet ve koyu sarı vurgularla temalandırılmıştır. **Ayarlar → Tema** üzerinden
-Windows 11 açık temasına anında geçilebilir; tercih `settings.json` içinde saklanır. Windows'un native
-başlık çubuğu yerine temayla uyumlu, sürüklenebilir özel pencere çerçevesi kullanılır;
-küçültme/büyütme/kapatma düğmeleri de aynı paleti izler. Anasayfadaki CPU/RAM/boş depolama kartlarında
-durum ikonları bulunur. Aynı anda yalnızca bir uygulama örneği çalışır; ikinci başlatma mevcut pencereyi
-geri yükleyip öne getirir. Sistem tepsisindeki simge ve “Pencereyi göster” kısayolu da küçültülmüş veya
-gizlenmiş pencereyi açar.
+Arayüzde özel pencere çerçevesi, sistem tepsisi simgesi, tek örnek davranışı ve anasayfa durum kartları korunur. Ayrıntılar için [RELEASE_NOTES.md](RELEASE_NOTES.md) dosyasına bakın.
 
 ## 🆕 1.3.0 yenilikleri
 
@@ -232,19 +218,19 @@ Bildirim biçimi:
 
 ```json
 {
-  "version": "1.7.0",
+  "version": "1.8.0",
   "notes": "Yeni özellikler ve düzeltmeler",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.7.0.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.8.0.exe",
   "sha512": "<exe dosyasının base64 veya hex SHA-512 özeti>",
   "size": 83631421,
-  "url": "Pars Sistem Yoneticisi Setup 1.7.0.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.8.0.exe"
 }
 ```
 
 `url` bildirim dosyasına göreli olabilir; verilmezse `fileName` kullanılır. Özeti üretmek için:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.7.0.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.8.0.exe" SHA512
 ```
 
 Bu adımları otomatik yapan `npm run publish` komutu da vardır. `package.json` sürümünü okur,
@@ -643,10 +629,10 @@ address or local folder in **Settings → Update source**. Notification format:
 {
   "version": "1.3.0",
   "notes": "New features and fixes",
-  "fileName": "Pars Sistem Yoneticisi Setup 1.7.0.exe",
+  "fileName": "Pars Sistem Yoneticisi Setup 1.8.0.exe",
   "sha512": "<base64 or hex SHA-512 checksum of the exe>",
   "size": 83632376,
-  "url": "Pars Sistem Yoneticisi Setup 1.7.0.exe"
+  "url": "Pars Sistem Yoneticisi Setup 1.8.0.exe"
 }
 ```
 
@@ -654,7 +640,7 @@ address or local folder in **Settings → Update source**. Notification format:
 checksum:
 
 ```powershell
-certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.7.0.exe" SHA512
+certutil -hashfile ".\release\Pars Sistem Yoneticisi Setup 1.8.0.exe" SHA512
 ```
 
 `npm run publish` automates these steps. It reads the version from `package.json`, finds the setup exe

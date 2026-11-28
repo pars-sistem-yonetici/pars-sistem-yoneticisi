@@ -1,6 +1,6 @@
 {
   "name": "pars-sistem-yoneticisi-ts",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "private": true,
   "description": "Windows, macOS ve Linux için sistem bakım ve yazılım yöneticisi (TypeScript / Electron)",
   "license": "MIT",
