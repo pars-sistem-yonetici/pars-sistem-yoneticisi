@@ -18,14 +18,14 @@ TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klas
 ## 🆕 1.6.0 birleşik sürümü
 
 - **Tek release, üç platform:** Windows kurulum/portable `.exe`, macOS `arm64`/`x64` `.dmg` + `.zip` ve Linux `x64` AppImage + `.deb` aynı [1.6.0 release’inde](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/tag/1.6.0) toplandı. Bu release GitHub **Latest**’tir; `1.4.0` ve macOS `1.5.0` release’leri geçmiş olarak korunur.
-- **İç sürüm notu:** Windows dosyaları `1.4.0`, macOS dosyaları `1.5.0`, Linux dosyaları `1.6.0` kaynak derlemeleridir. `1.6.0` birleşik dağıtım etiketidir.
+- **İç sürüm notu:** Windows dosyaları `1.6.0`, macOS dosyaları `1.5.0`, Linux dosyaları `1.6.0` kaynak derlemeleridir. `1.6.0` birleşik dağıtım etiketidir.
 - **Linux kapsamı:** apt, dnf, pacman, flatpak ve snap yalnızca arama/listeleme için salt-okunur kullanılır; yazma eylemleri ve self-update kapalıdır.
 - **Doğrulama:** `SHA256SUMS-1.6.0.txt` (Windows + macOS), `SHA256SUMS-Linux.txt` (Linux) ve tüm dosyaların ayrıntılı listesi `INDIRME_LINKLERI.md` asset’lerinde yayımlandı.
 
 | Platform | Dosyalar | SHA-256 (özet) |
 | --- | --- | --- |
-| Windows | `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe` | `59981085f2d3ad08b1ab516004300a27108a668073470b43ad5c1fd3c9ab445a` |
-| Windows | `ParsSistemYoneticisi-Portable.exe` | `b8a30016cccd35a68929493ea68a5354c75fb309804fb5d92929c1feeeef4cc7` |
+| Windows | `Pars.Sistem.Yoneticisi.Setup.1.6.0.exe` | `4473797bfd2cd53486e26b94467fb1442a870ffe555f08126c3a9eacdd7d1e9e` |
+| Windows | `ParsSistemYoneticisi-Portable.exe` | `45dc1f318d312f02951098f806e085733a1a07906fce808956f279ec971e9751` |
 | macOS arm64 | `.dmg` / `.zip` | `0f1bb0a9…` / `22af969d…` |
 | macOS x64 | `.dmg` / `.zip` | `027cd67d…` / `4b0421d4…` |
 | Linux x64 | `.AppImage` | `f0ddffe55e88b353186beeb3cffa49061955faa26990a798f2972b1fef6bc143` |
