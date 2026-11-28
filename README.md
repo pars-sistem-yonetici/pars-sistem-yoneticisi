@@ -9,9 +9,9 @@ TypeScript + Electron + React karşılığıdır; eski `YazilimYoneticisi/` klas
 [![Son sürüm](https://img.shields.io/github/v/release/pars-sistem-yonetici/pars-sistem-yoneticisi?label=s%C3%BCr%C3%BCm&style=for-the-badge)](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/latest)
 [![İndirmeler](https://img.shields.io/github/downloads/pars-sistem-yonetici/pars-sistem-yoneticisi/total?label=indirme&style=for-the-badge)](https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases)
 [![Lisans](https://img.shields.io/badge/lisans-MIT-gold?style=for-the-badge)](LICENSE)
-[![Windows](https://img.shields.io/badge/Windows-10%2F11-x64-blue?style=for-the-badge)](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
-[![macOS](https://img.shields.io/badge/macOS-13%2B-arm64%20%7C%20x64-blue?style=for-the-badge)](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
-[![Linux](https://img.shields.io/badge/Linux-x64-AppImage%20%7C%20deb-orange?style=for-the-badge)](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
+[![Windows](https://img.shields.io/badge/Windows-10%2F11--x64-blue?style=for-the-badge)](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
+[![macOS](https://img.shields.io/badge/macOS-13%2B--arm64%20%7C%20x64-blue?style=for-the-badge)](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
+[![Linux](https://img.shields.io/badge/Linux-x64--AppImage%20%7C%20deb-orange?style=for-the-badge)](https://pars-sistem-yonetici.github.io/pars-sistem-yoneticisi/download.html)
 
 **Dil / Language:** [🇹🇷 Türkçe](#turkce) · [🇬🇧 English](#english)
 
