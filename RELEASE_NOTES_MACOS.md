@@ -1,6 +1,6 @@
-# Pars Sistem Yöneticisi 1.5.0 — macOS (deneysel)
+# Pars Sistem Yöneticisi 1.5.0 — macOS
 
-> Bu bir **deneysel** sürümdür. Windows 1.4.0 kararlı sürümü etkilenmez; 1.5 macOS kapsamı yalnızca salt-okunur çekirdektir.
+Bu, macOS için ilk **kararlı** sürümdür. Kapsam salt-okunur çekirdektir; Windows'a özgü yazma özellikleri macOS'e taşınmamıştır. Windows `1.4.0` kararlı sürümü ve GitHub "Latest" etiketi etkilenmez.
 
 ## İndirme
 
@@ -30,4 +30,5 @@ Paketler **imzalanmamıştır** ve noterlemeye gönderilmemiştir. macOS Gatekee
 
 - İmzasız paket nedeniyle Gatekeeper uyarısı normaldir.
 - CPU yüzdesi macOS yük ortalamasından tahmin edilir; Windows performans sayacıyla birebir aynı değildir.
-- Linux paketleri (AppImage + .deb) 2.0 sürümünde planlanmıştır.
+- GitHub "Latest" etiketi Windows `1.4.0` sürümünde kalır; macOS `1.5.0` kararlı olmasına rağmen genel "en yeni sürüm" olarak işaretlenmez.
+- Linux paketleri (AppImage + `.deb`) `2.0` sürümünde planlanmıştır.
