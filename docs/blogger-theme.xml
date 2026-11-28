@@ -462,14 +462,14 @@ details.faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size:
                 <div class="meta">Pars.Sistem.Yoneticisi.Setup.1.6.0.exe · 85,5 MB · NSIS</div>
                 <a class="btn" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/Pars.Sistem.Yoneticisi.Setup.1.6.0.exe">Kurulumu indir</a>
                 <span class="hash-label">SHA-256</span>
-                <code class="hash">d6c8d43ab2025698d9ad8954b6761cd8e7bea34e7b82cde3125656af380f99cd</code>
+                <code class="hash">1b0256aa324e2d93940d83788fa03f46f41be2663c7583825be0f14766258a90</code>
               </div>
               <div class="dlcard reveal" style="--d:.14s">
                 <h3>Portable sürüm</h3>
                 <div class="meta">ParsSistemYoneticisi-Portable.exe · 85,3 MB · Kurulum gerektirmez</div>
                 <a class="btn-2" href="https://github.com/pars-sistem-yonetici/pars-sistem-yoneticisi/releases/download/1.6.0/ParsSistemYoneticisi-Portable.exe">Portable indir</a>
                 <span class="hash-label">SHA-256</span>
-                <code class="hash">0682173bbe80e934f395eed21c7d97f06662a95f171001f98265f4632e48dc7e</code>
+                <code class="hash">2952b083d4960e8d666538051c00932ae572e4d55d6e2bbe7f555299af48a560</code>
               </div>
               <div class="dlcard reveal" style="--d:.22s">
                 <h3>macOS · arm64</h3>

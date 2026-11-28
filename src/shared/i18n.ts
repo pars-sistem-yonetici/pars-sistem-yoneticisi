@@ -629,6 +629,7 @@ export const EN: Record<string, string> = {
   'Disk bilgileri yenileniyor': 'Refreshing drive information',
   'Disk bilgisi alınamadı.': 'Drive information could not be read.',
   'Toplam {count} uygulama listeleniyor. İkonlar kayıt defterinden, boyutlar EstimatedSize değerinden alınır.': '{count} apps listed. Icons are read from the registry; sizes come from EstimatedSize.',
+  'Toplam {count} uygulama listeleniyor. İkonlar kayıt defterinden; boyutlar EstimatedSize veya kurulum klasörü ölçümünden alınır.': '{count} apps listed. Icons are read from the registry; sizes come from EstimatedSize or a measured install folder.',
   'İlk 10 başlangıç uygulaması': 'First 10 startup apps',
   'Önyükleme sonrası işlem başlangıç zamanı (yaklaşık).': 'Approximate process start time after boot.',
   'Başlangıç zamanları yenileniyor': 'Refreshing startup timings',

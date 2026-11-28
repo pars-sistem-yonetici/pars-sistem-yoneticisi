@@ -2290,7 +2290,7 @@ export default function App() {
                   </tbody>
                 </table>
               </div>
-              <p className="muted small">{tf('Toplam {count} uygulama listeleniyor. İkonlar kayıt defterinden, boyutlar EstimatedSize değerinden alınır.', { count: apps.length })}</p>
+              <p className="muted small">{tf('Toplam {count} uygulama listeleniyor. İkonlar kayıt defterinden; boyutlar EstimatedSize veya kurulum klasörü ölçümünden alınır.', { count: apps.length })}</p>
             </section>
           )}
 
