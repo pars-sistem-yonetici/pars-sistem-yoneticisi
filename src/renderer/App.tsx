@@ -50,6 +50,9 @@ import type {
   Package,
   PackageManagerStatus,
   PackageSource,
+  PosixAuditReport,
+  PosixAuditSectionId,
+  PosixAuditStatus,
   Prerequisite,
   ProfileApplyResult,
   ProfileId,
@@ -278,6 +281,7 @@ const TABS_ALL: Array<{ id: Tab; label: string; icon: string }> = [
   { id: 'profiles', label: 'Optimizasyon Profilleri', icon: 'Zap' },
   { id: 'dns', label: 'DNS Karşılaştırma', icon: 'Globe' },
   { id: 'contextmenu', label: 'Sağ tık menüsü', icon: 'Menu' },
+  { id: 'posixaudit', label: 'POSIX Denetimi', icon: 'ScanSearch' },
   { id: 'debugging', label: 'Hata Ayıklama', icon: 'Bug' },
   { id: 'settings', label: 'Ayarlar', icon: 'Settings' },
 ];
@@ -288,7 +292,7 @@ const TAB_GROUPS_ALL: Array<{ id: string; label: string; icon: string; tabs: Tab
   { id: 'software', label: 'Yazılım Yönetimi', icon: 'Package', tabs: ['updates', 'apps', 'packages', 'drivers'] },
   { id: 'maintenance', label: 'Sistem Bakımı', icon: 'Wrench', tabs: ['disk', 'duplicates', 'analysis', 'repair', 'registry', 'bloatware', 'startup', 'schedule'] },
   { id: 'optimization', label: 'Optimizasyon & Ağ', icon: 'Zap', tabs: ['tweaks', 'profiles', 'dns'] },
-  { id: 'security', label: 'Güvenlik', icon: 'Shield', tabs: ['firewall', 'malware', 'autoruns', 'privacy'] },
+  { id: 'security', label: 'Güvenlik', icon: 'Shield', tabs: ['firewall', 'malware', 'autoruns', 'privacy', 'posixaudit'] },
   // Sağ tık menüsü Windows kabuğunu kişiselleştirir; hata ayıklamadan ayrıldı.
   { id: 'personalization', label: 'Kişiselleştirme', icon: 'Palette', tabs: ['contextmenu'] },
   // Ayarlar sol alt köşeye sabitlendi; Yapılandırma yalnızca hata ayıklamayı içerir.
@@ -303,6 +307,27 @@ function groupForTab(id: Tab): string {
   if (id === 'home') return '';
   return TAB_GROUPS.find((group) => group.tabs.includes(id))?.id ?? '';
 }
+
+/** Kudu POSIX denetimlerinin salt-okunur bölüm başlıkları ve ikonları. */
+const POSIX_SECTIONS: Array<{ id: PosixAuditSectionId; icon: string; title: string; note: string }> = [
+  { id: 'startup', icon: 'Power', title: 'Başlangıç öğeleri', note: 'LaunchAgents, LaunchDaemons, autostart ve systemd kullanıcı birimleri okunur; değişiklik yapılmaz.' },
+  { id: 'services', icon: 'Server', title: 'Hizmetler', note: 'launchctl ve systemctl list-units çıktısı; Apple ve not-found birimler atlanır.' },
+  { id: 'network', icon: 'Globe', title: 'Ağ bağlantıları', note: 'Kurulu bağlantılar ve DNS bilgisi okunur; loopback adresleri dışlanır.' },
+  { id: 'browsers', icon: 'LayoutGrid', title: 'Tarayıcı süreçleri', note: 'Çalışan tarayıcılar yalnızca tam process adıyla listelenir; hiçbiri kapatılmaz.' },
+  { id: 'privacy', icon: 'ScanSearch', title: 'Gizlilik ayarları', note: 'defaults, gsettings, sysctl ve sshd_config değerleri okunur; hiçbiri değiştirilmez.' },
+  { id: 'malware', icon: 'Virus', title: 'Kötü amaçlı yazılım', note: 'codesign imza doğrulaması ve varsa ClamAV taraması yalnızca raporlama içindir.' },
+  { id: 'cleanup', icon: 'HardDrive', title: 'Temizlik adayları', note: 'Önbellek ve günlük klasörlerinin boyutları hesaplanır; dosya silinmez.' },
+  { id: 'trash', icon: 'Trash2', title: 'Çöp kutusu', note: 'Çöp kutusu girdileri sayılır; geri yükleme veya kalıcı silme yapılmaz.' },
+];
+
+const POSIX_STATUS: Record<PosixAuditStatus, string> = {
+  enabled: 'Etkin',
+  disabled: 'Devre dışı',
+  running: 'Çalışıyor',
+  stopped: 'Durmuş',
+  finding: 'Bulgu',
+  unavailable: 'Kullanılamıyor',
+};
 
 function sizeText(size: number): string {
   if (!size) return '0 B';
@@ -701,6 +726,7 @@ export default function App() {
   const [dnsCurrentState, setDnsCurrentState] = useState<DnsCurrentResult | null>(null);
   const [dnsBenchmark, setDnsBenchmark] = useState<DnsBenchmarkResult | null>(null);
   const [dnsSwitchResult, setDnsSwitchResult] = useState<string>('');
+  const [posixAuditReport, setPosixAuditReport] = useState<PosixAuditReport | null>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Package[]>([]);
@@ -802,7 +828,7 @@ export default function App() {
   }, []);
 
   const currentTheme: Theme = settings?.theme ?? 'default';
-  const appliedTheme: 'default' | 'windows11' = currentTheme === 'auto'
+  const appliedTheme: 'default' | 'windows11' | 'fluent' = currentTheme === 'auto'
     ? (systemDark ? 'default' : 'windows11')
     : currentTheme;
 
@@ -879,6 +905,13 @@ export default function App() {
       setBusy(null);
     }
   }, [notify]);
+
+  useEffect(() => {
+    if (tab !== 'posixaudit' || posixAuditReport) return;
+    void run(t('POSIX denetimi hazırlanıyor'), async () => {
+      setPosixAuditReport(await api.posixAudit());
+    });
+  }, [tab, posixAuditReport, run, t]);
 
   const startMalwareScan = useCallback(() => {
     const requestId = `malware-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
@@ -995,7 +1028,7 @@ export default function App() {
     const content = format === 'json'
       ? JSON.stringify({
         generatedAt: new Date().toISOString(),
-        version: '1.7.0',
+        version: '1.8.0',
         engines: malwareEngines.map(engineLabel),
         scanned: malwareResult?.scanned ?? {},
         totalFindings: malwareResult?.findings.length ?? 0,
@@ -1994,7 +2027,7 @@ export default function App() {
               aria-haspopup="menu"
               onClick={() => setThemeMenuOpen((open) => !open)}
             >
-              <Glyph name={currentTheme === 'auto' ? 'SunMoon' : currentTheme === 'windows11' ? 'Sun' : 'Moon'} size={15} />
+              <Glyph name={currentTheme === 'auto' ? 'SunMoon' : currentTheme === 'windows11' ? 'Sun' : currentTheme === 'fluent' ? 'Sparkles' : 'Moon'} size={15} />
             </button>
             {themeMenuOpen && (
               <div className="theme-menu" role="menu">
@@ -2015,6 +2048,15 @@ export default function App() {
                 >
                   <span className="theme-icon" aria-hidden="true"><Glyph name="Sun" size={14} /></span>
                   {t('Açık Mod')}
+                </button>
+                <button
+                  role="menuitemradio"
+                  aria-checked={currentTheme === 'fluent'}
+                  className={currentTheme === 'fluent' ? 'active' : ''}
+                  onClick={() => applyTheme('fluent')}
+                >
+                  <span className="theme-icon" aria-hidden="true"><Glyph name="Sparkles" size={14} /></span>
+                  {t('Fluent Amber')}
                 </button>
                 <button
                   role="menuitemradio"
@@ -2172,7 +2214,7 @@ export default function App() {
           </div>
           <div className="sidebar-foot">
             <span className="dot" style={{ background: 'var(--accent)' }} />
-            {t('Sistem Bakım Merkezi · v1.7.0')}
+            {t('Sistem Bakım Merkezi · v1.8.0')}
           </div>
         </div>
       </aside>
@@ -3388,6 +3430,84 @@ export default function App() {
             </section>
           )}
 
+          {tab === 'posixaudit' && (
+            <section className="page">
+              <div className="card">
+                <div className="card-head">
+                  <h3><UiIcon icon="ScanSearch" />{t('POSIX Denetimi')}</h3>
+                  <button
+                    className="btn btn-small"
+                    onClick={() => void run(t('POSIX denetimi yenileniyor'), async () => {
+                      setPosixAuditReport(await api.posixAudit());
+                    }, t('Denetim tamamlandı.'))}
+                  >
+                    <UiIcon label="Yenile" />{t('Yenile')}
+                  </button>
+                </div>
+                <p className="muted small">
+                  {t("Kudu'nun macOS ve Linux denetimlerinin salt-okunur karşılığı. Ayar değiştirmez, dosya silmez, süreç kapatmaz; bulut ve daemon modları yoktur.")}
+                </p>
+                <p className="muted small">
+                  {posixAuditReport
+                    ? `${t('Son denetim')}: ${new Date(posixAuditReport.startedAt).toLocaleString()} · ${posixAuditReport.platform.toUpperCase()}`
+                    : t('Denetim henüz çalıştırılmadı.')}
+                </p>
+              </div>
+
+              <div className="grid-3">
+                <div className="card">
+                  <strong>{posixAuditReport?.sections.find((item) => item.id === 'startup')?.rows.length ?? 0}</strong>
+                  <small className="muted">{t('Başlangıç öğesi')}</small>
+                </div>
+                <div className="card">
+                  <strong>{posixAuditReport?.sections.find((item) => item.id === 'services')?.rows.length ?? 0}</strong>
+                  <small className="muted">{t('Hizmet')}</small>
+                </div>
+                <div className="card">
+                  <strong>{posixAuditReport?.sections.flatMap((item) => item.rows).filter((item) => item.status === 'finding').length ?? 0}</strong>
+                  <small className="muted">{t('Bulgu')}</small>
+                </div>
+              </div>
+
+              {POSIX_SECTIONS.map((meta) => {
+                const data = posixAuditReport?.sections.find((item) => item.id === meta.id);
+                return (
+                  <div className="card" key={meta.id}>
+                    <div className="card-head">
+                      <h3><UiIcon icon={meta.icon} />{t(meta.title)}</h3>
+                      <span className="badge">{data?.rows.length ?? 0}</span>
+                    </div>
+                    <p className="muted small">{t(meta.note)}</p>
+                    {data?.error && <p className="muted small">{t('Bölüm okunamadı')}: {data.error}</p>}
+                    <div className="table-wrap">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>{t('Öğe')}</th>
+                            <th>{t('Ayrıntı')}</th>
+                            <th>{t('Durum')}</th>
+                            <th>{t('Boyut')}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {(data?.rows ?? []).map((item, index) => (
+                            <tr key={`${meta.id}-${index}`}>
+                              <td className="mono">{item.label}</td>
+                              <td className="muted small">{item.detail}{item.count !== undefined ? ` · ${item.count} ${t('öğe')}` : ''}</td>
+                              <td>{item.status ? t(POSIX_STATUS[item.status]) : '—'}</td>
+                              <td>{item.size !== undefined ? sizeText(item.size) : '—'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    {!data?.rows.length && <p className="muted small">{t('Kayıt yok')}</p>}
+                  </div>
+                );
+              })}
+            </section>
+          )}
+
           {tab === 'debugging' && (
             <section className="page">
               <div className="card">
@@ -3451,6 +3571,7 @@ export default function App() {
                   >
                     <option value="default">{t('Koyu Mod')}</option>
                     <option value="windows11">{t('Açık Mod')}</option>
+                    <option value="fluent">{t('Fluent Amber')}</option>
                     <option value="auto">{t('Sistem')}</option>
                   </select>
                 </div>
